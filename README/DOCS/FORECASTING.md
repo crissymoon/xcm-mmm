@@ -146,3 +146,4 @@ What this crate does not do is model transaction costs, turnover, position sizin
 - The search treats each feature independently. Interaction features have to be built before the search.
 - The fold count is fixed in advance. Very short panels return fewer folds than requested rather than empty windows.
 - The search is stochastic. Two runs with different seeds can return different subsets when several are equally good; the report should be read as evidence, not as a unique answer.
+- This is not a full marketing mix model. There is no adstock carry over, no saturation curve and no channel budget allocation. Those are feature construction and post fit steps; build the transformed columns first, then let the search choose among them.

@@ -35,6 +35,12 @@ No file is near the size where a module should be split. The largest is the CLI,
 6. **A failed fit is not a panic.** Ridge returns `Option`, and the search treats `None` as a large error.
 7. **No unsafe code.** There is none in the crate.
 
+## Dependencies
+
+Four crates, each doing one job: `rayon` for the evaluation batch, `clap` for the command line, `serde` and `serde_json` for JSON Lines input and the report output. The random generator, the linear algebra and the optimisers are in the crate.
+
+`argmin` was considered for the solvers and is not used. It is a good framework, but it ships CMA-ES, particle swarm, simulated annealing and gradient methods, not SHADE, jDE or MOEA/D, so it would replace none of the algorithm code. It would add a solver type parameter and a second problem abstraction on top of a trait that is already six methods. The parallel evaluation here is also part of the reproducibility contract, which is easier to guarantee directly than through a generic backend.
+
 ## Adding a problem
 
 Implement `Problem` and pass it to either engine. Constraints are optional and follow `g <= 0`.
