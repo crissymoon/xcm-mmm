@@ -4,7 +4,7 @@
 [![Rust 1.75+](https://img.shields.io/badge/rust-1.75%2B-blue.svg)](https://github.com/crissymoon/xcm-mmm)
 [![Website](https://img.shields.io/badge/website-xcaliburmoon.net-black.svg)](https://xcaliburmoon.net/)
 
-Differential evolution and MOEA/D in Rust, with a walk-forward forecasting front end.
+Differential evolution and MOEA/D in Rust, with walk-forward forecasting.
 
 xcm-mmm solves single and multi-objective optimisation problems with two research grade engines. SHADE carries a success history of scale factors and crossover rates, an external archive and the L-SHADE population schedule; jDE and the classic Storn and Price algorithm are included for comparison. MOEA/D-DE decomposes a front into weighted subproblems, mates inside a neighbourhood and updates a bounded number of neighbours per child. Both engines evaluate on a rayon pool and both are bit for bit reproducible at any thread count.
 
