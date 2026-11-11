@@ -298,63 +298,69 @@ impl SelectionProblem {
 
     /// Full out-of-sample report for a column subset.
     pub fn report(&self, columns: &[usize]) -> Report {
-        let mut predicted = Vec::new();
-        let mut actual = Vec::new();
-        let mut baseline = Vec::new();
-        let mut scores = Vec::new();
-        for fold in &self.folds {
-            let model = fit_ridge(&self.dataset, fold.train(), columns, self.lambda);
-            let train_mean = mean(&self.dataset.target[fold.train()]);
-            let mut fold_actual = Vec::new();
-            let mut fold_predicted = Vec::new();
-            for i in fold.test() {
-                let p = match &model {
-                    Some(m) => m.predict(&self.dataset.features[i]),
-                    None => train_mean,
-                };
-                fold_actual.push(self.dataset.target[i]);
-                fold_predicted.push(p);
-                baseline.push(train_mean);
-            }
-            predicted.extend_from_slice(&fold_predicted);
-            actual.extend_from_slice(&fold_actual);
-            scores.push(FoldScore {
-                train_start: fold.train_start,
-                train_end: fold.train_end,
-                test_start: fold.test_start,
-                test_end: fold.test_end,
-                mse: mse(&fold_actual, &fold_predicted),
-                r2: r2(&fold_actual, &fold_predicted),
-                mae: mae(&fold_actual, &fold_predicted),
-                ic: spearman(&fold_predicted, &fold_actual),
-            });
+        score_over(&self.dataset, &self.folds, columns, self.lambda)
+    }
+}
+
+/// Score a column subset over an explicit set of folds.
+///
+/// Taking the folds as an argument is what lets a caller hold rows back: a
+/// selection search can run on one window and the chosen subset be scored on a
+/// window the search never saw.
+pub fn score_over(dataset: &Dataset, folds: &[Fold], columns: &[usize], lambda: f64) -> Report {
+    let mut predicted = Vec::new();
+    let mut actual = Vec::new();
+    let mut baseline = Vec::new();
+    let mut scores = Vec::new();
+    for fold in folds {
+        let model = fit_ridge(dataset, fold.train(), columns, lambda);
+        let train_mean = mean(&dataset.target[fold.train()]);
+        let mut fold_actual = Vec::new();
+        let mut fold_predicted = Vec::new();
+        for i in fold.test() {
+            let p = match &model {
+                Some(m) => m.predict(&dataset.features[i]),
+                None => train_mean,
+            };
+            fold_actual.push(dataset.target[i]);
+            fold_predicted.push(p);
+            baseline.push(train_mean);
         }
-        let pooled_mse = mse(&actual, &predicted);
-        let baseline_mse = mse(&actual, &baseline);
-        let ic = if scores.is_empty() {
-            f64::NAN
+        predicted.extend_from_slice(&fold_predicted);
+        actual.extend_from_slice(&fold_actual);
+        scores.push(FoldScore {
+            train_start: fold.train_start,
+            train_end: fold.train_end,
+            test_start: fold.test_start,
+            test_end: fold.test_end,
+            mse: mse(&fold_actual, &fold_predicted),
+            r2: r2(&fold_actual, &fold_predicted),
+            mae: mae(&fold_actual, &fold_predicted),
+            ic: spearman(&fold_predicted, &fold_actual),
+        });
+    }
+    let pooled_mse = mse(&actual, &predicted);
+    let baseline_mse = mse(&actual, &baseline);
+    let ic = if scores.is_empty() {
+        f64::NAN
+    } else {
+        scores.iter().map(|s| s.ic).sum::<f64>() / scores.len() as f64
+    };
+    Report {
+        columns: columns.to_vec(),
+        names: columns.iter().map(|&c| dataset.names[c].clone()).collect(),
+        mse: pooled_mse,
+        rmse: pooled_mse.sqrt(),
+        mae: mae(&actual, &predicted),
+        r2: r2(&actual, &predicted),
+        ic,
+        baseline_mse,
+        skill: if baseline_mse > 0.0 {
+            1.0 - pooled_mse / baseline_mse
         } else {
-            scores.iter().map(|s| s.ic).sum::<f64>() / scores.len() as f64
-        };
-        Report {
-            columns: columns.to_vec(),
-            names: columns
-                .iter()
-                .map(|&c| self.dataset.names[c].clone())
-                .collect(),
-            mse: pooled_mse,
-            rmse: pooled_mse.sqrt(),
-            mae: mae(&actual, &predicted),
-            r2: r2(&actual, &predicted),
-            ic,
-            baseline_mse,
-            skill: if baseline_mse > 0.0 {
-                1.0 - pooled_mse / baseline_mse
-            } else {
-                0.0
-            },
-            folds: scores,
-        }
+            0.0
+        },
+        folds: scores,
     }
 }
 
@@ -589,6 +595,25 @@ mod tests {
         // overlap them rather than chase noise.
         let overlap = columns.iter().filter(|c| **c < 3).count();
         assert!(overlap >= 2, "selected {columns:?}");
+    }
+
+    #[test]
+    fn score_over_scores_a_window_the_search_never_used() {
+        let dataset = standardised(400, 8, 3, 5);
+        let fold = Fold {
+            train_start: 0,
+            train_end: 300,
+            test_start: 310,
+            test_end: 400,
+        };
+        let all: Vec<usize> = (0..8).collect();
+        let report = score_over(&dataset, std::slice::from_ref(&fold), &all, DEFAULT_LAMBDA);
+        assert_eq!(report.folds.len(), 1);
+        assert_eq!(report.folds[0].test_start, 310);
+        assert_eq!(report.folds[0].test_end, 400);
+        assert!(report.mse.is_finite() && report.mse >= 0.0);
+        assert!(report.r2.is_finite());
+        assert_eq!(report.columns, all);
     }
 
     #[test]

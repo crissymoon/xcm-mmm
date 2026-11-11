@@ -102,25 +102,44 @@ The example panel has 800 rows, 12 standardised features, four of which drive th
 
 ```bash
 xcm-mmm synth --rows 800 --features 12 --informative 4 --seed 7 --out tmp/panel.csv
-xcm-mmm forecast tmp/panel.csv --folds 4 --method both --budget 6000
+xcm-mmm forecast tmp/panel.csv --folds 4 --method both --budget 6000 --holdout 0.25
 ```
 
 ```text
 rows        800   features 12   folds 4
 model        feat          mse       r2      ic   skill
-all            12     0.371781   0.6616   0.796   67.8%
-de              4     0.335217   0.6949   0.820   71.0%
+all            12     0.389071   0.6019   0.768   64.7%
+de              4     0.325792   0.6667   0.810   70.5%
   keeps: x1, x2, x3, x4
-moead-knee      2     0.524956   0.5222   0.718   54.6%
+moead-knee      2     0.480321   0.5086   0.722   56.5%
   keeps: x1, x3
-moead-best      4     0.335217   0.6949   0.820   71.0%
+moead-best      4     0.325792   0.6667   0.810   70.5%
   keeps: x1, x2, x3, x4
   front: 4 points, knee 2, best 0
+
+holdout     rows 601..800   trained on 0..600   never seen by the search
+model        feat          mse       r2      ic   skill
+all            12     0.362740   0.7103   0.840   71.8%
+de              4     0.366311   0.7075   0.838   71.5%
+moead-knee      2     0.625203   0.5007   0.703   51.4%
+moead-best      4     0.366311   0.7075   0.838   71.5%
 ```
 
-The single objective search recovers exactly the four informative features. The error falls by 9.8 percent against using all twelve, R2 rises from 0.662 to 0.695 and the rank IC from 0.796 to 0.820. The two objective front has four points because the model size axis is measured in twelfths; its best point is the same four feature model, and its knee is a two feature model that gives up accuracy for half the columns.
+The single objective search recovers exactly the four informative features. Inside the search window that looks like a clear win: R2 0.6019 for all twelve columns against 0.6667 for the four. The holdout table says otherwise. On the last 200 rows, which the search never saw, all twelve score 0.7103 and the selected four score 0.7075. The apparent gain was the search choosing columns on the same folds the report scores, which is the standard way feature selection flatters itself.
 
-That gap is the point. On this panel the noise columns are not free: they cost 9.8 percent of the error, even with a ridge penalty. On a real panel the cost is usually larger, because real noise is correlated with the signal.
+That is the reason the flag exists. Read the first table to see what the search believes, and the holdout table to see what it can deliver. When the two disagree, believe the second one.
+
+The same test on a real panel of 324,539 rows and 36 numeric columns, search budget 2000, four folds, holdout of the last quarter:
+
+| target | embargo rows | all features IC | selected IC | all R2 | selected R2 | features kept |
+|---|---|---|---|---|---|---|
+| 1 day return | 500 | 0.008 | 0.018 | -0.0068 | 0.0006 | 2 |
+| 5 day return | 2500 | 0.040 | 0.051 | 0.0008 | 0.0048 | 3 |
+| 21 day return | 10500 | 0.048 | 0.038 | 0.0053 | 0.0008 | 2 |
+
+Two horizons improve and one gets worse, by margins that sit near the noise floor: overlapping labels mean the effective sample is roughly a fifth of the stated rows, so a difference of 0.01 in IC is under two standard errors. The honest reading is that selection on this panel is close to a wash, and the in-window table would have hidden that. A wide panel with correlated, mostly useless columns is where the search pays; a panel of well chosen features is where it costs.
+
+Two concrete levers do move accuracy: dropping columns only helps when the dropped columns are actually noise, and the embargo has to cover the label horizon in rows, not days. A five day return on a panel of roughly 500 tickers per date needs about 2500 rows of embargo, not five.
 
 ## Where better accuracy comes from
 
@@ -133,6 +152,8 @@ In order of how much they usually matter:
 5. **Match the embargo to the label horizon.** A five day forward return needs at least five rows of embargo. A leak here flatters every number downstream.
 6. **Use more than four folds on a long panel.** Six to ten folds give a better view of regime stability, at the cost of a shorter first training block.
 7. **Tune the ridge penalty on the folds, not on the report.** `--lambda` is a search setting; the report measures the model, not the penalty. Trying several values and reading the best report is a quiet way to overfit.
+8. **Hold rows back before you believe a selection.** Run with `--holdout 0.25` and quote the second table. Without it the search picks columns using the same folds the report scores, and the selected rows win by construction.
+9. **Keep the holdout at the end, in time.** The holdout is the last fraction of rows for that reason. Row order matters, so sort by date before feeding a panel in.
 8. **Check IC as well as error.** A forecast can have a good R2 and no rank information, which is useless for ranking candidates.
 9. **Add features with a reason.** Lags, spreads, ratios and regime flags derived from the same row are fine. Anything computed from future rows is not.
 10. **Look at per fold detail.** If one fold carries all the skill, the model has found a regime, not a relationship.

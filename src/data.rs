@@ -252,6 +252,26 @@ impl Dataset {
         Ok(dataset)
     }
 
+    /// Read a CSV or JSON Lines file, choosing the parser from the content.
+    ///
+    /// The first non-empty line decides: a leading brace means JSON Lines,
+    /// anything else is CSV with a header row. Sniffing the content instead of
+    /// trusting the file name keeps a misnamed export working, and it turns a
+    /// silent "every row was skipped" into a correct parse.
+    pub fn load(path: impl AsRef<Path>, target: &str) -> Result<Self, DataError> {
+        let text = fs::read_to_string(path).map_err(|e| DataError::Io(e.to_string()))?;
+        let first = text
+            .lines()
+            .map(str::trim)
+            .find(|line| !line.is_empty())
+            .unwrap_or("");
+        if first.starts_with('{') {
+            Self::from_jsonl(&text, target)
+        } else {
+            Self::from_csv(&text, target)
+        }
+    }
+
     /// Centre every feature and divide by its standard deviation.
     ///
     /// Returns the mean and deviation of each column so a fitted model can be
@@ -274,6 +294,34 @@ impl Dataset {
             }
         }
         stats
+    }
+
+    /// A copy of the rows in `rows`, keeping the feature names.
+    pub fn slice(&self, rows: std::ops::Range<usize>) -> Dataset {
+        let start = rows.start.min(self.len());
+        let end = rows.end.min(self.len()).max(start);
+        Dataset {
+            names: self.names.clone(),
+            features: self.features[start..end].to_vec(),
+            target: self.target[start..end].to_vec(),
+            skipped: 0,
+        }
+    }
+
+    /// Re-apply a mean and deviation per column, as returned by
+    /// [`Dataset::standardize`].
+    ///
+    /// This is how a held-out window inherits the training window's scaling
+    /// instead of being standardised with its own statistics.
+    pub fn apply_standardization(&mut self, stats: &[(f64, f64)]) {
+        for (j, &(mean, sd)) in stats.iter().enumerate() {
+            if j >= self.n_features() {
+                break;
+            }
+            for row in self.features.iter_mut() {
+                row[j] = if sd > 0.0 { (row[j] - mean) / sd } else { 0.0 };
+            }
+        }
     }
 
     /// A synthetic panel for the examples and the tests.
@@ -328,6 +376,23 @@ impl Dataset {
             let cells: Vec<String> = row.iter().map(|v| format!("{v:.10}")).collect();
             out.push_str(&cells.join(","));
             out.push_str(&format!(",{y:.10}\n"));
+        }
+        out
+    }
+
+    /// Render the dataset as JSON Lines, one object per row.
+    ///
+    /// The target key is `target`, matching the default the reader expects.
+    pub fn to_jsonl(&self) -> String {
+        let mut out = String::new();
+        for (row, y) in self.features.iter().zip(&self.target) {
+            let mut object = serde_json::Map::with_capacity(self.names.len() + 1);
+            for (name, value) in self.names.iter().zip(row) {
+                object.insert(name.clone(), serde_json::json!(value));
+            }
+            object.insert("target".to_string(), serde_json::json!(y));
+            out.push_str(&serde_json::Value::Object(object).to_string());
+            out.push('\n');
         }
         out
     }
@@ -441,6 +506,58 @@ mod tests {
         assert_eq!(d.n_features(), 2);
         assert_eq!(d.len(), 2);
         assert_eq!(d.target, vec![3.0, 6.0]);
+    }
+
+    #[test]
+    fn jsonl_writer_round_trips_through_the_reader() {
+        let d = Dataset::synthetic(60, 6, 3, 11);
+        let text = d.to_jsonl();
+        let back = Dataset::from_jsonl(&text, "target").unwrap();
+        assert_eq!(back.len(), d.len());
+        assert_eq!(back.n_features(), d.n_features());
+        for (a, b) in back.target.iter().zip(&d.target) {
+            assert!((a - b).abs() < 1e-6);
+        }
+    }
+
+    #[test]
+    fn load_sniffs_jsonl_and_csv_by_content_not_name() {
+        let dir = std::env::temp_dir().join(format!("xcm-mmm-load-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+
+        // JSON Lines written under a .csv name.
+        let jsonl = Dataset::synthetic(50, 5, 2, 3).to_jsonl();
+        let misleading_jsonl = dir.join("panel.csv");
+        std::fs::write(&misleading_jsonl, &jsonl).unwrap();
+        let a = Dataset::load(&misleading_jsonl, "target").unwrap();
+        assert_eq!(a.len(), 50);
+
+        // CSV written under a .jsonl name, the case that used to skip every row.
+        let csv = Dataset::synthetic(50, 5, 2, 3).to_csv();
+        let misleading_csv = dir.join("panel.jsonl");
+        std::fs::write(&misleading_csv, &csv).unwrap();
+        let b = Dataset::load(&misleading_csv, "target").unwrap();
+        assert_eq!(b.len(), 50);
+        assert_eq!(b.n_features(), 5);
+
+        std::fs::remove_dir_all(&dir).ok();
+    }
+
+    #[test]
+    fn a_held_out_slice_inherits_the_training_scaling() {
+        let raw = Dataset::synthetic(300, 4, 2, 9);
+        let mut head = raw.slice(0..200);
+        let stats = head.standardize();
+        let mut tail = raw.slice(200..300);
+        tail.apply_standardization(&stats);
+        assert_eq!(tail.len(), 100);
+        let (mean, sd) = stats[0];
+        let expected = (raw.features[200][0] - mean) / sd;
+        assert!((tail.features[0][0] - expected).abs() < 1e-12);
+        // Standardised with its own statistics the first value would differ.
+        let mut own = raw.slice(200..300);
+        own.standardize();
+        assert!((own.features[0][0] - tail.features[0][0]).abs() > 1e-12);
     }
 
     #[test]

@@ -21,7 +21,7 @@ Most of the prediction accuracy in a panel is lost before the model is fitted: f
 - The single objective search minimises error plus a sparsity penalty; the two objective search returns the trade-off between error and model size.
 - The report is out of sample: mean squared error, R2, mean absolute error, rank information coefficient, and skill against predicting the training mean.
 
-On the synthetic panel used by the example, a 4 feature model beats the 12 feature model on data it has not seen: R2 rises from 0.662 to 0.695, the rank IC from 0.796 to 0.820, and the out-of-sample error falls by 9.8 percent.
+On the synthetic panel the search lowers its own walk-forward error: all 12 features score R2 0.661, and the 4 true features score 0.695. That comparison flatters the search, because it scores every fold it also uses to choose the subset. Holding the last quarter of the panel back with `--holdout 0.25` removes the advantage: 0.7026 for the selected four against 0.7058 for all twelve. On a wide noisy panel selection pays; on a panel whose columns are already few and informative it does not, and the tool is built to show you which case you are in.
 
 ## What is inside
 

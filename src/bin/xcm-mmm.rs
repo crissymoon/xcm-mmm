@@ -8,9 +8,11 @@ use std::time::Instant;
 use clap::{Parser, Subcommand, ValueEnum};
 
 use xcm_mmm::benchmarks::{Benchmark, Kind, CATALOGUE};
-use xcm_mmm::data::Dataset;
+use xcm_mmm::data::{Dataset, Fold};
 use xcm_mmm::de::{self, Adaptation, Crossover, DeConfig, Strategy};
-use xcm_mmm::forecast::{knee, Report, SelectionProblem, SparseAccuracy, DEFAULT_LAMBDA};
+use xcm_mmm::forecast::{
+    knee, score_over, Report, SelectionProblem, SparseAccuracy, DEFAULT_LAMBDA,
+};
 use xcm_mmm::metrics::{hypervolume_report, igd, reference_front};
 use xcm_mmm::moead::scalar::Scalarization;
 use xcm_mmm::moead::{self, MoeadConfig, MoeadOutcome};
@@ -168,6 +170,11 @@ struct ForecastArgs {
     /// Write the Pareto front to a CSV file.
     #[arg(long)]
     out: Option<PathBuf>,
+    /// Fraction of rows held back from the search and scored once at the end.
+    /// Zero keeps every row in the search, which flatters the result because
+    /// the selection then scores itself on rows it already saw.
+    #[arg(long, default_value_t = 0.0)]
+    holdout: f64,
     /// Print a JSON report instead of a table.
     #[arg(long)]
     json: bool,
@@ -187,7 +194,7 @@ struct SynthArgs {
     /// Random seed.
     #[arg(long, default_value_t = 7)]
     seed: u64,
-    /// Destination CSV.
+    /// Destination file. A `.jsonl` suffix writes JSON Lines, anything else CSV.
     #[arg(long, default_value = "synthetic.csv")]
     out: PathBuf,
 }
@@ -486,24 +493,53 @@ fn reference_point(kind: Kind) -> Vec<f64> {
 }
 
 fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
-    let text = std::fs::read_to_string(&args.data)?;
-    let mut dataset = if args.data.extension().and_then(|e| e.to_str()) == Some("jsonl") {
-        Dataset::from_jsonl(&text, &args.target)?
-    } else {
-        Dataset::from_csv(&text, &args.target)?
-    };
+    let dataset = Dataset::load(&args.data, &args.target)?;
     if dataset.n_features() < 2 {
         return Err("need at least two feature columns".into());
     }
-    dataset.standardize();
     let features = dataset.n_features();
     let rows = dataset.len();
-    let shared = Arc::new(dataset);
+
+    // A holdout carves the last fraction of rows off before the search runs, so
+    // the subsets are chosen on the development prefix and then scored once on
+    // rows the search never saw. Both halves are scaled with the development
+    // statistics only.
+    let fraction = args.holdout.clamp(0.0, 0.9);
+    let cut = if fraction > 0.0 {
+        (rows as f64 * (1.0 - fraction)).round() as usize
+    } else {
+        rows
+    }
+    .min(rows);
+    if cut < args.folds + args.embargo + 2 {
+        return Err(format!(
+            "{cut} development rows is too few for {} folds with an embargo of {}",
+            args.folds, args.embargo
+        )
+        .into());
+    }
+
+    let mut head = dataset.slice(0..cut);
+    let stats = head.standardize();
+    let mut scaled = dataset;
+    scaled.apply_standardization(&stats);
+    let holdout_fold = if cut < rows {
+        Some(Fold {
+            train_start: 0,
+            train_end: cut,
+            test_start: (cut + args.embargo).min(rows),
+            test_end: rows,
+        })
+    } else {
+        None
+    };
+    let shared = Arc::new(scaled.slice(0..cut));
 
     let problem = SelectionProblem::new(shared.clone(), args.folds, args.embargo, args.lambda);
     if problem.folds.is_empty() {
-        return Err(format!("{rows} rows is too few for {} folds", args.folds).into());
+        return Err(format!("{cut} rows is too few for {} folds", args.folds).into());
     }
+    let scaled = Arc::new(scaled);
     let all: Vec<usize> = (0..features).collect();
     let baseline = problem.report(&all);
     let started = Instant::now();
@@ -560,6 +596,36 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
     }
     let elapsed = started.elapsed();
 
+    // Score the chosen subsets once on the held-out rows. This is the only
+    // number in the run that the search had no hand in.
+    let holdout: Vec<(String, Report)> = match &holdout_fold {
+        Some(fold) if fold.test_len() > 0 => {
+            let mut scored = vec![(
+                "all".to_string(),
+                score_over(&scaled, std::slice::from_ref(fold), &all, args.lambda),
+            )];
+            if let Some((columns, _, _)) = &de_result {
+                scored.push((
+                    "de".to_string(),
+                    score_over(&scaled, std::slice::from_ref(fold), columns, args.lambda),
+                ));
+            }
+            if let Some(run) = &front_result {
+                for (label, columns) in [
+                    ("moead-knee", &run.knee_report.columns),
+                    ("moead-best", &run.best_report.columns),
+                ] {
+                    scored.push((
+                        label.to_string(),
+                        score_over(&scaled, std::slice::from_ref(fold), columns, args.lambda),
+                    ));
+                }
+            }
+            scored
+        }
+        _ => Vec::new(),
+    };
+
     if let Some(path) = &args.out {
         if let Some(run) = &front_result {
             let mut text = String::from("mse,feature_fraction\n");
@@ -615,12 +681,31 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
                 "front": run.outcome.front(),
             });
         }
+        let holdout_json: serde_json::Value = holdout
+            .iter()
+            .map(|(label, r)| {
+                (
+                    label.clone(),
+                    serde_json::json!({
+                        "features": r.columns.len(),
+                        "names": r.names,
+                        "mse": r.mse,
+                        "r2": r.r2,
+                        "ic": r.ic,
+                        "skill": r.skill,
+                    }),
+                )
+            })
+            .collect::<serde_json::Map<_, _>>()
+            .into();
         let report = serde_json::json!({
             "rows": rows,
             "features": features,
             "folds": problem.folds.len(),
+            "holdout_rows": holdout_fold.as_ref().map(|f| f.test_len()).unwrap_or(0),
             "skipped_rows": shared.skipped,
             "models": models,
+            "holdout": holdout_json,
             "seconds": elapsed.as_secs_f64(),
         });
         println!("{}", serde_json::to_string_pretty(&report)?);
@@ -677,6 +762,29 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
                 run.best_index
             );
         }
+        if let Some(fold) = &holdout_fold {
+            if !holdout.is_empty() {
+                println!(
+                    "\nholdout     rows {}..{}   trained on 0..{}   never seen by the search",
+                    fold.test_start, fold.test_end, fold.train_end
+                );
+                println!(
+                    "{:<10} {:>6} {:>12} {:>8} {:>7} {:>7}",
+                    "model", "feat", "mse", "r2", "ic", "skill"
+                );
+                for (label, report) in &holdout {
+                    println!(
+                        "{:<10} {:>6} {:>12.6} {:>8.4} {:>7.3} {:>6.1}%",
+                        label,
+                        report.columns.len(),
+                        report.mse,
+                        report.r2,
+                        report.ic,
+                        report.skill * 100.0
+                    );
+                }
+            }
+        }
         println!("seconds     {:.2}", elapsed.as_secs_f64());
     }
     Ok(())
@@ -694,7 +802,13 @@ struct FrontRun {
 
 fn run_synth(args: SynthArgs) -> Result<(), Box<dyn Error>> {
     let dataset = Dataset::synthetic(args.rows, args.features, args.informative, args.seed);
-    std::fs::write(&args.out, dataset.to_csv())?;
+    let wants_jsonl = args.out.extension().and_then(|e| e.to_str()) == Some("jsonl");
+    let body = if wants_jsonl {
+        dataset.to_jsonl()
+    } else {
+        dataset.to_csv()
+    };
+    std::fs::write(&args.out, body)?;
     println!(
         "wrote {} rows and {} features to {}",
         dataset.len(),

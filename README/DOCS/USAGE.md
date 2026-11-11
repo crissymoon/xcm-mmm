@@ -120,14 +120,18 @@ Selects features, fits ridge regressions on walk-forward folds, and reports out-
 | `--budget` | 6 000 | evaluations for each search |
 | `--seed` | 1 | random seed |
 | `--out` | none | write the Pareto front as CSV |
+| `--holdout` | 0.0 | fraction of rows held back from the search and scored once at the end |
 | `--json` | off | print a JSON report |
 
 ```bash
 xcm-mmm forecast tmp/panel.csv --method both --folds 4
 xcm-mmm forecast prices.csv --target forward_return --folds 6 --embargo 5 --json
+xcm-mmm forecast prices.csv --target forward_return --embargo 2500 --holdout 0.25
 ```
 
 The table has a row per model: all features, the single objective selection, the MOEA/D knee and the best point on the MOEA/D front. Each row shows the number of features, pooled out-of-sample mean squared error, R2, mean information coefficient and skill against the training mean. `1 - mse / baseline_mse` is the skill, so 71 percent means the model removed 71 percent of the error of predicting the training mean.
+
+With `--holdout` the run prints a second table underneath, scored on rows the search never saw. Use it whenever you intend to quote a number: without it the search chooses the subset on the same folds the report scores, so the selected rows always look better than `all`.
 
 The JSON report carries the same numbers plus the per model column indices and names, the full front, fold counts and elapsed seconds. See [Forecasting](FORECASTING.md) for what the numbers mean and how to improve them.
 
