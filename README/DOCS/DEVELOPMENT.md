@@ -1,0 +1,129 @@
+# Development
+
+[Back to the project](../../README.md)
+
+## Layout
+
+| Path | Contents |
+|---|---|
+| `src/problem.rs` | `Problem`, `Bounds`, `Score`, Deb's comparison rules |
+| `src/de/mod.rs` | the DE loop, adaptations, restarts, population reduction |
+| `src/de/ops.rs` | mutation, crossover, polynomial mutation, bound repair |
+| `src/de/memory.rs` | the SHADE success history |
+| `src/moead/mod.rs` | the MOEA/D loop, replacement, the returned front |
+| `src/moead/weights.rs` | the simplex lattice and neighbourhoods |
+| `src/moead/scalar.rs` | Tchebycheff, PBI and weighted sum |
+| `src/eval.rs` | dominance, non-dominated sorting, crowding, archive |
+| `src/metrics.rs` | hypervolume, IGD, GD, spacing, reference fronts |
+| `src/forecast.rs` | ridge, walk-forward folds, feature selection problems |
+| `src/data.rs` | CSV and JSON Lines, standardisation, fold construction |
+| `src/linalg.rs` | Cholesky, correlation, ranks |
+| `src/rng.rs` | xoshiro256++ and the sampler helpers |
+| `src/bin/xcm-mmm.rs` | the command line |
+| `tests/` | convergence, the forecasting path, the CLI surface |
+| `examples/` | three runnable demonstrations |
+
+No file is near the size where a module should be split. The largest is the CLI, which is mostly argument definitions and one report per subcommand.
+
+## Design rules
+
+1. **Determinism is a feature.** All random draws happen on the calling thread. Evaluation is the only thing sent to Rayon, and results return in input order. A test compares a one thread pool with a four thread pool and requires identical output.
+2. **No hidden state.** Bounds live in the problem, caches are per instance, and no global mutable state exists. This is why a benchmark can be built twice and compared.
+3. **The traits stay small.** A problem supplies its dimension, bounds, objective count, constraint count and one evaluate function. Everything else has a default.
+4. **Scores own their numbers.** `Score` stores objectives, constraints and the derived violation, so selection never recomputes a constraint.
+5. **Numbers that matter are named.** Defaults are public constants such as `de::DEFAULT_BUDGET_PER_DIM` and `moead::DEFAULT_BUDGET`, and the documentation quotes them.
+6. **A failed fit is not a panic.** Ridge returns `Option`, and the search treats `None` as a large error.
+7. **No unsafe code.** There is none in the crate.
+
+## Adding a problem
+
+Implement `Problem` and pass it to either engine. Constraints are optional and follow `g <= 0`.
+
+```rust
+use xcm_mmm::problem::{Bounds, Problem};
+
+struct AckleyLike {
+    bounds: Bounds,
+}
+
+impl Problem for AckleyLike {
+    fn name(&self) -> &str {
+        "ackley-like"
+    }
+
+    fn dim(&self) -> usize {
+        self.bounds.dim()
+    }
+
+    fn bounds(&self) -> &Bounds {
+        &self.bounds
+    }
+
+    fn evaluate(&self, x: &[f64], f: &mut [f64], _g: &mut [f64]) {
+        f[0] = x.iter().map(|v| v * v).sum::<f64>().sqrt();
+    }
+}
+```
+
+The implementation must be `Sync` and pure. Purity is not enforced by the compiler, but a problem that returns different values for the same point breaks reproducibility and invalidates the memory of successful parameters.
+
+To add a benchmark, extend `Kind` and the `CATALOGUE` table in `src/benchmarks.rs`, add the formula to the `evaluate` match, and add a known point test. The catalogue test builds every entry at its default dimension, so a missing arm fails immediately.
+
+## Tests
+
+```bash
+cargo test
+cargo test --lib                       # unit tests only
+cargo test --test de_quality           # one integration suite
+cargo test moead::tests                # one module
+cargo test -- --nocapture              # keep println output
+```
+
+The suite has 86 tests and runs in a few seconds in debug. It covers:
+
+- convergence on sphere, Rosenbrock, Rastrigin and Ackley for every adaptation and mutation
+- reproducibility at one and four threads, and identical history
+- a constrained problem whose optimum is known
+- ZDT1, ZDT2 and ZDT3 fronts, checked for IGD, non-dominance and point count
+- exact hypervolume identities in two and three dimensions, and Monte Carlo agreement
+- simplex lattice counts and neighbourhood correctness
+- the forecasting path, including that the selected subset overlaps the true informative features
+- every CLI subcommand, including the JSON shape and the wrong engine refusal
+
+Tests assert thresholds with headroom, so a change in the random stream does not make the suite flaky. If a threshold fails, check the algorithm before relaxing it.
+
+## Lints and formatting
+
+```bash
+cargo fmt --all
+cargo clippy --all-targets -- -D warnings
+```
+
+The crate is clippy clean at the time of writing, and CI treats a warning as an error. Two numeric kernels carry a local `allow(clippy::needless_range_loop)` with a comment, because the row and column indices are the formula.
+
+## Documentation
+
+The pages under `README/DOCS` and the main README are written by hand. A small script checks that every relative link resolves, that every page listed in the README exists, and that the text contains no em dash:
+
+```bash
+python3 scripts/check_docs.py
+```
+
+Run it before a commit. CI runs it on Linux.
+
+## Performance notes
+
+- Build with `--release` for measurements. Debug builds spend most of their time in bounds checks.
+- Threads come from Rayon. `RAYON_NUM_THREADS=4 cargo run --release -- ...` fixes the pool size; the answer does not change, only the speed.
+- The expensive part of a DE generation is the batch of trials, and the expensive part of a MOEA/D generation is the batch of children. Both are evaluated with `par_iter`, so a problem with a cheap evaluation will be dominated by the Rayon overhead. That is expected; the forecasting path is the target workload.
+- A forecast evaluation fits one ridge model per fold. Reducing the fold count or the feature count is the effective way to speed up a search; the population size matters much less.
+
+## Release checklist
+
+1. `cargo fmt --all -- --check`
+2. `cargo clippy --all-targets -- -D warnings`
+3. `cargo test --release`
+4. `python3 scripts/check_docs.py`
+5. `cargo run --release -- bench --runs 5` and update the tables if a default changed
+6. bump `version` in `Cargo.toml` and the line in the README
+7. `git tag vX.Y.Z`

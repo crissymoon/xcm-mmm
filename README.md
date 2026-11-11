@@ -1,0 +1,120 @@
+# xcm-mmm
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/crissymoon/xcm-mmm/blob/main/LICENSE)
+[![Rust 1.75+](https://img.shields.io/badge/rust-1.75%2B-blue.svg)](https://github.com/crissymoon/xcm-mmm)
+[![Website](https://img.shields.io/badge/website-xcaliburmoon.net-black.svg)](https://xcaliburmoon.net/)
+
+Differential evolution and MOEA/D in Rust, with a walk-forward forecasting front end.
+
+xcm-mmm solves single and multi-objective optimisation problems with two research grade engines. SHADE carries a success history of scale factors and crossover rates, an external archive and the L-SHADE population schedule; jDE and the classic Storn and Price algorithm are included for comparison. MOEA/D-DE decomposes a front into weighted subproblems, mates inside a neighbourhood and updates a bounded number of neighbours per child. Both engines evaluate on a rayon pool and both are bit for bit reproducible at any thread count.
+
+The forecasting module turns feature selection into a search problem over blocked walk-forward folds. A ridge model is fitted on a training block, scored on the block that follows, and the search sees only the cross-validated error. Run it with two objectives and it returns the whole accuracy against model size curve, so a smaller model can be chosen on evidence rather than hope.
+
+**Version:** 0.1.0
+
+## Why this exists
+
+Most of the prediction accuracy in a panel is lost before the model is fitted: features are chosen on the same rows they are scored on, the split ignores time, and a handful of noisy columns are kept because they helped in sample. This crate makes the honest version the easy one.
+
+- Ridge is closed form, deterministic and fast enough to be evaluated tens of thousands of times inside an evolutionary loop.
+- Every fold trains on the past and tests on the future, with an embargo between them, so a label can never look at its own future.
+- The single objective search minimises error plus a sparsity penalty; the two objective search returns the trade-off between error and model size.
+- The report is out of sample: mean squared error, R2, mean absolute error, rank information coefficient, and skill against predicting the training mean.
+
+On the synthetic panel used by the example, a 4 feature model beats the 12 feature model on data it has not seen: R2 rises from 0.662 to 0.695, the rank IC from 0.796 to 0.820, and the out-of-sample error falls by 9.8 percent.
+
+## What is inside
+
+- **SHADE and L-SHADE.** Current-to-pbest mutation, success history memory with a weighted Lehmer mean for F, Cauchy sampling for F and normal sampling for CR, an external archive, and the linear population reduction schedule.
+- **jDE and classic DE.** Per individual self adaptation, and the Storn and Price rand/1/bin baseline, with binomial or exponential crossover.
+- **Constraints.** Deb's feasibility rules everywhere: a feasible point always beats an infeasible one, and two infeasible points compare by total violation.
+- **MOEA/D-DE.** Das and Dennis simplex weights, Euclidean neighbourhoods, Tchebycheff, PBI and weighted sum scalarisation, neighbourhood mating with delta, two neighbour replacements per child, polynomial mutation.
+- **Quality indicators.** Exact hypervolume in two and three dimensions, seeded Monte Carlo above that with a reported error, IGD, generational distance, spacing, and the standard ZDT and DTLZ reference fronts.
+- **Parallel and deterministic.** Evaluation runs on rayon. Mutation, selection and all random draws stay on one thread, so the result does not depend on the thread count.
+- **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
+- **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
+
+## Quick start
+
+```bash
+cargo build --release
+./target/release/xcm-mmm list
+./target/release/xcm-mmm de --problem sphere --dim 30
+./target/release/xcm-mmm moead --problem zdt1
+```
+
+A forecast needs a CSV with a header row and a numeric target column. To try the whole path without data of your own:
+
+```bash
+./target/release/xcm-mmm synth --rows 800 --features 12 --informative 4 --out tmp/panel.csv
+./target/release/xcm-mmm forecast tmp/panel.csv --method both --folds 4
+```
+
+That prints one line per model:
+
+```text
+rows        800   features 12   folds 4
+model        feat          mse       r2      ic   skill
+all            12     0.371781   0.6616   0.796   67.8%
+de              4     0.335217   0.6949   0.820   71.0%
+  keeps: x1, x2, x3, x4
+moead-knee      2     0.524956   0.5222   0.718   54.6%
+  keeps: x1, x3
+moead-best      4     0.335217   0.6949   0.820   71.0%
+  keeps: x1, x2, x3, x4
+  front: 4 points, knee 2, best 0
+```
+
+## Benchmarks
+
+Both tables come from `xcm-mmm bench --runs 5` on one development machine, release build. Times are wall clock per run and only show scale; compare the objective values, not the clocks.
+
+Differential evolution, SHADE with the L-SHADE reduction, 300 000 evaluations at 30 variables:
+
+| problem | best | median | mean | seconds |
+|---|---:|---:|---:|---:|
+| sphere | 1.510e-13 | 1.629e-13 | 1.639e-13 | 0.21 |
+| rosenbrock | 1.371e-13 | 1.502e-13 | 1.509e-13 | 0.20 |
+| rastrigin | 5.684e-14 | 1.137e-13 | 1.023e-13 | 0.21 |
+| ackley | 4.405e-13 | 5.649e-13 | 5.585e-13 | 0.22 |
+
+MOEA/D with Tchebycheff scalarisation, 100 subproblems, 50 000 evaluations, five runs:
+
+| problem | variables | IGD | hypervolume | points | seconds |
+|---|---:|---:|---:|---:|---:|
+| zdt1 | 30 | 0.01066 | 0.85703 | 100 | 0.056 |
+| zdt2 | 30 | 0.00719 | 0.52725 | 99 | 0.055 |
+| zdt3 | 30 | 0.01792 | 1.28145 | 80 | 0.055 |
+| zdt4 | 10 | 0.00801 | 0.86152 | 95 | 0.046 |
+| zdt6 | 10 | 0.00189 | 0.50452 | 100 | 0.045 |
+| dtlz1 | 7 | 0.03017 | 0.18294 | 61 | 0.056 |
+| dtlz2 | 12 | 0.07501 | 0.69888 | 60 | 0.055 |
+
+Hypervolume uses the reference point 1.1 in every objective for the ZDT set, 0.6 for DTLZ1 and 1.1 for DTLZ2. IGD is measured against 500 points of the true front. Reproduce with `xcm-mmm bench --runs 5`; the settings and the caveats are in [Benchmarks](README/DOCS/BENCHMARKS.md).
+
+## Documentation
+
+- [Algorithms](README/DOCS/ALGORITHMS.md) - the operators, the success history formulas, decomposition, constraints and every default.
+- [Usage](README/DOCS/USAGE.md) - the full command line, JSON reports and library examples.
+- [Forecasting](README/DOCS/FORECASTING.md) - data formats, folds, metrics, how to read the front and where accuracy comes from.
+- [Benchmarks](README/DOCS/BENCHMARKS.md) - methodology, the tables above and how they compare with published results.
+- [Install](README/DOCS/INSTALL.md) - requirements, build, install and using the crate as a dependency.
+- [Development](README/DOCS/DEVELOPMENT.md) - layout, design rules, tests, lints and how to add a problem.
+
+## Testing
+
+```bash
+cargo test
+cargo clippy --all-targets -- -D warnings
+cargo fmt --all -- --check
+```
+
+The suite has 86 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, and every CLI subcommand.
+
+## License
+
+MIT License, copyright 2026 Crissy Moon. See [LICENSE](LICENSE) for the full text.
+
+Crissy Moon - [https://xcaliburmoon.net/](https://xcaliburmoon.net/)
+
+Repository: [https://github.com/crissymoon/xcm-mmm](https://github.com/crissymoon/xcm-mmm)

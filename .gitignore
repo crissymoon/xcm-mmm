@@ -1,0 +1,17 @@
+# Build output
+/target/
+**/*.rs.bk
+*.pdb
+
+# Editor and OS noise
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Local data, reports and scratch output
+/tmp/
+/data/
+*.local.csv
+synthetic.csv
+/front.csv

@@ -1,0 +1,37 @@
+[package]
+name = "xcm-mmm"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Differential evolution and MOEA/D in Rust, with a walk-forward forecasting front end"
+authors = ["Crissy Moon <https://xcaliburmoon.net/>"]
+license = "MIT"
+repository = "https://github.com/crissymoon/xcm-mmm"
+exclude = ["/tmp/*", "/.github/*"]
+homepage = "https://xcaliburmoon.net/"
+documentation = "https://github.com/crissymoon/xcm-mmm#readme"
+readme = "README.md"
+keywords = ["optimization", "evolutionary-algorithms", "differential-evolution", "moead", "forecasting"]
+categories = ["science", "algorithms", "mathematics"]
+
+[[bin]]
+name = "xcm-mmm"
+path = "src/bin/xcm-mmm.rs"
+
+[dependencies]
+rayon = "1.12"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+clap = { version = "4", features = ["derive"] }
+
+[dev-dependencies]
+approx = "0.5"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+
+[profile.bench]
+lto = "thin"
+codegen-units = 1
