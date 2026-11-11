@@ -77,7 +77,7 @@ println!("{:.3e}", out.best_objective());
 
 ## Platforms
 
-CI runs the suite on Ubuntu, macOS and Windows. The crate has no platform specific code and no feature flags. The only environment variable that changes behaviour is `RAYON_NUM_THREADS`, which sets the evaluation pool size; it never changes the result.
+There is no hosted CI run: `scripts/check.sh` runs the whole suite on the machine in front of you. The crate has no platform specific code and no feature flags. The only environment variable that changes behaviour is `RAYON_NUM_THREADS`, which sets the evaluation pool size; it never changes the result.
 
 ## Offline builds
 

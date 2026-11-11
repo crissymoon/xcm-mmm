@@ -110,7 +110,7 @@ cargo fmt --all
 cargo clippy --all-targets -- -D warnings
 ```
 
-The crate is clippy clean at the time of writing, and CI treats a warning as an error. Two numeric kernels carry a local `allow(clippy::needless_range_loop)` with a comment, because the row and column indices are the formula.
+The crate is clippy clean at the time of writing, and `scripts/check.sh` treats a warning as an error. Two numeric kernels carry a local `allow(clippy::needless_range_loop)` with a comment, because the row and column indices are the formula.
 
 ## Documentation
 
@@ -120,7 +120,7 @@ The pages under `README/DOCS` and the main README are written by hand. A small s
 python3 scripts/check_docs.py
 ```
 
-Run it before a commit. CI runs it on Linux.
+Run it before a commit, or run `scripts/check.sh`, which runs it together with the formatter, the linter, the test suite and a rustdoc build.
 
 ## Performance notes
 
