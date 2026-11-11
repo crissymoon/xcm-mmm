@@ -127,6 +127,10 @@ struct MoeadArgs {
     /// schedule starts.
     #[arg(long, default_value_t = 0.1)]
     update_delay: f64,
+    /// Stagnation window in generations for relative-improvement allocation.
+    /// Zero draws the subset uniformly at random.
+    #[arg(long, default_value_t = 50)]
+    ri_window: usize,
     /// Differential scale factor.
     #[arg(long, default_value_t = 0.5)]
     f: f64,
@@ -236,6 +240,10 @@ struct BenchArgs {
     /// MOEA/D section. Omitted means the engine default; 1 is plain MOEA/D-DE.
     #[arg(long)]
     update_probability: Option<f64>,
+    /// Stagnation window for relative-improvement allocation in the MOEA/D
+    /// section. Zero keeps the uniform random subset.
+    #[arg(long, default_value_t = 50)]
+    ri_window: usize,
     /// Print JSON instead of a table.
     #[arg(long)]
     json: bool,
@@ -428,6 +436,7 @@ fn run_moead(args: MoeadArgs) -> Result<(), Box<dyn Error>> {
         replacements: args.replacements,
         update_probability: args.update_probability,
         update_delay: args.update_delay,
+        ri_window: args.ri_window,
         scalar,
         f: args.f,
         cr: args.cr,
@@ -911,9 +920,14 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
     let update = args
         .update_probability
         .unwrap_or(MoeadConfig::default().update_probability);
+    let allocation = if args.ri_window > 0 {
+        format!("relative improvement, window {}", args.ri_window)
+    } else {
+        "uniform random subset".to_string()
+    };
     println!(
         "\n# MOEA/D, Tchebycheff, 100 subproblems, update probability {update}, \
-         {moead_budget} evaluations"
+         {allocation}, {moead_budget} evaluations"
     );
     println!(
         "{:<10} {:>10} {:>11} {:>11} {:>8} {:>8}",
@@ -940,6 +954,7 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
             if let Some(probability) = args.update_probability {
                 config.update_probability = probability;
             }
+            config.ri_window = args.ri_window;
             let out = moead::minimize(&problem, &config);
             let front = out.front();
             igds.push(igd(&front, &reference));
@@ -949,6 +964,12 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
         let elapsed = started.elapsed().as_secs_f64() / runs as f64;
         let igd_mean = igds.iter().sum::<f64>() / runs as f64;
         let hv_mean = hvs.iter().sum::<f64>() / runs as f64;
+        let igd_sd = (igds
+            .iter()
+            .map(|v| (v - igd_mean) * (v - igd_mean))
+            .sum::<f64>()
+            / runs as f64)
+            .sqrt();
         println!(
             "{:<10} {:>10.5} {:>11.5} {:>11} {:>8.3} {:>8}",
             name, igd_mean, hv_mean, points, elapsed, runs
@@ -958,6 +979,7 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
             "problem": name,
             "dim": dim,
             "igd": igd_mean,
+            "igd_sd": igd_sd,
             "hypervolume": hv_mean,
             "points": points,
             "seconds": elapsed,

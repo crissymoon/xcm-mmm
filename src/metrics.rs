@@ -275,9 +275,11 @@ pub fn spacing(approximation: &[Vec<f64>]) -> f64 {
 /// A dense, evenly spread sample of the true Pareto front of a benchmark.
 ///
 /// ZDT fronts are parameterised by the first variable, so sampling that
-/// variable gives an exact front. ZDT3 is filtered to its non-dominated
-/// segments. DTLZ fronts come from a simplex lattice, which is exact for DTLZ1
-/// and lies on the unit sphere for DTLZ2.
+/// variable gives an exact front with `samples` points. ZDT3 is filtered to its
+/// non-dominated segments. DTLZ fronts come from a simplex lattice, which is
+/// exact for DTLZ1 and lies on the unit sphere for DTLZ2; there the division
+/// count is solved for, so `samples` is again the number of points requested
+/// and the lattice returns at most that many.
 pub fn reference_front(kind: Kind, samples: usize) -> Vec<Vec<f64>> {
     let n = samples.max(2);
     match kind {
@@ -312,11 +314,11 @@ pub fn reference_front(kind: Kind, samples: usize) -> Vec<Vec<f64>> {
             }
             front
         }
-        Kind::Dtlz1 => das_dennis(samples, 3)
+        Kind::Dtlz1 => das_dennis(divisions_for_points(n, 3), 3)
             .into_iter()
             .map(|w| w.iter().map(|v| 0.5 * v).collect())
             .collect(),
-        Kind::Dtlz2 => das_dennis(samples, 3)
+        Kind::Dtlz2 => das_dennis(divisions_for_points(n, 3), 3)
             .into_iter()
             .map(|w| {
                 let norm = w.iter().map(|v| v * v).sum::<f64>().sqrt();
@@ -325,6 +327,32 @@ pub fn reference_front(kind: Kind, samples: usize) -> Vec<Vec<f64>> {
             .collect(),
         _ => Vec::new(),
     }
+}
+
+/// Largest division count whose simplex lattice holds at most `points` points.
+///
+/// Das and Dennis builds `C(d + m - 1, m - 1)` points from `d` divisions, so a
+/// caller asking for 500 points must not pass 500 as the division count: that
+/// would ask for 125 751 points and make every distance in IGD a measurement of
+/// lattice density instead of front quality.
+fn divisions_for_points(points: usize, objectives: usize) -> usize {
+    let mut divisions = 1;
+    while simplex_count(divisions + 1, objectives) <= points && divisions < 5000 {
+        divisions += 1;
+    }
+    divisions
+}
+
+/// Points on a simplex lattice of `divisions` steps and `objectives`
+/// objectives, the same `C(d + m - 1, m - 1)` the weight builder uses.
+fn simplex_count(divisions: usize, objectives: usize) -> usize {
+    let k = (objectives - 1).min(divisions);
+    let n = divisions + objectives - 1;
+    let mut count = 1u128;
+    for i in 1..=k {
+        count = count * (n - k + i) as u128 / i as u128;
+    }
+    usize::try_from(count).unwrap_or(usize::MAX)
 }
 
 /// The Das and Dennis simplex lattice, the standard weight generator.
@@ -453,6 +481,25 @@ mod tests {
     fn zdt1_reference_lies_on_its_curve() {
         for p in reference_front(Kind::Zdt1, 50) {
             assert_relative_eq!(p[1], 1.0 - p[0].sqrt(), epsilon = 1e-12);
+        }
+    }
+
+    #[test]
+    fn dtlz_references_hold_the_requested_number_of_points() {
+        for samples in [50, 200, 500] {
+            for kind in [Kind::Dtlz1, Kind::Dtlz2] {
+                let front = reference_front(kind, samples);
+                assert!(
+                    !front.is_empty() && front.len() <= samples,
+                    "{kind:?} asked {samples}, got {}",
+                    front.len()
+                );
+                assert!(
+                    front.len() > samples * 3 / 4,
+                    "{kind:?} asked {samples}, got only {}",
+                    front.len()
+                );
+            }
         }
     }
 

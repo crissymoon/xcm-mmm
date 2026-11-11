@@ -4,14 +4,16 @@
 //! simplex lattice of weights, one subproblem per weight, a Tchebycheff
 //! scalarisation by default, mating restricted to a neighbourhood with
 //! probability `delta`, at most `replacements` neighbours updated per child, a
-//! `rand/1` differential operator followed by polynomial mutation, and an
-//! external archive of the non-dominated points seen so far.
+//! `rand/1` differential operator followed by polynomial mutation, and a front
+//! read from the final population rather than from an archive of every point
+//! ever seen.
 //!
 //! Each generation is synchronous: every child is generated from the population
 //! at the start of the round, the round is evaluated in parallel, and the
 //! replacements are applied in index order. That keeps a run reproducible at any
 //! thread count while still using every core for the expensive part.
 
+pub mod allocation;
 pub mod scalar;
 pub mod weights;
 
@@ -19,6 +21,7 @@ use crate::eval::{dominates, evaluate_population, same_point};
 use crate::problem::{Boundary, Problem, Score};
 use crate::rng::Rng;
 
+use allocation::RelativeImprovement;
 use scalar::Scalarization;
 use weights::{divisions_for, WeightSet};
 
@@ -59,6 +62,14 @@ pub struct MoeadConfig {
     /// subproblem before the partial schedule starts. Matches the two-phase
     /// warm-up of the relative-improvement resource allocation it generalises.
     pub update_delay: f64,
+    /// Generations of stagnation after which a subproblem's relative
+    /// improvement priority is reset to the mean. A positive value selects
+    /// subproblems in proportion to how much their scalar value improved over
+    /// the last `ri_window` generations, after the dynamic resource allocation
+    /// of Zhang, Liu and Li (2009); zero keeps the subset uniform at random.
+    /// The measured default is 50. The share is still set by
+    /// `update_probability`.
+    pub ri_window: usize,
     /// Evaluation budget. Zero picks 50_000, which gives 500 generations at the
     /// default population.
     pub budget: usize,
@@ -82,6 +93,7 @@ impl Default for MoeadConfig {
             mutation_eta: 20.0,
             update_probability: 0.2,
             update_delay: 0.1,
+            ri_window: 50,
             budget: 0,
             boundary: Boundary::Clip,
             seed: 1,
@@ -219,7 +231,12 @@ pub fn minimize<P: Problem + ?Sized>(problem: &P, config: &MoeadConfig) -> Moead
     // the delay does not shift when the budget changes.
     let planned_generations = (budget as f64 / n as f64).ceil().max(1.0) as usize;
     let warmup = (config.update_delay * planned_generations as f64).round() as usize;
-    let partial = config.update_probability < 1.0;
+    let mut utilities = if config.ri_window > 0 {
+        Some(RelativeImprovement::new(n, config.ri_window))
+    } else {
+        None
+    };
+    let partial = config.update_probability < 1.0 || utilities.is_some();
 
     while evaluations < budget {
         // Only selected subproblems produce an offspring this round. Unselected
@@ -228,6 +245,8 @@ pub fn minimize<P: Problem + ?Sized>(problem: &P, config: &MoeadConfig) -> Moead
         // replacement.
         let mut active: Vec<usize> = if !partial || generations < warmup {
             (0..n).collect()
+        } else if let Some(state) = utilities.as_ref() {
+            state.select(config.update_probability, &mut rng)
         } else {
             (0..n)
                 .filter(|_| rng.chance(config.update_probability))
@@ -296,7 +315,11 @@ pub fn minimize<P: Problem + ?Sized>(problem: &P, config: &MoeadConfig) -> Moead
             }
         }
 
-        history.push(mean_scalar(&scores, &ideal, &set, config.scalar));
+        let values = scalar_values(&scores, &ideal, &set, config.scalar);
+        if let Some(state) = utilities.as_mut() {
+            state.observe(&values);
+        }
+        history.push(values.iter().sum::<f64>() / values.len() as f64);
     }
 
     // The front is read from the final population rather than from a history of
@@ -385,12 +408,18 @@ fn update_ideal(ideal: &mut [f64], scores: &[Score], objectives: usize) {
     debug_assert_eq!(ideal.len(), objectives);
 }
 
-fn mean_scalar(scores: &[Score], ideal: &[f64], set: &WeightSet, scalar: Scalarization) -> f64 {
-    let mut total = 0.0;
-    for (i, s) in scores.iter().enumerate() {
-        total += scalar.value(s.objectives(), ideal, &set.weights[i % set.len()]);
-    }
-    total / scores.len() as f64
+/// Scalar value of every subproblem under its own weight.
+fn scalar_values(
+    scores: &[Score],
+    ideal: &[f64],
+    set: &WeightSet,
+    scalar: Scalarization,
+) -> Vec<f64> {
+    scores
+        .iter()
+        .enumerate()
+        .map(|(i, s)| scalar.value(s.objectives(), ideal, &set.weights[i % set.len()]))
+        .collect()
 }
 
 /// Three distinct parent indices, drawn from the neighbourhood when one is

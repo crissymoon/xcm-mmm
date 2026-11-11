@@ -71,6 +71,9 @@ Solves a multi-objective problem with MOEA/D.
 | `--neighbourhood` | 20 | `T` |
 | `--delta` | 0.9 | probability of mating in the neighbourhood |
 | `--replacements` | 2 | neighbours replaced per child |
+| `--update-probability` | 0.2 | share of subproblems that produce a child per generation |
+| `--update-delay` | 0.1 | warm-up share before the partial schedule starts |
+| `--ri-window` | 50 | stagnation window for relative-improvement allocation; 0 draws the share uniformly at random |
 | `--scalar` | tchebycheff | `tchebycheff`, `pbi` or `weighted-sum` |
 | `--theta` | 5.0 | PBI penalty |
 | `--f` | 0.5 | differential scale factor |

@@ -11,6 +11,7 @@
 | `src/de/ops.rs` | mutation, crossover, polynomial mutation, bound repair |
 | `src/de/memory.rs` | the SHADE success history |
 | `src/moead/mod.rs` | the MOEA/D loop, replacement, the returned front |
+| `src/moead/allocation.rs` | which subproblems vary, random or relative improvement |
 | `src/moead/weights.rs` | the simplex lattice and neighbourhoods |
 | `src/moead/scalar.rs` | Tchebycheff, PBI and weighted sum |
 | `src/eval.rs` | dominance, non-dominated sorting, crowding, archive |

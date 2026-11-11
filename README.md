@@ -28,7 +28,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **SHADE and L-SHADE.** Current-to-pbest mutation, success history memory with a weighted Lehmer mean for F, Cauchy sampling for F and normal sampling for CR, an external archive, and the linear population reduction schedule.
 - **jDE and classic DE.** Per individual self adaptation, and the Storn and Price rand/1/bin baseline, with binomial or exponential crossover.
 - **Constraints.** Deb's feasibility rules everywhere: a feasible point always beats an infeasible one, and two infeasible points compare by total violation.
-- **MOEA/D-DE.** Das and Dennis simplex weights, Euclidean neighbourhoods, Tchebycheff, PBI and weighted sum scalarisation, neighbourhood mating with delta, two neighbour replacements per child, polynomial mutation, and partial updates that vary a random fifth of the subproblems per generation.
+- **MOEA/D-DE.** Das and Dennis simplex weights, Euclidean neighbourhoods, Tchebycheff, PBI and weighted sum scalarisation, neighbourhood mating with delta, two neighbour replacements per child, polynomial mutation, and partial updates that vary a fifth of the subproblems per generation, weighted by relative improvement with a stagnation reset.
 - **Quality indicators.** Exact hypervolume in two and three dimensions, seeded Monte Carlo above that with a reported error, IGD, generational distance, spacing, and the standard ZDT and DTLZ reference fronts.
 - **Parallel and deterministic.** Evaluation runs on rayon. Mutation, selection and all random draws stay on one thread, so the result does not depend on the thread count.
 - **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
@@ -78,19 +78,19 @@ Differential evolution, SHADE with the L-SHADE reduction, 300 000 evaluations at
 | rastrigin | 5.684e-14 | 1.137e-13 | 1.023e-13 | 0.21 |
 | ackley | 4.405e-13 | 5.649e-13 | 5.585e-13 | 0.22 |
 
-MOEA/D with Tchebycheff scalarisation, 100 subproblems, 50 000 evaluations, five runs, partial updates at 0.2 per generation:
+MOEA/D with Tchebycheff scalarisation, 100 subproblems, 50 000 evaluations, five runs, partial updates at a 0.2 share weighted by relative improvement:
 
 | problem | variables | IGD | hypervolume | points | seconds |
 |---|---:|---:|---:|---:|---:|
-| zdt1 | 30 | 0.00716 | 0.86329 | 100 | 0.091 |
-| zdt2 | 30 | 0.00528 | 0.53247 | 99 | 0.087 |
-| zdt3 | 30 | 0.01252 | 1.30075 | 75 | 0.089 |
-| zdt4 | 10 | 0.00549 | 0.86659 | 100 | 0.086 |
-| zdt6 | 10 | 0.00190 | 0.50387 | 100 | 0.080 |
-| dtlz1 | 7 | 0.03043 | 0.18247 | 62 | 0.099 |
-| dtlz2 | 12 | 0.07466 | 0.69783 | 61 | 0.099 |
+| zdt1 | 30 | 0.00550 | 0.86646 | 100 | 0.119 |
+| zdt2 | 30 | 0.00561 | 0.53220 | 98 | 0.119 |
+| zdt3 | 30 | 0.01230 | 1.30270 | 84 | 0.122 |
+| zdt4 | 10 | 0.00710 | 0.86345 | 100 | 0.109 |
+| zdt6 | 10 | 0.00190 | 0.50436 | 100 | 0.105 |
+| dtlz1 | 7 | 0.03186 | 0.18272 | 63 | 0.110 |
+| dtlz2 | 12 | 0.07700 | 0.70066 | 60 | 0.112 |
 
-Hypervolume uses the reference point 1.1 in every objective for the ZDT set, 0.6 for DTLZ1 and 1.1 for DTLZ2. IGD is measured against 500 points of the true front. Reproduce with `xcm-mmm bench --runs 5`; the settings and the caveats are in [Benchmarks](README/DOCS/BENCHMARKS.md).
+Hypervolume uses the reference point 1.1 in every objective for the ZDT set, 0.6 for DTLZ1 and 1.1 for DTLZ2. IGD is measured against a 500 point sample of the true front, which the DTLZ rows serve with a 496 point lattice; the three objective rows are resolution limited, and the scaling law behind that is in [Benchmarks](README/DOCS/BENCHMARKS.md). Reproduce with `xcm-mmm bench --runs 5`.
 
 ## Documentation
 

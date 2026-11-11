@@ -143,17 +143,36 @@ PBI           d1 = ((f - z) . w) / ||w||
 
 Tchebycheff is the default because it reaches points on a concave front, where weighted sum cannot. PBI with `theta = 5` is the usual choice for three or more objectives. In this crate PBI improved DTLZ1 and DTLZ2 at 50 000 evaluations, and Tchebycheff was clearly better on ZDT1; the tables are in [Benchmarks](BENCHMARKS.md).
 
-### Partial updates
+### Partial updates and resource allocation
 
-Plain MOEA/D-DE produces one child per subproblem per generation. That is not what this engine does by default. Each generation first selects a random subset of subproblems, each with probability `update_probability`, and only those produce a child:
+Plain MOEA/D-DE produces one child per subproblem per generation. That is not what this engine does by default. Each generation first selects a subset of subproblems, and only those produce a child. Two schedules are available.
+
+The uniform random subset, the strategy measured by Lavinas, Aranha, Ladeira and Campelo (2020), draws each subproblem independently:
 
 ```text
 active = { i : U_i < p_s }                    p_s = update_probability
 ```
 
-For the first `update_delay` share of the planned generations every subproblem is active, which is the two phase warm-up of the relative improvement resource allocation that this generalises. A subproblem that is not active can still be replaced by a neighbour's child, because resource allocation limits variation, not replacement.
+The relative improvement schedule, after the dynamic resource allocation of Zhang, Liu and Li (2009), keeps a priority per subproblem. Each generation it measures how much the subproblem's scalar value `g_i` improved and accumulates that with a window of `W = ri_window` generations:
 
-The default is `p_s = 0.2`, against 1.0 for MOEA/D-DE. Lavinas, Aranha, Ladeira and Campelo (2020) found that a random subset beats both no allocation and the relative improvement rule, and that the gain grows as the subset shrinks, because the population gains inertia: most incumbents survive a round, so the front moves by selection rather than by churn. Their 2021 follow up explains the mechanism: partial update converges as fast as a small population and explores as widely as a large one, so it removes most of the sensitivity to the population size choice.
+```text
+delta_i = max(0, (g_i_old - g_i_new) / |g_i_old|)
+pi_i   <- (1 - 1/W) pi_i + delta_i
+```
+
+A subproblem that has not improved for `W` generations is reset to the mean priority, so a subproblem that will only pay off late is retried instead of being abandoned. Selection is independent per subproblem, proportional to priority, and never returns an empty set:
+
+```text
+P(i in active) = min(1, p_s pi_i / mean(pi))   p_s = update_probability
+```
+
+For the first `update_delay` share of the planned generations every subproblem is active, which is the two phase warm-up of the relative improvement rule. A subproblem that is not active can still be replaced by a neighbour's child, because resource allocation limits variation, not replacement.
+
+The defaults are `p_s = 0.2` and `ri_window = 50`, against 1.0 and no allocation for plain MOEA/D-DE. Lavinas et al. found that a random subset beats both no allocation and the relative improvement rule, and that the gain grows as the subset shrinks, because the population gains inertia: most incumbents survive a round, so the front moves by selection rather than by churn. Their 2021 follow up explains the mechanism: partial update converges as fast as a small population and explores as widely as a large one, so it removes most of the sensitivity to the population size choice.
+
+On this suite the random subset reproduces that result against no allocation, and the improvement weighting then adds to it. Thirty seeds, 50 000 evaluations, mean IGD over the seven problems falls from 0.0253 at no allocation to 0.0207 with a random fifth, and then to 0.0200 when that fifth is weighted by relative improvement. The weighting wins at shares of 0.1, 0.2 and 0.4, on IGD and on hypervolume, with the gain concentrated in ZDT1 (0.0079 to 0.0061) and ZDT3 (0.0128 to 0.0117); ZDT6 and both DTLZ rows do not move. The tables are in [Benchmarks](BENCHMARKS.md).
+
+Resource allocation of this shape has one failure mode worth naming: without the stagnation reset the priorities drift onto the subproblems that improved early, and the tail of the front stops being sampled. The reset is the defence, and this implementation gives a stale subproblem the current mean priority rather than a fixed one, which keeps the expected active set equal to the requested share. The measured gain over the random subset is consistent with that argument, but the two rules were not compared in isolation, so the attribution is open.
 
 ### One generation
 
@@ -185,7 +204,7 @@ The front is read from the final population, not from a history of every non-dom
 
 One generation costs `N` evaluations of `O(dim)` plus `O(N * T * m)` scalar work, with `N` subproblems, neighbourhood `T` and `m` objectives. Memory is `O(N * dim + N * m)`. The weight lattice and the neighbourhoods are built once.
 
-Under partial update a generation costs about `p_s N` evaluations, so the same budget is spent over roughly `1 / p_s` more generations. The evaluation budget is still the stop condition and the number of objective evaluations does not change; what grows is the per generation bookkeeping and, for a cheap problem, the wall clock. On the benchmark suite the default costs about 1.6 times the plain run at the same 50 000 evaluations.
+Under partial update a generation costs about `p_s N` evaluations, so the same budget is spent over roughly `1 / p_s` more generations. The evaluation budget is still the stop condition and the number of objective evaluations does not change; what grows is the per generation bookkeeping and, for a cheap problem, the wall clock. On the benchmark suite the default costs about 1.6 times the plain run at the same 50 000 evaluations, of which the relative improvement bookkeeping is around 8 percent: one scalar value per subproblem per generation, `O(N m)`, which is small next to `O(N T m)` in the replacement loop.
 
 ### Defaults
 
@@ -200,13 +219,15 @@ Under partial update a generation costs about `p_s N` evaluations, so the same b
 | F, CR | 0.5, 1.0 | MOEA/D-DE operator |
 | mutation eta | 20 | polynomial mutation index |
 | update probability | 0.2 | share of subproblems active per generation |
+| relative improvement window | 50 | stagnation window; 0 draws the share uniformly at random |
 | update delay | 0.1 | warm-up share before the partial schedule |
 | budget | 50 000 | 500 generations at 100 subproblems |
 | boundary | clip | standard for MOEA/D |
 
 Tuning notes, in the order that usually matters:
 
-- `update_probability`: the largest single lever. 30 seeds at 50 000 evaluations, mean over all seven problems: mean IGD falls from 0.0248 at 1.0 to 0.0203 at 0.4, 0.0201 at 0.2 and 0.0201 at 0.1; mean hypervolume rises from 0.6999 to 0.7061. ZDT3 and DTLZ1 improve by about 30 percent, DTLZ2 is flat. The default is 0.2, which keeps the gain without the very small active sets that push DTLZ2 back by a hair.
+- `update_probability`: the largest single lever. 30 seeds at 50 000 evaluations, mean over all seven problems: mean IGD falls from 0.0253 at 1.0 to 0.0209 at 0.4, 0.0207 at 0.2 and 0.0206 at 0.1 with the uniform random subset, and to 0.0203, 0.0200 and 0.0203 with relative improvement; mean hypervolume rises from 0.6999 to about 0.707. ZDT3 and DTLZ1 improve by about 30 percent, DTLZ2 is flat. The default is 0.2, which keeps the gain without the very small active sets that cost ZDT4 at 0.1.
+- `ri_window`: 50 is the measured default. Setting it to 0 returns to the uniform random subset and costs about 3 percent of mean IGD, mostly on ZDT1. At 10 the mean was indistinguishable from the random subset, and at 200 the ZDT1 gain was paid for by a loss on ZDT2 and ZDT3, so 50 is the flat part of the curve rather than a sharp optimum.
 - `replacements`: 2 is the paper setting and keeps diversity. Raising it to 5 improved ZDT1 at 30 variables from IGD 0.0093 to 0.0066 at the same budget, and narrows the front.
 - `neighbourhood`: larger values slow convergence and improve spread. At 30 variables, `T = 10` beat `T = 20` on ZDT1 at a short budget, and `T = 40` was worse than both.
 - `delta`: 0.9 keeps most mating local, which is the point of the decomposition. Raising it to 1.0 is reasonable for a front with many objectives.
@@ -256,6 +277,7 @@ Every engine draws from a xoshiro256++ generator seeded by `seed`. The generator
 - Lavinas, Y., Aranha, C., Ladeira, M. and Campelo, F. (2020). MOEA/D with random partial update strategy. IEEE Congress on Evolutionary Computation. DOI 10.1109/CEC48606.2020.9185527, arXiv 2001.06980
 - Lavinas, Y., Ladeira, M. and Aranha, C. (2021). Faster convergence in multi-objective optimization algorithms based on decomposition. arXiv 2112.11939
 - Brest, J., Greiner, S., Boskovic, B., Mernik, M. and Zumer, V. (2006). Self-adapting control parameters in differential evolution. IEEE Transactions on Evolutionary Computation 10(6), 646-657. DOI 10.1109/TEVC.2006.872133
+- Zhang, Q., Liu, W. and Li, H. (2009). The performance of a new version of MOEA/D on CEC09 unconstrained MOP test instances. IEEE Congress on Evolutionary Computation, 203-208. DOI 10.1109/CEC.2009.4982949
 - Zhang, Q. and Li, H. (2007). MOEA/D, a multiobjective evolutionary algorithm based on decomposition. IEEE Transactions on Evolutionary Computation 11(6), 712-731. DOI 10.1109/TEVC.2007.892759
 - Li, H. and Zhang, Q. (2009). Multiobjective optimization problems with complicated Pareto sets, MOEA/D and NSGA-II. IEEE Transactions on Evolutionary Computation 13(2), 284-302. DOI 10.1109/TEVC.2008.925798
 - Deb, K., Pratap, A., Agarwal, S. and Meyarivan, T. (2002). A fast and elitist multiobjective genetic algorithm, NSGA-II. IEEE Transactions on Evolutionary Computation 6(2), 182-197. DOI 10.1109/4235.996017

@@ -79,6 +79,42 @@ fn moead_json_report_has_a_front() {
 }
 
 #[test]
+fn the_allocation_schedule_can_be_switched_off_from_the_shell() {
+    let run = |window: &str| {
+        let out = Command::new(binary())
+            .args([
+                "moead",
+                "--problem",
+                "zdt1",
+                "--dim",
+                "6",
+                "--population",
+                "30",
+                "--budget",
+                "1500",
+                "--ri-window",
+                window,
+                "--seed",
+                "4",
+                "--json",
+            ])
+            .output()
+            .unwrap();
+        assert!(
+            out.status.success(),
+            "{}",
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let value: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+        assert!(!value["front"].as_array().unwrap().is_empty());
+        value["front"].clone()
+    };
+    let improved = run("50");
+    let random = run("0");
+    assert_ne!(improved, random, "the schedule must change the run");
+}
+
+#[test]
 fn the_wrong_engine_for_a_problem_is_refused() {
     let out = Command::new(binary())
         .args(["de", "--problem", "zdt1"])
