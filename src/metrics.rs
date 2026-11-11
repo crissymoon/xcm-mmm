@@ -407,6 +407,33 @@ mod tests {
     }
 
     #[test]
+    fn generational_distance_is_a_one_sided_measure() {
+        let reference = vec![vec![0.0, 1.0], vec![1.0, 0.0]];
+        // A point exactly on the front has zero distance to it.
+        assert_relative_eq!(gd(&[vec![1.0, 0.0]], &reference), 0.0);
+        // A point off the front has a positive distance, and the reference
+        // side does not enter the calculation.
+        assert!(gd(&[vec![0.5, 0.5]], &reference) > 0.0);
+        assert_eq!(gd(&[], &reference), f64::INFINITY);
+    }
+
+    #[test]
+    fn a_hypervolume_report_marks_exactness() {
+        let front = vec![vec![0.2, 0.6], vec![0.6, 0.2]];
+        let exact = hypervolume_report(&front, &[1.0, 1.0]);
+        assert!(exact.exact);
+        assert_eq!(exact.error, 0.0);
+        assert!(exact.value > 0.0);
+
+        // Four objectives is the first dimension without an exact method.
+        let surface = vec![vec![0.2, 0.6, 0.4, 0.5], vec![0.6, 0.2, 0.5, 0.3]];
+        let estimate = hypervolume_report(&surface, &[1.0, 1.0, 1.0, 1.0]);
+        assert!(!estimate.exact);
+        assert!(estimate.error > 0.0);
+        assert!(estimate.value > 0.0);
+    }
+
+    #[test]
     fn spacing_is_zero_on_a_uniform_line() {
         let front: Vec<Vec<f64>> = (0..5).map(|i| vec![i as f64, 4.0 - i as f64]).collect();
         assert_relative_eq!(spacing(&front), 0.0, epsilon = 1e-12);

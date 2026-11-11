@@ -79,7 +79,7 @@ cargo test moead::tests                # one module
 cargo test -- --nocapture              # keep println output
 ```
 
-The suite has 86 tests and runs in a few seconds in debug. It covers:
+The suite has 88 tests and runs in a few seconds in debug. It covers:
 
 - convergence on sphere, Rosenbrock, Rastrigin and Ackley for every adaptation and mutation
 - reproducibility at one and four threads, and identical history
