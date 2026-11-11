@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/hrIbaf3YyZjDPEOVZ+alQVpmCz4</id>
+  <title>arXiv Query: search_query=abs:"differential evolution" AND abs:"opposition-based learning"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:18Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22differential+evolution%22+AND+abs:%22opposition-based+learning%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>6</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1002.0745v1</id>
+    <title>Using CODEQ to Train Feed-forward Neural Networks</title>
+    <updated>2010-02-03T14:02:39Z</updated>
+    <link href="https://arxiv.org/abs/1002.0745v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1002.0745v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  CODEQ is a new, population-based meta-heuristic algorithm that is a hybrid of concepts from chaotic search, opposition-based learning, differential evolution and quantum mechanics. CODEQ has successfully been used to solve different types of problems (e.g. constrained, integer-programming, engineering) with excellent results. In this paper, CODEQ is used to train feed-forward neural networks. The proposed method is compared with particle swarm optimization and differential evolution algorithms on three data sets with encouraging results.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2010-02-03T14:02:39Z</published>
+    <arxiv:comment>8 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Mahamed G. H. Omran</name>
+    </author>
+    <author>
+      <name>Faisal al-Adwani</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1709.06909v2</id>
+    <title>Opposition based Ensemble Micro Differential Evolution</title>
+    <updated>2017-09-21T00:22:45Z</updated>
+    <link href="https://arxiv.org/abs/1709.06909v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1709.06909v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Differential evolution (DE) algorithm with a small population size is called Micro-DE (MDE). A small population size decreases the computational complexity but also reduces the exploration ability of DE by limiting the population diversity. In this paper, we propose the idea of combining ensemble mutation scheme selection and opposition-based learning concepts to enhance the diversity of population in MDE at mutation and selection stages. The proposed algorithm enhances the diversity of population by generating a random mutation scale factor per individual and per dimension, randomly assigning a mutation scheme to each individual in each generation, and diversifying individuals selection using opposition-based learning. This approach is easy to implement and does not require the setting of mutation scheme selection and mutation scale factor. Experimental results are conducted for a variety of objective functions with low and high dimensionality on the CEC Black- Box Optimization Benchmarking 2015 (CEC-BBOB 2015). The results show superior performance of the proposed algorithm compared to the other micro-DE algorithms.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-09-08T02:21:37Z</published>
+    <arxiv:comment>This paper is accepted for presentation at IEEE Symposium Series on Computational Intelligence (IEEE SSCI 2017), Hawaii, USA, 2017</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Hojjat Salehinejad</name>
+    </author>
+    <author>
+      <name>Shahryar Rahnamayan</name>
+    </author>
+    <author>
+      <name>Hamid R. Tizhoosh</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2106.15392v1</id>
+    <title>Differential Evolution-based Neural Network Training Incorporating a Centroid-based Strategy and Dynamic Opposition-based Learning</title>
+    <updated>2021-06-29T13:27:12Z</updated>
+    <link href="https://arxiv.org/abs/2106.15392v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2106.15392v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Training multi-layer neural networks (MLNNs), a challenging task, involves finding appropriate weights and biases. MLNN training is important since the performance of MLNNs is mainly dependent on these network parameters. However, conventional algorithms such as gradient-based methods, while extensively used for MLNN training, suffer from drawbacks such as a tendency to getting stuck in local optima. Population-based metaheuristic algorithms can be used to overcome these problems. In this paper, we propose a novel MLNN training algorithm, CenDE-DOBL, that is based on differential evolution (DE), a centroid-based strategy (Cen-S), and dynamic opposition-based learning (DOBL). The Cen-S approach employs the centroid of the best individuals as a member of population, while other members are updated using standard crossover and mutation operators. This improves exploitation since the new member is obtained based on the best individuals, while the employed DOBL strategy, which uses the opposite of an individual, leads to enhanced exploration. Our extensive experiments compare CenDE-DOBL to 26 conventional and population-based algorithms and confirm it to provide excellent MLNN training performance.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-06-29T13:27:12Z</published>
+    <arxiv:comment>IEEE Congress on Evolutionary Computation 2021 (CEC2021), 8 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Seyed Jalaleddin Mousavirad</name>
+    </author>
+    <author>
+      <name>Diego Oliva</name>
+    </author>
+    <author>
+      <name>Salvador Hinojosa</name>
+    </author>
+    <author>
+      <name>Gerald Schaefer</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2305.02731v2</id>
+    <title>A Cluster-Based Opposition Differential Evolution Algorithm Boosted by a Local Search for ECG Signal Classification</title>
+    <updated>2023-10-06T16:03:47Z</updated>
+    <link href="https://arxiv.org/abs/2305.02731v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2305.02731v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Electrocardiogram (ECG) signals, which capture the heart's electrical activity, are used to diagnose and monitor cardiac problems. The accurate classification of ECG signals, particularly for distinguishing among various types of arrhythmias and myocardial infarctions, is crucial for the early detection and treatment of heart-related diseases. This paper proposes a novel approach based on an improved differential evolution (DE) algorithm for ECG signal classification for enhancing the performance. In the initial stages of our approach, the preprocessing step is followed by the extraction of several significant features from the ECG signals. These extracted features are then provided as inputs to an enhanced multi-layer perceptron (MLP). While MLPs are still widely used for ECG signal classification, using gradient-based training methods, the most widely used algorithm for the training process, has significant disadvantages, such as the possibility of being stuck in local optimums. This paper employs an enhanced differential evolution (DE) algorithm for the training process as one of the most effective population-based algorithms. To this end, we improved DE based on a clustering-based strategy, opposition-based learning, and a local search. Clustering-based strategies can act as crossover operators, while the goal of the opposition operator is to improve the exploration of the DE algorithm. The weights and biases found by the improved DE algorithm are then fed into six gradient-based local search algorithms. In other words, the weights found by the DE are employed as an initialization point. Therefore, we introduced six different algorithms for the training process (in terms of different local search algorithms). In an extensive set of experiments, we showed that our proposed training algorithm could provide better results than the conventional training algorithms.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-05-04T11:10:30Z</published>
+    <arxiv:comment>44 pages, 9 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Mehran Pourvahab</name>
+    </author>
+    <author>
+      <name>Seyed Jalaleddin Mousavirad</name>
+    </author>
+    <author>
+      <name>Virginie Felizardo</name>
+    </author>
+    <author>
+      <name>Nuno Pombo</name>
+    </author>
+    <author>
+      <name>Henriques Zacarias</name>
+    </author>
+    <author>
+      <name>Hamzeh Mohammadigheymasi</name>
+    </author>
+    <author>
+      <name>Sebastião Pais</name>
+    </author>
+    <author>
+      <name>Seyed Nooreddin Jafari</name>
+    </author>
+    <author>
+      <name>Nuno M. Garcia</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1908.08011v2</id>
+    <title>A Fast and Efficient Stochastic Opposition-Based Learning for Differential Evolution in Numerical Optimization</title>
+    <updated>2020-05-26T06:52:29Z</updated>
+    <link href="https://arxiv.org/abs/1908.08011v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1908.08011v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A fast and efficient stochastic opposition-based learning (OBL) variant is proposed in this paper. OBL is a machine learning concept to accelerate the convergence of soft computing algorithms, which consists of simultaneously calculating an original solution and its opposite. Recently, a stochastic OBL variant called BetaCOBL was proposed, which is capable of controlling the degree of opposite solutions, preserving useful information held by original solutions, and preventing the waste of fitness evaluations. While it has shown outstanding performance compared to several state-of-the-art OBL variants, the high computational cost of BetaCOBL may hinder it from cost-sensitive optimization problems. Also, as it assumes that the decision variables of a given problem are independent, BetaCOBL may be ineffective for optimizing inseparable problems. In this paper, we propose an improved BetaCOBL that mitigates all the limitations. The proposed algorithm called iBetaCOBL reduces the computational cost from $O(NP^{2} \cdot D)$ to $O(NP \cdot D)$ ($NP$ and $D$ stand for population size and a dimension, respectively) using a linear time diversity measure. Also, the proposed algorithm preserves strongly dependent variables that are adjacent to each other using multiple exponential crossover. We used differential evolution (DE) variants to evaluate the performance of the proposed algorithm. The results of the performance evaluations on a set of 58 test functions show the excellent performance of iBetaCOBL compared to ten state-of-the-art OBL variants, including BetaCOBL.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-08-09T22:12:02Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Tae Jong Choi</name>
+    </author>
+    <author>
+      <name>Julian Togelius</name>
+    </author>
+    <author>
+      <name>Yun-Gyung Cheong</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2412.19763v1</id>
+    <title>Multi-population Differential Evolution for RSS based Cooperative Localization in Wireless Sensor Networks with Limited Communication Range</title>
+    <updated>2024-12-27T17:45:10Z</updated>
+    <link href="https://arxiv.org/abs/2412.19763v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2412.19763v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper presents a novel approach to deal with the cooperative localization problem in wireless sensor networks based on received signal strength measurements. In cooperative scenarios, the cost function of the localization problem becomes increasingly nonlinear and nonconvex due to the heightened interaction between sensor nodes, making the estimation of the positions of the target nodes more challenging. Although most of existing cooperative localization algorithms assure acceptable localization accuracy, their computational complexity increases dramatically, which may restrict their applicability. To reduce the computational complexity and provide competitive localization accuracy at the same time, we propose a localization algorithm based on the differential evolution with multiple populations, opposite-based learning, redirection, and anchoring. In this work, the cooperative localization cost function is split into several simpler cost functions, each of which accounts only for one individual target node. Then, each cost function is solved by a dedicated population of the proposed algorithm. In addition, an enhanced version of the proposed algorithm which incorporates the population midpoint scheme for further improvement in the localization accuracy is devised. Simulation results demonstrate that the proposed algorithms provide comparative localization accuracy with much lower computational complexity compared with the state-of-the-art algorithms.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-12-27T17:45:10Z</published>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Lismer Andres Caceres Najarro</name>
+    </author>
+    <author>
+      <name>Iickho Song</name>
+    </author>
+    <author>
+      <name>Muhammad Salman</name>
+    </author>
+    <author>
+      <name>Kiseon Kim</name>
+    </author>
+  </entry>
+</feed>

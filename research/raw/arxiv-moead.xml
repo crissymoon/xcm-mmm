@@ -1,0 +1,242 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/1HQpZCGSqLv6hNED4mTCPH+jj/c</id>
+  <title>arXiv Query: search_query=abs:"MOEA/D" AND abs:"decomposition"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:20Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22MOEA/D%22+AND+abs:%22decomposition%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>52</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1802.03608v1</id>
+    <title>MOEA/D with Angle-based Constrained Dominance Principle for Constrained Multi-objective Optimization Problems</title>
+    <updated>2018-02-10T15:12:03Z</updated>
+    <link href="https://arxiv.org/abs/1802.03608v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1802.03608v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper proposes a novel constraint-handling mechanism named angle-based constrained dominance principle (ACDP) embedded in a decomposition-based multi-objective evolutionary algorithm (MOEA/D) to solve constrained multi-objective optimization problems (CMOPs). To maintain the diversity of the working population, ACDP utilizes the information of the angle of solutions to adjust the dominance relation of solutions during the evolutionary process. This paper uses 14 benchmark instances to evaluate the performance of the MOEA/D with ACDP (MOEA/D-ACDP). Additionally, an engineering optimization problem (which is I-beam optimization problem) is optimized. The proposed MOEA/D-ACDP, and four other decomposition-based CMOEAs, including C-MOEA/D, MOEA/D-CDP, MOEA/D-Epsilon and MOEA/D-SR are tested by the above benchmarks and the engineering application. The experimental results manifest that MOEA/D-ACDP is significantly better than the other four CMOEAs on these test instances and the real-world case, which indicates that ACDP is more effective for solving CMOPs.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-02-10T15:12:03Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Zhun Fan</name>
+    </author>
+    <author>
+      <name>Yi Fang</name>
+    </author>
+    <author>
+      <name>Wenji Li</name>
+    </author>
+    <author>
+      <name>Xinye Cai</name>
+    </author>
+    <author>
+      <name>Caimin Wei</name>
+    </author>
+    <author>
+      <name>Erik Goodman</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1707.08767v1</id>
+    <title>An Improved Epsilon Constraint-handling Method in MOEA/D for CMOPs with Large Infeasible Regions</title>
+    <updated>2017-07-27T07:59:31Z</updated>
+    <link href="https://arxiv.org/abs/1707.08767v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1707.08767v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper proposes an improved epsilon constraint-handling mechanism, and combines it with a decomposition-based multi-objective evolutionary algorithm (MOEA/D) to solve constrained multi-objective optimization problems (CMOPs). The proposed constrained multi-objective evolutionary algorithm (CMOEA) is named MOEA/D-IEpsilon. It adjusts the epsilon level dynamically according to the ratio of feasible to total solutions (RFS) in the current population. In order to evaluate the performance of MOEA/D-IEpsilon, a new set of CMOPs with two and three objectives is designed, having large infeasible regions (relative to the feasible regions), and they are called LIR-CMOPs. Then the fourteen benchmarks, including LIR-CMOP1-14, are used to test MOEA/D-IEpsilon and four other decomposition-based CMOEAs, including MOEA/D-Epsilon, MOEA/D-SR, MOEA/D-CDP and C-MOEA/D. The experimental results indicate that MOEA/D-IEpsilon is significantly better than the other four CMOEAs on all of the test instances, which shows that MOEA/D-IEpsilon is more suitable for solving CMOPs with large infeasible regions. Furthermore, a real-world problem, namely the robot gripper optimization problem, is used to test the five CMOEAs. The experimental results demonstrate that MOEA/D-IEpsilon also outperforms the other four CMOEAs on this problem.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-07-27T07:59:31Z</published>
+    <arxiv:comment>17 pages, 7 figures and 6 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Zhun Fan</name>
+    </author>
+    <author>
+      <name>Wenji Li</name>
+    </author>
+    <author>
+      <name>Xinye Cai</name>
+    </author>
+    <author>
+      <name>Han Huang</name>
+    </author>
+    <author>
+      <name>Yi Fang</name>
+    </author>
+    <author>
+      <name>Yugen You</name>
+    </author>
+    <author>
+      <name>Jiajie Mo</name>
+    </author>
+    <author>
+      <name>Caimin Wei</name>
+    </author>
+    <author>
+      <name>Erik Goodman</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2109.05741v1</id>
+    <title>MOEA/D with Adaptative Number of Weight Vectors</title>
+    <updated>2021-09-13T07:05:10Z</updated>
+    <link href="https://arxiv.org/abs/2109.05741v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2109.05741v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The Multi-Objective Evolutionary Algorithm based on Decomposition (MOEA/D) is a popular algorithm for solving Multi-Objective Problems (MOPs). The main component of MOEA/D is to decompose a MOP into easier sub-problems using a set of weight vectors. The choice of the number of weight vectors significantly impacts the performance of MOEA/D. However, the right choice for this number varies, given different MOPs and search stages.
+  Here we adaptively change the number of vectors by removing unnecessary vectors and adding new ones in empty areas of the objective space.
+  Our MOEA/D variant uses the Consolidation Ratio to decide when to change the number of vectors, and then it decides where to add or remove these weighted vectors.
+  We investigate the effects of this adaptive MOEA/D against MOEA/D with a poorly chosen set of vectors, a MOEA/D with fine-tuned vectors and MOEA/D-AWA on the DTLZ and ZDT benchmark functions. We analyse the algorithms in terms of hypervolume, IGD and entropy performance.
+  Our results show that the proposed method is equivalent to MOEA/D with fine-tuned vectors and superior to MOEA/D with poorly defined vectors. Thus, our adaptive mechanism mitigates problems related to the choice of the number of weight vectors in MOEA/D, increasing the final performance of MOEA/D by filling empty areas of the objective space while avoiding premature stagnation of the search progress.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-09-13T07:05:10Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Yuri Lavinas</name>
+    </author>
+    <author>
+      <name>Abe Mitsu Teru</name>
+    </author>
+    <author>
+      <name>Yuta Kobayashi</name>
+    </author>
+    <author>
+      <name>Claus Aranha</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.14571v2</id>
+    <title>A Survey of Decomposition-Based Evolutionary Multi-Objective Optimization: Part I-Past and Future</title>
+    <updated>2024-10-21T23:13:24Z</updated>
+    <link href="https://arxiv.org/abs/2404.14571v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.14571v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Decomposition has been the mainstream approach in classic mathematical programming for multi-objective optimization and multi-criterion decision-making. However, it was not properly studied in the context of evolutionary multi-objective optimization (EMO) until the development of multi-objective evolutionary algorithm based on decomposition (MOEA/D). In this two-part survey series, we use MOEA/D as the representative of decomposition-based EMO to review the up-to-date development in this area, and systematically and comprehensively analyze its research landscape. In the first part, we present a comprehensive survey of the development of MOEA/D from its origin to the current state-of-the-art approaches. In order to be self-contained, we start with a step-by-step tutorial that aims to help a novice quickly get onto the working mechanism of MOEA/D. Then, selected major developments of MOEA/D are reviewed according to its core design components including weight vector settings, subproblem formulations, selection mechanisms and reproduction operators. Besides, we also overview some selected advanced topics for constraint handling, optimization in dynamic and uncertain environments, computationally expensive objective functions, and preference incorporation. In the final part, we shed some light on emerging directions for future developments.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-22T20:34:46Z</published>
+    <arxiv:comment>40 pages, 8 figures. arXiv admin note: substantial text overlap with arXiv:2108.09588</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Ke Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.35334v1</id>
+    <title>A Dynamic Decomposition Strategy for the MOEA/D With Proven Performance Guarantees</title>
+    <updated>2026-10-26T12:32:13Z</updated>
+    <link href="https://arxiv.org/abs/2610.35334v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.35334v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The MOEA/D is one of the most successful multi-objective evolutionary algorithms. It operates by decomposing the optimization problem into single-objective subproblems, which are then solved in a co-evolutionary manner. The performance of the MOEA/D depends critically on this decomposition. In this work, we propose a novel way to adjust this decomposition on the fly, for the case of discrete bi-objective optimization. Different from all previous works in this direction, we support our new algorithm with a proven performance guarantee. This is the first work that rigorously proves the runtime of a dynamic multi-objective evolutionary algorithm. For monotonic distortions of the simple LOTZ benchmark, it is known that classic decompositions leave large holes in the Pareto front, making it very hard for the MOEA/D to cover the entire Pareto front. In contrast, we prove that our self-adjusting MOEA/D solves all these LOTZ problems in an expected number of $O(n^4)$ function evaluations. This relatively low runtime as well as the details of our mathematical proof show that the dynamic decomposition strategy indeed evolves a decomposition adjusted to each of these problem instances.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-26T12:32:13Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Benjamin Doerr</name>
+    </author>
+    <author>
+      <name>Martin S. Krejca</name>
+    </author>
+    <author>
+      <name>Noé Weeks</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2108.09588v1</id>
+    <title>Decomposition Multi-Objective Evolutionary Optimization: From State-of-the-Art to Future Opportunities</title>
+    <updated>2021-08-21T22:21:44Z</updated>
+    <link href="https://arxiv.org/abs/2108.09588v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2108.09588v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Decomposition has been the mainstream approach in the classic mathematical programming for multi-objective optimization and multi-criterion decision-making. However, it was not properly studied in the context of evolutionary multi-objective optimization until the development of multi-objective evolutionary algorithm based on decomposition (MOEA/D). In this article, we present a comprehensive survey of the development of MOEA/D from its origin to the current state-of-the-art approaches. In order to be self-contained, we start with a step-by-step tutorial that aims to help a novice quickly get onto the working mechanism of MOEA/D. Then, selected major developments of MOEA/D are reviewed according to its core design components including weight vector settings, sub-problem formulations, selection mechanisms and reproduction operators. Besides, we also overviews some further developments for constraint handling, computationally expensive objective functions, preference incorporation, and real-world applications. In the final part, we shed some lights on emerging directions for future developments.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-08-21T22:21:44Z</published>
+    <arxiv:comment>45 pages, 7 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Ke Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1511.05625v1</id>
+    <title>MOEA/D-GM: Using probabilistic graphical models in MOEA/D for solving combinatorial optimization problems</title>
+    <updated>2015-11-18T00:04:35Z</updated>
+    <link href="https://arxiv.org/abs/1511.05625v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1511.05625v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Evolutionary algorithms based on modeling the statistical dependencies (interactions) between the variables have been proposed to solve a wide range of complex problems. These algorithms learn and sample probabilistic graphical models able to encode and exploit the regularities of the problem. This paper investigates the effect of using probabilistic modeling techniques as a way to enhance the behavior of MOEA/D framework. MOEA/D is a decomposition based evolutionary algorithm that decomposes a multi-objective optimization problem (MOP) in a number of scalar single-objective subproblems and optimizes them in a collaborative manner. MOEA/D framework has been widely used to solve several MOPs. The proposed algorithm, MOEA/D using probabilistic Graphical Models (MOEA/D-GM) is able to instantiate both univariate and multi-variate probabilistic models for each subproblem. To validate the introduced framework algorithm, an experimental study is conducted on a multi-objective version of the deceptive function Trap5. The results show that the variant of the framework (MOEA/D-Tree), where tree models are learned from the matrices of the mutual information between the variables, is able to capture the structure of the problem. MOEA/D-Tree is able to achieve significantly better results than both MOEA/D using genetic operators and MOEA/D using univariate probability models, in terms of the approximation to the true Pareto front.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2015-11-18T00:04:35Z</published>
+    <arxiv:comment>13 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Murilo Zangari de Souza</name>
+    </author>
+    <author>
+      <name>Roberto Santana</name>
+    </author>
+    <author>
+      <name>Aurora Trinidad Ramirez Pozo</name>
+    </author>
+    <author>
+      <name>Alexander Mendiburu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.00265v1</id>
+    <title>Review and Analysis of Three Components of Differential Evolution Mutation Operator in MOEA/D-DE</title>
+    <updated>2020-10-01T09:16:30Z</updated>
+    <link href="https://arxiv.org/abs/2010.00265v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.00265v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A decomposition-based multi-objective evolutionary algorithm with a differential evolution variation operator (MOEA/D-DE) shows high performance on challenging multi-objective problems (MOPs). The DE mutation consists of three key components: a mutation strategy, an index selection method for parent individuals, and a bound-handling method. However, the configuration of the DE mutation operator that should be used for MOEA/D-DE has not been thoroughly investigated in the literature. This configuration choice confuses researchers and users of MOEA/D-DE. To address this issue, we present a review of the existing configurations of the DE mutation operator in MOEA/D-DE and systematically examine the influence of each component on the performance of MOEA/D-DE. Our review reveals that the configuration of the DE mutation operator differs depending on the source code of MOEA/D-DE. In our analysis, a total of 30 configurations (three index selection methods, two mutation strategies, and five bound handling methods) are investigated on 16 MOPs with up to five objectives. Results show that each component significantly affects the performance of MOEA/D-DE. We also present the most suitable configuration of the DE mutation operator, which maximizes the effectiveness of MOEA/D-DE.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-01T09:16:30Z</published>
+    <arxiv:comment>This is an accepted version of a paper published in Soft Computing</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Ryoji Tanabe</name>
+    </author>
+    <author>
+      <name>Hisao Ishibuchi</name>
+    </author>
+    <arxiv:doi>10.1007/s00500-019-03842-6</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s00500-019-03842-6" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1807.06731v1</id>
+    <title>The MOEADr Package - A Component-Based Framework for Multiobjective Evolutionary Algorithms Based on Decomposition</title>
+    <updated>2018-07-18T01:14:03Z</updated>
+    <link href="https://arxiv.org/abs/1807.06731v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1807.06731v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multiobjective Evolutionary Algorithms based on Decomposition (MOEA/D) represent a widely used class of population-based metaheuristics for the solution of multicriteria optimization problems. We introduce the MOEADr package, which offers many of these variants as instantiations of a component-oriented framework. This approach contributes for easier reproducibility of existing MOEA/D variants from the literature, as well as for faster development and testing of new composite algorithms. The package offers an standardized, modular implementation of MOEA/D based on this framework, which was designed aiming at providing researchers and practitioners with a standard way to discuss and express MOEA/D variants. In this paper we introduce the design principles behind the MOEADr package, as well as its current components. Three case studies are provided to illustrate the main aspects of the package.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-07-18T01:14:03Z</published>
+    <arxiv:comment>41 pages. 5 figures. Submitted to the Journal of Statistical Software</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Felipe Campelo</name>
+    </author>
+    <author>
+      <name>Lucas S. Batista</name>
+    </author>
+    <author>
+      <name>Claus Aranha</name>
+    </author>
+    <arxiv:doi>10.18637/jss.v092.i06</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.18637/jss.v092.i06" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.00818v1</id>
+    <title>An Analysis of Control Parameters of MOEA/D Under Two Different Optimization Scenarios</title>
+    <updated>2020-10-02T07:35:35Z</updated>
+    <link href="https://arxiv.org/abs/2010.00818v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.00818v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>An unbounded external archive (UEA), which stores all nondominated solutions found during the search process, is frequently used to evaluate the performance of multi-objective evolutionary algorithms (MOEAs) in recent studies. A recent benchmarking study also shows that decomposition-based MOEA (MOEA/D) is competitive with state-of-the-art MOEAs when the UEA is incorporated into MOEA/D. However, a parameter study of MOEA/D using the UEA has not yet been performed. Thus, it is unclear how control parameter settings influence the performance of MOEA/D with the UEA. In this paper, we present an analysis of control parameters of MOEA/D under two performance evaluation scenarios. One is a final population scenario where the performance assessment of MOEAs is performed based on all nondominated solutions in the final population, and the other is a reduced UEA scenario where it is based on a pre-specified number of selected nondominated solutions from the UEA. Control parameters of MOEA/D investigated in this paper include the population size, scalarizing functions, and the penalty parameter of the penalty-based boundary intersection (PBI) function. Experimental results indicate that suitable settings of the three control parameters significantly depend on the choice of an optimization scenario. We also analyze the reason why the best parameter setting is totally different for each scenario.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-02T07:35:35Z</published>
+    <arxiv:comment>This is an accepted version of a paper published in Applied Soft Computing</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Ryoji Tanabe</name>
+    </author>
+    <author>
+      <name>Hisao Ishibuchi</name>
+    </author>
+    <arxiv:doi>10.1016/j.asoc.2018.05.014</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.asoc.2018.05.014" title="doi"/>
+  </entry>
+</feed>

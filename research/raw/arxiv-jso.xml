@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/eJj5CUor3Kz2BmUFn8bzSEguK6U</id>
+  <title>arXiv Query: search_query=abs:"differential evolution" AND abs:"population size reduction"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:16Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22differential+evolution%22+AND+abs:%22population+size+reduction%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>4</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2610.26202v1</id>
+    <title>Hybrid metaheuristics for architectural design optimization under small evaluation and wall-clock budgets</title>
+    <updated>2026-10-19T11:29:14Z</updated>
+    <link href="https://arxiv.org/abs/2610.26202v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.26202v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Architectural and structural design optimization in parametric software affords about a thousand evaluations of an expensive model for problems with tens of variables, a regime for which most metaheuristics were not designed. On the side of artificial intelligence, two hybrid metaheuristics are proposed: a covariance matrix adaptation evolution strategy (CMA-ES) whose sampling is enriched with differential-evolution trial vectors, and a particle swarm with success-history parameter adaptation, differential-evolution injection and local refinement. A budget-aware delay of population-size reduction in adaptive differential evolution is also proposed. Under a hard cap of 1,200 evaluations, all counted, the CMA-ES hybrid ranks first on seven shifted and rotated functions at 10 and 30 variables and beats CMA-ES on six of seven functions at 30 variables. Ablations attribute this gain to the injection and show that a local search pays off only when its result re-enters the population. The delayed schedule improves three adaptive differential-evolution variants in 40 of 51 comparisons, with no loss. On the side of engineering application, in Grasshopper the CMA-ES hybrid and plain CMA-ES are never significantly worse than the optimizers of Galapagos, SilverEye, Opossum and Tunny on travelling-salesman instances and on a built 85-variable free-form shell, where they end 48 % below the best external tool in 15 minutes. On a 22-variable building-performance problem with binary choices, differential evolution leads instead. Shifting and rotating the functions reverses the rank of Harris hawks optimization. Solvers should therefore be selected by problem structure and stopping time, not by a single ranking.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-19T11:29:14Z</published>
+    <arxiv:comment>39 pages, 10 figures, 6 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Luciano Ambrosini</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2102.11275v1</id>
+    <title>Large Scale Global Optimization Algorithms for IoT Networks: A Comparative Study</title>
+    <updated>2021-02-22T18:59:22Z</updated>
+    <link href="https://arxiv.org/abs/2102.11275v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2102.11275v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The advent of Internet of Things (IoT) has bring a new era in communication technology by expanding the current inter-networking services and enabling the machine-to-machine communication. IoT massive deployments will create the problem of optimal power allocation. The objective of the optimization problem is to obtain a feasible solution that minimizes the total power consumption of the WSN, when the error probability at the fusion center meets certain criteria. This work studies the optimization of a wireless sensor network (WNS) at higher dimensions by focusing to the power allocation of decentralized detection. More specifically, we apply and compare four algorithms designed to tackle Large scale global optimization (LGSO) problems. These are the memetic linear population size reduction and semi-parameter adaptation (MLSHADE-SPA), the contribution-based cooperative coevolution recursive differential grouping (CBCC-RDG3), the differential grouping with spectral clustering-differential evolution cooperative coevolution (DGSC-DECC), and the enhanced adaptive differential evolution (EADE). To the best of the authors knowledge, this is the first time that LGSO algorithms are applied to the optimal power allocation problem in IoT networks. We evaluate the algorithms performance in several different cases by applying them in cases with 300, 600 and 800 dimensions.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-02-22T18:59:22Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Sotirios K. Goudos</name>
+    </author>
+    <author>
+      <name>Achilles D. Boursianis</name>
+    </author>
+    <author>
+      <name>Ali Wagdy Mohamed</name>
+    </author>
+    <author>
+      <name>Shaohua Wan</name>
+    </author>
+    <author>
+      <name>Panagiotis Sarigiannidis</name>
+    </author>
+    <author>
+      <name>George K. Karagiannidis</name>
+    </author>
+    <author>
+      <name>Ponnuthurai N. Suganthan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.18429v5</id>
+    <title>Robust Differential Evolution via Nonlinear Population Size Reduction and Adaptive Restart: The ARRDE Algorithm</title>
+    <updated>2026-05-26T22:55:52Z</updated>
+    <link href="https://arxiv.org/abs/2511.18429v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.18429v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Robustness across heterogeneous optimization regimes remains a central challenge in bound-constrained continuous optimization. In practice, users often prefer optimizers that remain reliable across different dimensionalities, landscape structures, and evaluation budgets. Yet many Differential Evolution (DE) variants that perform strongly in one regime degrade substantially when transferred to others. To address this issue, we propose the Adaptive Restart--Refine Differential Evolution (ARRDE) algorithm, a DE variant designed explicitly for cross-regime robustness. ARRDE combines an adaptive restart--refine strategy, a nonlinear population-size reduction schedule that depends on problem dimensionality, and a budget-aware population-initialization rule for restricted-budget settings.
+  Because robustness cannot be established credibly from a narrow experimental setting, we evaluate ARRDE on five benchmark suites: CEC2011, CEC2017, CEC2019, CEC2020, and CEC2022. These suites span markedly different dimensions, landscape characteristics, and evaluation budgets, making this, to the best of our knowledge, one of the most comprehensive robustness-oriented evaluations reported for a proposed DE variant in this context. Since their official performance metrics emphasize different aspects and are not directly comparable, we additionally introduce a bounded accuracy-based scoring metric derived from relative error for cross-suite robustness assessment. Using both the official suite-specific metrics and the proposed unified metric, ARRDE demonstrates consistently strong performance and one of the most stable aggregate profiles across the five suites. These results support ARRDE as a competitive DE variant for robust optimization across heterogeneous benchmark regimes.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-23T12:50:25Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Khoirul Faiq Muzakka</name>
+    </author>
+    <author>
+      <name>Ahsani Hafizhu Shali</name>
+    </author>
+    <author>
+      <name>Haris Suhendar</name>
+    </author>
+    <author>
+      <name>Sören Möller</name>
+    </author>
+    <author>
+      <name>Martin Finsterbusch</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.27764v1</id>
+    <title>DE-2LS: Differential Evolution with Lightweight Late Local Search for Constrained Numerical Optimization</title>
+    <updated>2026-06-26T06:45:46Z</updated>
+    <link href="https://arxiv.org/abs/2606.27764v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.27764v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Constrained single-objective numerical optimization requires a careful balance among feasibility, objective convergence, and computational efficiency under a fixed function-evaluation budget. This paper proposes DE-2LS, a late-stage, locally search-enhanced variant of differential evolution built on the RDEx framework. The proposed method preserves the original RDEx components, including mutation and crossover operators, success-history adaptation, archive mechanism, population-size reduction, and $ε$-based constraint handling. A lightweight coordinate-pattern local search is added as a guarded polishing component around the current best solution. It is activated only in the late stage of the run, uses a small evaluation budget, and accepts candidates through a feasibility-aware comparison rule. Ablation results show that the finalized DE-2LS configuration achieves the best U-score among all tested variants, confirming that controlled late-stage refinement is more effective than aggressive or premature local search. In the direct comparison with RDEx, DE-2LS achieves a 5.58\% gain in U-score. In the four-algorithm comparison, DE-2LS obtains the highest overall U-score of 80968 and the best total rank of 48 among RDEx, CL-SRDE, and UDE-III. These results indicate that DE-2LS improves the exploitation capability of the RDEx-based search framework while preserving its speed advantage under the combined speed-accuracy scoring criterion. The source code of DE-2LS is available at https://github.com/ChauhanDikshit?tab=repositories.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-26T06:45:46Z</published>
+    <arxiv:comment>10 pages, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Dikshit Chauhan</name>
+    </author>
+    <author>
+      <name>Anupam Trivedi</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,623 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 10509589,
+    "items": [
+      {
+        "DOI": "10.1109/cec.2014.6900380",
+        "title": [
+          "Improving the search performance of SHADE using linear population size reduction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2014,
+              7
+            ]
+          ]
+        },
+        "container-title": [
+          "2014 IEEE Congress on Evolutionary Computation (CEC)"
+        ],
+        "is-referenced-by-count": 1376,
+        "author": [
+          {
+            "given": "Ryoji",
+            "family": "Tanabe",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Alex S.",
+            "family": "Fukunaga",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/incos.2016.50",
+        "title": [
+          "Network Based Linear Population Size Reduction in SHADE"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2016,
+              9
+            ]
+          ]
+        },
+        "container-title": [
+          "2016 International Conference on Intelligent Networking and Collaborative Systems (INCoS)"
+        ],
+        "is-referenced-by-count": 16,
+        "author": [
+          {
+            "given": "Adam",
+            "family": "Viktorin",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Michal",
+            "family": "Pluhacek",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Roman",
+            "family": "Senkerik",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/iaeac47372.2019.8997762",
+        "title": [
+          "Linear Distribution-based SHADE with Variable Population Size"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2019,
+              12
+            ]
+          ]
+        },
+        "container-title": [
+          "2019 IEEE 4th Advanced Information Technology, Electronic and Automation Control Conference (IAEAC)"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Zhao-Guang",
+            "family": "Liu",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Shandong University of Finance and Economics,School of Computer Science and Technology,Jinan,China"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.21203/rs.3.rs-790818/v1",
+        "title": [
+          "Improving Bees Algorithm Using\nGradual Search Space Reduction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              8,
+              9
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "abstract": "<jats:title>Abstract</jats:title>\n        <jats:p>The aim of this research is to propose a new technique to improve Bees Algorithm. Bees Algorithm is one of the well-known metaheuristic optimization method which have been subject to several attempts to improve it by overcoming some of the weaknesses. The suggested method is derived from the numerical optimization methods, namely bracketing and region elimination methods. It employs an adaption of the regional elimination method to achieve abandonment and reduction of search space within the Bees Algorithm. The utilization of the exhaustive search involves exploring the whole search space to find the optimum at equally located intervals. To assess performance, the proposed method was evaluated on twenty-four benchmark functions and two engineering problems. The acquired result indicated a statistically significant improvement.</jats:p>",
+        "author": [
+          {
+            "given": "Turki",
+            "family": "Binbakir",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "University of Birmingham Edgbaston campus: University of Birmingham"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.14210/cotb.v11n1.p351-358",
+        "title": [
+          "L-SHADE with Alternative Population Size Reduction for Unconstrained Continuous Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2020,
+              9,
+              4
+            ]
+          ]
+        },
+        "container-title": [
+          "Anais do XI Computer on the Beach - COTB '20"
+        ],
+        "is-referenced-by-count": 2,
+        "abstract": "<jats:p>Differential Evolution (DE) is a powerful and versatile algorithmfor numerical optimization, but one of its downsides is its numberof parameters that need to be tuned. Multiple techniques have beenproposed to self-adapt DE\u2019s parameters, with L-SHADE being oneof the most well established in the literature. This work presentsthe A-SHADE algorithm, which modifies the population size reductionschema of L-SHADE, and also EB-A-SHADE, which applies amutation strategy hybridization framework to A-SHADE. Thesealgorithms are applied to the CEC2013 benchmark set with 100dimensions, and it\u2019s shown that A-SHADE and EB-A-SHADE canachieve competitive results.</jats:p>",
+        "author": [
+          {
+            "given": "Christopher",
+            "family": "Renkavieski",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Rafael",
+            "family": "Stubs Parpinelli",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1364/oe.550701",
+        "title": [
+          "Performance analysis of the optimized equilibrium optimizer algorithm using linear population size reduction in the coherent free-space optical communication system"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              3,
+              4
+            ]
+          ]
+        },
+        "container-title": [
+          "Optics Express"
+        ],
+        "is-referenced-by-count": 4,
+        "abstract": "<jats:p>Sensor-less adaptive optics (SLAO) systems are extensively employed due to their ability to effectively mitigate the adverse impact of atmospheric turbulence on coherent free-space optical communication (CFSOC) systems. The control algorithm dictates the corrective capabilities of the SLAO system. For this work, we employ the optimized equilibrium optimizer algorithm using linear population size reduction (LOEO) as the control algorithm. The LOEO algorithm is an enhanced version of the equilibrium optimizer (EO) algorithm. More precisely, we enhanced the control parameters, introduced the linear population size reduction (LPSR) strategy, and modified the search framework. Theoretical study and numerical simulations demonstrate that the LOEO algorithm exhibits exceptional precision, rapid correction speed, and strong robustness. The LOEO algorithm enhances the speed of correction by approximately 50% compared to the EO algorithm, resulting in a correction speed that is 15.92 times faster than the SPGD algorithm. The experimental results demonstrate that the LOEO algorithm is capable of efficiently rectifying the distorted wavefront phase aberration. This algorithm is well-suited for SLAO systems and can enhance the communication performance of the CFSOC systems.</jats:p>",
+        "author": [
+          {
+            "given": "Zhimin",
+            "family": "Wang",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "id": [
+                  {
+                    "id": "https://ror.org/00js3aw79",
+                    "id-type": "ROR",
+                    "asserted-by": "publisher"
+                  }
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Jingtai",
+            "family": "Cao",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Changchun Institute of Optics, Fine Mechanics and Physics, Chinese Academy of Sciences"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Xingxin",
+            "family": "Fu",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Changchun Institute of Optics, Fine Mechanics and Physics, Chinese Academy of Sciences"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0003-0167-646X",
+            "authenticated-orcid": true,
+            "given": "Wei",
+            "family": "Liu",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "id": [
+                  {
+                    "id": "https://ror.org/00js3aw79",
+                    "id-type": "ROR",
+                    "asserted-by": "publisher"
+                  }
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/978-981-16-1209-1_1",
+        "title": [
+          "Improving the Performance of\u00a0QUATRE-EAR Using Linear Population Size Reduction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021
+            ]
+          ]
+        },
+        "container-title": [
+          "Smart Innovation, Systems and Technologies",
+          "Advances in Smart Vehicular Technology, Transportation, Communication and Applications"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Zhenyu",
+            "family": "Meng",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Yuxin",
+            "family": "Chen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Cheng",
+            "family": "Yang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Yuxin",
+            "family": "Zhong",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jeng-Shyang",
+            "family": "Pan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Fang",
+            "family": "Lin",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/ijcnn.1991.170736",
+        "title": [
+          "Learning neural network weights using genetic algorithms-improving performance by search-space reduction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1991
+            ]
+          ]
+        },
+        "container-title": [
+          "[Proceedings] 1991 IEEE International Joint Conference on Neural Networks"
+        ],
+        "is-referenced-by-count": 20,
+        "author": [
+          {
+            "given": "M.",
+            "family": "Srinivas",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "L.M.",
+            "family": "Patnaik",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.knosys.2023.110297",
+        "title": [
+          "Memory, evolutionary operator, and local search based improved Grey Wolf Optimizer with linear population size reduction technique"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023,
+              3
+            ]
+          ]
+        },
+        "container-title": [
+          "Knowledge-Based Systems"
+        ],
+        "is-referenced-by-count": 105,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-7712-6272",
+            "authenticated-orcid": false,
+            "given": "Rasel",
+            "family": "Ahmed",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0001-8108-6608",
+            "authenticated-orcid": false,
+            "given": "Gade Pandu",
+            "family": "Rangaiah",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Shuhaimi",
+            "family": "Mahadzir",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Seyedali",
+            "family": "Mirjalili",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0003-1754-4883",
+            "authenticated-orcid": false,
+            "given": "Mohamed H.",
+            "family": "Hassan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Salah",
+            "family": "Kamel",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.20944/preprints202308.0684.v1",
+        "title": [
+          "Improving Photovoltaic MPPT Performance through PSO Dynamic Swarm Size Reduction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023,
+              8,
+              8
+            ]
+          ]
+        },
+        "is-referenced-by-count": 11,
+        "abstract": "<jats:p>Efficient energy extraction in photovoltaic (PV) systems relies on the effective implementation of Maximum Power Point Tracking (MPPT) methods. Conventional MPPT techniques often suffer from slow convergence speeds and suboptimal tracking performance, particularly under dynamic variation of environmental conditions. Smart optimization algorithms (SOA) using metaheuristic optimization algorithms can avoid this limitation inherent in the conventional MPPT methods. The problem of slow convergence of the SOA is avoided in this paper using a novel strategy called Swarm Size Reduction (SSR) utilized with Particle Swarm Optimization (PSO) algorithm, specifically designed to achieve short convergence time (CT) while maintaining exceptional tracking accuracy. The novelty of the proposed MPPT method introduced in this paper is the dynamic reduction of the swarm size of the PSO for improved performance of the MPPT of the PV systems. This adaptive reduction approach allows the algorithm to efficiently explore the solution space of PV systems and rapidly exploit to identify the global maximum power point (GMPP) even under fast fluctuation of uneven solar irradiance and temperature. This pioneering ultra-fast MPPT method represents a significant advancement in PV system efficiency and promotes the wider adoption of solar energy as a reliable and sustainable power source. The novel adaptive PSO algorithm also opens new possibilities for further innovations in optimization-driven applications, extending its potential impact on a diverse range of real-world challenges. The results obtained from this proposed strategy are compared with several optimization algorithms to validate its superiority.</jats:p>",
+        "author": [
+          {
+            "given": "Adel O.",
+            "family": "Baatiah",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-9831-7182",
+            "authenticated-orcid": false,
+            "given": "Ali M.",
+            "family": "Eltamaly",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Majed A.",
+            "family": "Alotaibi",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

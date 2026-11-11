@@ -162,6 +162,41 @@ fn population_reduction_can_be_switched_off() {
     assert_eq!(out.population, cfg.resolved_population(5));
 }
 
+#[test]
+fn an_explicit_x_pbest_schedule_changes_the_run() {
+    let problem = sphere(6);
+    let constant = DeConfig {
+        budget: 4_000,
+        seed: 3,
+        ..DeConfig::default()
+    };
+    let scheduled = DeConfig {
+        p_best: 0.25,
+        p_best_final: 0.125,
+        ..constant.clone()
+    };
+    let a = minimize(&problem, &constant);
+    let b = minimize(&problem, &scheduled);
+    assert_eq!(a.evaluations, b.evaluations);
+    assert_eq!(a.history.len(), b.history.len());
+    // Both schedules solve a sphere, so the difference is in the path, not in
+    // the answer. The histories must still diverge, or the knob is not wired.
+    assert_ne!(a.history[1], b.history[1]);
+    assert!(b.best_objective() < 1e-8, "best {:.3e}", b.best_objective());
+}
+
+#[test]
+#[should_panic(expected = "p_best_final")]
+fn a_negative_x_pbest_endpoint_is_rejected() {
+    let problem = sphere(4);
+    let cfg = DeConfig {
+        budget: 400,
+        p_best_final: -0.1,
+        ..DeConfig::default()
+    };
+    minimize(&problem, &cfg);
+}
+
 /// Minimise `sum x^2` subject to `x0 >= 1`, whose optimum is at `x = (1, 0, ...)`
 /// with value one.
 struct Constrained {

@@ -1,0 +1,2098 @@
+{
+ "readings": {
+  "queries": 28,
+  "papers": 146,
+  "by_source": {
+   "openalex": 23,
+   "arxiv": 49,
+   "crossref": 74
+  },
+  "with_abstract": 78
+ },
+ "papers": [
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/s10489-007-0091-x",
+   "title": "Population size reduction for the differential evolution algorithm",
+   "date": "2007",
+   "venue": "Applied Intelligence",
+   "citations": 318,
+   "authors": [
+    "Janez Brest",
+    "Mirjam Sepesy Mau\u010dec"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/s00500-010-0644-5",
+   "title": "Self-adaptive differential evolution algorithm using population size reduction and three strategies",
+   "date": "2010",
+   "venue": "Soft Computing",
+   "citations": 173,
+   "authors": [
+    "Janez Brest",
+    "Mirjam Sepesy Mau\u010dec"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1016/j.swevo.2018.10.013",
+   "title": "Distance based parameter adaptation for Success-History based Differential Evolution",
+   "date": "2018",
+   "venue": "Swarm and Evolutionary Computation",
+   "citations": 154,
+   "authors": [],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2021.3060811",
+   "title": "Learning Adaptive Differential Evolution Algorithm From Optimization Experiences by Policy Gradient",
+   "date": "2021",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 152,
+   "authors": [],
+   "abstract": "Differential evolution is one of the most prestigious population-based stochastic optimization algorithm for black-box problems. The performance of a differential evolution algorithm depends highly on its mutation and crossover strategy and associated control parameters. However, the determination process for the most suitable parameter setting is troublesome and time consuming. Adaptive control parameter methods that can adapt to problem landscape and optimization environment are more preferable than fixed parameter settings. This article proposes a novel adaptive parameter control approach based on learning from the optimization experiences over a set of problems. In the approach, the parameter control is modeled as a finite-horizon Markov decision process. A reinforcement learning algorithm, named policy gradient, is applied to learn an agent (i.e., parameter controller) that can provide the control parameters of a proposed differential evolution adaptively during the search procedure. The differential evolution algorithm based on the learned agent is compared against nine well-known evolutionary algorithms on the CEC'13 and CEC'17 test suites. Experimental results show that the proposed algorithm performs competitively against these compared algorithms on the test suites.",
+   "query": "jso"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/access.2019.2893292",
+   "title": "HARD-DE: Hierarchical ARchive Based Mutation Strategy With Depth Information of Evolution for the Enhancement of Differential Evolution on Numerical Optimization",
+   "date": "2019",
+   "venue": "IEEE Access",
+   "citations": 114,
+   "authors": [],
+   "abstract": "Differential evolution is a famous and effective branch of evolutionary computation, which aims at tackling complex optimization problems. There are two aspects significantly affecting the overall performance of DE variants, one is trial vector generation strategy and the other is the control parameter adaptation scheme. Here in this paper, a new hierarchical archive-based trial vector generation strategy with depth information of evolution was proposed to get a better perception of landscapes of objective functions as well as to improve the candidate diversity of the trial vectors. Furthermore, novel adaptation schemes both for crossover rate Cr and for population size ps were also advanced in this paper, and consequently, an overall better optimization performance was obtained after these changes. The novel HARD-DE algorithm was verified under many benchmarks of the Congress on Evolutionary Computation (CEC) Competition test suites on real-parameter single-objective optimization as well as two benchmarks on real-world optimization from CEC2011 test suite, and the experiment results showed that the proposed HARD-DE algorithm was competitive with the other state-of-the-art DE variants.",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cec.2008.4631067",
+   "title": "High-dimensional real-parameter optimization using Self-Adaptive Differential Evolution algorithm with population size reduction",
+   "date": "2008",
+   "venue": "2008 IEEE Congress on Evolutionary Computation (IEEE World Congress on Computational Intelligence)",
+   "citations": 90,
+   "authors": [
+    "Janez Brest",
+    "Ales Zamuda",
+    "Borko Boskovic",
+    "Mirjam Sepesy Maucec"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1007/s10462-024-11053-1",
+   "title": "Modified LSHADE-SPACMA with new mutation strategy and external archive mechanism for numerical optimization and point cloud registration",
+   "date": "2025",
+   "venue": "Artificial Intelligence Review",
+   "citations": 86,
+   "authors": [],
+   "abstract": "Abstract Numerical optimization and point cloud registration are critical research topics in the field of artificial intelligence. The differential evolution algorithm is an effective approach to address these problems, and LSHADE-SPACMA, the winning algorithm of CEC2017, is a competitive differential evolution variant. However, LSHADE-SPACMA\u2019s local exploitation capability can sometimes be insufficient when handling these challenges. Therefore, in this work, we propose a modified version of LSHADE-SPACMA (mLSHADE-SPACMA) for numerical optimization and point cloud registration. Compared to the original approach, this work presents three main innovations. First, we present a precise elimination and generation mechanism to enhance the algorithm\u2019s local exploitation ability. Second, we introduce a mutation strategy based on a modified semi-parametric adaptive strategy and rank-based selective pressure, which improves the algorithm\u2019s evolutionary direction. Third, we propose an elite-based external archiving mechanism, which ensures the diversity of the external population and can accelerate the algorithm\u2019s convergence progress. Additionally, we utilize the CEC2014 (Dim = 10, 30, 50, 100) and CEC2017 (Dim = 10, 30, 50, 100) test suites for numerical optimization experiments, comparing our approach against: (1) 10 recent CEC winner algorithms, including LSHADE, EBOwithCMAR, jSO, LSHADE-cnEpSin, HSES, LSHADE-RSP, ELSHADE-SPACMA, EA4eig, L-SRTDE, and LSHADE-SPACMA; (2) 4 advanced va",
+   "query": "jso"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1007/s11831-022-09825-5",
+   "title": "Differential Evolution and Its Applications in Image Processing Problems: A Comprehensive Review",
+   "date": "2022",
+   "venue": "Archives of Computational Methods in Engineering",
+   "citations": 78,
+   "authors": [],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.asoc.2023.110209",
+   "title": "An adaptive differential evolution algorithm with population size reduction strategy for unconstrained optimization problem",
+   "date": "2023",
+   "venue": "Applied Soft Computing",
+   "citations": 54,
+   "authors": [
+    "Xiaoyan Zhang",
+    "Qianqian Liu",
+    "Yawei Qu"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cec45853.2021.9504782",
+   "title": "Self-adaptive Differential Evolution Algorithm with Population Size Reduction for Single Objective Bound-Constrained Optimization: Algorithm j21",
+   "date": "2021",
+   "venue": "2021 IEEE Congress on Evolutionary Computation (CEC)",
+   "citations": 32,
+   "authors": [
+    "Janez Brest",
+    "Mirjam Sepesy Maucec",
+    "Borko Boskovic"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/s11047-021-09855-1",
+   "title": "Enhancing differential evolution algorithm through a population size adaptation strategy",
+   "date": "2021",
+   "venue": "Natural Computing",
+   "citations": 15,
+   "authors": [
+    "Yanyun Zhang",
+    "Guangming Dai",
+    "Lei Peng",
+    "Maocai Wang"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/978-3-319-13356-0_2",
+   "title": "An Adaptive Cauchy Differential Evolution Algorithm with Population Size Reduction and Modified Multiple Mutation Strategies",
+   "date": "2015",
+   "venue": "Proceedings in Adaptation, Learning and Optimization",
+   "citations": 11,
+   "authors": [
+    "Tae Jong Choi",
+    "Chang Wook Ahn"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/iwssip.2018.8439374",
+   "title": "Adaptation of Population Size in Differential Evolution Algorithm: An Experimental Comparison",
+   "date": "2018",
+   "venue": "2018 25th International Conference on Systems, Signals and Image Processing (IWSSIP)",
+   "citations": 7,
+   "authors": [
+    "Radka Polakova",
+    "Petr Bujok"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/978-3-540-44999-7_41",
+   "title": "Population Size Adaptation for Differential Evolution Algorithm Using Fuzzy Logic",
+   "date": "2003",
+   "venue": "Intelligent Systems Design and Applications",
+   "citations": 1,
+   "authors": [
+    "Junhong Liu",
+    "Jouni Lampinen"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2102.11275v1",
+   "title": "Large Scale Global Optimization Algorithms for IoT Networks: A Comparative Study",
+   "date": "2021-02-22",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Sotirios K. Goudos",
+    "Achilles D. Boursianis",
+    "Ali Wagdy Mohamed",
+    "Shaohua Wan"
+   ],
+   "abstract": "The advent of Internet of Things (IoT) has bring a new era in communication technology by expanding the current inter-networking services and enabling the machine-to-machine communication. IoT massive deployments will create the problem of optimal power allocation. The objective of the optimization problem is to obtain a feasible solution that minimizes the total power consumption of the WSN, when the error probability at the fusion center meets certain criteria. This work studies the optimization of a wireless sensor network (WNS) at higher dimensions by focusing to the power allocation of decentralized detection. More specifically, we apply and compare four algorithms designed to tackle Large scale global optimization (LGSO) problems. These are the memetic linear population size reduction and semi-parameter adaptation (MLSHADE-SPA), the contribution-based cooperative coevolution recursive differential grouping (CBCC-RDG3), the differential grouping with spectral clustering-differential evolution cooperative coevolution (DGSC-DECC), and the enhanced adaptive differential evolution (EADE). To the best of the authors knowledge, this is the first time that LGSO algorithms are applied to the optimal power allocation problem in IoT networks. We evaluate the algorithms performance in several different cases by applying them in cases with 300, 600 and 800 dimensions.",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.4359637",
+   "title": "A Modified Differential Evolution Algorithm Based on Improving a New Mutation Strategy and Self-Adaptation Crossover",
+   "date": "2023",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Sadeer Fadhil",
+    "Hegazy Zaher",
+    "Naglaa Ragaa",
+    "Eman Oun"
+   ],
+   "abstract": "",
+   "query": "jso"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2511.18429v5",
+   "title": "Robust Differential Evolution via Nonlinear Population Size Reduction and Adaptive Restart: The ARRDE Algorithm",
+   "date": "2025-11-23",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Khoirul Faiq Muzakka",
+    "Ahsani Hafizhu Shali",
+    "Haris Suhendar",
+    "S\u00f6ren M\u00f6ller"
+   ],
+   "abstract": "Robustness across heterogeneous optimization regimes remains a central challenge in bound-constrained continuous optimization. In practice, users often prefer optimizers that remain reliable across different dimensionalities, landscape structures, and evaluation budgets. Yet many Differential Evolution (DE) variants that perform strongly in one regime degrade substantially when transferred to others. To address this issue, we propose the Adaptive Restart--Refine Differential Evolution (ARRDE) algorithm, a DE variant designed explicitly for cross-regime robustness. ARRDE combines an adaptive restart--refine strategy, a nonlinear population-size reduction schedule that depends on problem dimensionality, and a budget-aware population-initialization rule for restricted-budget settings. Because robustness cannot be established credibly from a narrow experimental setting, we evaluate ARRDE on five benchmark suites: CEC2011, CEC2017, CEC2019, CEC2020, and CEC2022. These suites span markedly different dimensions, landscape characteristics, and evaluation budgets, making this, to the best of our knowledge, one of the most comprehensive robustness-oriented evaluations reported for a proposed DE variant in this context. Since their official performance metrics emphasize different aspects and are not directly comparable, we additionally introduce a bounded accuracy-based scoring metric derived from relative error for cross-suite robustness assessment. Using both the official suite-specific metrics and the proposed unified metric, ARRDE demonstrates consistently strong performance and one of the most stable aggregate profiles across the five suites. These results support ARRDE as a competitive DE variant for robust optimization across heterogeneous benchmark regimes.",
+   "query": "jso"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.knosys.2023.110297",
+   "title": "Memory, evolutionary operator, and local search based improved Grey Wolf Optimizer with linear population size reduction technique",
+   "date": "2023",
+   "venue": "Knowledge-Based Systems",
+   "citations": 105,
+   "authors": [
+    "Rasel Ahmed",
+    "Gade Pandu Rangaiah",
+    "Shuhaimi Mahadzir",
+    "Seyedali Mirjalili"
+   ],
+   "abstract": "",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/ijcnn.1991.170736",
+   "title": "Learning neural network weights using genetic algorithms-improving performance by search-space reduction",
+   "date": "1991",
+   "venue": "[Proceedings] 1991 IEEE International Joint Conference on Neural Networks",
+   "citations": 20,
+   "authors": [
+    "M. Srinivas",
+    "L.M. Patnaik"
+   ],
+   "abstract": "",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/incos.2016.50",
+   "title": "Network Based Linear Population Size Reduction in SHADE",
+   "date": "2016",
+   "venue": "2016 International Conference on Intelligent Networking and Collaborative Systems (INCoS)",
+   "citations": 16,
+   "authors": [
+    "Adam Viktorin",
+    "Michal Pluhacek",
+    "Roman Senkerik"
+   ],
+   "abstract": "",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.20944/preprints202308.0684.v1",
+   "title": "Improving Photovoltaic MPPT Performance through PSO Dynamic Swarm Size Reduction",
+   "date": "2023",
+   "venue": "",
+   "citations": 11,
+   "authors": [
+    "Adel O. Baatiah",
+    "Ali M. Eltamaly",
+    "Majed A. Alotaibi"
+   ],
+   "abstract": "Efficient energy extraction in photovoltaic (PV) systems relies on the effective implementation of Maximum Power Point Tracking (MPPT) methods. Conventional MPPT techniques often suffer from slow convergence speeds and suboptimal tracking performance, particularly under dynamic variation of environmental conditions. Smart optimization algorithms (SOA) using metaheuristic optimization algorithms can avoid this limitation inherent in the conventional MPPT methods. The problem of slow convergence of the SOA is avoided in this paper using a novel strategy called Swarm Size Reduction (SSR) utilized with Particle Swarm Optimization (PSO) algorithm, specifically designed to achieve short convergence time (CT) while maintaining exceptional tracking accuracy. The novelty of the proposed MPPT method introduced in this paper is the dynamic reduction of the swarm size of the PSO for improved performance of the MPPT of the PV systems. This adaptive reduction approach allows the algorithm to efficiently explore the solution space of PV systems and rapidly exploit to identify the global maximum power point (GMPP) even under fast fluctuation of uneven solar irradiance and temperature. This pioneering ultra-fast MPPT method represents a significant advancement in PV system efficiency and promotes the wider adoption of solar energy as a reliable and sustainable power source. The novel adaptive PSO algorithm also opens new possibilities for further innovations in optimization-driven application",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1364/oe.550701",
+   "title": "Performance analysis of the optimized equilibrium optimizer algorithm using linear population size reduction in the coherent free-space optical communication system",
+   "date": "2025",
+   "venue": "Optics Express",
+   "citations": 4,
+   "authors": [
+    "Zhimin Wang",
+    "Jingtai Cao",
+    "Xingxin Fu",
+    "Wei Liu"
+   ],
+   "abstract": "Sensor-less adaptive optics (SLAO) systems are extensively employed due to their ability to effectively mitigate the adverse impact of atmospheric turbulence on coherent free-space optical communication (CFSOC) systems. The control algorithm dictates the corrective capabilities of the SLAO system. For this work, we employ the optimized equilibrium optimizer algorithm using linear population size reduction (LOEO) as the control algorithm. The LOEO algorithm is an enhanced version of the equilibrium optimizer (EO) algorithm. More precisely, we enhanced the control parameters, introduced the linear population size reduction (LPSR) strategy, and modified the search framework. Theoretical study and numerical simulations demonstrate that the LOEO algorithm exhibits exceptional precision, rapid correction speed, and strong robustness. The LOEO algorithm enhances the speed of correction by approximately 50% compared to the EO algorithm, resulting in a correction speed that is 15.92 times faster than the SPGD algorithm. The experimental results demonstrate that the LOEO algorithm is capable of efficiently rectifying the distorted wavefront phase aberration. This algorithm is well-suited for SLAO systems and can enhance the communication performance of the CFSOC systems.",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.14210/cotb.v11n1.p351-358",
+   "title": "L-SHADE with Alternative Population Size Reduction for Unconstrained Continuous Optimization",
+   "date": "2020",
+   "venue": "Anais do XI Computer on the Beach - COTB '20",
+   "citations": 2,
+   "authors": [
+    "Christopher Renkavieski",
+    "Rafael Stubs Parpinelli"
+   ],
+   "abstract": "Differential Evolution (DE) is a powerful and versatile algorithmfor numerical optimization, but one of its downsides is its numberof parameters that need to be tuned. Multiple techniques have beenproposed to self-adapt DE\u2019s parameters, with L-SHADE being oneof the most well established in the literature. This work presentsthe A-SHADE algorithm, which modifies the population size reductionschema of L-SHADE, and also EB-A-SHADE, which applies amutation strategy hybridization framework to A-SHADE. Thesealgorithms are applied to the CEC2013 benchmark set with 100dimensions, and it\u2019s shown that A-SHADE and EB-A-SHADE canachieve competitive results.",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/iaeac47372.2019.8997762",
+   "title": "Linear Distribution-based SHADE with Variable Population Size",
+   "date": "2019",
+   "venue": "2019 IEEE 4th Advanced Information Technology, Electronic and Automation Control Conference (IAEAC)",
+   "citations": 0,
+   "authors": [
+    "Zhao-Guang Liu"
+   ],
+   "abstract": "",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21203/rs.3.rs-790818/v1",
+   "title": "Improving Bees Algorithm Using Gradual Search Space Reduction",
+   "date": "2021",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Turki Binbakir"
+   ],
+   "abstract": "Abstract The aim of this research is to propose a new technique to improve Bees Algorithm. Bees Algorithm is one of the well-known metaheuristic optimization method which have been subject to several attempts to improve it by overcoming some of the weaknesses. The suggested method is derived from the numerical optimization methods, namely bracketing and region elimination methods. It employs an adaption of the regional elimination method to achieve abandonment and reduction of search space within the Bees Algorithm. The utilization of the exhaustive search involves exploring the whole search space to find the optimum at equally located intervals. To assess performance, the proposed method was evaluated on twenty-four benchmark functions and two engineering problems. The acquired result indicated a statistically significant improvement.",
+   "query": "lshade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/978-981-16-1209-1_1",
+   "title": "Improving the Performance of QUATRE-EAR Using Linear Population Size Reduction",
+   "date": "2021",
+   "venue": "Smart Innovation, Systems and Technologies",
+   "citations": 0,
+   "authors": [
+    "Zhenyu Meng",
+    "Yuxin Chen",
+    "Cheng Yang",
+    "Yuxin Zhong"
+   ],
+   "abstract": "",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2511.13843v4",
+   "title": "QUASAR: An Evolutionary Algorithm to Accelerate High-Dimensional Numerical Optimization",
+   "date": "2025-11-17",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Julian G. Soltes"
+   ],
+   "abstract": "High-dimensional numerical optimization presents a persistent challenge in computational science. This paper introduces Quasi-Adaptive Search with Asymptotic Reinitialization (QUASAR), an evolutionary algorithm to accelerate convergence in complex, non-differentiable problems afflicted by the curse of dimensionality. QUASAR expands upon the core principles of Differential Evolution (DE), introducing quasi-adaptive mechanisms to dynamically balance exploration and exploitation in its search. Inspired by the behavior of quantum particles, the algorithm utilizes three highly stochastic mechanisms that augment standard DE: 1) probabilistic mutation strategies and scaling factors; 2) rank-based crossover rates; 3) asymptotically decaying covariance reinitializations. Evaluated on the notoriously difficult CEC2017 benchmark suite of 29 test functions, QUASAR achieved the lowest overall rank sum (367) using the Friedman test, outperforming DE (735) and L-SHADE (452). Geometric mean comparisons show average final solution quality improvements of $3.85 \\times$ and $2.07 \\times$ compared to DE and L-SHADE, respectively ($p \\ll 0.001$), with average optimization speed averaging $1.40 \\times$ and $5.16 \\times$ faster. QUASAR's performance establishes it as an effective, efficient, and user-friendly evolutionary algorithm for complex high-dimensional problems.",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2601.11499v1",
+   "title": "On the Probability of First Success in Differential Evolution: Hazard Identities and Tail Bounds",
+   "date": "2026-01-16",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Dimitar Nedanovski",
+    "Svetoslav Nenov",
+    "Dimitar Pilev"
+   ],
+   "abstract": "We study first-hitting times in Differential Evolution (DE) through a conditional hazard frame work. Instead of analyzing convergence via Markov-chain transition kernels or drift arguments, we ex press the survival probability of a measurable target set $A$ as a product of conditional first-hit probabilities (hazards) $p_t=\\Prob(E_t\\mid\\mathcal F_{t-1})$. This yields distribution-free identities for survival and explicit tail bounds whenever deterministic lower bounds on the hazard hold on the survival event. For the L-SHADE algorithm with current-to-$p$best/1 mutation, we construct a checkable algorithmic witness event $\\mathcal L_t$ under which the conditional hazard admits an explicit lower bound depending only on sampling rules, population size, and crossover statistics. This separates theoretical constants from empirical event frequencies and explains why worst-case constant-hazard bounds are typically conservative. We complement the theory with a Kaplan--Meier survival analysis on the CEC2017 benchmark suite . Across functions and budgets, we identify three distinct empirical regimes: (i) strongly clustered success, where hitting times concentrate in short bursts; (ii) approximately geometric tails, where a constant-hazard model is accurate; and (iii) intractable cases with no observed hits within the evaluation horizon. The results show that while constant-hazard bounds provide valid tail envelopes, the practical behavior of L-SHADE is governed by burst-like transitions rather than homogeneous per-generati on success probabilities.",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2603.24140v1",
+   "title": "A Longitudinal Analysis of the CEC Single-Objective Competitions (2010-2024) and Implications for Variational Quantum Optimization",
+   "date": "2026-03-25",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Vojt\u011bch Nov\u00e1k",
+    "Tom\u00e1\u0161 Bezd\u011bk",
+    "Ivan Zelinka",
+    "Swagatam Das"
+   ],
+   "abstract": "This paper provides a historical analysis of the IEEE CEC Single Objective Optimization competition results (2010-2024). We analyze how benchmark functions shaped winning algorithms, identifying the 2014 introduction of dense rotation matrices as a key performance filter. This design choice introduced parameter non-separability, reduced effectiveness of coordinate-dependent methods (PSO, GA), and established the dominance of Differential Evolution variants capable of preserving the rotational invariance of their difference vectors, specifically L-SHADE. Post-2020 analysis reveals a shift towards high complexity hybrid optimizers that combine different mechanisms (e.g., Eigenvector Crossover, Societal Sharing, Reinforcement Learning) to maximize ranking stability. We conclude by identifying structural similarities between these modern benchmarks and Variational Quantum Algorithm landscapes, suggesting that evolved CEC solvers possess the specific adaptive capabilities required for quantum control.",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2604.15761v1",
+   "title": "Frenetic Cat-inspired Particle Optimization: a Markov state-switching hybrid swarm optimizer with application to cardiac digital twinning",
+   "date": "2026-04-17",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Jorge S\u00e1nchez",
+    "Guadalupe Garc\u00eda-Isla",
+    "Sandra Perez-Herrero",
+    "Beatriz Trenor"
+   ],
+   "abstract": "Designing optimizers that remain effective under tight evaluation budgets is critical in expensive black-box settings such as cardiac digital twinning. We propose Frenetic Cat-inspired Particle Optimization (FCPO), a hybrid swarm method that couples particle swarm optimization-like dynamics with an explicit-state Markov switching controller to schedule exploration and refinement operators online. FCPO integrates (i) state-conditioned bounded motion, (ii) an elite-difference global jump operator to escape stagnation, (iii) eigen-space guided local refinement from elite covariance, and (iv) linear population size reduction to control late-stage computational cost. We benchmark FCPO on five representative functions from the Congress on Evolutionary Computation (CEC) 2022 suite (F1, F2, F3, F6 and F10) at dimensions D$\\in${10,20} over 30 independent runs, comparing against PSO, CSO, CLPSO, SHADE, L-SHADE and CMA-ES. FCPO achieves the lowest mean runtime across the ten benchmark cases (average 0.183 s), about 2.3x faster than CMA-ES and 2.6x faster than L-SHADE in our Python implementation. On the multimodal composition function F10 at D=20, FCPO attains the best mean objective (9.625x 10^2 $\\pm$ 1.275x 10^3) and remains faster than CMA-ES (0.602 s vs. 1.126 s mean runtime). On structured landscapes (F1--F3) and on the hybrid function (F6), CMA-ES remains the most accurate method, while FCPO substantially improves over classical swarms and maintains a favorable accuracy--runtime trade-off. Finally, in a ventricular activation digital twin calibration task, FCPO reaches the target electrocardiogram (ECG) fidelity (RMSE<0.1 mV) within ~ 40 iterations and produces physiologically plausible activation maps with robust convergence across repeated initializations, supporting its use as a practical optimizer for expensive inverse problems.",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.20858v2",
+   "title": "Evolutionary Discovery of Developmental Reward Schedules in Deep Reinforcement Learning",
+   "date": "2026-06-18",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Alan Nadelsticher Ruvalcaba"
+   ],
+   "abstract": "The temporal structure of reward composition in reinforcement learning (RL) is typically hand-designed and held fixed throughout training, leaving the progression of motivational priorities largely unexplored. In this work, we propose an evolutionary framework for discovering developmental reward schedules, in which three distinct biologically inspired motivational components -- agency, novelty, and reactivity -- are combined through time-varying weights that dynamically shift over the course of training. Evaluated on two sparse-reward MiniGrid tasks: DoorKey-6x6 and KeyCorridorS3R1, our framework compares the generalizability of four evolutionary algorithms: CMA-ES, xNES, DE, and L-SHADE against an extrinsically motivated baseline (our main comparison point), and three additional hand-designed methods. On DoorKey-6x6, all evolved methods outperform the non-evolved baselines, with L-SHADE achieving the best performance -- an approximate relative mean improvement of 11.4% over the extrinsic only baseline. On KeyCorridorS3R1, CMA-ES achieves the best overall performance, with the remaining evolved methods showing weaker and less reliable generalization capability compared to the extrinsic only baseline. Interestingly, the discovered schedules diverge from our defined developmental ordering, with novelty consistently emerging as the dominant early signal during training, across both tasks. Collectively, our results position evolutionary optimization as a promising approach for developmental reward schedule discovery in deep reinforcement learning, and suggest that what evolution finds to be optimal in computational settings may differ from what it finds to be optimal in biology. The code for this project can be found at: https://github.com/alannadels/Evolutionary_RL.git.",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.26714v1",
+   "title": "Random Walk on B\u00e9zier Curves for Global Optimization",
+   "date": "2026-06-25",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Jinpeng Wang",
+    "Xingguo Xu",
+    "Yujing Sun",
+    "Jiguang Yu"
+   ],
+   "abstract": "Balancing exploration and exploitation remains a central challenge in metaheuristic optimization. To address this issue, this paper proposes B\u00e9zier Walk Evolution (BWE), a geometry-driven optimization framework that reformulates evolutionary search as adaptive trajectory construction in the decision space. BWE integrates B\u00e9zier curve modeling with a distance-aware random walk mechanism to generate topology-guided search trajectories. By adaptively varying the curve order during evolution, the proposed method enables a smooth transition from diversified global exploration to refined local exploitation. Higher-order B\u00e9zier curves leverage multiple population-derived control points to enhance search diversity, while lower-order curves generate near-linear trajectories to improve convergence efficiency. This adaptive geometric search mechanism provides an interpretable alternative to conventional nature-inspired designs. Extensive experiments on 41 benchmark functions from the CEC2017 and CEC2022 suites, spanning dimensions from 10 to 100, show that BWE achieves strong overall performance and favorable scalability compared with 7 classical and 6 state-of-the-art optimizers, including L-SHADE and CMA-ES. Additional evaluations on five constrained engineering design problems further demonstrate the practical applicability and robustness of BWE.",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2610.41099v1",
+   "title": "Local Budget Benefits, Population Commitment, and Solver Performance: A DGO Case Study with Controlled DE Transfer",
+   "date": "2026-10-30",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Shiqi Li"
+   ],
+   "abstract": "An evaluated candidate can improve a local search step, alter the population used by later steps, and affect a solver's final result. We distinguish these three questions using Da Gou Gun Optimization (DGO), a population optimizer designed for this study. Its JQ100 configuration evaluates an interpolation candidate during a two-sided probe. We define local budget value, population commitment effects and complete-policy performance, and give an exact example in which a locally better commitment leads to a worse continuation. Short-horizon matched comparisons favor interpolation on eligible quadratic states. Paired continuations yield mixed effect estimates, with primary group intervals spanning zero. Complete-policy comparisons favor JQ100 over the tested classical references in aggregate; a matched-start comparison has favorable means but intervals spanning parity. On 24 boxed BBOB functions, target-truncated geometric-mean error ratios favor JQ100 over the tested classical policies and favor L-SHADE and CMA-ES over JQ100 under the stated initialization and stopping rules. Local evaluation gains, commitment effects and solver competitiveness therefore require separate comparisons.",
+   "query": "lshade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2204.07176v1",
+   "title": "A collaborative decomposition-based evolutionary algorithm integrating normal and penalty-based boundary intersection for many-objective optimization",
+   "date": "2022-04-14",
+   "venue": "arXiv",
+   "citations": 8,
+   "authors": [
+    "Yu Wu",
+    "Jianle Wei",
+    "Weiqin Ying",
+    "Yanqi Lan"
+   ],
+   "abstract": "Decomposition-based evolutionary algorithms have become fairly popular for many-objective optimization in recent years. However, the existing decomposition methods still are quite sensitive to the various shapes of frontiers of many-objective optimization problems (MaOPs). On the one hand, the cone decomposition methods such as the penalty-based boundary intersection (PBI) are incapable of acquiring uniform frontiers for MaOPs with very convex frontiers. On the other hand, the parallel reference lines of the parallel decomposition methods including the normal boundary intersection (NBI) might result in poor diversity because of under-sampling near the boundaries for MaOPs with concave frontiers. In this paper, a collaborative decomposition method is first proposed to integrate the advantages of parallel decomposition and cone decomposition to overcome their respective disadvantages. This method inherits the NBI-style Tchebycheff function as a convergence measure to heighten the convergence and uniformity of distribution of the PBI method. Moreover, this method also adaptively tunes the extent of rotating an NBI reference line towards a PBI reference line for every subproblem to enhance the diversity of distribution of the NBI method. Furthermore, a collaborative decomposition-based evolutionary algorithm (CoDEA) is presented for many-objective optimization. A collaborative decomposition-based environmental selection mechanism is primarily designed in CoDEA to rank all the individuals associated with the same PBI reference line in the boundary layer and pick out the best ranks. CoDEA is compared with several popular algorithms on 85 benchmark test instances. The experimental results show that CoDEA achieves high competitiveness benefiting from the collaborative decomposition maintaining a good balance among the convergence, uniformity, and diversity of distribution.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1704.02340v1",
+   "title": "Evolutionary Many-Objective Optimization Based on Adversarial Decomposition",
+   "date": "2017-04-07",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Mengyuan Wu",
+    "Ke Li",
+    "Sam Kwong",
+    "Qingfu Zhang"
+   ],
+   "abstract": "The decomposition-based method has been recognized as a major approach for multi-objective optimization. It decomposes a multi-objective optimization problem into several single-objective optimization subproblems, each of which is usually defined as a scalarizing function using a weight vector. Due to the characteristics of the contour line of a particular scalarizing function, the performance of the decomposition-based method strongly depends on the Pareto front's shape by merely using a single scalarizing function, especially when facing a large number of objectives. To improve the flexibility of the decomposition-based method, this paper develops an adversarial decomposition method that leverages the complementary characteristics of two different scalarizing functions within a single paradigm. More specifically, we maintain two co-evolving populations simultaneously by using different scalarizing functions. In order to avoid allocating redundant computational resources to the same region of the Pareto front, we stably match these two co-evolving populations into one-one solution pairs according to their working regions of the Pareto front. Then, each solution pair can at most contribute one mating parent during the mating selection process. Comparing with nine state-of-the-art many-objective optimizers, we have witnessed the competitive performance of our proposed algorithm on 130 many-objective test instances with various characteristics and Pareto front's shapes.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1710.00175v1",
+   "title": "A Many-Objective Evolutionary Algorithm with Angle-Based Selection and Shift-Based Density Estimation",
+   "date": "2017-09-30",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Zhi-Zhong Liu",
+    "Yong Wang",
+    "Pei-Qiu Huang"
+   ],
+   "abstract": "Evolutionary many-objective optimization has been gaining increasing attention from the evolutionary computation research community. Much effort has been devoted to addressing this issue by improving the scalability of multiobjective evolutionary algorithms, such as Pareto-based, decomposition-based, and indicator-based approaches. Different from current work, we propose a novel algorithm in this paper called AnD, which consists of an angle-based selection strategy and a shift-based density estimation strategy. These two strategies are employed in the environmental selection to delete the poor individuals one by one. Specifically, the former is devised to find a pair of individuals with the minimum vector angle, which means that these two individuals share the most similar search direction. The latter, which takes both the diversity and convergence into account, is adopted to compare these two individuals and to delete the worse one. AnD has a simple structure, few parameters, and no complicated operators. The performance of AnD is compared with that of seven state-of-the-art many-objective evolutionary algorithms on a variety of benchmark test problems with up to 15 objectives. The experimental results suggest that AnD can achieve highly competitive performance. In addition, we also verify that AnD can be readily extended to solve constrained many-objective optimization problems.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1803.06282v1",
+   "title": "A mullti- or many- objective evolutionary algorithm with global loop update",
+   "date": "2018-01-25",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Yingyu Zhang",
+    "Bing Zeng",
+    "Yuanzhen Li",
+    "Junqing Li"
+   ],
+   "abstract": "Multi- or many-objective evolutionary algorithm- s(MOEAs), especially the decomposition-based MOEAs have been widely concerned in recent years. The decomposition-based MOEAs emphasize convergence and diversity in a simple model and have made a great success in dealing with theoretical and practical multi- or many-objective optimization problems. In this paper, we focus on update strategies of the decomposition- based MOEAs, and their criteria for comparing solutions. Three disadvantages of the decomposition-based MOEAs with local update strategies and several existing criteria for comparing solutions are analyzed and discussed. And a global loop update strategy and two hybrid criteria are suggested. Subsequently, an evolutionary algorithm with the global loop update is implement- ed and compared to several of the best multi- or many-objective optimization algorithms on two famous unconstraint test suites with up to 15 objectives. Experimental results demonstrate that unlike evolutionary algorithms with local update strategies, the population of our algorithm does not degenerate at any generation of its evolution, which guarantees the diversity of the resulting population. In addition, our algorithm wins in most instances of the two test suites, indicating that it is very compet- itive in terms of convergence and diversity. Running results of our algorithm with different criteria for comparing solutions are also compared. Their differences are very significant, indicating that the performance of our algorithm is affected by the criterion it adopts.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1807.10275v2",
+   "title": "A Many-Objective Evolutionary Algorithm Based on Decomposition and Local Dominance",
+   "date": "2018-07-13",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Yingyu Zhang",
+    "Yuanzhen Li",
+    "Quan-Ke Panb",
+    "P. N. Suganthan"
+   ],
+   "abstract": "Many-objective evolutionary algorithms (MOEAs), especially the decomposition-based MOEAs, have attracted wide attention in recent years. Recent studies show that a well designed combination of the decomposition method and the domination method can improve the performance ,i.e., convergence and diversity, of a MOEA. In this paper, a novel way of combining the decomposition method and the domination method is proposed. More precisely, a set of weight vectors is employed to decompose a given many-objective optimization problem(MaOP), and a hybrid method of the penalty-based boundary intersection function and dominance is proposed to compare local solutions within a subpopulation defined by a weight vector. A MOEA based on the hybrid method is implemented and tested on problems chosen from two famous test suites, i.e., DTLZ and WFG. The experimental results show that our algorithm is very competitive in dealing with MaOPs. Subsequently, our algorithm is extended to solve constraint MaOPs, and the constrained version of our algorithm also shows good performance in terms of convergence and diversity. These reveals that using dominance locally and combining it with the decomposition method can effectively improve the performance of a MOEA.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2006.02628v3",
+   "title": "Decomposition in Decision and Objective Space for Multi-Modal Multi-Objective Optimization",
+   "date": "2020-06-04",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Monalisa Pal",
+    "Sanghamitra Bandyopadhyay"
+   ],
+   "abstract": "Multi-modal multi-objective optimization problems (MMMOPs) have multiple subsets within the Pareto-optimal Set, each independently mapping to the same Pareto-Front. Prevalent multi-objective evolutionary algorithms are not purely designed to search for multiple solution subsets, whereas, algorithms designed for MMMOPs demonstrate degraded performance in the objective space. This motivates the design of better algorithms for addressing MMMOPs. The present work identifies the crowding illusion problem originating from using crowding distance globally over the entire decision space. Subsequently, an evolutionary framework, called graph Laplacian based Optimization using Reference vector assisted Decomposition (LORD), is proposed, which uses decomposition in both objective and decision space for dealing with MMMOPs. Its filtering step is further extended to present LORD-II algorithm, which demonstrates its dynamics on multi-modal many-objective problems. The efficacies of the frameworks are established by comparing their performance on test instances from the CEC 2019 multi-modal multi-objective test suite and polygon problems with the state-of-the-art algorithms for MMMOPs and other multi- and many-objective evolutionary algorithms. The manuscript is concluded by mentioning the limitations of the proposed frameworks and future directions to design still better algorithms for MMMOPs. The source code is available at https://worksupplements.droppages.com/lord.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2107.07121v1",
+   "title": "Preference Incorporation into Many-Objective Optimization: An Outranking-based Ant Colony Algorithm",
+   "date": "2021-07-15",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Gilberto Rivera",
+    "Carlos A. Coello Coello",
+    "Laura Cruz-Reyes",
+    "Eduardo R. Fernandez"
+   ],
+   "abstract": "In this paper, we enriched Ant Colony Optimization (ACO) with interval outranking to develop a novel multiobjective ACO optimizer to approach problems with many objective functions. This proposal is suitable if the preferences of the Decision Maker (DM) can be modeled through outranking relations. The introduced algorithm (named Interval Outranking-based ACO, IO-ACO) is the first ant-colony optimizer that embeds an outranking model to bear vagueness and ill-definition of DM preferences. This capacity is the most differentiating feature of IO-ACO because this issue is highly relevant in practice. IO-ACO biases the search towards the Region of Interest (RoI), the privileged zone of the Pareto frontier containing the solutions that better match the DM preferences. Two widely studied benchmarks were utilized to measure the efficiency of IO-ACO, i.e., the DTLZ and WFG test suites. Accordingly, IO-ACO was compared with two competitive many-objective optimizers: The Indicator-based Many-Objective ACO and the Multiobjective Evolutionary Algorithm Based on Decomposition. The numerical results show that IO-ACO approximates the Region of Interest (RoI) better than the leading metaheuristics based on approximating the Pareto frontier alone.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2205.15884v2",
+   "title": "An Effective and Efficient Evolutionary Algorithm for Many-Objective Optimization",
+   "date": "2022-05-31",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Yani Xue",
+    "Miqing Li",
+    "Xiaohui Liu"
+   ],
+   "abstract": "In evolutionary multiobjective optimization, effectiveness refers to how an evolutionary algorithm performs in terms of converging its solutions into the Pareto front and also diversifying them over the front. This is not an easy job, particularly for optimization problems with more than three objectives, dubbed many-objective optimization problems. In such problems, classic Pareto-based algorithms fail to provide sufficient selection pressure towards the Pareto front, whilst recently developed algorithms, such as decomposition-based ones, may struggle to maintain a set of well-distributed solutions on certain problems (e.g., those with irregular Pareto fronts). Another issue in some many-objective optimizers is rapidly increasing computational requirement with the number of objectives, such as hypervolume-based algorithms and shift-based density estimation (SDE) methods. In this paper, we aim to address this problem and develop an effective and efficient evolutionary algorithm (E3A) that can handle various many-objective problems. In E3A, inspired by SDE, a novel population maintenance method is proposed to select high-quality solutions in the environmental selection procedure. We conduct extensive experiments and show that E3A performs better than 11 state-of-the-art many-objective evolutionary algorithms in quickly finding a set of well-converged and well-diversified solutions.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2510.02709v1",
+   "title": "A many-objective evolutionary algorithm using indicator-driven weight vector optimization",
+   "date": "2025-10-03",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Xiaojing Han",
+    "Yuanxin Li"
+   ],
+   "abstract": "For regular Pareto Fronts (PFs), such as those that are smooth, continuous, and uniformly distributed, using fixed weight vectors is sufficient for multi-objective optimization approaches using decomposition. However, when encountering irregular PFs-including degenerate, disconnected, inverted, etc. Fixed weight vectors can often cause a non-uniform distribution of the sets or even poor optimization results. To address this issue, this study proposes an adaptive many-objective evolutionary algorithm with a simplified hypervolume indicator. It synthesizes indicator assessment techniques with decomposition-based methods to facilitate self-adaptive and dynamic adjustment of the weight vectors in many-objective optimization methods. Specifically, based on the MOEA/D framework, it uses a simplified hypervolume indicator to accurately assess solution distribution. Simultaneously, applying the R2 indicator (as an approximation of hypervolume) dynamically regulates the update frequency of the weight vectors. Experimental results demonstrate that the proposed algorithm is efficient and effective when compared with six state-of-the-art algorithms.",
+   "query": "many-objective"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.27767v2",
+   "title": "Difference of Convex Programming in the Wasserstein Space with Applications to MMD Optimization",
+   "date": "2026-06-26",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Cl\u00e9ment Bonet",
+    "Pierre-Cyril Aubin-Frankowski",
+    "Youssef Mroueh"
+   ],
+   "abstract": "Optimizing functionals over the space of probability measures is now ubiquitous in machine learning. A widely used approach is to perform the optimization directly over the Wasserstein space, but many objective functionals of practical interest are non-convex along Wasserstein geodesics, making the analysis of standard first-order methods challenging. In this work, we study a class of objectives over the Wasserstein space that admit a difference-of-convex (DC) decomposition and we lift the classical convex-concave procedure (CCCP) to this setting. Under smoothness and strong convexity assumptions on the convex components of the decomposition, we prove almost stationarity along the iterates of the resulting algorithm. Our main focus is on the Maximum Mean Discrepancy (MMD) and the Energy Distance (ED) functionals, for which we develop explicit Wasserstein DC decompositions, and establish local convergence of the scheme under mild assumptions. Empirically, we show that well-chosen DC decompositions yield faster and more stable convergence than Wasserstein gradient descent on these MMD objectives.",
+   "query": "many-objective"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2007.892759",
+   "title": "MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition",
+   "date": "2007",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 10290,
+   "authors": [
+    "Qingfu Zhang",
+    "Hui Li"
+   ],
+   "abstract": "Decomposition is a basic strategy in traditional multiobjective optimization. However, it has not yet been widely used in multiobjective evolutionary optimization. This paper proposes a multiobjective evolutionary algorithm based on decomposition (MOEA/D). It decomposes a multiobjective optimization problem into a number of scalar optimization subproblems and optimizes them simultaneously. Each subproblem is optimized by only using information from its several neighboring subproblems, which makes MOEA/D have lower computational complexity at each generation than MOGLS and nondominated sorting genetic algorithm II (NSGA-II). Experimental results have demonstrated that MOEA/D with simple decomposition methods outperforms or performs similarly to MOGLS and NSGA-II on multiobjective 0-1 knapsack problems and continuous multiobjective optimization problems. It has been shown that MOEA/D using objective normalization can deal with disparately-scaled objectives, and MOEA/D with an advanced decomposition method can generate a set of very evenly distributed solutions for 3-objective test instances. The ability of MOEA/D with small population, the scalability and sensitivity of MOEA/D have also been experimentally investigated in this paper.",
+   "query": "moead"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2008.925798",
+   "title": "Multiobjective Optimization Problems With Complicated Pareto Sets, MOEA/D and NSGA-II",
+   "date": "2008",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 2569,
+   "authors": [
+    "Hui Li",
+    "Qingfu Zhang"
+   ],
+   "abstract": "Partly due to lack of test problems, the impact of the Pareto set (PS) shapes on the performance of evolutionary algorithms has not yet attracted much attention. This paper introduces a general class of continuous multiobjective optimization test instances with arbitrary prescribed PS shapes, which could be used for studying the ability of multiobjective evolutionary algorithms for dealing with complicated PS shapes. It also proposes a new version of MOEA/D based on differential evolution (DE), i.e., MOEA/D-DE, and compares the proposed algorithm with NSGA-II with the same reproduction operators on the test instances introduced in this paper. The experimental results indicate that MOEA/D could significantly outperform NSGA-II on these test instances. It suggests that decomposition based multiobjective evolutionary algorithms are very promising in dealing with complicated PS shapes.",
+   "query": "moead"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2013.2281533",
+   "title": "Decomposition of a Multiobjective Optimization Problem Into a Number of Simple Multiobjective Subproblems",
+   "date": "2013",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 814,
+   "authors": [],
+   "abstract": "This letter suggests an approach for decomposing a multiobjective optimization problem (MOP) into a set of simple multiobjective optimization subproblems. Using this approach, it proposes MOEA/D-M2M, a new version of multiobjective optimization evolutionary algorithm-based decomposition. This proposed algorithm solves these subproblems in a collaborative way. Each subproblem has its own population and receives computational effort at each generation. In such a way, population diversity can be maintained, which is critical for solving some MOPs. Experimental studies have been conducted to compare MOEA/D-M2M with classic MOEA/D and NSGA-II. This letter argues that population diversity is more important than convergence in multiobjective evolutionary algorithms for dealing with some MOPs. It also explains why MOEA/D-M2M performs better.",
+   "query": "moead"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2009.2033671",
+   "title": "Expensive Multiobjective Optimization by MOEA/D With Gaussian Process Model",
+   "date": "2009",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 758,
+   "authors": [],
+   "abstract": "In some expensive multiobjective optimization problems (MOPs), several function evaluations can be carried out in a batch way. Therefore, it is very desirable to develop methods which can generate multipler test points simultaneously. This paper proposes such a method, called MOEA/D-EGO, for dealing with expensive multiobjective optimization. MOEA/D-EGO decomposes an MOP in question into a number of single-objective optimization subproblems. A predictive model is built for each subproblem based on the points evaluated so far. Effort has been made to reduce the overhead for modeling and to improve the prediction quality. At each generation, MOEA/D is used for maximizing the expected improvement metric values of all the subproblems, and then several test points are selected for evaluation. Extensive experimental studies have been carried out to investigate the ability of the proposed algorithm.",
+   "query": "moead"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1162/evco_a_00109",
+   "title": "MOEA/D with Adaptive Weight Adjustment",
+   "date": "2013",
+   "venue": "Evolutionary Computation",
+   "citations": 697,
+   "authors": [],
+   "abstract": "Recently, MOEA/D (multi-objective evolutionary algorithm based on decomposition) has achieved great success in the field of evolutionary multi-objective optimization and has attracted a lot of attention. It decomposes a multi-objective optimization problem (MOP) into a set of scalar subproblems using uniformly distributed aggregation weight vectors and provides an excellent general algorithmic framework of evolutionary multi-objective optimization. Generally, the uniformity of weight vectors in MOEA/D can ensure the diversity of the Pareto optimal solutions, however, it cannot work as well when the target MOP has a complex Pareto front (PF; i.e., discontinuous PF or PF with sharp peak or low tail). To remedy this, we propose an improved MOEA/D with adaptive weight vector adjustment (MOEA/D-AWA). According to the analysis of the geometric relationship between the weight vectors and the optimal solutions under the Chebyshev decomposition scheme, a new weight vector initialization method and an adaptive weight vector adjustment strategy are introduced in MOEA/D-AWA. The weights are adjusted periodically so that the weights of subproblems can be redistributed adaptively to obtain better uniformity of solutions. Meanwhile, computing efforts devoted to subproblems with duplicate optimal solution can be saved. Moreover, an external elite population is introduced to help adding new subproblems into real sparse regions rather than pseudo sparse regions of the complex PF, that is, disc",
+   "query": "moead"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/cec.2009.4982949",
+   "title": "The performance of a new version of MOEA/D on CEC09 unconstrained MOP test instances",
+   "date": "2009",
+   "venue": "IEEE Congress on Evolutionary Computation (CEC)",
+   "citations": 631,
+   "authors": [],
+   "abstract": "This paper describes the idea of MOEA/D and proposes a strategy for allocating the computational resource to different subproblems in MOEA/D. The new version of MOEA/D has been tested on all the CEC09 unconstrained MOP test instances.",
+   "query": "moead"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2016.2608507",
+   "title": "A Survey of Multiobjective Evolutionary Algorithms based on Decomposition",
+   "date": "2016",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 560,
+   "authors": [],
+   "abstract": "Decomposition is a well-known strategy in traditional multiobjective optimization. However, the decomposition strategy was not widely employed in evolutionary multiobjective optimization until Zhang and Li proposed multiobjective evolutionary algorithm based on decomposition (MOEA/D) in 2007. MOEA/D proposed by Zhang and Li decomposes a multiobjective optimization problem into a number of scalar optimization subproblems and optimizes them in a collaborative manner using an evolutionary algorithm (EA). Each subproblem is optimized by utilizing the information mainly from its several neighboring subproblems. Since the proposition of MOEA/D in 2007, decomposition-based MOEAs have attracted significant attention from the researchers. Investigations have been undertaken in several directions, including development of novel weight vector generation methods, use of new decomposition approaches, efficient allocation of computational resources, modifications in the reproduction operation, mating selection and replacement mechanism, hybridizing decomposition- and dominance-based approaches, etc. Furthermore, several attempts have been made at extending the decomposition-based framework to constrained multiobjective optimization, many-objective optimization, and incorporate the preference of decision makers. Additionally, there have been many attempts at application of decomposition-based MOEAs to solve complex real-world optimization problems. This paper presents a comprehensive survey",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/tsmcb.2012.2231860",
+   "title": "MOEA/D-ACO: A Multiobjective Evolutionary Algorithm Using Decomposition and AntColony",
+   "date": "2013",
+   "venue": "IEEE Transactions on Cybernetics",
+   "citations": 276,
+   "authors": [
+    "Liangjun Ke",
+    "Qingfu Zhang",
+    "Roberto Battiti"
+   ],
+   "abstract": "",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/tcyb.2017.2779450",
+   "title": "MOEA/HD: A Multiobjective Evolutionary Algorithm Based on Hierarchical Decomposition",
+   "date": "2019",
+   "venue": "IEEE Transactions on Cybernetics",
+   "citations": 134,
+   "authors": [
+    "Hang Xu",
+    "Wenhua Zeng",
+    "Defu Zhang",
+    "Xiangxiang Zeng"
+   ],
+   "abstract": "",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1162/evco_a_00299",
+   "title": "VSD-MOEA: A Dominance-Based Multiobjective Evolutionary Algorithm with Explicit Variable Space Diversity Management",
+   "date": "2022",
+   "venue": "Evolutionary Computation",
+   "citations": 7,
+   "authors": [
+    "Joel Chac\u00f3n Castillo",
+    "Carlos Segura",
+    "Carlos A. Coello Coello"
+   ],
+   "abstract": "Abstract Most state-of-the-art Multiobjective Evolutionary Algorithms (moeas) promote the preservation of diversity of objective function space but neglect the diversity of decision variable space. The aim of this article is to show that explicitly managing the amount of diversity maintained in the decision variable space is useful to increase the quality of moeas when taking into account metrics of the objective space. Our novel Variable Space Diversity-based MOEA (vsd-moea) explicitly considers the diversity of both decision variable and objective function space. This information is used with the aim of properly adapting the balance between exploration and intensification during the optimization process. Particularly, at the initial stages, decisions made by the approach are more biased by the information on the diversity of the variable space, whereas it gradually grants more importance to the diversity of objective function space as the evolution progresses. The latter is achieved through a novel density estimator. The new method is compared with state-of-art moeas using several benchmarks with two and three objectives. This novel proposal yields much better results than state-of-the-art schemes when considering metrics applied on objective function space, exhibiting a more stable and robust behavior.",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cec48606.2020.9185741",
+   "title": "A hybrid algorithm based on MOEA/D and local search for multiobjective optimization",
+   "date": "2020",
+   "venue": "2020 IEEE Congress on Evolutionary Computation (CEC)",
+   "citations": 5,
+   "authors": [
+    "Man-Fai Leung",
+    "Sin-Chun Ng"
+   ],
+   "abstract": "",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1201/9780429298028-12",
+   "title": "Multiobjective Evolutionary Algorithm Based on Decomposition",
+   "date": "2021",
+   "venue": "Applied Evolutionary Algorithms for Engineers Using Python",
+   "citations": 3,
+   "authors": [
+    "Leonardo Azevedo Scardua"
+   ],
+   "abstract": "",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/itnec.2017.8285046",
+   "title": "Design of dielectric-loaded compact broadband circularly-polarized helix antenna by using multiobjective evolutionary algorithm based on decomposition (MOEA/D)",
+   "date": "2017",
+   "venue": "2017 IEEE 2nd Information Technology, Networking, Electronic and Automation Control Conference (ITNEC)",
+   "citations": 1,
+   "authors": [
+    "Dawei Ding",
+    "Youwei Tu",
+    "Yunxuan Lin",
+    "Xiaodong Ding"
+   ],
+   "abstract": "",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1511.05625v1",
+   "title": "MOEA/D-GM: Using probabilistic graphical models in MOEA/D for solving combinatorial optimization problems",
+   "date": "2015-11-18",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Murilo Zangari de Souza",
+    "Roberto Santana",
+    "Aurora Trinidad Ramirez Pozo",
+    "Alexander Mendiburu"
+   ],
+   "abstract": "Evolutionary algorithms based on modeling the statistical dependencies (interactions) between the variables have been proposed to solve a wide range of complex problems. These algorithms learn and sample probabilistic graphical models able to encode and exploit the regularities of the problem. This paper investigates the effect of using probabilistic modeling techniques as a way to enhance the behavior of MOEA/D framework. MOEA/D is a decomposition based evolutionary algorithm that decomposes a multi-objective optimization problem (MOP) in a number of scalar single-objective subproblems and optimizes them in a collaborative manner. MOEA/D framework has been widely used to solve several MOPs. The proposed algorithm, MOEA/D using probabilistic Graphical Models (MOEA/D-GM) is able to instantiate both univariate and multi-variate probabilistic models for each subproblem. To validate the introduced framework algorithm, an experimental study is conducted on a multi-objective version of the deceptive function Trap5. The results show that the variant of the framework (MOEA/D-Tree), where tree models are learned from the matrices of the mutual information between the variables, is able to capture the structure of the problem. MOEA/D-Tree is able to achieve significantly better results than both MOEA/D using genetic operators and MOEA/D using univariate probability models, in terms of the approximation to the true Pareto front.",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1807.06731v1",
+   "title": "The MOEADr Package - A Component-Based Framework for Multiobjective Evolutionary Algorithms Based on Decomposition",
+   "date": "2018-07-18",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Felipe Campelo",
+    "Lucas S. Batista",
+    "Claus Aranha"
+   ],
+   "abstract": "Multiobjective Evolutionary Algorithms based on Decomposition (MOEA/D) represent a widely used class of population-based metaheuristics for the solution of multicriteria optimization problems. We introduce the MOEADr package, which offers many of these variants as instantiations of a component-oriented framework. This approach contributes for easier reproducibility of existing MOEA/D variants from the literature, as well as for faster development and testing of new composite algorithms. The package offers an standardized, modular implementation of MOEA/D based on this framework, which was designed aiming at providing researchers and practitioners with a standard way to discuss and express MOEA/D variants. In this paper we introduce the design principles behind the MOEADr package, as well as its current components. Three case studies are provided to illustrate the main aspects of the package.",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/b978-0-12-819795-0.00006-2",
+   "title": "Multiobjective evolutionary algorithm (MOEA)-based sparse clustering",
+   "date": "2020",
+   "venue": "Brain and Nature-Inspired Learning Computation and Recognition",
+   "citations": 0,
+   "authors": [
+    "Licheng Jiao",
+    "Ronghua Shang",
+    "Fang Liu",
+    "Weitong Zhang"
+   ],
+   "abstract": "",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2010.00265v1",
+   "title": "Review and Analysis of Three Components of Differential Evolution Mutation Operator in MOEA/D-DE",
+   "date": "2020-10-01",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Ryoji Tanabe",
+    "Hisao Ishibuchi"
+   ],
+   "abstract": "A decomposition-based multi-objective evolutionary algorithm with a differential evolution variation operator (MOEA/D-DE) shows high performance on challenging multi-objective problems (MOPs). The DE mutation consists of three key components: a mutation strategy, an index selection method for parent individuals, and a bound-handling method. However, the configuration of the DE mutation operator that should be used for MOEA/D-DE has not been thoroughly investigated in the literature. This configuration choice confuses researchers and users of MOEA/D-DE. To address this issue, we present a review of the existing configurations of the DE mutation operator in MOEA/D-DE and systematically examine the influence of each component on the performance of MOEA/D-DE. Our review reveals that the configuration of the DE mutation operator differs depending on the source code of MOEA/D-DE. In our analysis, a total of 30 configurations (three index selection methods, two mutation strategies, and five bound handling methods) are investigated on 16 MOPs with up to five objectives. Results show that each component significantly affects the performance of MOEA/D-DE. We also present the most suitable configuration of the DE mutation operator, which maximizes the effectiveness of MOEA/D-DE.",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2010.00818v1",
+   "title": "An Analysis of Control Parameters of MOEA/D Under Two Different Optimization Scenarios",
+   "date": "2020-10-02",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Ryoji Tanabe",
+    "Hisao Ishibuchi"
+   ],
+   "abstract": "An unbounded external archive (UEA), which stores all nondominated solutions found during the search process, is frequently used to evaluate the performance of multi-objective evolutionary algorithms (MOEAs) in recent studies. A recent benchmarking study also shows that decomposition-based MOEA (MOEA/D) is competitive with state-of-the-art MOEAs when the UEA is incorporated into MOEA/D. However, a parameter study of MOEA/D using the UEA has not yet been performed. Thus, it is unclear how control parameter settings influence the performance of MOEA/D with the UEA. In this paper, we present an analysis of control parameters of MOEA/D under two performance evaluation scenarios. One is a final population scenario where the performance assessment of MOEAs is performed based on all nondominated solutions in the final population, and the other is a reduced UEA scenario where it is based on a pre-specified number of selected nondominated solutions from the UEA. Control parameters of MOEA/D investigated in this paper include the population size, scalarizing functions, and the penalty parameter of the penalty-based boundary intersection (PBI) function. Experimental results indicate that suitable settings of the three control parameters significantly depend on the choice of an optimization scenario. We also analyze the reason why the best parameter setting is totally different for each scenario.",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2108.09588v1",
+   "title": "Decomposition Multi-Objective Evolutionary Optimization: From State-of-the-Art to Future Opportunities",
+   "date": "2021-08-21",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Ke Li"
+   ],
+   "abstract": "Decomposition has been the mainstream approach in the classic mathematical programming for multi-objective optimization and multi-criterion decision-making. However, it was not properly studied in the context of evolutionary multi-objective optimization until the development of multi-objective evolutionary algorithm based on decomposition (MOEA/D). In this article, we present a comprehensive survey of the development of MOEA/D from its origin to the current state-of-the-art approaches. In order to be self-contained, we start with a step-by-step tutorial that aims to help a novice quickly get onto the working mechanism of MOEA/D. Then, selected major developments of MOEA/D are reviewed according to its core design components including weight vector settings, sub-problem formulations, selection mechanisms and reproduction operators. Besides, we also overviews some further developments for constraint handling, computationally expensive objective functions, preference incorporation, and real-world applications. In the final part, we shed some lights on emerging directions for future developments.",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2109.05741v1",
+   "title": "MOEA/D with Adaptative Number of Weight Vectors",
+   "date": "2021-09-13",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Yuri Lavinas",
+    "Abe Mitsu Teru",
+    "Yuta Kobayashi",
+    "Claus Aranha"
+   ],
+   "abstract": "The Multi-Objective Evolutionary Algorithm based on Decomposition (MOEA/D) is a popular algorithm for solving Multi-Objective Problems (MOPs). The main component of MOEA/D is to decompose a MOP into easier sub-problems using a set of weight vectors. The choice of the number of weight vectors significantly impacts the performance of MOEA/D. However, the right choice for this number varies, given different MOPs and search stages. Here we adaptively change the number of vectors by removing unnecessary vectors and adding new ones in empty areas of the objective space. Our MOEA/D variant uses the Consolidation Ratio to decide when to change the number of vectors, and then it decides where to add or remove these weighted vectors. We investigate the effects of this adaptive MOEA/D against MOEA/D with a poorly chosen set of vectors, a MOEA/D with fine-tuned vectors and MOEA/D-AWA on the DTLZ and ZDT benchmark functions. We analyse the algorithms in terms of hypervolume, IGD and entropy performance. Our results show that the proposed method is equivalent to MOEA/D with fine-tuned vectors and superior to MOEA/D with poorly defined vectors. Thus, our adaptive mechanism mitigates problems related to the choice of the number of weight vectors in MOEA/D, increasing the final performance of MOEA/D by filling empty areas of the objective space while avoiding premature stagnation of the search progress.",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2404.14571v2",
+   "title": "A Survey of Decomposition-Based Evolutionary Multi-Objective Optimization: Part I-Past and Future",
+   "date": "2024-04-22",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Ke Li"
+   ],
+   "abstract": "Decomposition has been the mainstream approach in classic mathematical programming for multi-objective optimization and multi-criterion decision-making. However, it was not properly studied in the context of evolutionary multi-objective optimization (EMO) until the development of multi-objective evolutionary algorithm based on decomposition (MOEA/D). In this two-part survey series, we use MOEA/D as the representative of decomposition-based EMO to review the up-to-date development in this area, and systematically and comprehensively analyze its research landscape. In the first part, we present a comprehensive survey of the development of MOEA/D from its origin to the current state-of-the-art approaches. In order to be self-contained, we start with a step-by-step tutorial that aims to help a novice quickly get onto the working mechanism of MOEA/D. Then, selected major developments of MOEA/D are reviewed according to its core design components including weight vector settings, subproblem formulations, selection mechanisms and reproduction operators. Besides, we also overview some selected advanced topics for constraint handling, optimization in dynamic and uncertain environments, computationally expensive objective functions, and preference incorporation. In the final part, we shed some light on emerging directions for future developments.",
+   "query": "moead"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1145/3838457.3838505",
+   "title": "MOEA/D-EPS: Evolutionary-Potential Scheduling for Decomposition-Based Multiobjective Optimization",
+   "date": "2026",
+   "venue": "Proceedings of the 2026 6th International Conference on Internet of Things and Machine Learning",
+   "citations": 0,
+   "authors": [
+    "Dongdong Chen",
+    "Yu Sun"
+   ],
+   "abstract": "",
+   "query": "moead"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2610.35334v1",
+   "title": "A Dynamic Decomposition Strategy for the MOEA/D With Proven Performance Guarantees",
+   "date": "2026-10-26",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Benjamin Doerr",
+    "Martin S. Krejca",
+    "No\u00e9 Weeks"
+   ],
+   "abstract": "The MOEA/D is one of the most successful multi-objective evolutionary algorithms. It operates by decomposing the optimization problem into single-objective subproblems, which are then solved in a co-evolutionary manner. The performance of the MOEA/D depends critically on this decomposition. In this work, we propose a novel way to adjust this decomposition on the fly, for the case of discrete bi-objective optimization. Different from all previous works in this direction, we support our new algorithm with a proven performance guarantee. This is the first work that rigorously proves the runtime of a dynamic multi-objective evolutionary algorithm. For monotonic distortions of the simple LOTZ benchmark, it is known that classic decompositions leave large holes in the Pareto front, making it very hard for the MOEA/D to cover the entire Pareto front. In contrast, we prove that our self-adjusting MOEA/D solves all these LOTZ problems in an expected number of $O(n^4)$ function evaluations. This relatively low runtime as well as the details of our mathematical proof show that the dynamic decomposition strategy indeed evolves a decomposition adjusted to each of these problem instances.",
+   "query": "moead"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1007/s00500-019-03794-x",
+   "title": "An improved epsilon constraint-handling method in MOEA/D for CMOPs with large infeasible regions",
+   "date": "2019",
+   "venue": "Soft Computing",
+   "citations": 478,
+   "authors": [
+    "Zhun Fan",
+    "Wenji Li",
+    "Xinye Cai",
+    "Han Huang"
+   ],
+   "abstract": "This paper proposes an improved epsilon constraint-handling mechanism, and combines it with a decomposition-based multi-objective evolutionary algorithm (MOEA/D) to solve constrained multi-objective optimization problems (CMOPs). The proposed constrained multi-objective evolutionary algorithm (CMOEA) is named MOEA/D-IEpsilon. It adjusts the epsilon level dynamically according to the ratio of feasible to total solutions (RFS) in the current population. In order to evaluate the performance of MOEA/D-IEpsilon, a new set of CMOPs with two and three objectives is designed, having large infeasible regions (relative to the feasible regions), and they are called LIR-CMOPs. Then the fourteen benchmarks, including LIR-CMOP1-14, are used to test MOEA/D-IEpsilon and four other decomposition-based CMOEAs, including MOEA/D-Epsilon, MOEA/D-SR, MOEA/D-CDP and C-MOEA/D. The experimental results indicate that MOEA/D-IEpsilon is significantly better than the other four CMOEAs on all of the test instances, which shows that MOEA/D-IEpsilon is more suitable for solving CMOPs with large infeasible regions. Furthermore, a real-world problem, namely the robot gripper optimization problem, is used to test the five CMOEAs. The experimental results demonstrate that MOEA/D-IEpsilon also outperforms the other four CMOEAs on this problem.",
+   "query": "moead-de"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tcyb.2015.2403131",
+   "title": "An Improved Multiobjective Optimization Evolutionary Algorithm Based on Decomposition for Complex Pareto Fronts",
+   "date": "2015",
+   "venue": "IEEE Transactions on Cybernetics",
+   "citations": 238,
+   "authors": [],
+   "abstract": "The multiobjective evolutionary algorithm based on decomposition (MOEA/D) has been shown to be very efficient in solving multiobjective optimization problems (MOPs). In practice, the Pareto-optimal front (POF) of many MOPs has complex characteristics. For example, the POF may have a long tail and sharp peak and disconnected regions, which significantly degrades the performance of MOEA/D. This paper proposes an improved MOEA/D for handling such kind of complex problems. In the proposed algorithm, a two-phase strategy (TP) is employed to divide the whole optimization procedure into two phases. Based on the crowdedness of solutions found in the first phase, the algorithm decides whether or not to delicate computational resources to handle unsolved subproblems in the second phase. Besides, a new niche scheme is introduced into the improved MOEA/D to guide the selection of mating parents to avoid producing duplicate solutions, which is very helpful for maintaining the population diversity when the POF of the MOP being optimized is discontinuous. The performance of the proposed algorithm is investigated on some existing benchmark and newly designed MOPs with complex POF shapes in comparison with several MOEA/D variants and other approaches. The experimental results show that the proposed algorithm produces promising performance on these complex problems.",
+   "query": "moead-de"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1016/j.asoc.2018.10.027",
+   "title": "MOEA/D with angle-based constrained dominance principle for constrained multi-objective optimization problems",
+   "date": "2018",
+   "venue": "Applied Soft Computing",
+   "citations": 171,
+   "authors": [
+    "Zhun Fan",
+    "Yi Fang",
+    "Wenji Li",
+    "Xinye Cai"
+   ],
+   "abstract": "This paper proposes a novel constraint-handling mechanism named angle-based constrained dominance principle (ACDP) embedded in a decomposition-based multi-objective evolutionary algorithm (MOEA/D) to solve constrained multi-objective optimization problems (CMOPs). To maintain the diversity of the working population, ACDP utilizes the information of the angle of solutions to adjust the dominance relation of solutions during the evolutionary process. This paper uses 14 benchmark instances to evaluate the performance of the MOEA/D with ACDP (MOEA/D-ACDP). Additionally, an engineering optimization problem (which is I-beam optimization problem) is optimized. The proposed MOEA/D-ACDP, and four other decomposition-based CMOEAs, including C-MOEA/D, MOEA/D-CDP, MOEA/D-Epsilon and MOEA/D-SR are tested by the above benchmarks and the engineering application. The experimental results manifest that MOEA/D-ACDP is significantly better than the other four CMOEAs on these test instances and the real-world case, which indicates that ACDP is more effective for solving CMOPs.",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.ins.2012.06.007",
+   "title": "A modification to MOEA/D-DE for multiobjective optimization problems with complicated Pareto sets",
+   "date": "2012",
+   "venue": "Information Sciences",
+   "citations": 68,
+   "authors": [
+    "Yan-Yan Tan",
+    "Yong-Chang Jiao",
+    "Hong Li",
+    "Xin-Kuan Wang"
+   ],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/tcyb.2021.3062949",
+   "title": "Resetting Weight Vectors in MOEA/D for Multiobjective Optimization Problems With Discontinuous Pareto Front",
+   "date": "2022",
+   "venue": "IEEE Transactions on Cybernetics",
+   "citations": 36,
+   "authors": [
+    "Chunjiang Zhang",
+    "Liang Gao",
+    "Xinyu Li",
+    "Weiming Shen"
+   ],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/tcyb.2019.2952881",
+   "title": "Manifold Learning-Inspired Mating Restriction for Evolutionary Multiobjective Optimization With Complicated Pareto Sets",
+   "date": "2021",
+   "venue": "IEEE Transactions on Cybernetics",
+   "citations": 31,
+   "authors": [
+    "Linqiang Pan",
+    "Lianghao Li",
+    "Ran Cheng",
+    "Cheng He"
+   ],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.5220/0006905402870293",
+   "title": "Linear Subset Size Scheduling for Many-objective Optimization using NSGA-II based on Pareto Partial Dominance",
+   "date": "2018",
+   "venue": "Proceedings of the 15th International Conference on Informatics in Control, Automation and Robotics",
+   "citations": 3,
+   "authors": [
+    "Makoto Ohki"
+   ],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.5220/0003759500640072",
+   "title": "BRKGA ADAPTED TO MULTIOBJECTIVE UNIT COMMITMENT - Solving Pareto Frontier for UC Multiobjective Problem using BRKGA SPEA2 NPGA and NSGA II Techniques",
+   "date": "2012",
+   "venue": "Proceedings of the 1st International Conference on Operations Research and Enterprise Systems",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1410.4343v2",
+   "title": "Enhanced Multiobjective Evolutionary Algorithm based on Decomposition for Solving the Unit Commitment Problem",
+   "date": "2014-10-16",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Anupam Trivedi",
+    "Kunal Pal",
+    "Chiranjib Saha",
+    "Dipti Srinivasan"
+   ],
+   "abstract": "The unit commitment (UC) problem is a nonlinear, high-dimensional, highly constrained, mixed-integer power system optimization problem and is generally solved in the literature considering minimizing the system operation cost as the only objective. However, due to increasing environmental concerns, the recent attention has shifted to incorporating emission in the problem formulation. In this paper, a multi-objective evolutionary algorithm based on decomposition (MOEA/D) is proposed to solve the UC problem as a multi-objective optimization problem considering minimizing cost and emission as the multiple objec- tives. Since, UC problem is a mixed-integer optimization problem consisting of binary UC variables and continuous power dispatch variables, a novel hybridization strategy is proposed within the framework of MOEA/D such that genetic algorithm (GA) evolves the binary variables while differential evolution (DE) evolves the continuous variables. Further, a novel non-uniform weight vector distribution strategy is proposed and a parallel island model based on combination of MOEA/D with uniform and non-uniform weight vector distribution strategy is implemented to enhance the performance of the presented algorithm. Extensive case studies are presented on different test systems and the effectiveness of the proposed hybridization strategy, the non-uniform weight vector distribution strategy and parallel island model is verified through stringent simulated results. Further, exhaustive benchmarking against the algorithms proposed in the literature is presented to demonstrate the superiority of the proposed algorithm in obtaining significantly better converged and uniformly distributed trade-off solutions.",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21884/ijmter.2017.4009.fceig",
+   "title": "Multiobjective optimization during wire EDM of WC-4.79%Co composite using controlled NSGA II",
+   "date": "2017",
+   "venue": "International Journal of Modern Trends in Engineering &amp; Research",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/978-3-031-27250-9_17",
+   "title": "An Improved Fuzzy Classifier-Based Evolutionary Algorithm for Expensive Multiobjective Optimization Problems with Complicated Pareto Sets",
+   "date": "2023",
+   "venue": "Lecture Notes in Computer Science",
+   "citations": 0,
+   "authors": [
+    "Jinyuan Zhang",
+    "Linjun He",
+    "Hisao Ishibuchi"
+   ],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2306.02648v1",
+   "title": "Continuous Cartesian Genetic Programming based representation for Multi-Objective Neural Architecture Search",
+   "date": "2023-06-05",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Cosijopii Garcia-Garcia",
+    "Alicia Morales-Reyes",
+    "Hugo Jair Escalante"
+   ],
+   "abstract": "We propose a novel approach for the challenge of designing less complex yet highly effective convolutional neural networks (CNNs) through the use of cartesian genetic programming (CGP) for neural architecture search (NAS). Our approach combines real-based and block-chained CNNs representations based on CGP for optimization in the continuous domain using multi-objective evolutionary algorithms (MOEAs). Two variants are introduced that differ in the granularity of the search space they consider. The proposed CGP-NASV1 and CGP-NASV2 algorithms were evaluated using the non-dominated sorting genetic algorithm II (NSGA-II) on the CIFAR-10 and CIFAR-100 datasets. The empirical analysis was extended to assess the crossover operator from differential evolution (DE), the multi-objective evolutionary algorithm based on decomposition (MOEA/D) and S metric selection evolutionary multi-objective algorithm (SMS-EMOA) using the same representation. Experimental results demonstrate that our approach is competitive with state-of-the-art proposals in terms of classification performance and model complexity.",
+   "query": "moead-de"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/icaci69731.2026.11677786",
+   "title": "LLM-Enhanced Adaptive MOEA/D for Solving Multiobjective Problems with Complex Pareto Fronts",
+   "date": "2026",
+   "venue": "2026 18th International Conference on Advanced Computational Intelligence (ICACI)",
+   "citations": 0,
+   "authors": [
+    "Zhihua Li",
+    "Xianpeng Wang",
+    "Zhiming Dong",
+    "Erchao Li"
+   ],
+   "abstract": "",
+   "query": "moead-de"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2014.2315442",
+   "title": "Behavior of Multiobjective Evolutionary Algorithms on Many-Objective Knapsack Problems",
+   "date": "2014",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 291,
+   "authors": [],
+   "abstract": "We examine the behavior of three classes of evolutionary multiobjective optimization (EMO) algorithms on many-objective knapsack problems. They are Pareto dominance-based, scalarizing function-based, and hypervolume-based algorithms. NSGA-II, MOEA/D, SMS-EMOA, and HypE are examined using knapsack problems with 2-10 objectives. Our test problems are generated by randomly specifying coefficients (i.e., profits) in objectives. We also generate other test problems by combining two objectives to create a dependent or correlated objective. Experimental results on randomly generated many-objective knapsack problems are consistent with well-known performance deterioration of Pareto dominance-based algorithms. That is, NSGA-II is outperformed by the other algorithms. However, it is also shown that NSGA-II outperforms the other algorithms when objectives are highly correlated. MOEA/D shows totally different search behavior depending on the choice of a scalarizing function and its parameter value. Some MOEA/D variants work very well only on two-objective problems while others work well on many-objective problems with 4-10 objectives. We also obtain other interesting observations such as the performance improvement by similar parent recombination and the necessity of diversity improvement for many-objective knapsack problems.",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/access.2020.2973670",
+   "title": "A Survey of Multiobjective Evolutionary Algorithms Based on Decomposition: Variants, Challenges and Future Directions",
+   "date": "2020",
+   "venue": "IEEE Access",
+   "citations": 108,
+   "authors": [],
+   "abstract": "There are many challengeable multiobjective optimization problems in different areas, whose optimization objectives are usually diversionary. Decomposition methods and evolution mechanisms enable multiobjective evolutionary algorithms based on decomposition (MOEA/D) to tackle these complex optimization problems efficiently. Therefore, MOEA/D has found wide applications in various fields and been attracting increasingly significant attention from both academia and industry since it was first proposed by Zhang and Li in 2007. Many efforts that are dedicated to improving and extending MOEA/D have been summarized shortly by some papers in their introductions, and there exists only one article that reviewed MOEA/D comprehensively in 2017. However, a number of MOEA/D variants with novel methods solving versatile problems in different fields have been emerging since then. This article is motivated by a more systematic survey of MOEA/D from its original ideas to edge-cutting works, including its basic framework and a comprehensive overview of the improvements on key components (decomposition method, weight vector generation method, and evolutionary operator) and the extensions to both many-objective and constrained multiobjective optimizations. The findings of this survey are categorized in seven aspects with corresponding references. In addition, different from introducing briefly the future research directions of MOEA/D in conclusion of the survey in 2017, we present a more detaile",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1016/j.eswa.2017.09.051",
+   "title": "An improved MOEA/D algorithm for bi-objective optimization problems with complex Pareto fronts and its application to structural optimization",
+   "date": "2017",
+   "venue": "Expert Systems with Applications",
+   "citations": 92,
+   "authors": [],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1007/s40747-017-0061-9",
+   "title": "On the effect of normalization in MOEA/D for multi-objective and many-objective optimization",
+   "date": "2017",
+   "venue": "Complex & Intelligent Systems",
+   "citations": 79,
+   "authors": [],
+   "abstract": "The frequently used basic version of MOEA/D (multi-objective evolutionary algorithm based on decomposition) has no normalization mechanism of the objective space, whereas the normalization was discussed in the original MOEA/D paper. As a result, MOEA/D shows difficulties in finding a set of uniformly distributed solutions over the entire Pareto front when each objective has a totally different range of objective values. Recent variants of MOEA/D have normalization mechanisms for handling such a scaling issue. In this paper, we examine the effect of the normalization of the objective space on the performance of MOEA/D through computational experiments. A simple normalization mechanism is used to examine the performance of MOEA/D with and without normalization. These two types of MOEA/D are also compared with recently proposed many-objective algorithms: NSGA-III, MOEA/DD, and $$\\theta $$ -DEA. In addition to the frequently used many-objective test problems DTLZ and WFG, we use their minus versions. We also propose two variants of the DTLZ test problems for examining the effect of the normalization in MOEA/D. Test problems in one variant have objective functions with totally different ranges. The other variant has a kind of deceptive nature, where the range of each objective is the same on the Pareto front but totally different over the entire feasible region. Computational experiments on those test problems clearly show the necessity of the normalization. It is also shown that ",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.ins.2017.05.012",
+   "title": "Pareto adaptive penalty-based boundary intersection method for multi-objective optimization",
+   "date": "2017",
+   "venue": "Information Sciences",
+   "citations": 47,
+   "authors": [
+    "Mengjun Ming",
+    "Rui Wang",
+    "Yabing Zha",
+    "Tao Zhang"
+   ],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.ins.2019.03.040",
+   "title": "An adaptive penalty-based boundary intersection method for many-objective optimization problem",
+   "date": "2020",
+   "venue": "Information Sciences",
+   "citations": 18,
+   "authors": [
+    "Yutao Qi",
+    "Dazhuang Liu",
+    "Xiaodong Li",
+    "Jiaojiao Lei"
+   ],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1162/evco_a_00276",
+   "title": "Effect of Objective Normalization and Penalty Parameter on Penalty Boundary Intersection Decomposition-Based Evolutionary Many-Objective Optimization Algorithms",
+   "date": "2021",
+   "venue": "Evolutionary Computation",
+   "citations": 18,
+   "authors": [
+    "Lei Chen",
+    "Kalyanmoy Deb",
+    "Hai-Lin Liu",
+    "Qingfu Zhang"
+   ],
+   "abstract": "An objective normalization strategy is essential in any evolutionary multiobjective or many-objective optimization (EMO or EMaO) algorithm, due to the distance calculations between objective vectors required to compute diversity and convergence of population members. For the decomposition-based EMO/EMaO algorithms involving the Penalty Boundary Intersection (PBI) metric, normalization is an important matter due to the computation of two distance metrics. In this article, we make a theoretical analysis of the effect of instabilities in the normalization process on the performance of PBI-based MOEA/D and a proposed PBI-based NSGA-III procedure. Although the effect is well recognized in the literature, few theoretical studies have been done so far to understand its true nature and the choice of a suitable penalty parameter value for an arbitrary problem. The developed theoretical results have been corroborated with extensive experimental results on three to 15-objective convex and non-convex instances of DTLZ and WFG problems. The article, makes important theoretical conclusions on PBI-based decomposition algorithms derived from the study.",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cec.2016.7744053",
+   "title": "An adaptive penalty-based boundary intersection approach for multiobjective evolutionary algorithm based on decomposition",
+   "date": "2016",
+   "venue": "2016 IEEE Congress on Evolutionary Computation (CEC)",
+   "citations": 7,
+   "authors": [
+    "Jinglei Guo",
+    "Shengxiang Yang",
+    "Shouyong Jiang"
+   ],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.ins.2024.121837",
+   "title": "A multi/many-objective evolutionary algorithm based on normal-boundary intersection direction",
+   "date": "2025",
+   "venue": "Information Sciences",
+   "citations": 4,
+   "authors": [
+    "Qinghua Gu",
+    "Yu Chen",
+    "Dan Wang",
+    "Di Liu"
+   ],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cis54983.2021.00012",
+   "title": "A Multi-Objective Decomposition Based Evolutionary Algorithm Using Adaptive Searching Method",
+   "date": "2021",
+   "venue": "2021 17th International Conference on Computational Intelligence and Security (CIS)",
+   "citations": 1,
+   "authors": [
+    "Xiaofang Guo"
+   ],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/s10489-023-04717-y",
+   "title": "Mathematical foundation, discussion and suggestion on penalty parameter setting of penalty-based boundary intersection method for many-objective optimization problems",
+   "date": "2023",
+   "venue": "Applied Intelligence",
+   "citations": 1,
+   "authors": [
+    "Chenglin Yang",
+    "Shulin Tian"
+   ],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.32604/cmc.2025.060887",
+   "title": "Collaborative Decomposition Multi-Objective Improved Elephant Clan Optimization Based on Penalty-Based and Normal Boundary Intersection",
+   "date": "2025",
+   "venue": "Computers, Materials &amp; Continua",
+   "citations": 1,
+   "authors": [
+    "Mengjiao Wei",
+    "Wenyu Liu"
+   ],
+   "abstract": "",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21203/rs.3.rs-3875843/v1",
+   "title": "High-dimensional multi-objective evolutionary algorithm based on adaptive penalty parameters and improved association methods",
+   "date": "2024",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Shanshan Wang",
+    "Jiacheng Wang",
+    "Siying Xiang",
+    "Liang Zeng"
+   ],
+   "abstract": "Abstract The balance between convergence and diversity is a crucial and challenging aspect of evolutionary multi-objective optimization. In order to balance them, this paper proposes a high-dimensional multi-objective evolutionary algorithm based on adaptive penalty parameters and an improved association method (MOEAAP). An adaptive penalty parameter is first proposed and utilized in non-dominated sorting based on reference points, allowing for the dynamic assignment of Pareto ranks to the population according to changes in iteration counts and objective dimensions. Additionally, an improved association method is employed to categorize candidate solutions into associated and non-associated solutions, while associated solutions are given preferential consideration. To verify the feasibility of the proposed algorithm, it is compared with several mainstream algorithms through simulation experiments, and is applied to multiple practical applications. Experimental results show the algorithm effectively balances convergence and diversity in high-dimensional, complex multi-objective optimization.",
+   "query": "moead-pbi"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.ijepes.2020.106050",
+   "title": "MOEA/D with many-stage dynamical resource allocation strategy to solution of many-objective OPF problems",
+   "date": "2020",
+   "venue": "International Journal of Electrical Power &amp; Energy Systems",
+   "citations": 34,
+   "authors": [
+    "Jingrui Zhang",
+    "Xiaoqing Zhu",
+    "Po Li"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cec48606.2020.9185549",
+   "title": "MOEA/D-S<sup>3</sup>: MOEA/D using SVM-based Surrogates adjusted to Subproblems for Many objective optimization",
+   "date": "2020",
+   "venue": "2020 IEEE Congress on Evolutionary Computation (CEC)",
+   "citations": 9,
+   "authors": [
+    "Takumi Sonoda",
+    "Masaya Nakata"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/access.2020.2999417",
+   "title": "A Decomposition Method Based on Random Objective Division for MOEA/D in Many-Objective Optimization",
+   "date": "2020",
+   "venue": "IEEE Access",
+   "citations": 4,
+   "authors": [
+    "Xue Lu",
+    "Yanyan Tan",
+    "Wei Zheng",
+    "Lili Meng"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cec.2015.7257245",
+   "title": "MOEA/D using constant-distance based neighbors designed for many-objective optimization",
+   "date": "2015",
+   "venue": "2015 IEEE Congress on Evolutionary Computation (CEC)",
+   "citations": 3,
+   "authors": [
+    "Hiroyuki Sato"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.5220/0012190100003543",
+   "title": "Maritime Dynamic Resource Allocation and Risk Minimization Using Visual Analytics and Elitist Multi-Objective Optimization",
+   "date": "2023",
+   "venue": "Proceedings of the 20th International Conference on Informatics in Control, Automation and Robotics",
+   "citations": 2,
+   "authors": [
+    "Mayamin Raha",
+    "Md. Sayed",
+    "Monica Nicolescu",
+    "Mircea Nicolescu"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/cac48633.2019.8996706",
+   "title": "Many-objective power flow optimization problems based on an improved MOEA/D with dynamical resource allocation strategy",
+   "date": "2019",
+   "venue": "2019 Chinese Automation Congress (CAC)",
+   "citations": 0,
+   "authors": [
+    "Xiaoqing Zhu",
+    "Jingrui Zhang",
+    "Zezhi Wu"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2001.06980v1",
+   "title": "MOEA/D with Random Partial Update Strategy",
+   "date": "2020-01-20",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Yuri Lavinas",
+    "Claus Aranha",
+    "Marcelo Ladeira",
+    "Felipe Campelo"
+   ],
+   "abstract": "Recent studies on resource allocation suggest that some subproblems are more important than others in the context of the MOEA/D, and that focusing on the most relevant ones can consistently improve the performance of that algorithm. These studies share the common characteristic of updating only a fraction of the population at any given iteration of the algorithm. In this work we investigate a new, simpler partial update strategy, in which a random subset of solutions is selected at every iteration. The performance of the MOEA/D using this new resource allocation approach is compared experimentally against that of the standard MOEA/D-DE and the MOEA/D with relative improvement-based resource allocation. The results indicate that using the MOEA/D with this new partial update strategy results in improved HV and IGD values, and a much higher proportion of non-dominated solutions, particularly as the number of updated solutions at every iteration is reduced.",
+   "query": "moead-resource"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2112.11939v1",
+   "title": "Faster Convergence in Multi-Objective Optimization Algorithms Based on Decomposition",
+   "date": "2021-12-21",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Yuri Lavinas",
+    "Marcelo Ladeira",
+    "Claus Aranha"
+   ],
+   "abstract": "The Resource Allocation approach (RA) improves the performance of MOEA/D by maintaining a big population and updating few solutions each generation. However, most of the studies on RA generally focused on the properties of different Resource Allocation metrics. Thus, it is still uncertain what the main factors are that lead to increments in performance of MOEA/D with RA. This study investigates the effects of MOEA/D with the Partial Update Strategy in an extensive set of MOPs to generate insights into correspondences of MOEA/D with the Partial Update and MOEA/D with small population size and big population size. Our work undertakes an in-depth analysis of the populational dynamics behaviour considering their final approximation Pareto sets, anytime hypervolume performance, attained regions and number of unique non-dominated solutions. Our results indicate that MOEA/D with Partial Update progresses with the search as fast as MOEA/D with small population size and explores the search space as MOEA/D with big population size. MOEA/D with Partial Update can mitigate common problems related to population size choice with better convergence speed in most MOPs, as shown by the results of hypervolume and number of unique non-dominated solutions, the anytime performance and Empirical Attainment Function indicates.",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1002/9781119848899.ch20",
+   "title": "Many\u2010objective Robust Optimization\u2010based Dynamic VAR Resource Planning",
+   "date": "2023",
+   "venue": "Stability\u2010Constrained Optimization for Modern Power System Operation and Planning",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.4721127",
+   "title": "Hk-Moea/D: A Historical Knowledge-Guided Resource Allocation for Decomposition Multiobjective Optimization",
+   "date": "2024",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Wei Li",
+    "Xiaolong Zeng",
+    "Ying Huang",
+    "Yiu-ming Cheung"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2403.10299v1",
+   "title": "A Multi-constraint and Multi-objective Allocation Model for Emergency Rescue in IoT Environment",
+   "date": "2024-03-15",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Xinrun Xu",
+    "Zhanbiao Lian",
+    "Yurong Wu",
+    "Manying Lv"
+   ],
+   "abstract": "Emergency relief operations are essential in disaster aftermaths, necessitating effective resource allocation to minimize negative impacts and maximize benefits. In prolonged crises or extensive disasters, a systematic, multi-cycle approach is key for timely and informed decision-making. Leveraging advancements in IoT and spatio-temporal data analytics, we've developed the Multi-Objective Shuffled Gray-Wolf Frog Leaping Model (MSGW-FLM). This multi-constraint, multi-objective resource allocation model has been rigorously tested against 28 diverse challenges, showing superior performance in comparison to established models such as NSGA-II, IBEA, and MOEA/D. MSGW-FLM's effectiveness is particularly notable in complex, multi-cycle emergency rescue scenarios, which involve numerous constraints and objectives. This model represents a significant step forward in optimizing resource distribution in emergency response situations.",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21203/rs.3.rs-11200633/v1",
+   "title": "Dynamic Multi-Objective Optimization for Batch-wise Task Assignment and Resource Allocation in Mobile Edge Computing",
+   "date": "2026",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Yingying Sun",
+    "Zhiming Dong",
+    "Gongshu Wang"
+   ],
+   "abstract": "Abstract In practical mobile edge computing systems, computation tasks arrive in successive batches while task attributes, wireless conditions, and available resources vary across decision slots. This paper formulates batch-wise task assignment and communication/computing resource allocation as a constrained dynamic bi-objective optimization problem and proposes a Location-Resource Coupled Dynamic NSGA-II (LRC-DNSGA-II). Its Location-Resource Coupled Variation operator captures the dependency between discrete assignment and continuous allocation by restricting assignment mutation to accessible execution sites and resetting associated resource-weight genes when locations change. A task-feature-matched dynamic response mechanism reuses relevant decision information across successive batches. Experiments under dynamic batch-wise MEC scenarios show that LRC-DNSGA-II significantly outperforms four comparison methods in hypervolume and inverted generational distance. Ablation studies indicate that coupled variation mainly improves final approximation quality, whereas dynamic response primarily accelerates adaptation after batch transitions.",
+   "query": "moead-resource"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/s00500-026-11508-3",
+   "title": "MOEA/D with elitist resource allocation for structural optimization problems",
+   "date": "2026",
+   "venue": "Soft Computing",
+   "citations": 0,
+   "authors": [
+    "Mustafa Altiok",
+    "Ahmet \u00d6zki\u015f",
+    "Mesut G\u00fcnd\u00fcz"
+   ],
+   "abstract": "",
+   "query": "moead-resource"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1155/2014/640764",
+   "title": "Chaotic Multiobjective Evolutionary Algorithm Based on Decomposition for Test Task Scheduling Problem",
+   "date": "2014",
+   "venue": "Mathematical Problems in Engineering",
+   "citations": 9,
+   "authors": [],
+   "abstract": "Test task scheduling problem (TTSP) is a complex optimization problem and has many local optima. In this paper, a hybrid chaotic multiobjective evolutionary algorithm based on decomposition (CMOEA/D) is presented to avoid becoming trapped in local optima and to obtain high quality solutions. First, we propose an improving integrated encoding scheme (IES) to increase the efficiency. Then ten chaotic maps are applied into the multiobjective evolutionary algorithm based on decomposition (MOEA/D) in three phases, that is, initial population and crossover and mutation operators. To identify a good approach for hybrid MOEA/D and chaos and indicate the effectiveness of the improving IES several experiments are performed. The Pareto front and the statistical results demonstrate that different chaotic maps in different phases have different effects for solving the TTSP especially the circle map and ICMIC map. The similarity degree of distribution between chaotic maps and the problem is a very essential factor for the application of chaotic maps. In addition, the experiments of comparisons of CMOEA/D and variable neighborhood MOEA/D (VNM) indicate that our algorithm has the best performance in solving the TTSP.",
+   "query": "moead-weight"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1002.0745v1",
+   "title": "Using CODEQ to Train Feed-forward Neural Networks",
+   "date": "2010-02-03",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Mahamed G. H. Omran",
+    "Faisal al-Adwani"
+   ],
+   "abstract": "CODEQ is a new, population-based meta-heuristic algorithm that is a hybrid of concepts from chaotic search, opposition-based learning, differential evolution and quantum mechanics. CODEQ has successfully been used to solve different types of problems (e.g. constrained, integer-programming, engineering) with excellent results. In this paper, CODEQ is used to train feed-forward neural networks. The proposed method is compared with particle swarm optimization and differential evolution algorithms on three data sets with encouraging results.",
+   "query": "opposition"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1709.06909v2",
+   "title": "Opposition based Ensemble Micro Differential Evolution",
+   "date": "2017-09-08",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Hojjat Salehinejad",
+    "Shahryar Rahnamayan",
+    "Hamid R. Tizhoosh"
+   ],
+   "abstract": "Differential evolution (DE) algorithm with a small population size is called Micro-DE (MDE). A small population size decreases the computational complexity but also reduces the exploration ability of DE by limiting the population diversity. In this paper, we propose the idea of combining ensemble mutation scheme selection and opposition-based learning concepts to enhance the diversity of population in MDE at mutation and selection stages. The proposed algorithm enhances the diversity of population by generating a random mutation scale factor per individual and per dimension, randomly assigning a mutation scheme to each individual in each generation, and diversifying individuals selection using opposition-based learning. This approach is easy to implement and does not require the setting of mutation scheme selection and mutation scale factor. Experimental results are conducted for a variety of objective functions with low and high dimensionality on the CEC Black- Box Optimization Benchmarking 2015 (CEC-BBOB 2015). The results show superior performance of the proposed algorithm compared to the other micro-DE algorithms.",
+   "query": "opposition"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1908.08011v2",
+   "title": "A Fast and Efficient Stochastic Opposition-Based Learning for Differential Evolution in Numerical Optimization",
+   "date": "2019-08-09",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Tae Jong Choi",
+    "Julian Togelius",
+    "Yun-Gyung Cheong"
+   ],
+   "abstract": "A fast and efficient stochastic opposition-based learning (OBL) variant is proposed in this paper. OBL is a machine learning concept to accelerate the convergence of soft computing algorithms, which consists of simultaneously calculating an original solution and its opposite. Recently, a stochastic OBL variant called BetaCOBL was proposed, which is capable of controlling the degree of opposite solutions, preserving useful information held by original solutions, and preventing the waste of fitness evaluations. While it has shown outstanding performance compared to several state-of-the-art OBL variants, the high computational cost of BetaCOBL may hinder it from cost-sensitive optimization problems. Also, as it assumes that the decision variables of a given problem are independent, BetaCOBL may be ineffective for optimizing inseparable problems. In this paper, we propose an improved BetaCOBL that mitigates all the limitations. The proposed algorithm called iBetaCOBL reduces the computational cost from $O(NP^{2} \\cdot D)$ to $O(NP \\cdot D)$ ($NP$ and $D$ stand for population size and a dimension, respectively) using a linear time diversity measure. Also, the proposed algorithm preserves strongly dependent variables that are adjacent to each other using multiple exponential crossover. We used differential evolution (DE) variants to evaluate the performance of the proposed algorithm. The results of the performance evaluations on a set of 58 test functions show the excellent performance of iBetaCOBL compared to ten state-of-the-art OBL variants, including BetaCOBL.",
+   "query": "opposition"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2106.15392v1",
+   "title": "Differential Evolution-based Neural Network Training Incorporating a Centroid-based Strategy and Dynamic Opposition-based Learning",
+   "date": "2021-06-29",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Seyed Jalaleddin Mousavirad",
+    "Diego Oliva",
+    "Salvador Hinojosa",
+    "Gerald Schaefer"
+   ],
+   "abstract": "Training multi-layer neural networks (MLNNs), a challenging task, involves finding appropriate weights and biases. MLNN training is important since the performance of MLNNs is mainly dependent on these network parameters. However, conventional algorithms such as gradient-based methods, while extensively used for MLNN training, suffer from drawbacks such as a tendency to getting stuck in local optima. Population-based metaheuristic algorithms can be used to overcome these problems. In this paper, we propose a novel MLNN training algorithm, CenDE-DOBL, that is based on differential evolution (DE), a centroid-based strategy (Cen-S), and dynamic opposition-based learning (DOBL). The Cen-S approach employs the centroid of the best individuals as a member of population, while other members are updated using standard crossover and mutation operators. This improves exploitation since the new member is obtained based on the best individuals, while the employed DOBL strategy, which uses the opposite of an individual, leads to enhanced exploration. Our extensive experiments compare CenDE-DOBL to 26 conventional and population-based algorithms and confirm it to provide excellent MLNN training performance.",
+   "query": "opposition"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2305.02731v2",
+   "title": "A Cluster-Based Opposition Differential Evolution Algorithm Boosted by a Local Search for ECG Signal Classification",
+   "date": "2023-05-04",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Mehran Pourvahab",
+    "Seyed Jalaleddin Mousavirad",
+    "Virginie Felizardo",
+    "Nuno Pombo"
+   ],
+   "abstract": "Electrocardiogram (ECG) signals, which capture the heart's electrical activity, are used to diagnose and monitor cardiac problems. The accurate classification of ECG signals, particularly for distinguishing among various types of arrhythmias and myocardial infarctions, is crucial for the early detection and treatment of heart-related diseases. This paper proposes a novel approach based on an improved differential evolution (DE) algorithm for ECG signal classification for enhancing the performance. In the initial stages of our approach, the preprocessing step is followed by the extraction of several significant features from the ECG signals. These extracted features are then provided as inputs to an enhanced multi-layer perceptron (MLP). While MLPs are still widely used for ECG signal classification, using gradient-based training methods, the most widely used algorithm for the training process, has significant disadvantages, such as the possibility of being stuck in local optimums. This paper employs an enhanced differential evolution (DE) algorithm for the training process as one of the most effective population-based algorithms. To this end, we improved DE based on a clustering-based strategy, opposition-based learning, and a local search. Clustering-based strategies can act as crossover operators, while the goal of the opposition operator is to improve the exploration of the DE algorithm. The weights and biases found by the improved DE algorithm are then fed into six gradient-based local search algorithms. In other words, the weights found by the DE are employed as an initialization point. Therefore, we introduced six different algorithms for the training process (in terms of different local search algorithms). In an extensive set of experiments, we showed that our proposed training algorithm could provide better results than the conventional training algorithms.",
+   "query": "opposition"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2412.19763v1",
+   "title": "Multi-population Differential Evolution for RSS based Cooperative Localization in Wireless Sensor Networks with Limited Communication Range",
+   "date": "2024-12-27",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Lismer Andres Caceres Najarro",
+    "Iickho Song",
+    "Muhammad Salman",
+    "Kiseon Kim"
+   ],
+   "abstract": "This paper presents a novel approach to deal with the cooperative localization problem in wireless sensor networks based on received signal strength measurements. In cooperative scenarios, the cost function of the localization problem becomes increasingly nonlinear and nonconvex due to the heightened interaction between sensor nodes, making the estimation of the positions of the target nodes more challenging. Although most of existing cooperative localization algorithms assure acceptable localization accuracy, their computational complexity increases dramatically, which may restrict their applicability. To reduce the computational complexity and provide competitive localization accuracy at the same time, we propose a localization algorithm based on the differential evolution with multiple populations, opposite-based learning, redirection, and anchoring. In this work, the cooperative localization cost function is split into several simpler cost functions, each of which accounts only for one individual target node. Then, each cost function is solved by a dedicated population of the proposed algorithm. In addition, an enhanced version of the proposed algorithm which incorporates the population midpoint scheme for further improvement in the localization accuracy is devised. Simulation results demonstrate that the proposed algorithms provide comparative localization accuracy with much lower computational complexity compared with the state-of-the-art algorithms.",
+   "query": "opposition"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2019.2944180",
+   "title": "Distributed Individuals for Multiple Peaks: A Novel Differential Evolution for Multimodal Optimization Problems",
+   "date": "2019",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 146,
+   "authors": [],
+   "abstract": "Locating more peaks and refining the solution accuracy on the found peaks are two challenging issues in solving multimodal optimization problems (MMOPs). To deal with these two challenges, a distributed individuals differential evolution (DIDE) algorithm is proposed in this article based on a distributed individuals for multiple peaks (DIMP) framework and two novel mechanisms. First, the DIMP framework provides sufficient diversity by letting each individual act as a distributed unit to track a peak. Based on the DIMP framework, each individual uses a virtual population controlled by an adaptive range adjustment strategy to explore the search space sufficiently for locating a peak and then gradually approach it. Second, the two novel mechanisms named lifetime mechanism and elite learning mechanism (ELM) cooperate with the DIMP framework. The lifetime mechanism is inspired by the natural phenomenon that every organism will gradually age and has a limited lifespan. When an individual runs out of its lifetime and also has good fitness, it is regarded as an elite solution and will be added to an archive. Then the individual restarts a new lifetime, so as to bring further diversity to locate more peaks. The ELM is proposed to refine the accuracy of those elite solutions in the archive, being efficient in dealing with the solution accuracy issue on the found peaks. The experimental results on 20 multimodal benchmark test functions show that the proposed DIDE algorithm has generally",
+   "query": "restart"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/tevc.2010.2087026",
+   "title": "An Inflationary Differential Evolution Algorithm for Space Trajectory Optimization",
+   "date": "2011",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 121,
+   "authors": [],
+   "abstract": "In this paper, we define a discrete dynamical system that governs the evolution of a population of agents. From the dynamical system, a variant of differential evolution (DE) is derived. It is then demonstrated that, under some assumptions on the differential mutation strategy and on the local structure of the objective function, the proposed dynamical system has fixed points toward which it converges with probability one for an infinite number of generations. This property is used to derive an algorithm that performs better than standard DE on some space trajectory optimization problems. The novel algorithm is then extended with a guided restart procedure that further increases the performance, reducing the probability of stagnation in deceptive local minima.",
+   "query": "restart"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.15830v3",
+   "title": "MSC-CMA-ES: Structure-Aware Restarts for CMA-ES via Cyclic Nearest-Better Basin Discovery",
+   "date": "2026-06-14",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Dimitar Nedanovski",
+    "Svetoslav Nenov",
+    "Dimitar Pilev"
+   ],
+   "abstract": "CMA-ES behaves, per restart, primarily as a local optimizer; multimodal search relies on restart strategies such as IPOP and BIPOP, which draw every restart uniformly and reuse no information from previous evaluations. Multi-Start Clustering CMA-ES (MSC-CMA-ES) makes restarts structure-aware: in alternating cycles, a Sobol pre-sample is partitioned into approximate basins of attraction by nearest-better clustering, restarts are seeded basin by basin with locally scaled step-sizes and population sizes, redundant basin visits are detected and excluded, and the remaining budget is spent on a budget-bounded, tolerance-disabled local refinement of the best-so-far solution. We evaluate the method on the four CEC suites (2014, 2017, 2020, and 2022) at their official budgets, across ten (suite, dimension) cells with dimensions 5--30, with 51 runs per function, and compare it with BIPOP-CMA-ES and five differential-evolution algorithms (ARRDE, jSO, j2020, NL-SHADE-RSP, and L-SRTDE). Read per function class over the $D\\leq 20$ cells, the results split three ways. On composition functions MSC-CMA-ES attains the best value on all aggregate measures, with $2.7\\times$ the fixed-budget target coverage of BIPOP-CMA-ES -- the highest composition coverage of any algorithm evaluated -- and leads in most suites, dimensions, and budgets. On unimodal and simple-multimodal functions it attains the best median error in aggregate but the lowest deep-target coverage, with orderings varying by suite and dimension. On hybrid functions both CMA algorithms trail the leading DE algorithms. All results and scripts are publicly available.",
+   "query": "restart"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/tevc.2008.927706",
+   "title": "Differential Evolution Algorithm With Strategy Adaptation for Global Numerical Optimization",
+   "date": "2009",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 3298,
+   "authors": [
+    "A.K. Qin",
+    "V.L. Huang",
+    "P.N. Suganthan"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1109/cec.2014.6900380",
+   "title": "Improving the search performance of SHADE using linear population size reduction",
+   "date": "2014",
+   "venue": "IEEE Congress on Evolutionary Computation (CEC)",
+   "citations": 1961,
+   "authors": [
+    "Ryoji Tanabe",
+    "Alex S. Fukunaga"
+   ],
+   "abstract": "SHADE is an adaptive DE which incorporates success-history based parameter adaptation and one of the state-of-the-art DE algorithms. This paper proposes L-SHADE, which further extends SHADE with Linear Population Size Reduction (LPSR), which continually decreases the population size according to a linear function. We evaluated the performance of L-SHADE on CEC2014 benchmarks and compared its search performance with state-of-the-art DE algorithms, as well as the state-of-the-art restart CMA-ES variants. The experimental results show that L-SHADE is quite competitive with state-of-the-art evolutionary algorithms.",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/s12597-009-0012-3",
+   "title": "Differential evolution algorithm with ensemble of populations for global numerical optimization",
+   "date": "2009",
+   "venue": "OPSEARCH",
+   "citations": 31,
+   "authors": [
+    "R. Mallipeddi",
+    "P. N. Suganthan"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/sde.2011.5952074",
+   "title": "A differential covariance matrix adaptation evolutionary algorithm for global optimization",
+   "date": "2011",
+   "venue": "2011 IEEE Symposium on Differential Evolution (SDE)",
+   "citations": 9,
+   "authors": [
+    "Saurav Ghosh",
+    "Subhrajit Roy",
+    "Sk. Minhazul Islam",
+    "Swagatam Das"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1080/0305215x.2019.1595611",
+   "title": "A hybrid iterated local search algorithm with adaptive perturbation mechanism by success-history based parameter adaptation for differential evolution (SHADE)",
+   "date": "2019",
+   "venue": "Engineering Optimization",
+   "citations": 9,
+   "authors": [
+    "Fuqing Zhao",
+    "Xuan He",
+    "Guoqiang Yang",
+    "Weimin Ma"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.4304/jcp.9.9.2139-2145",
+   "title": "An Adaptive Cauchy Differential Evolution Algorithm with Bias Strategy Adaptation Mechanism for Global Numerical Optimization",
+   "date": "2014",
+   "venue": "Journal of Computers",
+   "citations": 7,
+   "authors": [
+    "Tae Jong Choi",
+    "Chang Wook Ahn"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1145/3234664.3234676",
+   "title": "Asynchronous Differential Evolution with Strategy Adaptation for Global Numerical Optimization",
+   "date": "2018",
+   "venue": "Proceedings of the 2018 2nd High Performance Computing and Cluster Technologies Conference",
+   "citations": 3,
+   "authors": [
+    "Tae Jong Choi",
+    "Yeonju Lee"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/smc42975.2020.9283154",
+   "title": "One-array Differential Evolution Algorithm with a Novel Replacement Strategy for Numerical Optimization",
+   "date": "2020",
+   "venue": "2020 IEEE International Conference on Systems, Man, and Cybernetics (SMC)",
+   "citations": 3,
+   "authors": [
+    "Seyed Jalaleddin Mousavirad",
+    "Shahryar Rahnamayan"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2478/fcds-2020-0007",
+   "title": "An enhanced differential evolution algorithm with adaptation of switching crossover strategy for continuous optimization",
+   "date": "2020",
+   "venue": "Foundations of Computing and Decision Sciences",
+   "citations": 2,
+   "authors": [
+    "Pikul Puphasuk",
+    "Jeerayut Wetweerapong"
+   ],
+   "abstract": "Abstract Designing an efficient optimization method which also has a simple structure is generally required by users for its applications to a wide range of practical problems. In this research, an enhanced differential evolution algorithm with adaptation of switching crossover strategy (DEASC) is proposed as a general-purpose population-based optimization method for continuous optimization problems. DEASC extends the solving ability of a basic differential evolution algorithm (DE) whose performance significantly depends on user selection of the control parameters: scaling factor, crossover rate and population size. Like the original DE, the proposed method is aimed at e ciency, simplicity and robustness. The appropriate population size is selected to work in accordance with good choices of the scaling factors. Then, the switching crossover strategy of using low or high crossover rates are incorporated and adapted to suit the problem being solved. In this manner, the adaptation strategy is just a convenient add-on mechanism. To verify the performance of DEASC, it is tested on several benchmark problems of various types and di culties, and compared with some well-known methods in the literature. It is also applied to solve some practical systems of nonlinear equations. Despite its much simpler algorithmic structure, the experimental results show that DEASC greatly enhances the basic DE. It is able to solve all the test problems with fast convergence speed and overall outperfor",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/1802.09746v1",
+   "title": "Surrogate Model Assisted Cooperative Coevolution for Large Scale Optimization",
+   "date": "2018-02-27",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Zhigang Ren",
+    "Bei Pang",
+    "Yongsheng Liang",
+    "An Chen"
+   ],
+   "abstract": "It has been shown that cooperative coevolution (CC) can effectively deal with large scale optimization problems (LSOPs) through a divide-and-conquer strategy. However, its performance is severely restricted by the current context-vector-based sub-solution evaluation method since this method needs to access the original high dimensional simulation model when evaluating each sub-solution and thus requires many computation resources. To alleviate this issue, this study proposes a novel surrogate model assisted cooperative coevolution (SACC) framework. SACC constructs a surrogate model for each sub-problem obtained via decomposition and employs it to evaluate corresponding sub-solutions. The original simulation model is only adopted to reevaluate some good sub-solutions selected by surrogate models, and these real evaluated sub-solutions will be in turn employed to update surrogate models. By this means, the computation cost could be greatly reduced without significantly sacrificing evaluation quality. To show the efficiency of SACC, this study uses radial basis function (RBF) and success-history based adaptive differential evolution (SHADE) as surrogate model and optimizer, respectively. RBF and SHADE have been proved to be effective on small and medium scale problems. This study first scales them up to LSOPs of 1000 dimensions under the SACC framework, where they are tailored to a certain extent for adapting to the characteristics of LSOP and SACC. Empirical studies on IEEE CEC 2010 benchmark functions demonstrate that SACC significantly enhances the evaluation efficiency on sub-solutions, and even with much fewer computation resource, the resultant RBF-SHADE-SACC algorithm is able to find much better solutions than traditional CC algorithms.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2306.09931v1",
+   "title": "A Metaheuristic-based Machine Learning Approach for Energy Prediction in Mobile App Development",
+   "date": "2023-06-16",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Seyed Jalaleddin Mousavirad",
+    "Lu\u00eds A. Alexandre"
+   ],
+   "abstract": "Energy consumption plays a vital role in mobile App development for developers and end-users, and it is considered one of the most crucial factors for purchasing a smartphone. In addition, in terms of sustainability, it is essential to find methods to reduce the energy consumption of mobile devices since the extensive use of billions of smartphones worldwide significantly impacts the environment. Despite the existence of several energy-efficient programming practices in Android, the leading mobile ecosystem, machine learning-based energy prediction algorithms for mobile App development have yet to be reported. Therefore, this paper proposes a histogram-based gradient boosting classification machine (HGBC), boosted by a metaheuristic approach, for energy prediction in mobile App development. Our metaheuristic approach is responsible for two issues. First, it finds redundant and irrelevant features without any noticeable change in performance. Second, it performs a hyper-parameter tuning for the HGBC algorithm. Since our proposed metaheuristic approach is algorithm-independent, we selected 12 algorithms for the search strategy to find the optimal search algorithm. Our finding shows that a success-history-based parameter adaption for differential evolution with linear population size (L-SHADE) offers the best performance. It can improve performance and decrease the number of features effectively. Our extensive set of experiments clearly shows that our proposed approach can provide significant results for energy consumption prediction.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2401.08700v1",
+   "title": "Computationally Efficient Optimisation of Elbow-Type Draft Tube Using Neural Network Surrogates",
+   "date": "2024-01-14",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Ante Sikirica",
+    "Ivana Lu\u010din",
+    "Marta Alvir",
+    "Lado Kranj\u010devi\u0107"
+   ],
+   "abstract": "This study aims to provide a comprehensive assessment of single-objective and multi-objective optimisation algorithms for the design of an elbow-type draft tube, as well as to introduce a computationally efficient optimisation workflow. The proposed workflow leverages deep neural network surrogates trained on data obtained from numerical simulations. The use of surrogates allows for a more flexible and faster evaluation of novel designs. The success history-based adaptive differential evolution with linear reduction and the multi-objective evolutionary algorithm based on decomposition were identified as the best-performing algorithms and used to determine the influence of different objectives in the single-objective optimisation and their combined impact on the draft tube design in the multi-objective optimisation. The results for the single-objective algorithm are consistent with those of the multi-objective algorithm when the objectives are considered separately. Multi-objective approach, however, should typically be chosen, especially for computationally inexpensive surrogates. A multi-criteria decision analysis method was used to obtain optimal multi-objective results, showing an improvement of 1.5% and 17% for the pressure recovery factor and drag coefficient, respectively. The difference between the predictions and the numerical results is less than 0.5% for the pressure recovery factor and 3% for the drag coefficient. As the demand for renewable energy continues to increase, the relevance of data-driven optimisation workflows, as discussed in this study, will become increasingly important, especially in the context of global sustainability efforts.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2407.14271v1",
+   "title": "Modified-Improved Fitness Dependent Optimizer for Complex and Engineering Problems",
+   "date": "2024-06-27",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Hozan K. Hamarashid",
+    "Bryar A. Hassan",
+    "Tarik A. Rashid"
+   ],
+   "abstract": "Fitness dependent optimizer (FDO) is considered one of the novel swarm intelligent algorithms. Recently, FDO has been enhanced several times to improve its capability. One of the improvements is called improved FDO (IFDO). However, according to the research findings, the variants of FDO are constrained by two primary limitations that have been identified. Firstly, if the number of agents employed falls below five, it significantly diminishes the algorithm's precision. Secondly, the efficacy of FDO is intricately tied to the quantity of search agents utilized. To overcome these limitations, this study proposes a modified version of IFDO, called M-IFDO. The enhancement is conducted by updating the location of the scout bee to the IFDO to move the scout bees to achieve better performance and optimal solutions. More specifically, two parameters in IFDO, which are alignment and cohesion, are removed. Instead, the Lambda parameter is replaced in the place of alignment and cohesion. To verify the performance of the newly introduced algorithm, M-IFDO is tested on 19 basic benchmark functions, 10 IEEE Congress of Evolutionary Computation (CEC-C06 2019), and five real-world problems. M-IFDO is compared against five state-of-the-art algorithms: Improved Fitness Dependent Optimizer (IFDO), Improving Multi-Objective Differential Evolution algorithm (IMODE), Hybrid Sampling Evolution Strategy (HSES), Linear Success-History based Parameter Adaptation for Differential Evolution (LSHADE) and CMA-ES Integrated with an Occasional Restart Strategy and Increasing Population Size and An Iterative Local Search (NBIPOP-aCMAES). The verification criteria are based on how well the algorithm reaches convergence, memory usage, and statistical results. The results show that M-IFDO surpasses its competitors in several cases on the benchmark functions and five real-world problems.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2408.05556v1",
+   "title": "Evolutionary Neural Architecture Search for 3D Point Cloud Analysis",
+   "date": "2024-08-10",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Yisheng Yang",
+    "Guodong Du",
+    "Chean Khim Toa",
+    "Ho-Kin Tang"
+   ],
+   "abstract": "Neural architecture search (NAS) automates neural network design by using optimization algorithms to navigate architecture spaces, reducing the burden of manual architecture design. While NAS has achieved success, applying it to emerging domains, such as analyzing unstructured 3D point clouds, remains underexplored due to the data lying in non-Euclidean spaces, unlike images. This paper presents Success-History-based Self-adaptive Differential Evolution with a Joint Point Interaction Dimension Search (SHSADE-PIDS), an evolutionary NAS framework that encodes discrete deep neural network architectures to continuous spaces and performs searches in the continuous spaces for efficient point cloud neural architectures. Comprehensive experiments on challenging 3D segmentation and classification benchmarks demonstrate SHSADE-PIDS's capabilities. It discovered highly efficient architectures with higher accuracy, significantly advancing prior NAS techniques. For segmentation on SemanticKITTI, SHSADE-PIDS attained 64.51% mean IoU using only 0.55M parameters and 4.5GMACs, reducing overhead by over 22-26X versus other top methods. For ModelNet40 classification, it achieved 93.4% accuracy with just 1.31M parameters, surpassing larger models. SHSADE-PIDS provided valuable insights into bridging evolutionary algorithms with neural architecture optimization, particularly for emerging frontiers like point cloud learning.",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.5220/0014773600004818",
+   "title": "Optimization of Smoke Screen Projectile Deployment Strategy Based on Differential Evolution Algorithm",
+   "date": "2025",
+   "venue": "Proceedings of the 3rd International Conference on Data Analysis and Machine Learning",
+   "citations": 0,
+   "authors": [
+    "Shen Han",
+    "Lei Hao",
+    "Ting Gao"
+   ],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.7287/peerj-cs.2696v0.2/reviews/2",
+   "title": "Peer Review #2 of \"Enhanced mutation strategy based differential evolution for global optimization problems (v0.2)\"",
+   "date": "2025",
+   "venue": "",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2511.14517v1",
+   "title": "Tri-Hybrid Beamforming Design for Fully-Connected Pinching Antenna Systems",
+   "date": "2025-11-18",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Cheng-Jie Zhao",
+    "Zhaolin Wang",
+    "Hyundong Shin",
+    "Yuanwei Liu"
+   ],
+   "abstract": "A novel fully-connected (FC) tri-hybrid beamforming (THB) architecture is proposed for pinching antenna systems (PASS). In contrast to conventional sub-connected (SC) PASS, the proposed FC architecture employs a tunable phase-shifter network to interconnect all radio frequency (RF) chains with all waveguides. This facilitates a THB framework that integrates conventional hybrid analog-digital beamforming with pinching beamforming. A weighted sum-rate (WSR) optimization problem is then formulated to jointly optimize the transmit beamformers and pinching antenna (PA) positions. Two algorithms are developed to address this challenging non-convex problem. 1) Fractional programming (FP)-based algorithm: This algorithm directly maximizes the WSR using an FP-based alternating optimization framework. Particularly, a success-history based adaptive differential evolution (SHADE) method is proposed to optimize PA positions, effectively addressing the intractable multimodal objective function. 2) Zero-forcing (ZF)-based algorithm: To reduce design complexity, zero-forcing is employed for transmit beamforming. The PA positions are subsequently optimized to maximize the WSR via a modified SHADE method. Simulation results validate the effectiveness of the proposed algorithms, revealing that the FC-THB PASS achieves WSR comparable to the SC architecture while delivering superior energy efficiency with fewer RF chains.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2603.27089v1",
+   "title": "RDEx-SOP: Exploitation-Biased Reconstructed Differential Evolution for Fixed-Budget Bound-Constrained Single-Objective Optimization",
+   "date": "2026-03-28",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Sichen Tao",
+    "Yifei Yang",
+    "Ruihan Zhao",
+    "Kaiyu Wang"
+   ],
+   "abstract": "Bound-constrained single-objective numerical optimisation remains a key benchmark for assessing the robustness and efficiency of evolutionary algorithms. This report documents RDEx-SOP, an exploitation-biased success-history differential evolution variant used in the IEEE CEC 2025 numerical optimisation competition (C06 special session). RDEx-SOP combines success-history parameter adaptation, an exploitation-biased hybrid branch, and lightweight local perturbations to balance fast convergence and final solution quality under a strict evaluation budget. We evaluate RDEx-SOP on the official CEC 2025 SOP benchmark with the U-score framework (Speed and Accuracy categories). Experimental results show that RDEx-SOP achieves strong overall performance and statistically competitive final outcomes across the 29 benchmark functions.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2603.27090v1",
+   "title": "RDEx-CSOP: Feasibility-Aware Reconstructed Differential Evolution with Adaptive epsilon-Constraint Ranking",
+   "date": "2026-03-28",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Sichen Tao",
+    "Yifei Yang",
+    "Ruihan Zhao",
+    "Kaiyu Wang"
+   ],
+   "abstract": "Constrained single-objective numerical optimisation requires both feasibility maintenance and strong objective-value convergence under limited evaluation budgets. This report documents RDEx-CSOP, a constrained differential evolution variant used in the IEEE CEC 2025 numerical optimisation competition (C06 special session). RDEx-CSOP combines success-history parameter adaptation with an exploitation-biased hybrid search and an \u03b5-constraint handling mechanism with a time-varying threshold. We evaluate RDEx-CSOP on the official CEC 2025 CSOP benchmark using the U-score framework (Speed, Accuracy, and Constraint categories). The results show that RDEx-CSOP achieves the highest total score and the best average rank among all released comparison algorithms, mainly through strong speed and competitive constraint-handling performance across the 28 benchmark functions.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.27764v1",
+   "title": "DE-2LS: Differential Evolution with Lightweight Late Local Search for Constrained Numerical Optimization",
+   "date": "2026-06-26",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Dikshit Chauhan",
+    "Anupam Trivedi"
+   ],
+   "abstract": "Constrained single-objective numerical optimization requires a careful balance among feasibility, objective convergence, and computational efficiency under a fixed function-evaluation budget. This paper proposes DE-2LS, a late-stage, locally search-enhanced variant of differential evolution built on the RDEx framework. The proposed method preserves the original RDEx components, including mutation and crossover operators, success-history adaptation, archive mechanism, population-size reduction, and $\u03b5$-based constraint handling. A lightweight coordinate-pattern local search is added as a guarded polishing component around the current best solution. It is activated only in the late stage of the run, uses a small evaluation budget, and accepts candidates through a feasibility-aware comparison rule. Ablation results show that the finalized DE-2LS configuration achieves the best U-score among all tested variants, confirming that controlled late-stage refinement is more effective than aggressive or premature local search. In the direct comparison with RDEx, DE-2LS achieves a 5.58\\% gain in U-score. In the four-algorithm comparison, DE-2LS obtains the highest overall U-score of 80968 and the best total rank of 48 among RDEx, CL-SRDE, and UDE-III. These results indicate that DE-2LS improves the exploitation capability of the RDEx-based search framework while preserving its speed advantage under the combined speed-accuracy scoring criterion. The source code of DE-2LS is available at https://github.com/ChauhanDikshit?tab=repositories.",
+   "query": "shade"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2610.26202v1",
+   "title": "Hybrid metaheuristics for architectural design optimization under small evaluation and wall-clock budgets",
+   "date": "2026-10-19",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Luciano Ambrosini"
+   ],
+   "abstract": "Architectural and structural design optimization in parametric software affords about a thousand evaluations of an expensive model for problems with tens of variables, a regime for which most metaheuristics were not designed. On the side of artificial intelligence, two hybrid metaheuristics are proposed: a covariance matrix adaptation evolution strategy (CMA-ES) whose sampling is enriched with differential-evolution trial vectors, and a particle swarm with success-history parameter adaptation, differential-evolution injection and local refinement. A budget-aware delay of population-size reduction in adaptive differential evolution is also proposed. Under a hard cap of 1,200 evaluations, all counted, the CMA-ES hybrid ranks first on seven shifted and rotated functions at 10 and 30 variables and beats CMA-ES on six of seven functions at 30 variables. Ablations attribute this gain to the injection and show that a local search pays off only when its result re-enters the population. The delayed schedule improves three adaptive differential-evolution variants in 40 of 51 comparisons, with no loss. On the side of engineering application, in Grasshopper the CMA-ES hybrid and plain CMA-ES are never significantly worse than the optimizers of Galapagos, SilverEye, Opossum and Tunny on travelling-salesman instances and on a built 85-variable free-form shell, where they end 48 % below the best external tool in 15 minutes. On a 22-variable building-performance problem with binary choices, differential evolution leads instead. Shifting and rotating the functions reverses the rank of Harris hawks optimization. Solvers should therefore be selected by problem structure and stopping time, not by a single ranking.",
+   "query": "shade"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/tevc.2010.2059031",
+   "title": "Differential Evolution: A Survey of the State-of-the-Art",
+   "date": "2011",
+   "venue": "IEEE Transactions on Evolutionary Computation",
+   "citations": 4836,
+   "authors": [
+    "Swagatam Das",
+    "Ponnuthurai Nagaratnam Suganthan"
+   ],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/978-3-540-68830-3_7",
+   "title": "Multi-objective Optimization Using Differential Evolution: A Survey of the State-of-the-Art",
+   "date": "2008",
+   "venue": "Studies in Computational Intelligence",
+   "citations": 95,
+   "authors": [
+    "Efr\u00e9n Mezura-Montes",
+    "Margarita Reyes-Sierra",
+    "Carlos A. Coello Coello"
+   ],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1504/ijcsm.2014.064064",
+   "title": "Enhanced versions of differential evolution: state-of-the-art survey",
+   "date": "2014",
+   "venue": "International Journal of Computing Science and Mathematics",
+   "citations": 19,
+   "authors": [
+    "Wali Khan Mashwani"
+   ],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/sde.2013.6601456",
+   "title": "A brief survey of differential evolution on Graphic Processing Units",
+   "date": "2013",
+   "venue": "2013 IEEE Symposium on Differential Evolution (SDE)",
+   "citations": 5,
+   "authors": [
+    "Pavel Kromer",
+    "Jan Platos",
+    "Vaclav Snasel"
+   ],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1002/9780470823941.ch9",
+   "title": "An Introductory Survey on Differential Evolution in Electrical and Electronic Engineering",
+   "date": "2009",
+   "venue": "Differential Evolution",
+   "citations": 2,
+   "authors": [],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/access.2018.2882528",
+   "title": "State-of-the-Art Differential Evolution Algorithms Selection and Modifications for Difficult Functions",
+   "date": "2018",
+   "venue": "IEEE Access",
+   "citations": 2,
+   "authors": [
+    "Zhe Chen",
+    "Chengjun Li",
+    "Zukai Tang"
+   ],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/icpcsi.2017.8392102",
+   "title": "Data optimization with differential evolution strategies: A survey of the state-of-the-art",
+   "date": "2017",
+   "venue": "2017 IEEE International Conference on Power, Control, Signals and Instrumentation Engineering (ICPCSI)",
+   "citations": 1,
+   "authors": [
+    "Tarik Eltaeib",
+    "Julius Dichter"
+   ],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2172/7362128",
+   "title": "Energy from coal: a state-of-the-art review. [State-of-the-art survey]",
+   "date": "1975",
+   "venue": "",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21236/ada129063",
+   "title": "Automated Radiography: A State-of-the-Art Survey",
+   "date": "1978",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "C. G. Gardner"
+   ],
+   "abstract": "",
+   "query": "survey"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/978-3-642-12869-1_1",
+   "title": "A Literature Survey on Differential Evolution",
+   "date": "2010",
+   "venue": "Evolutionary Learning and Optimization",
+   "citations": 0,
+   "authors": [
+    "Anyong Qing"
+   ],
+   "abstract": "",
+   "query": "survey"
+  }
+ ]
+}

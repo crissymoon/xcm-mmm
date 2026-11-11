@@ -28,7 +28,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **SHADE and L-SHADE.** Current-to-pbest mutation, success history memory with a weighted Lehmer mean for F, Cauchy sampling for F and normal sampling for CR, an external archive, and the linear population reduction schedule.
 - **jDE and classic DE.** Per individual self adaptation, and the Storn and Price rand/1/bin baseline, with binomial or exponential crossover.
 - **Constraints.** Deb's feasibility rules everywhere: a feasible point always beats an infeasible one, and two infeasible points compare by total violation.
-- **MOEA/D-DE.** Das and Dennis simplex weights, Euclidean neighbourhoods, Tchebycheff, PBI and weighted sum scalarisation, neighbourhood mating with delta, two neighbour replacements per child, polynomial mutation.
+- **MOEA/D-DE.** Das and Dennis simplex weights, Euclidean neighbourhoods, Tchebycheff, PBI and weighted sum scalarisation, neighbourhood mating with delta, two neighbour replacements per child, polynomial mutation, and partial updates that vary a random fifth of the subproblems per generation.
 - **Quality indicators.** Exact hypervolume in two and three dimensions, seeded Monte Carlo above that with a reported error, IGD, generational distance, spacing, and the standard ZDT and DTLZ reference fronts.
 - **Parallel and deterministic.** Evaluation runs on rayon. Mutation, selection and all random draws stay on one thread, so the result does not depend on the thread count.
 - **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
@@ -78,17 +78,17 @@ Differential evolution, SHADE with the L-SHADE reduction, 300 000 evaluations at
 | rastrigin | 5.684e-14 | 1.137e-13 | 1.023e-13 | 0.21 |
 | ackley | 4.405e-13 | 5.649e-13 | 5.585e-13 | 0.22 |
 
-MOEA/D with Tchebycheff scalarisation, 100 subproblems, 50 000 evaluations, five runs:
+MOEA/D with Tchebycheff scalarisation, 100 subproblems, 50 000 evaluations, five runs, partial updates at 0.2 per generation:
 
 | problem | variables | IGD | hypervolume | points | seconds |
 |---|---:|---:|---:|---:|---:|
-| zdt1 | 30 | 0.01066 | 0.85703 | 100 | 0.056 |
-| zdt2 | 30 | 0.00719 | 0.52725 | 99 | 0.055 |
-| zdt3 | 30 | 0.01792 | 1.28145 | 80 | 0.055 |
-| zdt4 | 10 | 0.00801 | 0.86152 | 95 | 0.046 |
-| zdt6 | 10 | 0.00189 | 0.50452 | 100 | 0.045 |
-| dtlz1 | 7 | 0.03017 | 0.18294 | 61 | 0.056 |
-| dtlz2 | 12 | 0.07501 | 0.69888 | 60 | 0.055 |
+| zdt1 | 30 | 0.00716 | 0.86329 | 100 | 0.091 |
+| zdt2 | 30 | 0.00528 | 0.53247 | 99 | 0.087 |
+| zdt3 | 30 | 0.01252 | 1.30075 | 75 | 0.089 |
+| zdt4 | 10 | 0.00549 | 0.86659 | 100 | 0.086 |
+| zdt6 | 10 | 0.00190 | 0.50387 | 100 | 0.080 |
+| dtlz1 | 7 | 0.03043 | 0.18247 | 62 | 0.099 |
+| dtlz2 | 12 | 0.07466 | 0.69783 | 61 | 0.099 |
 
 Hypervolume uses the reference point 1.1 in every objective for the ZDT set, 0.6 for DTLZ1 and 1.1 for DTLZ2. IGD is measured against 500 points of the true front. Reproduce with `xcm-mmm bench --runs 5`; the settings and the caveats are in [Benchmarks](README/DOCS/BENCHMARKS.md).
 
@@ -109,7 +109,7 @@ cargo clippy --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite has 88 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, and every CLI subcommand.
+The suite has 97 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, and every CLI subcommand.
 
 ## License
 

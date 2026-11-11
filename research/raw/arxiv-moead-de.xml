@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/BwNQ3rZAsZw4UJfxou1vLQrITek</id>
+  <title>arXiv Query: search_query=abs:"MOEA/D" AND abs:"differential evolution"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:21Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22MOEA/D%22+AND+abs:%22differential+evolution%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>3</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2010.00265v1</id>
+    <title>Review and Analysis of Three Components of Differential Evolution Mutation Operator in MOEA/D-DE</title>
+    <updated>2020-10-01T09:16:30Z</updated>
+    <link href="https://arxiv.org/abs/2010.00265v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.00265v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A decomposition-based multi-objective evolutionary algorithm with a differential evolution variation operator (MOEA/D-DE) shows high performance on challenging multi-objective problems (MOPs). The DE mutation consists of three key components: a mutation strategy, an index selection method for parent individuals, and a bound-handling method. However, the configuration of the DE mutation operator that should be used for MOEA/D-DE has not been thoroughly investigated in the literature. This configuration choice confuses researchers and users of MOEA/D-DE. To address this issue, we present a review of the existing configurations of the DE mutation operator in MOEA/D-DE and systematically examine the influence of each component on the performance of MOEA/D-DE. Our review reveals that the configuration of the DE mutation operator differs depending on the source code of MOEA/D-DE. In our analysis, a total of 30 configurations (three index selection methods, two mutation strategies, and five bound handling methods) are investigated on 16 MOPs with up to five objectives. Results show that each component significantly affects the performance of MOEA/D-DE. We also present the most suitable configuration of the DE mutation operator, which maximizes the effectiveness of MOEA/D-DE.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-01T09:16:30Z</published>
+    <arxiv:comment>This is an accepted version of a paper published in Soft Computing</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Ryoji Tanabe</name>
+    </author>
+    <author>
+      <name>Hisao Ishibuchi</name>
+    </author>
+    <arxiv:doi>10.1007/s00500-019-03842-6</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s00500-019-03842-6" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1410.4343v2</id>
+    <title>Enhanced Multiobjective Evolutionary Algorithm based on Decomposition for Solving the Unit Commitment Problem</title>
+    <updated>2014-10-23T18:10:19Z</updated>
+    <link href="https://arxiv.org/abs/1410.4343v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1410.4343v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The unit commitment (UC) problem is a nonlinear, high-dimensional, highly constrained, mixed-integer power system optimization problem and is generally solved in the literature considering minimizing the system operation cost as the only objective. However, due to increasing environmental concerns, the recent attention has shifted to incorporating emission in the problem formulation. In this paper, a multi-objective evolutionary algorithm based on decomposition (MOEA/D) is proposed to solve the UC problem as a multi-objective optimization problem considering minimizing cost and emission as the multiple objec- tives. Since, UC problem is a mixed-integer optimization problem consisting of binary UC variables and continuous power dispatch variables, a novel hybridization strategy is proposed within the framework of MOEA/D such that genetic algorithm (GA) evolves the binary variables while differential evolution (DE) evolves the continuous variables. Further, a novel non-uniform weight vector distribution strategy is proposed and a parallel island model based on combination of MOEA/D with uniform and non-uniform weight vector distribution strategy is implemented to enhance the performance of the presented algorithm. Extensive case studies are presented on different test systems and the effectiveness of the proposed hybridization strategy, the non-uniform weight vector distribution strategy and parallel island model is verified through stringent simulated results. Further, exhaustive benchmarking against the algorithms proposed in the literature is presented to demonstrate the superiority of the proposed algorithm in obtaining significantly better converged and uniformly distributed trade-off solutions.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2014-10-16T09:17:51Z</published>
+    <arxiv:comment>This paper has been withdrawn by the author due to 1. inconsistency of vector representation in equation (12) and 2. algorithm 3 has not been included in this text which makes the description incomplete</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Anupam Trivedi</name>
+    </author>
+    <author>
+      <name>Kunal Pal</name>
+    </author>
+    <author>
+      <name>Chiranjib Saha</name>
+    </author>
+    <author>
+      <name>Dipti Srinivasan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2306.02648v1</id>
+    <title>Continuous Cartesian Genetic Programming based representation for Multi-Objective Neural Architecture Search</title>
+    <updated>2023-06-05T07:32:47Z</updated>
+    <link href="https://arxiv.org/abs/2306.02648v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2306.02648v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We propose a novel approach for the challenge of designing less complex yet highly effective convolutional neural networks (CNNs) through the use of cartesian genetic programming (CGP) for neural architecture search (NAS). Our approach combines real-based and block-chained CNNs representations based on CGP for optimization in the continuous domain using multi-objective evolutionary algorithms (MOEAs). Two variants are introduced that differ in the granularity of the search space they consider. The proposed CGP-NASV1 and CGP-NASV2 algorithms were evaluated using the non-dominated sorting genetic algorithm II (NSGA-II) on the CIFAR-10 and CIFAR-100 datasets. The empirical analysis was extended to assess the crossover operator from differential evolution (DE), the multi-objective evolutionary algorithm based on decomposition (MOEA/D) and S metric selection evolutionary multi-objective algorithm (SMS-EMOA) using the same representation. Experimental results demonstrate that our approach is competitive with state-of-the-art proposals in terms of classification performance and model complexity.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-06-05T07:32:47Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Cosijopii Garcia-Garcia</name>
+    </author>
+    <author>
+      <name>Alicia Morales-Reyes</name>
+    </author>
+    <author>
+      <name>Hugo Jair Escalante</name>
+    </author>
+  </entry>
+</feed>

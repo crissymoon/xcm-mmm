@@ -50,6 +50,15 @@ pub struct MoeadConfig {
     pub cr: f64,
     /// Polynomial mutation distribution index.
     pub mutation_eta: f64,
+    /// Probability that a given subproblem produces an offspring in a
+    /// generation. One is plain MOEA/D-DE. Lavinas et al. (2020) report that
+    /// lowering it improves hypervolume and IGD, and that the gain grows as
+    /// the probability falls, because the population gains inertia.
+    pub update_probability: f64,
+    /// Share of the budget, measured in generations, that updates every
+    /// subproblem before the partial schedule starts. Matches the two-phase
+    /// warm-up of the relative-improvement resource allocation it generalises.
+    pub update_delay: f64,
     /// Evaluation budget. Zero picks 50_000, which gives 500 generations at the
     /// default population.
     pub budget: usize,
@@ -71,6 +80,8 @@ impl Default for MoeadConfig {
             f: 0.5,
             cr: 1.0,
             mutation_eta: 20.0,
+            update_probability: 0.2,
+            update_delay: 0.1,
             budget: 0,
             boundary: Boundary::Clip,
             seed: 1,
@@ -96,6 +107,14 @@ impl MoeadConfig {
             "MOEA/D needs at least four subproblems"
         );
         assert!(self.replacements >= 1, "at least one replacement per child");
+        assert!(
+            self.update_probability > 0.0 && self.update_probability <= 1.0,
+            "update probability must be in (0, 1]"
+        );
+        assert!(
+            (0.0..=1.0).contains(&self.update_delay),
+            "update delay must be a fraction of the run in [0, 1]"
+        );
     }
 }
 
@@ -196,10 +215,36 @@ pub fn minimize<P: Problem + ?Sized>(problem: &P, config: &MoeadConfig) -> Moead
     let mut history = Vec::new();
     let mut generations = 0;
 
+    // The partial schedule starts after a warm-up, measured in generations, so
+    // the delay does not shift when the budget changes.
+    let planned_generations = (budget as f64 / n as f64).ceil().max(1.0) as usize;
+    let warmup = (config.update_delay * planned_generations as f64).round() as usize;
+    let partial = config.update_probability < 1.0;
+
     while evaluations < budget {
-        let batch = n.min(budget - evaluations);
+        // Only selected subproblems produce an offspring this round. Unselected
+        // ones can still be replaced by a neighbour's child, which is the
+        // distinction the partial update strategy makes between variation and
+        // replacement.
+        let mut active: Vec<usize> = if !partial || generations < warmup {
+            (0..n).collect()
+        } else {
+            (0..n)
+                .filter(|_| rng.chance(config.update_probability))
+                .collect()
+        };
+        if active.is_empty() {
+            // Nothing drawn, so nothing to evaluate. The round still counts as
+            // a generation, which keeps the warm-up and the history honest.
+            generations += 1;
+            continue;
+        }
+        if active.len() > budget - evaluations {
+            active.truncate(budget - evaluations);
+        }
+        let batch = active.len();
         let mut children: Vec<Vec<f64>> = Vec::with_capacity(batch);
-        for i in 0..batch {
+        for &i in &active {
             let pool: &[usize] = if rng.chance(config.delta) {
                 set.neighbours(i)
             } else {
@@ -226,14 +271,14 @@ pub fn minimize<P: Problem + ?Sized>(problem: &P, config: &MoeadConfig) -> Moead
 
         // Replace neighbours, at most `replacements` per child. The shuffle is
         // seeded, so the order is reproducible.
-        for i in 0..batch {
+        for (k, &i) in active.iter().enumerate() {
             let mut order: Vec<usize> = set.neighbours(i).to_vec();
             rng.shuffle(&mut order);
             let mut replaced = 0usize;
             let trial_value = |j: usize| {
                 config
                     .scalar
-                    .value(child_scores[i].objectives(), &ideal, &set.weights[j])
+                    .value(child_scores[k].objectives(), &ideal, &set.weights[j])
             };
             for &j in &order {
                 if replaced >= config.replacements {
@@ -243,9 +288,9 @@ pub fn minimize<P: Problem + ?Sized>(problem: &P, config: &MoeadConfig) -> Moead
                     config
                         .scalar
                         .value(scores[j].objectives(), &ideal, &set.weights[j]);
-                if worth_replacing(&child_scores[i], trial_value(j), &scores[j], old_value) {
-                    population[j] = children[i].clone();
-                    scores[j] = child_scores[i].clone();
+                if worth_replacing(&child_scores[k], trial_value(j), &scores[j], old_value) {
+                    population[j] = children[k].clone();
+                    scores[j] = child_scores[k].clone();
                     replaced += 1;
                 }
             }
@@ -443,5 +488,57 @@ mod tests {
         for (x, y) in a.solutions.iter().zip(&b.solutions) {
             assert_eq!(x.objectives, y.objectives);
         }
+    }
+
+    #[test]
+    fn partial_update_spends_the_same_budget_over_more_generations() {
+        let problem = Benchmark::build(Kind::Zdt1, 6).unwrap();
+        let full = MoeadConfig {
+            budget: 4_000,
+            update_probability: 1.0,
+            update_delay: 0.0,
+            seed: 5,
+            ..MoeadConfig::default()
+        };
+        let partial = MoeadConfig {
+            update_probability: 0.2,
+            ..full.clone()
+        };
+        let a = minimize(&problem, &full);
+        let b = minimize(&problem, &partial);
+        assert_eq!(a.evaluations, b.evaluations, "budget must not drift");
+        assert_eq!(a.evaluations, 4_000);
+        assert!(
+            b.generations > 2 * a.generations,
+            "partial {} against full {}",
+            b.generations,
+            a.generations
+        );
+    }
+
+    #[test]
+    fn partial_update_keeps_a_usable_front() {
+        let problem = Benchmark::build(Kind::Zdt3, 10).unwrap();
+        let out = flat(&problem);
+        let reference = reference_front(Kind::Zdt3, 200);
+        let igd = igd(&out.front(), &reference);
+        assert!(igd < 0.02, "IGD {igd}");
+        assert!(
+            out.solutions.len() > 40,
+            "only {} points",
+            out.solutions.len()
+        );
+    }
+
+    #[test]
+    #[should_panic(expected = "update probability")]
+    fn a_zero_update_probability_is_rejected() {
+        let problem = Benchmark::build(Kind::Zdt1, 4).unwrap();
+        let cfg = MoeadConfig {
+            budget: 400,
+            update_probability: 0.0,
+            ..MoeadConfig::default()
+        };
+        minimize(&problem, &cfg);
     }
 }

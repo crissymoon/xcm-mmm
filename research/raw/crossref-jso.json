@@ -1,0 +1,565 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 254548,
+    "items": [
+      {
+        "DOI": "10.1109/cec45853.2021.9504782",
+        "title": [
+          "Self-adaptive Differential Evolution Algorithm with Population Size Reduction for Single Objective Bound-Constrained Optimization: Algorithm j21"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              6,
+              28
+            ]
+          ]
+        },
+        "container-title": [
+          "2021 IEEE Congress on Evolutionary Computation (CEC)"
+        ],
+        "is-referenced-by-count": 32,
+        "author": [
+          {
+            "given": "Janez",
+            "family": "Brest",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mirjam Sepesy",
+            "family": "Maucec",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Borko",
+            "family": "Boskovic",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/s00500-010-0644-5",
+        "title": [
+          "Self-adaptive differential evolution algorithm using population size reduction and three strategies"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2010,
+              9,
+              16
+            ]
+          ]
+        },
+        "container-title": [
+          "Soft Computing"
+        ],
+        "is-referenced-by-count": 173,
+        "author": [
+          {
+            "given": "Janez",
+            "family": "Brest",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mirjam Sepesy",
+            "family": "Mau\u010dec",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/978-3-540-44999-7_41",
+        "title": [
+          "Population Size Adaptation for Differential Evolution Algorithm Using Fuzzy Logic"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2003
+            ]
+          ]
+        },
+        "container-title": [
+          "Intelligent Systems Design and Applications"
+        ],
+        "is-referenced-by-count": 1,
+        "author": [
+          {
+            "given": "Junhong",
+            "family": "Liu",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jouni",
+            "family": "Lampinen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/s10489-007-0091-x",
+        "title": [
+          "Population size reduction for the differential evolution algorithm"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2007,
+              9,
+              11
+            ]
+          ]
+        },
+        "container-title": [
+          "Applied Intelligence"
+        ],
+        "is-referenced-by-count": 318,
+        "author": [
+          {
+            "given": "Janez",
+            "family": "Brest",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mirjam",
+            "family": "Sepesy Mau\u010dec",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/iwssip.2018.8439374",
+        "title": [
+          "Adaptation of Population Size in Differential Evolution Algorithm: An Experimental Comparison"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2018,
+              6
+            ]
+          ]
+        },
+        "container-title": [
+          "2018 25th International Conference on Systems, Signals and Image Processing (IWSSIP)"
+        ],
+        "is-referenced-by-count": 7,
+        "author": [
+          {
+            "given": "Radka",
+            "family": "Polakova",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Petr",
+            "family": "Bujok",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/cec.2008.4631067",
+        "title": [
+          "High-dimensional real-parameter optimization using Self-Adaptive Differential Evolution algorithm with population size reduction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2008,
+              6
+            ]
+          ]
+        },
+        "container-title": [
+          "2008 IEEE Congress on Evolutionary Computation (IEEE World Congress on Computational Intelligence)"
+        ],
+        "is-referenced-by-count": 90,
+        "author": [
+          {
+            "given": "Janez",
+            "family": "Brest",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ales",
+            "family": "Zamuda",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Borko",
+            "family": "Boskovic",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mirjam Sepesy",
+            "family": "Maucec",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Viljem",
+            "family": "Zumer",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/s11047-021-09855-1",
+        "title": [
+          "Enhancing differential evolution algorithm through a population size adaptation strategy"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              5,
+              13
+            ]
+          ]
+        },
+        "container-title": [
+          "Natural Computing"
+        ],
+        "is-referenced-by-count": 15,
+        "author": [
+          {
+            "given": "Yanyun",
+            "family": "Zhang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Guangming",
+            "family": "Dai",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Lei",
+            "family": "Peng",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Maocai",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2139/ssrn.4359637",
+        "title": [
+          "A Modified Differential Evolution Algorithm Based on Improving a New Mutation Strategy and Self-Adaptation Crossover"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Sadeer",
+            "family": "Fadhil",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Hegazy",
+            "family": "Zaher",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Naglaa",
+            "family": "Ragaa",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Eman",
+            "family": "Oun",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.asoc.2023.110209",
+        "title": [
+          "An adaptive differential evolution algorithm with population size reduction strategy for unconstrained optimization problem"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023,
+              5
+            ]
+          ]
+        },
+        "container-title": [
+          "Applied Soft Computing"
+        ],
+        "is-referenced-by-count": 54,
+        "author": [
+          {
+            "given": "Xiaoyan",
+            "family": "Zhang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-9920-6249",
+            "authenticated-orcid": false,
+            "given": "Qianqian",
+            "family": "Liu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Yawei",
+            "family": "Qu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/978-3-319-13356-0_2",
+        "title": [
+          "An Adaptive Cauchy Differential Evolution Algorithm with Population Size Reduction and Modified Multiple Mutation Strategies"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2015
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings in Adaptation, Learning and Optimization",
+          "Proceedings of the 18th Asia Pacific Symposium on Intelligent and Evolutionary Systems - Volume 2"
+        ],
+        "is-referenced-by-count": 11,
+        "author": [
+          {
+            "given": "Tae Jong",
+            "family": "Choi",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Chang Wook",
+            "family": "Ahn",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

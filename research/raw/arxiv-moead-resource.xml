@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/CS0VyB5xqqblRgGuJB2I/DuMG0U</id>
+  <title>arXiv Query: search_query=abs:"MOEA/D" AND abs:"resource allocation"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:22Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22MOEA/D%22+AND+abs:%22resource+allocation%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>3</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2001.06980v1</id>
+    <title>MOEA/D with Random Partial Update Strategy</title>
+    <updated>2020-01-20T05:13:52Z</updated>
+    <link href="https://arxiv.org/abs/2001.06980v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2001.06980v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent studies on resource allocation suggest that some subproblems are more important than others in the context of the MOEA/D, and that focusing on the most relevant ones can consistently improve the performance of that algorithm. These studies share the common characteristic of updating only a fraction of the population at any given iteration of the algorithm. In this work we investigate a new, simpler partial update strategy, in which a random subset of solutions is selected at every iteration. The performance of the MOEA/D using this new resource allocation approach is compared experimentally against that of the standard MOEA/D-DE and the MOEA/D with relative improvement-based resource allocation. The results indicate that using the MOEA/D with this new partial update strategy results in improved HV and IGD values, and a much higher proportion of non-dominated solutions, particularly as the number of updated solutions at every iteration is reduced.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-01-20T05:13:52Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Yuri Lavinas</name>
+    </author>
+    <author>
+      <name>Claus Aranha</name>
+    </author>
+    <author>
+      <name>Marcelo Ladeira</name>
+    </author>
+    <author>
+      <name>Felipe Campelo</name>
+    </author>
+    <arxiv:doi>10.1109/CEC48606.2020.9185527</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/CEC48606.2020.9185527" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2112.11939v1</id>
+    <title>Faster Convergence in Multi-Objective Optimization Algorithms Based on Decomposition</title>
+    <updated>2021-12-21T07:33:06Z</updated>
+    <link href="https://arxiv.org/abs/2112.11939v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2112.11939v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The Resource Allocation approach (RA) improves the performance of MOEA/D by maintaining a big population and updating few solutions each generation. However, most of the studies on RA generally focused on the properties of different Resource Allocation metrics. Thus, it is still uncertain what the main factors are that lead to increments in performance of MOEA/D with RA. This study investigates the effects of MOEA/D with the Partial Update Strategy in an extensive set of MOPs to generate insights into correspondences of MOEA/D with the Partial Update and MOEA/D with small population size and big population size. Our work undertakes an in-depth analysis of the populational dynamics behaviour considering their final approximation Pareto sets, anytime hypervolume performance, attained regions and number of unique non-dominated solutions. Our results indicate that MOEA/D with Partial Update progresses with the search as fast as MOEA/D with small population size and explores the search space as MOEA/D with big population size. MOEA/D with Partial Update can mitigate common problems related to population size choice with better convergence speed in most MOPs, as shown by the results of hypervolume and number of unique non-dominated solutions, the anytime performance and Empirical Attainment Function indicates.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-12-21T07:33:06Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Yuri Lavinas</name>
+    </author>
+    <author>
+      <name>Marcelo Ladeira</name>
+    </author>
+    <author>
+      <name>Claus Aranha</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2403.10299v1</id>
+    <title>A Multi-constraint and Multi-objective Allocation Model for Emergency Rescue in IoT Environment</title>
+    <updated>2024-03-15T13:42:00Z</updated>
+    <link href="https://arxiv.org/abs/2403.10299v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2403.10299v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Emergency relief operations are essential in disaster aftermaths, necessitating effective resource allocation to minimize negative impacts and maximize benefits. In prolonged crises or extensive disasters, a systematic, multi-cycle approach is key for timely and informed decision-making. Leveraging advancements in IoT and spatio-temporal data analytics, we've developed the Multi-Objective Shuffled Gray-Wolf Frog Leaping Model (MSGW-FLM). This multi-constraint, multi-objective resource allocation model has been rigorously tested against 28 diverse challenges, showing superior performance in comparison to established models such as NSGA-II, IBEA, and MOEA/D. MSGW-FLM's effectiveness is particularly notable in complex, multi-cycle emergency rescue scenarios, which involve numerous constraints and objectives. This model represents a significant step forward in optimizing resource distribution in emergency response situations.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-03-15T13:42:00Z</published>
+    <arxiv:comment>5 pages, 5 figures, ISCAS 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Xinrun Xu</name>
+    </author>
+    <author>
+      <name>Zhanbiao Lian</name>
+    </author>
+    <author>
+      <name>Yurong Wu</name>
+    </author>
+    <author>
+      <name>Manying Lv</name>
+    </author>
+    <author>
+      <name>Zhiming Ding</name>
+    </author>
+    <author>
+      <name>Jian Yan</name>
+    </author>
+    <author>
+      <name>Shang Jiang</name>
+    </author>
+  </entry>
+</feed>

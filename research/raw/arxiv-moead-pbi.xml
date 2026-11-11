@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/k2V59bzFcI+ycj5FF4ojzTDHtv4</id>
+  <title>arXiv Query: search_query=abs:"MOEA/D" AND abs:"penalty-based boundary intersection"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:24Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22MOEA/D%22+AND+abs:%22penalty-based+boundary+intersection%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>1</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2010.00818v1</id>
+    <title>An Analysis of Control Parameters of MOEA/D Under Two Different Optimization Scenarios</title>
+    <updated>2020-10-02T07:35:35Z</updated>
+    <link href="https://arxiv.org/abs/2010.00818v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.00818v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>An unbounded external archive (UEA), which stores all nondominated solutions found during the search process, is frequently used to evaluate the performance of multi-objective evolutionary algorithms (MOEAs) in recent studies. A recent benchmarking study also shows that decomposition-based MOEA (MOEA/D) is competitive with state-of-the-art MOEAs when the UEA is incorporated into MOEA/D. However, a parameter study of MOEA/D using the UEA has not yet been performed. Thus, it is unclear how control parameter settings influence the performance of MOEA/D with the UEA. In this paper, we present an analysis of control parameters of MOEA/D under two performance evaluation scenarios. One is a final population scenario where the performance assessment of MOEAs is performed based on all nondominated solutions in the final population, and the other is a reduced UEA scenario where it is based on a pre-specified number of selected nondominated solutions from the UEA. Control parameters of MOEA/D investigated in this paper include the population size, scalarizing functions, and the penalty parameter of the penalty-based boundary intersection (PBI) function. Experimental results indicate that suitable settings of the three control parameters significantly depend on the choice of an optimization scenario. We also analyze the reason why the best parameter setting is totally different for each scenario.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-02T07:35:35Z</published>
+    <arxiv:comment>This is an accepted version of a paper published in Applied Soft Computing</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Ryoji Tanabe</name>
+    </author>
+    <author>
+      <name>Hisao Ishibuchi</name>
+    </author>
+    <arxiv:doi>10.1016/j.asoc.2018.05.014</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.asoc.2018.05.014" title="doi"/>
+  </entry>
+</feed>

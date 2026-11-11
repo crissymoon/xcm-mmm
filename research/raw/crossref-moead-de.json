@@ -1,0 +1,600 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 3972192,
+    "items": [
+      {
+        "DOI": "10.1109/tevc.2008.925798",
+        "title": [
+          "Multiobjective Optimization Problems With Complicated Pareto Sets, MOEA/D and NSGA-II"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2009,
+              4
+            ]
+          ]
+        },
+        "container-title": [
+          "IEEE Transactions on Evolutionary Computation"
+        ],
+        "is-referenced-by-count": 2354,
+        "author": [
+          {
+            "family": "Hui Li",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "family": "Qingfu Zhang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.ins.2012.06.007",
+        "title": [
+          "A modification to MOEA/D-DE for multiobjective optimization problems with complicated Pareto sets"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2012,
+              12
+            ]
+          ]
+        },
+        "container-title": [
+          "Information Sciences"
+        ],
+        "is-referenced-by-count": 68,
+        "author": [
+          {
+            "given": "Yan-Yan",
+            "family": "Tan",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Yong-Chang",
+            "family": "Jiao",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Hong",
+            "family": "Li",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Xin-Kuan",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/978-3-031-27250-9_17",
+        "title": [
+          "An Improved Fuzzy Classifier-Based Evolutionary Algorithm for\u00a0Expensive Multiobjective Optimization Problems with\u00a0Complicated Pareto Sets"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        },
+        "container-title": [
+          "Lecture Notes in Computer Science",
+          "Evolutionary Multi-Criterion Optimization"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Jinyuan",
+            "family": "Zhang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Linjun",
+            "family": "He",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Hisao",
+            "family": "Ishibuchi",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/tcyb.2021.3062949",
+        "title": [
+          "Resetting Weight Vectors in MOEA/D for Multiobjective Optimization Problems With Discontinuous Pareto Front"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022,
+              9
+            ]
+          ]
+        },
+        "container-title": [
+          "IEEE Transactions on Cybernetics"
+        ],
+        "is-referenced-by-count": 36,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-2284-7291",
+            "authenticated-orcid": false,
+            "given": "Chunjiang",
+            "family": "Zhang",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "State Key Laboratory of Digital Manufacturing Equipment and Technology, Huazhong University of Science and Technology, Wuhan, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-1485-0722",
+            "authenticated-orcid": false,
+            "given": "Liang",
+            "family": "Gao",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "State Key Laboratory of Digital Manufacturing Equipment and Technology, Huazhong University of Science and Technology, Wuhan, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-3730-0360",
+            "authenticated-orcid": false,
+            "given": "Xinyu",
+            "family": "Li",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "State Key Laboratory of Digital Manufacturing Equipment and Technology, Huazhong University of Science and Technology, Wuhan, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0001-5204-7992",
+            "authenticated-orcid": false,
+            "given": "Weiming",
+            "family": "Shen",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "State Key Laboratory of Digital Manufacturing Equipment and Technology, Huazhong University of Science and Technology, Wuhan, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Jiajun",
+            "family": "Zhou",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Computer Science, China University of Geosciences, Wuhan, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-6802-2463",
+            "authenticated-orcid": false,
+            "given": "Kay Chen",
+            "family": "Tan",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Computing, Hong Kong Polytechnic University, Hong Kong, SAR, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/icaci69731.2026.11677786",
+        "title": [
+          "LLM-Enhanced Adaptive MOEA/D for Solving Multiobjective Problems with Complex Pareto Fronts"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              8
+            ]
+          ]
+        },
+        "container-title": [
+          "2026 18th International Conference on Advanced Computational Intelligence (ICACI)"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Zhihua",
+            "family": "Li",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Northeastern University",
+                "place": [
+                  "Shenyang, China"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Xianpeng",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Northeastern University",
+                "place": [
+                  "Shenyang, China"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Zhiming",
+            "family": "Dong",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Northeastern University",
+                "place": [
+                  "Shenyang, China"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Erchao",
+            "family": "Li",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Lanzhou University of Technology",
+                "place": [
+                  "Lanzhou, China"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/tcyb.2019.2952881",
+        "title": [
+          "Manifold Learning-Inspired Mating Restriction for Evolutionary Multiobjective Optimization With Complicated Pareto Sets"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              6
+            ]
+          ]
+        },
+        "container-title": [
+          "IEEE Transactions on Cybernetics"
+        ],
+        "is-referenced-by-count": 31,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-4554-455X",
+            "authenticated-orcid": false,
+            "given": "Linqiang",
+            "family": "Pan",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-5810-8749",
+            "authenticated-orcid": false,
+            "given": "Lianghao",
+            "family": "Li",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0001-9410-8263",
+            "authenticated-orcid": false,
+            "given": "Ran",
+            "family": "Cheng",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0003-4218-8454",
+            "authenticated-orcid": false,
+            "given": "Cheng",
+            "family": "He",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-6802-2463",
+            "authenticated-orcid": false,
+            "given": "Kay Chen",
+            "family": "Tan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.21884/ijmter.2017.4009.fceig",
+        "title": [
+          "Multiobjective optimization during wire EDM of WC-4.79%Co composite using controlled NSGA II"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2017,
+              1,
+              17
+            ]
+          ]
+        },
+        "container-title": [
+          "International Journal of Modern Trends in Engineering &amp; Research"
+        ],
+        "is-referenced-by-count": 0
+      },
+      {
+        "DOI": "10.5220/0006905402870293",
+        "title": [
+          "Linear Subset Size Scheduling for Many-objective Optimization using NSGA-II based on Pareto Partial Dominance"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2018
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 15th International Conference on Informatics in Control, Automation and Robotics"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Makoto",
+            "family": "Ohki",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Field of Technology, Tottori University, 4, 101 Koyama-Minami, Tottori, Tottori 680-8552 and Japan, --- Select a Country ---"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.5220/0006905402770283",
+        "title": [
+          "Linear Subset Size Scheduling for Many-objective Optimization using NSGA-II based on Pareto Partial Dominance"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2018
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 15th International Conference on Informatics in Control, Automation and Robotics"
+        ],
+        "is-referenced-by-count": 3,
+        "author": [
+          {
+            "given": "Makoto",
+            "family": "Ohki",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Field of Technology, Tottori University, 4, 101 Koyama-Minami, Tottori, Tottori 680-8552 and Japan, --- Select a Country ---"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.5220/0003759500640072",
+        "title": [
+          "BRKGA ADAPTED TO MULTIOBJECTIVE UNIT COMMITMENT - Solving Pareto Frontier for UC Multiobjective Problem using BRKGA SPEA2 NPGA and NSGA II Techniques"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2012
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 1st International Conference on Operations Research and Enterprise Systems"
+        ],
+        "is-referenced-by-count": 0
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

@@ -1,0 +1,112 @@
+queries: 28
+papers: 146
+by_source: {'openalex': 23, 'arxiv': 49, 'crossref': 74}
+with_abstract: 78
+
+## jso
+- Population size reduction for the differential evolution algorithm (2007, Applied Intelligence, cited 318)
+- Self-adaptive differential evolution algorithm using population size reduction and three strategies (2010, Soft Computing, cited 173)
+- Distance based parameter adaptation for Success-History based Differential Evolution (2018, Swarm and Evolutionary Computation, cited 154)
+- Learning Adaptive Differential Evolution Algorithm From Optimization Experiences by Policy Gradient (2021, IEEE Transactions on Evolutionary Computation, cited 152)
+  Differential evolution is one of the most prestigious population-based stochastic optimization algorithm for black-box problems. The performance of a differential evolution algorithm depends highly on its mutation and crossover strategy and associated control parameters. However, the determination process for the most suitable parameter setting is troublesome and time consuming. Adaptive control parameter methods tha
+- HARD-DE: Hierarchical ARchive Based Mutation Strategy With Depth Information of Evolution for the Enhancement of Differential Evolution on Numerical Optimization (2019, IEEE Access, cited 114)
+  Differential evolution is a famous and effective branch of evolutionary computation, which aims at tackling complex optimization problems. There are two aspects significantly affecting the overall performance of DE variants, one is trial vector generation strategy and the other is the control parameter adaptation scheme. Here in this paper, a new hierarchical archive-based trial vector generation strategy with depth 
+
+## lshade
+- Memory, evolutionary operator, and local search based improved Grey Wolf Optimizer with linear population size reduction technique (2023, Knowledge-Based Systems, cited 105)
+- Learning neural network weights using genetic algorithms-improving performance by search-space reduction (1991, [Proceedings] 1991 IEEE International Joint Conference on Neural Networks, cited 20)
+- Network Based Linear Population Size Reduction in SHADE (2016, 2016 International Conference on Intelligent Networking and Collaborative Systems (INCoS), cited 16)
+- Improving Photovoltaic MPPT Performance through PSO Dynamic Swarm Size Reduction (2023, , cited 11)
+  Efficient energy extraction in photovoltaic (PV) systems relies on the effective implementation of Maximum Power Point Tracking (MPPT) methods. Conventional MPPT techniques often suffer from slow convergence speeds and suboptimal tracking performance, particularly under dynamic variation of environmental conditions. Smart optimization algorithms (SOA) using metaheuristic optimization algorithms can avoid this limitat
+- Performance analysis of the optimized equilibrium optimizer algorithm using linear population size reduction in the coherent free-space optical communication system (2025, Optics Express, cited 4)
+  Sensor-less adaptive optics (SLAO) systems are extensively employed due to their ability to effectively mitigate the adverse impact of atmospheric turbulence on coherent free-space optical communication (CFSOC) systems. The control algorithm dictates the corrective capabilities of the SLAO system. For this work, we employ the optimized equilibrium optimizer algorithm using linear population size reduction (LOEO) as t
+
+## many-objective
+- A collaborative decomposition-based evolutionary algorithm integrating normal and penalty-based boundary intersection for many-objective optimization (2022-04-14, arXiv, cited 8)
+  Decomposition-based evolutionary algorithms have become fairly popular for many-objective optimization in recent years. However, the existing decomposition methods still are quite sensitive to the various shapes of frontiers of many-objective optimization problems (MaOPs). On the one hand, the cone decomposition methods such as the penalty-based boundary intersection (PBI) are incapable of acquiring uniform frontiers
+- Evolutionary Many-Objective Optimization Based on Adversarial Decomposition (2017-04-07, arXiv, cited 0)
+  The decomposition-based method has been recognized as a major approach for multi-objective optimization. It decomposes a multi-objective optimization problem into several single-objective optimization subproblems, each of which is usually defined as a scalarizing function using a weight vector. Due to the characteristics of the contour line of a particular scalarizing function, the performance of the decomposition-ba
+- A Many-Objective Evolutionary Algorithm with Angle-Based Selection and Shift-Based Density Estimation (2017-09-30, arXiv, cited 0)
+  Evolutionary many-objective optimization has been gaining increasing attention from the evolutionary computation research community. Much effort has been devoted to addressing this issue by improving the scalability of multiobjective evolutionary algorithms, such as Pareto-based, decomposition-based, and indicator-based approaches. Different from current work, we propose a novel algorithm in this paper called AnD, wh
+- A mullti- or many- objective evolutionary algorithm with global loop update (2018-01-25, arXiv, cited 0)
+  Multi- or many-objective evolutionary algorithm- s(MOEAs), especially the decomposition-based MOEAs have been widely concerned in recent years. The decomposition-based MOEAs emphasize convergence and diversity in a simple model and have made a great success in dealing with theoretical and practical multi- or many-objective optimization problems. In this paper, we focus on update strategies of the decomposition- based
+- A Many-Objective Evolutionary Algorithm Based on Decomposition and Local Dominance (2018-07-13, arXiv, cited 0)
+  Many-objective evolutionary algorithms (MOEAs), especially the decomposition-based MOEAs, have attracted wide attention in recent years. Recent studies show that a well designed combination of the decomposition method and the domination method can improve the performance ,i.e., convergence and diversity, of a MOEA. In this paper, a novel way of combining the decomposition method and the domination method is proposed.
+
+## moead
+- MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition (2007, IEEE Transactions on Evolutionary Computation, cited 10290)
+  Decomposition is a basic strategy in traditional multiobjective optimization. However, it has not yet been widely used in multiobjective evolutionary optimization. This paper proposes a multiobjective evolutionary algorithm based on decomposition (MOEA/D). It decomposes a multiobjective optimization problem into a number of scalar optimization subproblems and optimizes them simultaneously. Each subproblem is optimize
+- Multiobjective Optimization Problems With Complicated Pareto Sets, MOEA/D and NSGA-II (2008, IEEE Transactions on Evolutionary Computation, cited 2569)
+  Partly due to lack of test problems, the impact of the Pareto set (PS) shapes on the performance of evolutionary algorithms has not yet attracted much attention. This paper introduces a general class of continuous multiobjective optimization test instances with arbitrary prescribed PS shapes, which could be used for studying the ability of multiobjective evolutionary algorithms for dealing with complicated PS shapes.
+- Decomposition of a Multiobjective Optimization Problem Into a Number of Simple Multiobjective Subproblems (2013, IEEE Transactions on Evolutionary Computation, cited 814)
+  This letter suggests an approach for decomposing a multiobjective optimization problem (MOP) into a set of simple multiobjective optimization subproblems. Using this approach, it proposes MOEA/D-M2M, a new version of multiobjective optimization evolutionary algorithm-based decomposition. This proposed algorithm solves these subproblems in a collaborative way. Each subproblem has its own population and receives comput
+- Expensive Multiobjective Optimization by MOEA/D With Gaussian Process Model (2009, IEEE Transactions on Evolutionary Computation, cited 758)
+  In some expensive multiobjective optimization problems (MOPs), several function evaluations can be carried out in a batch way. Therefore, it is very desirable to develop methods which can generate multipler test points simultaneously. This paper proposes such a method, called MOEA/D-EGO, for dealing with expensive multiobjective optimization. MOEA/D-EGO decomposes an MOP in question into a number of single-objective 
+- MOEA/D with Adaptive Weight Adjustment (2013, Evolutionary Computation, cited 697)
+  Recently, MOEA/D (multi-objective evolutionary algorithm based on decomposition) has achieved great success in the field of evolutionary multi-objective optimization and has attracted a lot of attention. It decomposes a multi-objective optimization problem (MOP) into a set of scalar subproblems using uniformly distributed aggregation weight vectors and provides an excellent general algorithmic framework of evolutiona
+
+## moead-de
+- An improved epsilon constraint-handling method in MOEA/D for CMOPs with large infeasible regions (2019, Soft Computing, cited 478)
+  This paper proposes an improved epsilon constraint-handling mechanism, and combines it with a decomposition-based multi-objective evolutionary algorithm (MOEA/D) to solve constrained multi-objective optimization problems (CMOPs). The proposed constrained multi-objective evolutionary algorithm (CMOEA) is named MOEA/D-IEpsilon. It adjusts the epsilon level dynamically according to the ratio of feasible to total solutio
+- An Improved Multiobjective Optimization Evolutionary Algorithm Based on Decomposition for Complex Pareto Fronts (2015, IEEE Transactions on Cybernetics, cited 238)
+  The multiobjective evolutionary algorithm based on decomposition (MOEA/D) has been shown to be very efficient in solving multiobjective optimization problems (MOPs). In practice, the Pareto-optimal front (POF) of many MOPs has complex characteristics. For example, the POF may have a long tail and sharp peak and disconnected regions, which significantly degrades the performance of MOEA/D. This paper proposes an improv
+- MOEA/D with angle-based constrained dominance principle for constrained multi-objective optimization problems (2018, Applied Soft Computing, cited 171)
+  This paper proposes a novel constraint-handling mechanism named angle-based constrained dominance principle (ACDP) embedded in a decomposition-based multi-objective evolutionary algorithm (MOEA/D) to solve constrained multi-objective optimization problems (CMOPs). To maintain the diversity of the working population, ACDP utilizes the information of the angle of solutions to adjust the dominance relation of solutions 
+- A modification to MOEA/D-DE for multiobjective optimization problems with complicated Pareto sets (2012, Information Sciences, cited 68)
+- Resetting Weight Vectors in MOEA/D for Multiobjective Optimization Problems With Discontinuous Pareto Front (2022, IEEE Transactions on Cybernetics, cited 36)
+
+## moead-pbi
+- Behavior of Multiobjective Evolutionary Algorithms on Many-Objective Knapsack Problems (2014, IEEE Transactions on Evolutionary Computation, cited 291)
+  We examine the behavior of three classes of evolutionary multiobjective optimization (EMO) algorithms on many-objective knapsack problems. They are Pareto dominance-based, scalarizing function-based, and hypervolume-based algorithms. NSGA-II, MOEA/D, SMS-EMOA, and HypE are examined using knapsack problems with 2-10 objectives. Our test problems are generated by randomly specifying coefficients (i.e., profits) in obje
+- A Survey of Multiobjective Evolutionary Algorithms Based on Decomposition: Variants, Challenges and Future Directions (2020, IEEE Access, cited 108)
+  There are many challengeable multiobjective optimization problems in different areas, whose optimization objectives are usually diversionary. Decomposition methods and evolution mechanisms enable multiobjective evolutionary algorithms based on decomposition (MOEA/D) to tackle these complex optimization problems efficiently. Therefore, MOEA/D has found wide applications in various fields and been attracting increasing
+- An improved MOEA/D algorithm for bi-objective optimization problems with complex Pareto fronts and its application to structural optimization (2017, Expert Systems with Applications, cited 92)
+- On the effect of normalization in MOEA/D for multi-objective and many-objective optimization (2017, Complex & Intelligent Systems, cited 79)
+  The frequently used basic version of MOEA/D (multi-objective evolutionary algorithm based on decomposition) has no normalization mechanism of the objective space, whereas the normalization was discussed in the original MOEA/D paper. As a result, MOEA/D shows difficulties in finding a set of uniformly distributed solutions over the entire Pareto front when each objective has a totally different range of objective valu
+- Pareto adaptive penalty-based boundary intersection method for multi-objective optimization (2017, Information Sciences, cited 47)
+
+## moead-resource
+- MOEA/D with many-stage dynamical resource allocation strategy to solution of many-objective OPF problems (2020, International Journal of Electrical Power &amp; Energy Systems, cited 34)
+- MOEA/D-S<sup>3</sup>: MOEA/D using SVM-based Surrogates adjusted to Subproblems for Many objective optimization (2020, 2020 IEEE Congress on Evolutionary Computation (CEC), cited 9)
+- A Decomposition Method Based on Random Objective Division for MOEA/D in Many-Objective Optimization (2020, IEEE Access, cited 4)
+- MOEA/D using constant-distance based neighbors designed for many-objective optimization (2015, 2015 IEEE Congress on Evolutionary Computation (CEC), cited 3)
+- Maritime Dynamic Resource Allocation and Risk Minimization Using Visual Analytics and Elitist Multi-Objective Optimization (2023, Proceedings of the 20th International Conference on Informatics in Control, Automation and Robotics, cited 2)
+
+## moead-weight
+- Chaotic Multiobjective Evolutionary Algorithm Based on Decomposition for Test Task Scheduling Problem (2014, Mathematical Problems in Engineering, cited 9)
+  Test task scheduling problem (TTSP) is a complex optimization problem and has many local optima. In this paper, a hybrid chaotic multiobjective evolutionary algorithm based on decomposition (CMOEA/D) is presented to avoid becoming trapped in local optima and to obtain high quality solutions. First, we propose an improving integrated encoding scheme (IES) to increase the efficiency. Then ten chaotic maps are applied i
+
+## opposition
+- Using CODEQ to Train Feed-forward Neural Networks (2010-02-03, arXiv, cited 0)
+  CODEQ is a new, population-based meta-heuristic algorithm that is a hybrid of concepts from chaotic search, opposition-based learning, differential evolution and quantum mechanics. CODEQ has successfully been used to solve different types of problems (e.g. constrained, integer-programming, engineering) with excellent results. In this paper, CODEQ is used to train feed-forward neural networks. The proposed method is c
+- Opposition based Ensemble Micro Differential Evolution (2017-09-08, arXiv, cited 0)
+  Differential evolution (DE) algorithm with a small population size is called Micro-DE (MDE). A small population size decreases the computational complexity but also reduces the exploration ability of DE by limiting the population diversity. In this paper, we propose the idea of combining ensemble mutation scheme selection and opposition-based learning concepts to enhance the diversity of population in MDE at mutation
+- A Fast and Efficient Stochastic Opposition-Based Learning for Differential Evolution in Numerical Optimization (2019-08-09, arXiv, cited 0)
+  A fast and efficient stochastic opposition-based learning (OBL) variant is proposed in this paper. OBL is a machine learning concept to accelerate the convergence of soft computing algorithms, which consists of simultaneously calculating an original solution and its opposite. Recently, a stochastic OBL variant called BetaCOBL was proposed, which is capable of controlling the degree of opposite solutions, preserving u
+- Differential Evolution-based Neural Network Training Incorporating a Centroid-based Strategy and Dynamic Opposition-based Learning (2021-06-29, arXiv, cited 0)
+  Training multi-layer neural networks (MLNNs), a challenging task, involves finding appropriate weights and biases. MLNN training is important since the performance of MLNNs is mainly dependent on these network parameters. However, conventional algorithms such as gradient-based methods, while extensively used for MLNN training, suffer from drawbacks such as a tendency to getting stuck in local optima. Population-based
+- A Cluster-Based Opposition Differential Evolution Algorithm Boosted by a Local Search for ECG Signal Classification (2023-05-04, arXiv, cited 0)
+  Electrocardiogram (ECG) signals, which capture the heart's electrical activity, are used to diagnose and monitor cardiac problems. The accurate classification of ECG signals, particularly for distinguishing among various types of arrhythmias and myocardial infarctions, is crucial for the early detection and treatment of heart-related diseases. This paper proposes a novel approach based on an improved differential evo
+
+## restart
+- Distributed Individuals for Multiple Peaks: A Novel Differential Evolution for Multimodal Optimization Problems (2019, IEEE Transactions on Evolutionary Computation, cited 146)
+  Locating more peaks and refining the solution accuracy on the found peaks are two challenging issues in solving multimodal optimization problems (MMOPs). To deal with these two challenges, a distributed individuals differential evolution (DIDE) algorithm is proposed in this article based on a distributed individuals for multiple peaks (DIMP) framework and two novel mechanisms. First, the DIMP framework provides suffi
+- An Inflationary Differential Evolution Algorithm for Space Trajectory Optimization (2011, IEEE Transactions on Evolutionary Computation, cited 121)
+  In this paper, we define a discrete dynamical system that governs the evolution of a population of agents. From the dynamical system, a variant of differential evolution (DE) is derived. It is then demonstrated that, under some assumptions on the differential mutation strategy and on the local structure of the objective function, the proposed dynamical system has fixed points toward which it converges with probabilit
+- MSC-CMA-ES: Structure-Aware Restarts for CMA-ES via Cyclic Nearest-Better Basin Discovery (2026-06-14, arXiv, cited 0)
+  CMA-ES behaves, per restart, primarily as a local optimizer; multimodal search relies on restart strategies such as IPOP and BIPOP, which draw every restart uniformly and reuse no information from previous evaluations. Multi-Start Clustering CMA-ES (MSC-CMA-ES) makes restarts structure-aware: in alternating cycles, a Sobol pre-sample is partitioned into approximate basins of attraction by nearest-better clustering, r
+
+## shade
+- Differential Evolution Algorithm With Strategy Adaptation for Global Numerical Optimization (2009, IEEE Transactions on Evolutionary Computation, cited 3298)
+- Improving the search performance of SHADE using linear population size reduction (2014, IEEE Congress on Evolutionary Computation (CEC), cited 1961)
+  SHADE is an adaptive DE which incorporates success-history based parameter adaptation and one of the state-of-the-art DE algorithms. This paper proposes L-SHADE, which further extends SHADE with Linear Population Size Reduction (LPSR), which continually decreases the population size according to a linear function. We evaluated the performance of L-SHADE on CEC2014 benchmarks and compared its search performance with s
+- Differential evolution algorithm with ensemble of populations for global numerical optimization (2009, OPSEARCH, cited 31)
+- A differential covariance matrix adaptation evolutionary algorithm for global optimization (2011, 2011 IEEE Symposium on Differential Evolution (SDE), cited 9)
+- A hybrid iterated local search algorithm with adaptive perturbation mechanism by success-history based parameter adaptation for differential evolution (SHADE) (2019, Engineering Optimization, cited 9)
+
+## survey
+- Differential Evolution: A Survey of the State-of-the-Art (2011, IEEE Transactions on Evolutionary Computation, cited 4836)
+- Multi-objective Optimization Using Differential Evolution: A Survey of the State-of-the-Art (2008, Studies in Computational Intelligence, cited 95)
+- Enhanced versions of differential evolution: state-of-the-art survey (2014, International Journal of Computing Science and Mathematics, cited 19)
+- A brief survey of differential evolution on Graphic Processing Units (2013, 2013 IEEE Symposium on Differential Evolution (SDE), cited 5)
+- An Introductory Survey on Differential Evolution in Electrical and Electronic Engineering (2009, Differential Evolution, cited 2)

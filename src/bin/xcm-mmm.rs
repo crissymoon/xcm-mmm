@@ -78,6 +78,13 @@ struct DeArgs {
     /// Fixed crossover rate, used by the static adaptation.
     #[arg(long, default_value_t = 0.9)]
     cr: f64,
+    /// Share of the population eligible as x_pbest at the start.
+    #[arg(long, default_value_t = 0.11)]
+    p_best: f64,
+    /// End of the x_pbest schedule. Zero holds p_best for the whole run, 0.125
+    /// with a start of 0.25 is the jSO schedule.
+    #[arg(long, default_value_t = 0.0)]
+    p_best_final: f64,
     /// Restart the worst half after this many stalled generations. Zero is off.
     #[arg(long, default_value_t = 0)]
     stall: usize,
@@ -112,6 +119,14 @@ struct MoeadArgs {
     /// Maximum neighbours replaced per child.
     #[arg(long, default_value_t = 2)]
     replacements: usize,
+    /// Share of subproblems that produce a child each generation. One is
+    /// plain MOEA/D-DE; the default varies a fifth.
+    #[arg(long, default_value_t = 0.2)]
+    update_probability: f64,
+    /// Share of the run that updates every subproblem before the partial
+    /// schedule starts.
+    #[arg(long, default_value_t = 0.1)]
+    update_delay: f64,
     /// Differential scale factor.
     #[arg(long, default_value_t = 0.5)]
     f: f64,
@@ -207,6 +222,20 @@ struct BenchArgs {
     /// Evaluation budget. Zero uses each engine's default.
     #[arg(long, default_value_t = 0)]
     budget: usize,
+    /// Start of the x_pbest schedule for the DE section.
+    #[arg(long, default_value_t = 0.11)]
+    p_best: f64,
+    /// End of the x_pbest schedule for the DE section. Zero holds p_best.
+    #[arg(long, default_value_t = 0.0)]
+    p_best_final: f64,
+    /// Restart the worst half of the DE population after this many stalled
+    /// generations. Zero is off.
+    #[arg(long, default_value_t = 0)]
+    stall: usize,
+    /// Per generation share of subproblems that produce a child, for the
+    /// MOEA/D section. Omitted means the engine default; 1 is plain MOEA/D-DE.
+    #[arg(long)]
+    update_probability: Option<f64>,
     /// Print JSON instead of a table.
     #[arg(long)]
     json: bool,
@@ -315,6 +344,8 @@ fn run_de(args: DeArgs) -> Result<(), Box<dyn Error>> {
         },
         f: args.f,
         cr: args.cr,
+        p_best: args.p_best,
+        p_best_final: args.p_best_final,
         reduce_population: !args.no_reduce,
         stall_generations: args.stall,
         seed: args.seed,
@@ -395,6 +426,8 @@ fn run_moead(args: MoeadArgs) -> Result<(), Box<dyn Error>> {
         neighbourhood: args.neighbourhood,
         delta: args.delta,
         replacements: args.replacements,
+        update_probability: args.update_probability,
+        update_delay: args.update_delay,
         scalar,
         f: args.f,
         cr: args.cr,
@@ -837,6 +870,9 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
         for run in 0..runs {
             let config = DeConfig {
                 budget: args.budget,
+                p_best: args.p_best,
+                p_best_final: args.p_best_final,
+                stall_generations: args.stall,
                 seed: run + 1,
                 ..DeConfig::default()
             };
@@ -872,9 +908,12 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
     } else {
         args.budget
     };
+    let update = args
+        .update_probability
+        .unwrap_or(MoeadConfig::default().update_probability);
     println!(
-        "\n# MOEA/D, Tchebycheff, 100 subproblems, {} evaluations",
-        moead_budget
+        "\n# MOEA/D, Tchebycheff, 100 subproblems, update probability {update}, \
+         {moead_budget} evaluations"
     );
     println!(
         "{:<10} {:>10} {:>11} {:>11} {:>8} {:>8}",
@@ -893,11 +932,14 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
         let mut points = 0usize;
         let started = Instant::now();
         for run in 0..runs {
-            let config = MoeadConfig {
+            let mut config = MoeadConfig {
                 budget: moead_budget,
                 seed: run + 1,
                 ..MoeadConfig::default()
             };
+            if let Some(probability) = args.update_probability {
+                config.update_probability = probability;
+            }
             let out = moead::minimize(&problem, &config);
             let front = out.front();
             igds.push(igd(&front, &reference));

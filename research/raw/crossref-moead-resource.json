@@ -1,0 +1,585 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 2615784,
+    "items": [
+      {
+        "DOI": "10.1109/cac48633.2019.8996706",
+        "title": [
+          "Many-objective power flow optimization problems based on an improved MOEA/D with dynamical resource allocation strategy"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2019,
+              11
+            ]
+          ]
+        },
+        "container-title": [
+          "2019 Chinese Automation Congress (CAC)"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Xiaoqing",
+            "family": "Zhu",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jingrui",
+            "family": "Zhang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Zezhi",
+            "family": "Wu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.ijepes.2020.106050",
+        "title": [
+          "MOEA/D with many-stage dynamical resource allocation strategy to solution of many-objective OPF problems"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2020,
+              9
+            ]
+          ]
+        },
+        "container-title": [
+          "International Journal of Electrical Power &amp; Energy Systems"
+        ],
+        "is-referenced-by-count": 34,
+        "author": [
+          {
+            "given": "Jingrui",
+            "family": "Zhang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Xiaoqing",
+            "family": "Zhu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Po",
+            "family": "Li",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1002/9781119848899.ch20",
+        "title": [
+          "Many\u2010objective Robust Optimization\u2010based Dynamic VAR Resource Planning"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023,
+              5,
+              19
+            ]
+          ]
+        },
+        "container-title": [
+          "Stability\u2010Constrained Optimization for Modern Power System Operation and Planning"
+        ],
+        "is-referenced-by-count": 0
+      },
+      {
+        "DOI": "10.1109/cec48606.2020.9185549",
+        "title": [
+          "MOEA/D-S<sup>3</sup>: MOEA/D using SVM-based Surrogates adjusted to Subproblems for Many objective optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2020,
+              7
+            ]
+          ]
+        },
+        "container-title": [
+          "2020 IEEE Congress on Evolutionary Computation (CEC)"
+        ],
+        "is-referenced-by-count": 9,
+        "author": [
+          {
+            "given": "Takumi",
+            "family": "Sonoda",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Masaya",
+            "family": "Nakata",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/cec.2015.7257245",
+        "title": [
+          "MOEA/D using constant-distance based neighbors designed for many-objective optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2015,
+              5
+            ]
+          ]
+        },
+        "container-title": [
+          "2015 IEEE Congress on Evolutionary Computation (CEC)"
+        ],
+        "is-referenced-by-count": 3,
+        "author": [
+          {
+            "given": "Hiroyuki",
+            "family": "Sato",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.5220/0012190100003543",
+        "title": [
+          "Maritime Dynamic Resource Allocation and Risk Minimization Using Visual Analytics and Elitist Multi-Objective Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 20th International Conference on Informatics in Control, Automation and Robotics"
+        ],
+        "is-referenced-by-count": 2,
+        "author": [
+          {
+            "given": "Mayamin",
+            "family": "Raha",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science and Engineering, University of Nevada, 1664 N. Virginia Street, Reno, NV 89557, U.S.A., --- Select a Country ---"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Md.",
+            "family": "Sayed",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science and Engineering, University of Nevada, 1664 N. Virginia Street, Reno, NV 89557, U.S.A., --- Select a Country ---"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Monica",
+            "family": "Nicolescu",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science and Engineering, University of Nevada, 1664 N. Virginia Street, Reno, NV 89557, U.S.A., --- Select a Country ---"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mircea",
+            "family": "Nicolescu",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science and Engineering, University of Nevada, 1664 N. Virginia Street, Reno, NV 89557, U.S.A., --- Select a Country ---"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sushil",
+            "family": "Louis",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science and Engineering, University of Nevada, 1664 N. Virginia Street, Reno, NV 89557, U.S.A., --- Select a Country ---"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2139/ssrn.4721127",
+        "title": [
+          "Hk-Moea/D: A Historical Knowledge-Guided Resource Allocation for Decomposition Multiobjective Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Wei",
+            "family": "Li",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Xiaolong",
+            "family": "Zeng",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Ying",
+            "family": "Huang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Yiu-ming",
+            "family": "Cheung",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/access.2020.2999417",
+        "title": [
+          "A Decomposition Method Based on Random Objective Division for MOEA/D in Many-Objective Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        },
+        "container-title": [
+          "IEEE Access"
+        ],
+        "is-referenced-by-count": 4,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0001-8084-4892",
+            "authenticated-orcid": false,
+            "given": "Xue",
+            "family": "Lu",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0001-5056-6019",
+            "authenticated-orcid": false,
+            "given": "Yanyan",
+            "family": "Tan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-5471-7328",
+            "authenticated-orcid": false,
+            "given": "Wei",
+            "family": "Zheng",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Lili",
+            "family": "Meng",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.21203/rs.3.rs-11200633/v1",
+        "title": [
+          "Dynamic Multi-Objective Optimization for Batch-wise Task Assignment and Resource Allocation in Mobile Edge Computing"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              10,
+              14
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "abstract": "<title>Abstract</title>\n                <p>In practical mobile edge computing systems, computation tasks arrive in successive batches while task attributes, wireless conditions, and available resources vary across decision slots. This paper formulates batch-wise task assignment and communication/computing resource allocation as a constrained dynamic bi-objective optimization problem and proposes a Location-Resource Coupled Dynamic NSGA-II (LRC-DNSGA-II). Its Location-Resource Coupled Variation operator captures the dependency between discrete assignment and continuous allocation by restricting assignment mutation to accessible execution sites and resetting associated resource-weight genes when locations change. A task-feature-matched dynamic response mechanism reuses relevant decision information across successive batches. Experiments under dynamic batch-wise MEC scenarios show that LRC-DNSGA-II significantly outperforms four comparison methods in hypervolume and inverted generational distance. Ablation studies indicate that coupled variation mainly improves final approximation quality, whereas dynamic response primarily accelerates adaptation after batch transitions.</p>",
+        "author": [
+          {
+            "given": "Yingying",
+            "family": "Sun",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "National Frontiers Science Center for Industrial Intelligence and Systems Optimization, Northeastern University"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Zhiming",
+            "family": "Dong",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Liaoning Engineering Laboratory of Data Analytics and Optimization for Smart Industry"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Gongshu",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "National Frontiers Science Center for Industrial Intelligence and Systems Optimization, Northeastern University"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/s00500-026-11508-3",
+        "title": [
+          "MOEA/D with elitist resource allocation for structural optimization problems"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              11,
+              6
+            ]
+          ]
+        },
+        "container-title": [
+          "Soft Computing"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0003-4753-2867",
+            "authenticated-orcid": false,
+            "given": "Mustafa",
+            "family": "Altiok",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ahmet",
+            "family": "\u00d6zki\u015f",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mesut",
+            "family": "G\u00fcnd\u00fcz",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

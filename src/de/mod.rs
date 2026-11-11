@@ -78,8 +78,15 @@ pub struct DeConfig {
     pub f: f64,
     /// Fixed crossover rate for [`Adaptation::Static`].
     pub cr: f64,
-    /// Fraction of the population that may serve as `x_pbest`.
+    /// Fraction of the population that may serve as `x_pbest` at the start.
     pub p_best: f64,
+    /// Fraction of the population that may serve as `x_pbest` at the end.
+    ///
+    /// Zero holds [`DeConfig::p_best`] for the whole run. A positive value
+    /// moves it linearly towards this endpoint, which is the jSO schedule
+    /// (0.25 down to 0.125): a wide pool early keeps the search explorative,
+    /// a narrow one late sharpens it.
+    pub p_best_final: f64,
     /// Archive capacity as a multiple of the population size.
     pub archive_scale: f64,
     /// Number of success history slots.
@@ -106,6 +113,7 @@ impl Default for DeConfig {
             f: 0.5,
             cr: 0.9,
             p_best: 0.11,
+            p_best_final: 0.0,
             archive_scale: 1.0,
             history: memory::DEFAULT_HISTORY,
             reduce_population: true,
@@ -147,6 +155,10 @@ impl DeConfig {
         assert!(
             self.p_best > 0.0 && self.p_best <= 1.0,
             "p_best must be in (0, 1]"
+        );
+        assert!(
+            self.p_best_final == 0.0 || (self.p_best_final > 0.0 && self.p_best_final <= 1.0),
+            "p_best_final must be zero or in (0, 1]"
         );
         assert!(self.history >= 1, "history must have at least one slot");
         assert!(dim > 0, "dimension must be positive");
@@ -244,9 +256,13 @@ pub fn minimize<P: Problem + ?Sized>(problem: &P, config: &DeConfig) -> DeOutcom
         let np = population.len();
         let batch = np.min(budget - evaluations);
         let ranked = ranked_indices(&scores);
-        let pbest_pool = ((config.p_best * np as f64).round() as usize)
-            .max(2)
-            .min(np);
+        let p_now = if config.p_best_final > 0.0 {
+            let progress = evaluations as f64 / budget as f64;
+            config.p_best + (config.p_best_final - config.p_best) * progress
+        } else {
+            config.p_best
+        };
+        let pbest_pool = ((p_now * np as f64).round() as usize).max(2).min(np);
 
         // Build every trial first, then evaluate the batch in parallel. This
         // keeps all random draws on one thread and the order deterministic.

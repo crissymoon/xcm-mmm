@@ -56,20 +56,33 @@ Five seeds, 50 000 evaluations, 100 subproblems. IGD lower is better, hypervolum
 
 | problem | variables | IGD | hypervolume | points | seconds per run |
 |---|---:|---:|---:|---:|---:|
-| zdt1 | 30 | 0.01066 | 0.85703 | 100 | 0.056 |
-| zdt2 | 30 | 0.00719 | 0.52725 | 99 | 0.055 |
-| zdt3 | 30 | 0.01792 | 1.28145 | 80 | 0.055 |
-| zdt4 | 10 | 0.00801 | 0.86152 | 95 | 0.046 |
-| zdt6 | 10 | 0.00189 | 0.50452 | 100 | 0.045 |
-| dtlz1 | 7 | 0.03017 | 0.18294 | 61 | 0.056 |
-| dtlz2 | 12 | 0.07501 | 0.69888 | 60 | 0.055 |
+| zdt1 | 30 | 0.00716 | 0.86329 | 100 | 0.091 |
+| zdt2 | 30 | 0.00528 | 0.53247 | 99 | 0.087 |
+| zdt3 | 30 | 0.01252 | 1.30075 | 75 | 0.089 |
+| zdt4 | 10 | 0.00549 | 0.86659 | 100 | 0.086 |
+| zdt6 | 10 | 0.00190 | 0.50387 | 100 | 0.080 |
+| dtlz1 | 7 | 0.03043 | 0.18247 | 62 | 0.099 |
+| dtlz2 | 12 | 0.07466 | 0.69783 | 61 | 0.099 |
 
 Two observations:
 
-- The ZDT fronts are dense and close. ZDT3 is the hardest of the two objective set because its front is disconnected, and it still lands within 0.02.
-- The DTLZ rows carry fewer points and a larger IGD. Three objectives give the lattice 105 weights and the front is a surface rather than a curve, so the same budget buys less coverage per point. DTLZ1 is also deceptive by construction: its barrier rewards a population that keeps exploring.
+- The ZDT fronts are dense and close. ZDT3 is the hardest of the two objective set because its front is disconnected, and it still lands within 0.013.
+- The DTLZ rows carry fewer points and a larger IGD. Three objectives give the lattice 105 weights and the front is a surface rather than a curve, so the same budget buys less coverage per point. DTLZ1 is also deceptive by construction: its barrier rewards a population that keeps exploring, and it is the one row partial updates do not move.
 
-At 30 variables, ZDT1 needs about 500 generations to converge. At 25 000 evaluations, which is 250 generations, IGD is around 0.12; at 50 000 it is 0.011; at 100 000 it is 0.005. The engine does not cheat by using a smaller search space, and the budget is the honest way to compare it.
+At 30 variables, ZDT1 needs a budget of about 50 000 evaluations to converge. At 25 000 evaluations IGD is around 0.12; at 50 000 it is 0.007; at 100 000 it is 0.005. The engine does not cheat by using a smaller search space, and the budget is the honest way to compare it.
+
+## Partial updates
+
+The default varies only a random fifth of the subproblems per generation. Thirty seeds per setting at 50 000 evaluations, mean IGD and mean hypervolume over all seven problems:
+
+| update probability | mean IGD | mean hypervolume |
+|---:|---:|---:|
+| 1.0, plain MOEA/D-DE | 0.02480 | 0.69987 |
+| 0.4 | 0.02031 | 0.70527 |
+| 0.2, default | 0.02011 | 0.70610 |
+| 0.1 | 0.02005 | 0.70611 |
+
+Per problem at the default, IGD falls from 0.0101 to 0.0077 on ZDT1, 0.0072 to 0.0056 on ZDT2, 0.0184 to 0.0128 on ZDT3, 0.0131 to 0.0075 on ZDT4 and 0.0480 to 0.0302 on DTLZ1. ZDT6 is flat at 0.0019 and DTLZ2 is flat at 0.075. The cost is wall clock: the same budget is spread over five times as many generations, and each row takes about 1.6 times as long for the same number of evaluations.
 
 ## Scalarisation choice
 
@@ -77,9 +90,9 @@ Three objectives are where PBI earns its place. Same budget and population, one 
 
 | problem | Tchebycheff IGD | PBI IGD | Tchebycheff points | PBI points |
 |---|---:|---:|---:|---:|
-| zdt1 | 0.00932 | 0.01981 | 100 | 96 |
-| dtlz1 | 0.03032 | 0.02398 | 61 | 91 |
-| dtlz2 | 0.07466 | 0.07032 | 58 | 83 |
+| zdt1 | 0.00890 | 0.01995 | 100 | 99 |
+| dtlz1 | 0.03002 | 0.02671 | 61 | 91 |
+| dtlz2 | 0.07434 | 0.06975 | 61 | 80 |
 
 PBI improves the three objective front and its density, and loses on ZDT1. The default stays Tchebycheff because two objective problems are the common case; pass `--scalar pbi` when the front is a surface.
 
@@ -88,5 +101,6 @@ PBI improves the three objective front and its density, and loses on ZDT1. The d
 - **Time is not a benchmark.** The problems are cheap, so a large part of the wall clock is Rayon start up and the allocation of scores. The forecasting path, where a single evaluation is four ridge fits, is the realistic measure of throughput.
 - **The reference fronts are generated.** ZDT1, ZDT2, ZDT4, ZDT6 and the DTLZ rows are exact; ZDT3 is sampled on its five published arcs. A different reference set changes IGD in the third digit.
 - **Monte Carlo hypervolume is not used above three objectives.** Every row in the table is exact. For four or more objectives the crate reports a seeded estimate and its 95 percent error, and the two should be quoted together.
-- **The engine is synchronous.** It evaluates a whole generation at once so the expensive part can use every core, and a child does not see its neighbours' updates until the next generation. Sequential MOEA/D converges slightly faster per generation. This is visible at short budgets, not at 500 generations.
+- **The engine is synchronous.** It evaluates a whole generation at once so the expensive part can use every core, and a child does not see its neighbours' updates until the next generation. Sequential MOEA/D converges slightly faster per generation. This is visible at short budgets, not at the budgets in this table.
+- **Partial updates change the generation count, not the evaluation count.** The budget is still 50 000 evaluations, but at an update probability of 0.2 each generation builds about twenty children, so a row runs around 2 500 generations instead of 500. Any figure per generation, including the wall clock, has to be read with that in mind.
 - **These are synthetic problems.** They test the optimiser, not the forecasting claim. The forecasting evidence is the worked example in [Forecasting](FORECASTING.md).

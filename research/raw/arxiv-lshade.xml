@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/g4N8AuM+2p48XnFl7ZyQmymveVE</id>
+  <title>arXiv Query: search_query=abs:"L-SHADE" OR abs:"success-history based adaptive"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:14Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22L-SHADE%22+OR+abs:%22success-history+based+adaptive%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>12</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2511.13843v4</id>
+    <title>QUASAR: An Evolutionary Algorithm to Accelerate High-Dimensional Numerical Optimization</title>
+    <updated>2026-02-01T01:50:26Z</updated>
+    <link href="https://arxiv.org/abs/2511.13843v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.13843v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>High-dimensional numerical optimization presents a persistent challenge in computational science. This paper introduces Quasi-Adaptive Search with Asymptotic Reinitialization (QUASAR), an evolutionary algorithm to accelerate convergence in complex, non-differentiable problems afflicted by the curse of dimensionality. QUASAR expands upon the core principles of Differential Evolution (DE), introducing quasi-adaptive mechanisms to dynamically balance exploration and exploitation in its search. Inspired by the behavior of quantum particles, the algorithm utilizes three highly stochastic mechanisms that augment standard DE: 1) probabilistic mutation strategies and scaling factors; 2) rank-based crossover rates; 3) asymptotically decaying covariance reinitializations.
+  Evaluated on the notoriously difficult CEC2017 benchmark suite of 29 test functions, QUASAR achieved the lowest overall rank sum (367) using the Friedman test, outperforming DE (735) and L-SHADE (452). Geometric mean comparisons show average final solution quality improvements of $3.85 \times$ and $2.07 \times$ compared to DE and L-SHADE, respectively ($p \ll 0.001$), with average optimization speed averaging $1.40 \times$ and $5.16 \times$ faster. QUASAR's performance establishes it as an effective, efficient, and user-friendly evolutionary algorithm for complex high-dimensional problems.</summary>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-17T19:02:31Z</published>
+    <arxiv:comment>8 pages, 6 figures. Open-source package containing QUASAR is available via 'pip install hdim_opt'; source code (with experiments) is maintained on GitHub at [https://www.github.com/jgsoltes/hdim-opt]</arxiv:comment>
+    <arxiv:primary_category term="math.OC"/>
+    <author>
+      <name>Julian G. Soltes</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2601.11499v1</id>
+    <title>On the Probability of First Success in Differential Evolution: Hazard Identities and Tail Bounds</title>
+    <updated>2026-01-16T18:24:24Z</updated>
+    <link href="https://arxiv.org/abs/2601.11499v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2601.11499v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We study first-hitting times in Differential Evolution (DE) through a conditional hazard frame work. Instead of analyzing convergence via Markov-chain transition kernels or drift arguments, we ex press the survival probability of a measurable target set $A$ as a product of conditional first-hit probabilities (hazards) $p_t=\Prob(E_t\mid\mathcal F_{t-1})$. This yields distribution-free identities for survival and explicit tail bounds whenever deterministic lower bounds on the hazard hold on the survival event.
+  For the L-SHADE algorithm with current-to-$p$best/1 mutation, we construct a checkable algorithmic witness event $\mathcal L_t$ under which the conditional hazard admits an explicit lower bound depending only on sampling rules, population size, and crossover statistics. This separates theoretical constants from empirical event frequencies and explains why worst-case constant-hazard bounds are typically conservative.
+  We complement the theory with a Kaplan--Meier survival analysis on the CEC2017 benchmark suite . Across functions and budgets, we identify three distinct empirical regimes: (i) strongly clustered success, where hitting times concentrate in short bursts; (ii) approximately geometric tails, where a constant-hazard model is accurate; and (iii) intractable cases with no observed hits within the evaluation horizon. The results show that while constant-hazard bounds provide valid tail envelopes, the practical behavior of L-SHADE is governed by burst-like transitions rather than homogeneous per-generati on success probabilities.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-01-16T18:24:24Z</published>
+    <arxiv:comment>All codes are publically available at https://github.com/snenovgmailcom/lshade_hazard_project</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Dimitar Nedanovski</name>
+    </author>
+    <author>
+      <name>Svetoslav Nenov</name>
+    </author>
+    <author>
+      <name>Dimitar Pilev</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.20858v2</id>
+    <title>Evolutionary Discovery of Developmental Reward Schedules in Deep Reinforcement Learning</title>
+    <updated>2026-07-10T15:36:36Z</updated>
+    <link href="https://arxiv.org/abs/2606.20858v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.20858v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The temporal structure of reward composition in reinforcement learning (RL) is typically hand-designed and held fixed throughout training, leaving the progression of motivational priorities largely unexplored. In this work, we propose an evolutionary framework for discovering developmental reward schedules, in which three distinct biologically inspired motivational components -- agency, novelty, and reactivity -- are combined through time-varying weights that dynamically shift over the course of training. Evaluated on two sparse-reward MiniGrid tasks: DoorKey-6x6 and KeyCorridorS3R1, our framework compares the generalizability of four evolutionary algorithms: CMA-ES, xNES, DE, and L-SHADE against an extrinsically motivated baseline (our main comparison point), and three additional hand-designed methods. On DoorKey-6x6, all evolved methods outperform the non-evolved baselines, with L-SHADE achieving the best performance -- an approximate relative mean improvement of 11.4% over the extrinsic only baseline. On KeyCorridorS3R1, CMA-ES achieves the best overall performance, with the remaining evolved methods showing weaker and less reliable generalization capability compared to the extrinsic only baseline. Interestingly, the discovered schedules diverge from our defined developmental ordering, with novelty consistently emerging as the dominant early signal during training, across both tasks. Collectively, our results position evolutionary optimization as a promising approach for developmental reward schedule discovery in deep reinforcement learning, and suggest that what evolution finds to be optimal in computational settings may differ from what it finds to be optimal in biology. The code for this project can be found at: https://github.com/alannadels/Evolutionary_RL.git.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-18T18:47:26Z</published>
+    <arxiv:comment>Accepted at the 2026 IEEE International Conference on Development and Learning (ICDL)</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Alan Nadelsticher Ruvalcaba</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.15761v1</id>
+    <title>Frenetic Cat-inspired Particle Optimization: a Markov state-switching hybrid swarm optimizer with application to cardiac digital twinning</title>
+    <updated>2026-04-17T07:05:18Z</updated>
+    <link href="https://arxiv.org/abs/2604.15761v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.15761v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Designing optimizers that remain effective under tight evaluation budgets is critical in expensive black-box settings such as cardiac digital twinning. We propose Frenetic Cat-inspired Particle Optimization (FCPO), a hybrid swarm method that couples particle swarm optimization-like dynamics with an explicit-state Markov switching controller to schedule exploration and refinement operators online. FCPO integrates (i) state-conditioned bounded motion, (ii) an elite-difference global jump operator to escape stagnation, (iii) eigen-space guided local refinement from elite covariance, and (iv) linear population size reduction to control late-stage computational cost. We benchmark FCPO on five representative functions from the Congress on Evolutionary Computation (CEC) 2022 suite (F1, F2, F3, F6 and F10) at dimensions D$\in${10,20} over 30 independent runs, comparing against PSO, CSO, CLPSO, SHADE, L-SHADE and CMA-ES. FCPO achieves the lowest mean runtime across the ten benchmark cases (average 0.183 s), about 2.3x faster than CMA-ES and 2.6x faster than L-SHADE in our Python implementation. On the multimodal composition function F10 at D=20, FCPO attains the best mean objective (9.625x 10^2 $\pm$ 1.275x 10^3) and remains faster than CMA-ES (0.602 s vs. 1.126 s mean runtime). On structured landscapes (F1--F3) and on the hybrid function (F6), CMA-ES remains the most accurate method, while FCPO substantially improves over classical swarms and maintains a favorable accuracy--runtime trade-off. Finally, in a ventricular activation digital twin calibration task, FCPO reaches the target electrocardiogram (ECG) fidelity (RMSE&lt;0.1 mV) within ~ 40 iterations and produces physiologically plausible activation maps with robust convergence across repeated initializations, supporting its use as a practical optimizer for expensive inverse problems.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-17T07:05:18Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Jorge Sánchez</name>
+    </author>
+    <author>
+      <name>Guadalupe García-Isla</name>
+    </author>
+    <author>
+      <name>Sandra Perez-Herrero</name>
+    </author>
+    <author>
+      <name>Beatriz Trenor</name>
+    </author>
+    <author>
+      <name>Javier Saiz</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.24140v1</id>
+    <title>A Longitudinal Analysis of the CEC Single-Objective Competitions (2010-2024) and Implications for Variational Quantum Optimization</title>
+    <updated>2026-03-25T10:04:46Z</updated>
+    <link href="https://arxiv.org/abs/2603.24140v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.24140v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper provides a historical analysis of the IEEE CEC Single Objective Optimization competition results (2010-2024). We analyze how benchmark functions shaped winning algorithms, identifying the 2014 introduction of dense rotation matrices as a key performance filter. This design choice introduced parameter non-separability, reduced effectiveness of coordinate-dependent methods (PSO, GA), and established the dominance of Differential Evolution variants capable of preserving the rotational invariance of their difference vectors, specifically L-SHADE. Post-2020 analysis reveals a shift towards high complexity hybrid optimizers that combine different mechanisms (e.g., Eigenvector Crossover, Societal Sharing, Reinforcement Learning) to maximize ranking stability. We conclude by identifying structural similarities between these modern benchmarks and Variational Quantum Algorithm landscapes, suggesting that evolved CEC solvers possess the specific adaptive capabilities required for quantum control.</summary>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-25T10:04:46Z</published>
+    <arxiv:primary_category term="quant-ph"/>
+    <author>
+      <name>Vojtěch Novák</name>
+    </author>
+    <author>
+      <name>Tomáš Bezděk</name>
+    </author>
+    <author>
+      <name>Ivan Zelinka</name>
+    </author>
+    <author>
+      <name>Swagatam Das</name>
+    </author>
+    <author>
+      <name>Martin Beseda</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.14517v1</id>
+    <title>Tri-Hybrid Beamforming Design for Fully-Connected Pinching Antenna Systems</title>
+    <updated>2025-11-18T14:14:47Z</updated>
+    <link href="https://arxiv.org/abs/2511.14517v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.14517v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A novel fully-connected (FC) tri-hybrid beamforming (THB) architecture is proposed for pinching antenna systems (PASS). In contrast to conventional sub-connected (SC) PASS, the proposed FC architecture employs a tunable phase-shifter network to interconnect all radio frequency (RF) chains with all waveguides. This facilitates a THB framework that integrates conventional hybrid analog-digital beamforming with pinching beamforming. A weighted sum-rate (WSR) optimization problem is then formulated to jointly optimize the transmit beamformers and pinching antenna (PA) positions. Two algorithms are developed to address this challenging non-convex problem. 1) Fractional programming (FP)-based algorithm: This algorithm directly maximizes the WSR using an FP-based alternating optimization framework. Particularly, a success-history based adaptive differential evolution (SHADE) method is proposed to optimize PA positions, effectively addressing the intractable multimodal objective function. 2) Zero-forcing (ZF)-based algorithm: To reduce design complexity, zero-forcing is employed for transmit beamforming. The PA positions are subsequently optimized to maximize the WSR via a modified SHADE method. Simulation results validate the effectiveness of the proposed algorithms, revealing that the FC-THB PASS achieves WSR comparable to the SC architecture while delivering superior energy efficiency with fewer RF chains.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-18T14:14:47Z</published>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Cheng-Jie Zhao</name>
+    </author>
+    <author>
+      <name>Zhaolin Wang</name>
+    </author>
+    <author>
+      <name>Hyundong Shin</name>
+    </author>
+    <author>
+      <name>Yuanwei Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.41099v1</id>
+    <title>Local Budget Benefits, Population Commitment, and Solver Performance: A DGO Case Study with Controlled DE Transfer</title>
+    <updated>2026-10-30T00:39:19Z</updated>
+    <link href="https://arxiv.org/abs/2610.41099v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.41099v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>An evaluated candidate can improve a local search step, alter the population used by later steps, and affect a solver's final result. We distinguish these three questions using Da Gou Gun Optimization (DGO), a population optimizer designed for this study. Its JQ100 configuration evaluates an interpolation candidate during a two-sided probe. We define local budget value, population commitment effects and complete-policy performance, and give an exact example in which a locally better commitment leads to a worse continuation. Short-horizon matched comparisons favor interpolation on eligible quadratic states. Paired continuations yield mixed effect estimates, with primary group intervals spanning zero. Complete-policy comparisons favor JQ100 over the tested classical references in aggregate; a matched-start comparison has favorable means but intervals spanning parity. On 24 boxed BBOB functions, target-truncated geometric-mean error ratios favor JQ100 over the tested classical policies and favor L-SHADE and CMA-ES over JQ100 under the stated initialization and stopping rules. Local evaluation gains, commitment effects and solver competitiveness therefore require separate comparisons.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-30T00:39:19Z</published>
+    <arxiv:comment>44 pages, 12 figures, 20 tables, including appendices</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Shiqi Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.26714v1</id>
+    <title>Random Walk on Bézier Curves for Global Optimization</title>
+    <updated>2026-06-25T07:50:06Z</updated>
+    <link href="https://arxiv.org/abs/2606.26714v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.26714v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Balancing exploration and exploitation remains a central challenge in metaheuristic optimization. To address this issue, this paper proposes Bézier Walk Evolution (BWE), a geometry-driven optimization framework that reformulates evolutionary search as adaptive trajectory construction in the decision space. BWE integrates Bézier curve modeling with a distance-aware random walk mechanism to generate topology-guided search trajectories. By adaptively varying the curve order during evolution, the proposed method enables a smooth transition from diversified global exploration to refined local exploitation. Higher-order Bézier curves leverage multiple population-derived control points to enhance search diversity, while lower-order curves generate near-linear trajectories to improve convergence efficiency. This adaptive geometric search mechanism provides an interpretable alternative to conventional nature-inspired designs. Extensive experiments on 41 benchmark functions from the CEC2017 and CEC2022 suites, spanning dimensions from 10 to 100, show that BWE achieves strong overall performance and favorable scalability compared with 7 classical and 6 state-of-the-art optimizers, including L-SHADE and CMA-ES. Additional evaluations on five constrained engineering design problems further demonstrate the practical applicability and robustness of BWE.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-25T07:50:06Z</published>
+    <arxiv:comment>Preprint</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Jinpeng Wang</name>
+    </author>
+    <author>
+      <name>Xingguo Xu</name>
+    </author>
+    <author>
+      <name>Yujing Sun</name>
+    </author>
+    <author>
+      <name>Jiguang Yu</name>
+    </author>
+    <author>
+      <name>Kaichen Ouyang</name>
+    </author>
+    <author>
+      <name>Yuansheng Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.08700v1</id>
+    <title>Computationally Efficient Optimisation of Elbow-Type Draft Tube Using Neural Network Surrogates</title>
+    <updated>2024-01-14T14:05:26Z</updated>
+    <link href="https://arxiv.org/abs/2401.08700v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.08700v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study aims to provide a comprehensive assessment of single-objective and multi-objective optimisation algorithms for the design of an elbow-type draft tube, as well as to introduce a computationally efficient optimisation workflow. The proposed workflow leverages deep neural network surrogates trained on data obtained from numerical simulations. The use of surrogates allows for a more flexible and faster evaluation of novel designs. The success history-based adaptive differential evolution with linear reduction and the multi-objective evolutionary algorithm based on decomposition were identified as the best-performing algorithms and used to determine the influence of different objectives in the single-objective optimisation and their combined impact on the draft tube design in the multi-objective optimisation. The results for the single-objective algorithm are consistent with those of the multi-objective algorithm when the objectives are considered separately. Multi-objective approach, however, should typically be chosen, especially for computationally inexpensive surrogates. A multi-criteria decision analysis method was used to obtain optimal multi-objective results, showing an improvement of 1.5% and 17% for the pressure recovery factor and drag coefficient, respectively. The difference between the predictions and the numerical results is less than 0.5% for the pressure recovery factor and 3% for the drag coefficient. As the demand for renewable energy continues to increase, the relevance of data-driven optimisation workflows, as discussed in this study, will become increasingly important, especially in the context of global sustainability efforts.</summary>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-14T14:05:26Z</published>
+    <arxiv:comment>41 pages, brief appendix</arxiv:comment>
+    <arxiv:primary_category term="math.OC"/>
+    <author>
+      <name>Ante Sikirica</name>
+    </author>
+    <author>
+      <name>Ivana Lučin</name>
+    </author>
+    <author>
+      <name>Marta Alvir</name>
+    </author>
+    <author>
+      <name>Lado Kranjčević</name>
+    </author>
+    <author>
+      <name>Zoran Čarija</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2306.09931v1</id>
+    <title>A Metaheuristic-based Machine Learning Approach for Energy Prediction in Mobile App Development</title>
+    <updated>2023-06-16T16:01:50Z</updated>
+    <link href="https://arxiv.org/abs/2306.09931v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2306.09931v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Energy consumption plays a vital role in mobile App development for developers and end-users, and it is considered one of the most crucial factors for purchasing a smartphone. In addition, in terms of sustainability, it is essential to find methods to reduce the energy consumption of mobile devices since the extensive use of billions of smartphones worldwide significantly impacts the environment. Despite the existence of several energy-efficient programming practices in Android, the leading mobile ecosystem, machine learning-based energy prediction algorithms for mobile App development have yet to be reported. Therefore, this paper proposes a histogram-based gradient boosting classification machine (HGBC), boosted by a metaheuristic approach, for energy prediction in mobile App development. Our metaheuristic approach is responsible for two issues. First, it finds redundant and irrelevant features without any noticeable change in performance. Second, it performs a hyper-parameter tuning for the HGBC algorithm. Since our proposed metaheuristic approach is algorithm-independent, we selected 12 algorithms for the search strategy to find the optimal search algorithm. Our finding shows that a success-history-based parameter adaption for differential evolution with linear population size (L-SHADE) offers the best performance. It can improve performance and decrease the number of features effectively. Our extensive set of experiments clearly shows that our proposed approach can provide significant results for energy consumption prediction.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-06-16T16:01:50Z</published>
+    <arxiv:comment>This paper is submitted to a related journal</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Seyed Jalaleddin Mousavirad</name>
+    </author>
+    <author>
+      <name>Luís A. Alexandre</name>
+    </author>
+  </entry>
+</feed>

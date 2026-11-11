@@ -1,0 +1,255 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/vl93VMRrOorCfciq0ReuzAuS7uc</id>
+  <title>arXiv Query: search_query=abs:"differential evolution" AND abs:"success-history"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:13Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22differential+evolution%22+AND+abs:%22success-history%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>10</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2603.27089v1</id>
+    <title>RDEx-SOP: Exploitation-Biased Reconstructed Differential Evolution for Fixed-Budget Bound-Constrained Single-Objective Optimization</title>
+    <updated>2026-03-28T02:18:38Z</updated>
+    <link href="https://arxiv.org/abs/2603.27089v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.27089v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Bound-constrained single-objective numerical optimisation remains a key benchmark for assessing the robustness and efficiency of evolutionary algorithms. This report documents RDEx-SOP, an exploitation-biased success-history differential evolution variant used in the IEEE CEC 2025 numerical optimisation competition (C06 special session). RDEx-SOP combines success-history parameter adaptation, an exploitation-biased hybrid branch, and lightweight local perturbations to balance fast convergence and final solution quality under a strict evaluation budget. We evaluate RDEx-SOP on the official CEC 2025 SOP benchmark with the U-score framework (Speed and Accuracy categories). Experimental results show that RDEx-SOP achieves strong overall performance and statistically competitive final outcomes across the 29 benchmark functions.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-28T02:18:38Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Sichen Tao</name>
+    </author>
+    <author>
+      <name>Yifei Yang</name>
+    </author>
+    <author>
+      <name>Ruihan Zhao</name>
+    </author>
+    <author>
+      <name>Kaiyu Wang</name>
+    </author>
+    <author>
+      <name>Sicheng Liu</name>
+    </author>
+    <author>
+      <name>Shangce Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2610.26202v1</id>
+    <title>Hybrid metaheuristics for architectural design optimization under small evaluation and wall-clock budgets</title>
+    <updated>2026-10-19T11:29:14Z</updated>
+    <link href="https://arxiv.org/abs/2610.26202v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2610.26202v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Architectural and structural design optimization in parametric software affords about a thousand evaluations of an expensive model for problems with tens of variables, a regime for which most metaheuristics were not designed. On the side of artificial intelligence, two hybrid metaheuristics are proposed: a covariance matrix adaptation evolution strategy (CMA-ES) whose sampling is enriched with differential-evolution trial vectors, and a particle swarm with success-history parameter adaptation, differential-evolution injection and local refinement. A budget-aware delay of population-size reduction in adaptive differential evolution is also proposed. Under a hard cap of 1,200 evaluations, all counted, the CMA-ES hybrid ranks first on seven shifted and rotated functions at 10 and 30 variables and beats CMA-ES on six of seven functions at 30 variables. Ablations attribute this gain to the injection and show that a local search pays off only when its result re-enters the population. The delayed schedule improves three adaptive differential-evolution variants in 40 of 51 comparisons, with no loss. On the side of engineering application, in Grasshopper the CMA-ES hybrid and plain CMA-ES are never significantly worse than the optimizers of Galapagos, SilverEye, Opossum and Tunny on travelling-salesman instances and on a built 85-variable free-form shell, where they end 48 % below the best external tool in 15 minutes. On a 22-variable building-performance problem with binary choices, differential evolution leads instead. Shifting and rotating the functions reverses the rank of Harris hawks optimization. Solvers should therefore be selected by problem structure and stopping time, not by a single ranking.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-10-19T11:29:14Z</published>
+    <arxiv:comment>39 pages, 10 figures, 6 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Luciano Ambrosini</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.27090v1</id>
+    <title>RDEx-CSOP: Feasibility-Aware Reconstructed Differential Evolution with Adaptive epsilon-Constraint Ranking</title>
+    <updated>2026-03-28T02:23:11Z</updated>
+    <link href="https://arxiv.org/abs/2603.27090v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.27090v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Constrained single-objective numerical optimisation requires both feasibility maintenance and strong objective-value convergence under limited evaluation budgets. This report documents RDEx-CSOP, a constrained differential evolution variant used in the IEEE CEC 2025 numerical optimisation competition (C06 special session). RDEx-CSOP combines success-history parameter adaptation with an exploitation-biased hybrid search and an ε-constraint handling mechanism with a time-varying threshold. We evaluate RDEx-CSOP on the official CEC 2025 CSOP benchmark using the U-score framework (Speed, Accuracy, and Constraint categories). The results show that RDEx-CSOP achieves the highest total score and the best average rank among all released comparison algorithms, mainly through strong speed and competitive constraint-handling performance across the 28 benchmark functions.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-28T02:23:11Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Sichen Tao</name>
+    </author>
+    <author>
+      <name>Yifei Yang</name>
+    </author>
+    <author>
+      <name>Ruihan Zhao</name>
+    </author>
+    <author>
+      <name>Kaiyu Wang</name>
+    </author>
+    <author>
+      <name>Sicheng Liu</name>
+    </author>
+    <author>
+      <name>Shangce Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2408.05556v1</id>
+    <title>Evolutionary Neural Architecture Search for 3D Point Cloud Analysis</title>
+    <updated>2024-08-10T13:41:18Z</updated>
+    <link href="https://arxiv.org/abs/2408.05556v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2408.05556v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Neural architecture search (NAS) automates neural network design by using optimization algorithms to navigate architecture spaces, reducing the burden of manual architecture design. While NAS has achieved success, applying it to emerging domains, such as analyzing unstructured 3D point clouds, remains underexplored due to the data lying in non-Euclidean spaces, unlike images. This paper presents Success-History-based Self-adaptive Differential Evolution with a Joint Point Interaction Dimension Search (SHSADE-PIDS), an evolutionary NAS framework that encodes discrete deep neural network architectures to continuous spaces and performs searches in the continuous spaces for efficient point cloud neural architectures. Comprehensive experiments on challenging 3D segmentation and classification benchmarks demonstrate SHSADE-PIDS's capabilities. It discovered highly efficient architectures with higher accuracy, significantly advancing prior NAS techniques. For segmentation on SemanticKITTI, SHSADE-PIDS attained 64.51% mean IoU using only 0.55M parameters and 4.5GMACs, reducing overhead by over 22-26X versus other top methods. For ModelNet40 classification, it achieved 93.4% accuracy with just 1.31M parameters, surpassing larger models. SHSADE-PIDS provided valuable insights into bridging evolutionary algorithms with neural architecture optimization, particularly for emerging frontiers like point cloud learning.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-08-10T13:41:18Z</published>
+    <arxiv:comment>This work has been submitted to the IEEE for possible publication</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yisheng Yang</name>
+    </author>
+    <author>
+      <name>Guodong Du</name>
+    </author>
+    <author>
+      <name>Chean Khim Toa</name>
+    </author>
+    <author>
+      <name>Ho-Kin Tang</name>
+    </author>
+    <author>
+      <name>Sim Kuan Goh</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.14517v1</id>
+    <title>Tri-Hybrid Beamforming Design for Fully-Connected Pinching Antenna Systems</title>
+    <updated>2025-11-18T14:14:47Z</updated>
+    <link href="https://arxiv.org/abs/2511.14517v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.14517v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A novel fully-connected (FC) tri-hybrid beamforming (THB) architecture is proposed for pinching antenna systems (PASS). In contrast to conventional sub-connected (SC) PASS, the proposed FC architecture employs a tunable phase-shifter network to interconnect all radio frequency (RF) chains with all waveguides. This facilitates a THB framework that integrates conventional hybrid analog-digital beamforming with pinching beamforming. A weighted sum-rate (WSR) optimization problem is then formulated to jointly optimize the transmit beamformers and pinching antenna (PA) positions. Two algorithms are developed to address this challenging non-convex problem. 1) Fractional programming (FP)-based algorithm: This algorithm directly maximizes the WSR using an FP-based alternating optimization framework. Particularly, a success-history based adaptive differential evolution (SHADE) method is proposed to optimize PA positions, effectively addressing the intractable multimodal objective function. 2) Zero-forcing (ZF)-based algorithm: To reduce design complexity, zero-forcing is employed for transmit beamforming. The PA positions are subsequently optimized to maximize the WSR via a modified SHADE method. Simulation results validate the effectiveness of the proposed algorithms, revealing that the FC-THB PASS achieves WSR comparable to the SC architecture while delivering superior energy efficiency with fewer RF chains.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-18T14:14:47Z</published>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Cheng-Jie Zhao</name>
+    </author>
+    <author>
+      <name>Zhaolin Wang</name>
+    </author>
+    <author>
+      <name>Hyundong Shin</name>
+    </author>
+    <author>
+      <name>Yuanwei Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2407.14271v1</id>
+    <title>Modified-Improved Fitness Dependent Optimizer for Complex and Engineering Problems</title>
+    <updated>2024-06-27T07:47:23Z</updated>
+    <link href="https://arxiv.org/abs/2407.14271v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2407.14271v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Fitness dependent optimizer (FDO) is considered one of the novel swarm intelligent algorithms. Recently, FDO has been enhanced several times to improve its capability. One of the improvements is called improved FDO (IFDO). However, according to the research findings, the variants of FDO are constrained by two primary limitations that have been identified. Firstly, if the number of agents employed falls below five, it significantly diminishes the algorithm's precision. Secondly, the efficacy of FDO is intricately tied to the quantity of search agents utilized. To overcome these limitations, this study proposes a modified version of IFDO, called M-IFDO. The enhancement is conducted by updating the location of the scout bee to the IFDO to move the scout bees to achieve better performance and optimal solutions. More specifically, two parameters in IFDO, which are alignment and cohesion, are removed. Instead, the Lambda parameter is replaced in the place of alignment and cohesion. To verify the performance of the newly introduced algorithm, M-IFDO is tested on 19 basic benchmark functions, 10 IEEE Congress of Evolutionary Computation (CEC-C06 2019), and five real-world problems. M-IFDO is compared against five state-of-the-art algorithms: Improved Fitness Dependent Optimizer (IFDO), Improving Multi-Objective Differential Evolution algorithm (IMODE), Hybrid Sampling Evolution Strategy (HSES), Linear Success-History based Parameter Adaptation for Differential Evolution (LSHADE) and CMA-ES Integrated with an Occasional Restart Strategy and Increasing Population Size and An Iterative Local Search (NBIPOP-aCMAES). The verification criteria are based on how well the algorithm reaches convergence, memory usage, and statistical results. The results show that M-IFDO surpasses its competitors in several cases on the benchmark functions and five real-world problems.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-27T07:47:23Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Hozan K. Hamarashid</name>
+    </author>
+    <author>
+      <name>Bryar A. Hassan</name>
+    </author>
+    <author>
+      <name>Tarik A. Rashid</name>
+    </author>
+    <arxiv:doi>10.1016/j.knosys.2024.112098</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.knosys.2024.112098" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2306.09931v1</id>
+    <title>A Metaheuristic-based Machine Learning Approach for Energy Prediction in Mobile App Development</title>
+    <updated>2023-06-16T16:01:50Z</updated>
+    <link href="https://arxiv.org/abs/2306.09931v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2306.09931v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Energy consumption plays a vital role in mobile App development for developers and end-users, and it is considered one of the most crucial factors for purchasing a smartphone. In addition, in terms of sustainability, it is essential to find methods to reduce the energy consumption of mobile devices since the extensive use of billions of smartphones worldwide significantly impacts the environment. Despite the existence of several energy-efficient programming practices in Android, the leading mobile ecosystem, machine learning-based energy prediction algorithms for mobile App development have yet to be reported. Therefore, this paper proposes a histogram-based gradient boosting classification machine (HGBC), boosted by a metaheuristic approach, for energy prediction in mobile App development. Our metaheuristic approach is responsible for two issues. First, it finds redundant and irrelevant features without any noticeable change in performance. Second, it performs a hyper-parameter tuning for the HGBC algorithm. Since our proposed metaheuristic approach is algorithm-independent, we selected 12 algorithms for the search strategy to find the optimal search algorithm. Our finding shows that a success-history-based parameter adaption for differential evolution with linear population size (L-SHADE) offers the best performance. It can improve performance and decrease the number of features effectively. Our extensive set of experiments clearly shows that our proposed approach can provide significant results for energy consumption prediction.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-06-16T16:01:50Z</published>
+    <arxiv:comment>This paper is submitted to a related journal</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Seyed Jalaleddin Mousavirad</name>
+    </author>
+    <author>
+      <name>Luís A. Alexandre</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.27764v1</id>
+    <title>DE-2LS: Differential Evolution with Lightweight Late Local Search for Constrained Numerical Optimization</title>
+    <updated>2026-06-26T06:45:46Z</updated>
+    <link href="https://arxiv.org/abs/2606.27764v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.27764v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Constrained single-objective numerical optimization requires a careful balance among feasibility, objective convergence, and computational efficiency under a fixed function-evaluation budget. This paper proposes DE-2LS, a late-stage, locally search-enhanced variant of differential evolution built on the RDEx framework. The proposed method preserves the original RDEx components, including mutation and crossover operators, success-history adaptation, archive mechanism, population-size reduction, and $ε$-based constraint handling. A lightweight coordinate-pattern local search is added as a guarded polishing component around the current best solution. It is activated only in the late stage of the run, uses a small evaluation budget, and accepts candidates through a feasibility-aware comparison rule. Ablation results show that the finalized DE-2LS configuration achieves the best U-score among all tested variants, confirming that controlled late-stage refinement is more effective than aggressive or premature local search. In the direct comparison with RDEx, DE-2LS achieves a 5.58\% gain in U-score. In the four-algorithm comparison, DE-2LS obtains the highest overall U-score of 80968 and the best total rank of 48 among RDEx, CL-SRDE, and UDE-III. These results indicate that DE-2LS improves the exploitation capability of the RDEx-based search framework while preserving its speed advantage under the combined speed-accuracy scoring criterion. The source code of DE-2LS is available at https://github.com/ChauhanDikshit?tab=repositories.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-26T06:45:46Z</published>
+    <arxiv:comment>10 pages, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Dikshit Chauhan</name>
+    </author>
+    <author>
+      <name>Anupam Trivedi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.08700v1</id>
+    <title>Computationally Efficient Optimisation of Elbow-Type Draft Tube Using Neural Network Surrogates</title>
+    <updated>2024-01-14T14:05:26Z</updated>
+    <link href="https://arxiv.org/abs/2401.08700v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.08700v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study aims to provide a comprehensive assessment of single-objective and multi-objective optimisation algorithms for the design of an elbow-type draft tube, as well as to introduce a computationally efficient optimisation workflow. The proposed workflow leverages deep neural network surrogates trained on data obtained from numerical simulations. The use of surrogates allows for a more flexible and faster evaluation of novel designs. The success history-based adaptive differential evolution with linear reduction and the multi-objective evolutionary algorithm based on decomposition were identified as the best-performing algorithms and used to determine the influence of different objectives in the single-objective optimisation and their combined impact on the draft tube design in the multi-objective optimisation. The results for the single-objective algorithm are consistent with those of the multi-objective algorithm when the objectives are considered separately. Multi-objective approach, however, should typically be chosen, especially for computationally inexpensive surrogates. A multi-criteria decision analysis method was used to obtain optimal multi-objective results, showing an improvement of 1.5% and 17% for the pressure recovery factor and drag coefficient, respectively. The difference between the predictions and the numerical results is less than 0.5% for the pressure recovery factor and 3% for the drag coefficient. As the demand for renewable energy continues to increase, the relevance of data-driven optimisation workflows, as discussed in this study, will become increasingly important, especially in the context of global sustainability efforts.</summary>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-14T14:05:26Z</published>
+    <arxiv:comment>41 pages, brief appendix</arxiv:comment>
+    <arxiv:primary_category term="math.OC"/>
+    <author>
+      <name>Ante Sikirica</name>
+    </author>
+    <author>
+      <name>Ivana Lučin</name>
+    </author>
+    <author>
+      <name>Marta Alvir</name>
+    </author>
+    <author>
+      <name>Lado Kranjčević</name>
+    </author>
+    <author>
+      <name>Zoran Čarija</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1802.09746v1</id>
+    <title>Surrogate Model Assisted Cooperative Coevolution for Large Scale Optimization</title>
+    <updated>2018-02-27T06:59:43Z</updated>
+    <link href="https://arxiv.org/abs/1802.09746v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1802.09746v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>It has been shown that cooperative coevolution (CC) can effectively deal with large scale optimization problems (LSOPs) through a divide-and-conquer strategy. However, its performance is severely restricted by the current context-vector-based sub-solution evaluation method since this method needs to access the original high dimensional simulation model when evaluating each sub-solution and thus requires many computation resources. To alleviate this issue, this study proposes a novel surrogate model assisted cooperative coevolution (SACC) framework. SACC constructs a surrogate model for each sub-problem obtained via decomposition and employs it to evaluate corresponding sub-solutions. The original simulation model is only adopted to reevaluate some good sub-solutions selected by surrogate models, and these real evaluated sub-solutions will be in turn employed to update surrogate models. By this means, the computation cost could be greatly reduced without significantly sacrificing evaluation quality. To show the efficiency of SACC, this study uses radial basis function (RBF) and success-history based adaptive differential evolution (SHADE) as surrogate model and optimizer, respectively. RBF and SHADE have been proved to be effective on small and medium scale problems. This study first scales them up to LSOPs of 1000 dimensions under the SACC framework, where they are tailored to a certain extent for adapting to the characteristics of LSOP and SACC. Empirical studies on IEEE CEC 2010 benchmark functions demonstrate that SACC significantly enhances the evaluation efficiency on sub-solutions, and even with much fewer computation resource, the resultant RBF-SHADE-SACC algorithm is able to find much better solutions than traditional CC algorithms.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-02-27T06:59:43Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Zhigang Ren</name>
+    </author>
+    <author>
+      <name>Bei Pang</name>
+    </author>
+    <author>
+      <name>Yongsheng Liang</name>
+    </author>
+    <author>
+      <name>An Chen</name>
+    </author>
+    <author>
+      <name>Yipeng Zhang</name>
+    </author>
+  </entry>
+</feed>

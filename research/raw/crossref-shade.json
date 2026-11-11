@@ -1,0 +1,595 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 5976397,
+    "items": [
+      {
+        "DOI": "10.4304/jcp.9.9.2139-2145",
+        "title": [
+          "An Adaptive Cauchy Differential Evolution Algorithm with Bias Strategy Adaptation Mechanism for Global Numerical Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2014,
+              9,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Journal of Computers"
+        ],
+        "is-referenced-by-count": 7,
+        "author": [
+          {
+            "given": "Tae Jong",
+            "family": "Choi",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Chang Wook",
+            "family": "Ahn",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/tevc.2008.927706",
+        "title": [
+          "Differential Evolution Algorithm With Strategy Adaptation for Global Numerical Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2009,
+              4
+            ]
+          ]
+        },
+        "container-title": [
+          "IEEE Transactions on Evolutionary Computation"
+        ],
+        "is-referenced-by-count": 3298,
+        "author": [
+          {
+            "given": "A.K.",
+            "family": "Qin",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "V.L.",
+            "family": "Huang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "P.N.",
+            "family": "Suganthan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1145/3234664.3234676",
+        "title": [
+          "Asynchronous Differential Evolution with Strategy Adaptation for Global Numerical Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2018,
+              6,
+              22
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 2018 2nd High Performance Computing and Cluster Technologies Conference"
+        ],
+        "is-referenced-by-count": 3,
+        "author": [
+          {
+            "given": "Tae Jong",
+            "family": "Choi",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Department of Computer Engineering, Sungkyunkwan University, Suwon, Republic of Korea"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Yeonju",
+            "family": "Lee",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "CTO Department, LG Electronics, Seoul, Republic of Korea"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/sde.2011.5952074",
+        "title": [
+          "A differential covariance matrix adaptation evolutionary algorithm for global optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2011,
+              4
+            ]
+          ]
+        },
+        "container-title": [
+          "2011 IEEE Symposium on Differential Evolution (SDE)"
+        ],
+        "is-referenced-by-count": 9,
+        "author": [
+          {
+            "given": "Saurav",
+            "family": "Ghosh",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Subhrajit",
+            "family": "Roy",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Sk. Minhazul",
+            "family": "Islam",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Swagatam",
+            "family": "Das",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "P. N.",
+            "family": "Suganthan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1080/0305215x.2019.1595611",
+        "title": [
+          "A hybrid iterated local search algorithm with adaptive perturbation mechanism by success-history based parameter adaptation for differential evolution (SHADE)"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2019,
+              5,
+              6
+            ]
+          ]
+        },
+        "container-title": [
+          "Engineering Optimization"
+        ],
+        "is-referenced-by-count": 9,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-7336-9699",
+            "authenticated-orcid": false,
+            "given": "Fuqing",
+            "family": "Zhao",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "School of Computer and Communication Technology, Lanzhou University of Technology, Lanzhou, People\u2019s Republic of China"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Xuan",
+            "family": "He",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Computer and Communication Technology, Lanzhou University of Technology, Lanzhou, People\u2019s Republic of China"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Guoqiang",
+            "family": "Yang",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Computer and Communication Technology, Lanzhou University of Technology, Lanzhou, People\u2019s Republic of China"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Weimin",
+            "family": "Ma",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Economics and Management, Tongji University, Shanghai, People\u2019s Republic of China"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Chuck",
+            "family": "Zhang",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "H.Milton Stewart School of Industrial & Systems Engineering, Georgia Institute of Technology, Atlanta, GA, USA"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Houbin",
+            "family": "Song",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Computer and Communication Technology, Lanzhou University of Technology, Lanzhou, People\u2019s Republic of China"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.5220/0014773600004818",
+        "title": [
+          "Optimization of Smoke Screen Projectile Deployment Strategy Based on Differential Evolution Algorithm"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 3rd International Conference on Data Analysis and Machine Learning"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Shen",
+            "family": "Han",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Xi'an Technological University School of Sciences, Xi\u2019an Technological University, Xi\u2019an, China, 710021"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Lei",
+            "family": "Hao",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Xi'an Technological University School of Sciences, Xi\u2019an Technological University, Xi\u2019an, China, 710021"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ting",
+            "family": "Gao",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Xi'an Technological University School of Computer Science and Engineering, Xi'an Technological University, Xi'an, China, 710021 #These authors are contributed equally."
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2478/fcds-2020-0007",
+        "title": [
+          "An enhanced differential evolution algorithm with adaptation of switching crossover strategy for continuous optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2020,
+              6,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Foundations of Computing and Decision Sciences"
+        ],
+        "is-referenced-by-count": 2,
+        "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>Designing an efficient optimization method which also has a simple structure is generally required by users for its applications to a wide range of practical problems. In this research, an enhanced differential evolution algorithm with adaptation of switching crossover strategy (DEASC) is proposed as a general-purpose population-based optimization method for continuous optimization problems. DEASC extends the solving ability of a basic differential evolution algorithm (DE) whose performance significantly depends on user selection of the control parameters: scaling factor, crossover rate and population size. Like the original DE, the proposed method is aimed at e ciency, simplicity and robustness. The appropriate population size is selected to work in accordance with good choices of the scaling factors. Then, the switching crossover strategy of using low or high crossover rates are incorporated and adapted to suit the problem being solved. In this manner, the adaptation strategy is just a convenient add-on mechanism. To verify the performance of DEASC, it is tested on several benchmark problems of various types and di culties, and compared with some well-known methods in the literature. It is also applied to solve some practical systems of nonlinear equations. Despite its much simpler algorithmic structure, the experimental results show that DEASC greatly enhances the basic DE. It is able to solve all the test problems with fast convergence speed and overall outperforms the compared methods which have more complicated structures. In addition, DEASC also shows promising results on high dimensional test functions.</jats:p>",
+        "author": [
+          {
+            "given": "Pikul",
+            "family": "Puphasuk",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Deparment of Mathematics, Faculty of Science , Khon Kaen University , Khon Kaen , 40002 , Thailand"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jeerayut",
+            "family": "Wetweerapong",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Deparment of Mathematics, Faculty of Science , Khon Kaen University , Khon Kaen , 40002 , Thailand"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/s12597-009-0012-3",
+        "title": [
+          "Differential evolution algorithm with ensemble of populations for global numerical optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2009,
+              6
+            ]
+          ]
+        },
+        "container-title": [
+          "OPSEARCH"
+        ],
+        "is-referenced-by-count": 31,
+        "author": [
+          {
+            "given": "R.",
+            "family": "Mallipeddi",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "P. N.",
+            "family": "Suganthan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/smc42975.2020.9283154",
+        "title": [
+          "One-array Differential Evolution Algorithm with a Novel Replacement Strategy for Numerical Optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2020,
+              10,
+              11
+            ]
+          ]
+        },
+        "container-title": [
+          "2020 IEEE International Conference on Systems, Man, and Cybernetics (SMC)"
+        ],
+        "is-referenced-by-count": 3,
+        "author": [
+          {
+            "given": "Seyed Jalaleddin",
+            "family": "Mousavirad",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Shahryar",
+            "family": "Rahnamayan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.7287/peerj-cs.2696v0.2/reviews/2",
+        "title": [
+          "Peer Review #2 of \"Enhanced mutation strategy based differential evolution for global optimization problems (v0.2)\""
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              3,
+              6
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/V5DyJ/06A1GgOUU/gY4URKdMGuo</id>
+  <title>arXiv Query: search_query=abs:"differential evolution" AND abs:"restart strategy"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-11T06:24:17Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22differential+evolution%22+AND+abs:%22restart+strategy%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>2</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2407.14271v1</id>
+    <title>Modified-Improved Fitness Dependent Optimizer for Complex and Engineering Problems</title>
+    <updated>2024-06-27T07:47:23Z</updated>
+    <link href="https://arxiv.org/abs/2407.14271v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2407.14271v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Fitness dependent optimizer (FDO) is considered one of the novel swarm intelligent algorithms. Recently, FDO has been enhanced several times to improve its capability. One of the improvements is called improved FDO (IFDO). However, according to the research findings, the variants of FDO are constrained by two primary limitations that have been identified. Firstly, if the number of agents employed falls below five, it significantly diminishes the algorithm's precision. Secondly, the efficacy of FDO is intricately tied to the quantity of search agents utilized. To overcome these limitations, this study proposes a modified version of IFDO, called M-IFDO. The enhancement is conducted by updating the location of the scout bee to the IFDO to move the scout bees to achieve better performance and optimal solutions. More specifically, two parameters in IFDO, which are alignment and cohesion, are removed. Instead, the Lambda parameter is replaced in the place of alignment and cohesion. To verify the performance of the newly introduced algorithm, M-IFDO is tested on 19 basic benchmark functions, 10 IEEE Congress of Evolutionary Computation (CEC-C06 2019), and five real-world problems. M-IFDO is compared against five state-of-the-art algorithms: Improved Fitness Dependent Optimizer (IFDO), Improving Multi-Objective Differential Evolution algorithm (IMODE), Hybrid Sampling Evolution Strategy (HSES), Linear Success-History based Parameter Adaptation for Differential Evolution (LSHADE) and CMA-ES Integrated with an Occasional Restart Strategy and Increasing Population Size and An Iterative Local Search (NBIPOP-aCMAES). The verification criteria are based on how well the algorithm reaches convergence, memory usage, and statistical results. The results show that M-IFDO surpasses its competitors in several cases on the benchmark functions and five real-world problems.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-27T07:47:23Z</published>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Hozan K. Hamarashid</name>
+    </author>
+    <author>
+      <name>Bryar A. Hassan</name>
+    </author>
+    <author>
+      <name>Tarik A. Rashid</name>
+    </author>
+    <arxiv:doi>10.1016/j.knosys.2024.112098</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.knosys.2024.112098" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.15830v3</id>
+    <title>MSC-CMA-ES: Structure-Aware Restarts for CMA-ES via Cyclic Nearest-Better Basin Discovery</title>
+    <updated>2026-07-21T17:23:29Z</updated>
+    <link href="https://arxiv.org/abs/2606.15830v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.15830v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>CMA-ES behaves, per restart, primarily as a local optimizer; multimodal search relies on restart strategies such as IPOP and BIPOP, which draw every restart uniformly and reuse no information from previous evaluations. Multi-Start Clustering CMA-ES (MSC-CMA-ES) makes restarts structure-aware: in alternating cycles, a Sobol pre-sample is partitioned into approximate basins of attraction by nearest-better clustering, restarts are seeded basin by basin with locally scaled step-sizes and population sizes, redundant basin visits are detected and excluded, and the remaining budget is spent on a budget-bounded, tolerance-disabled local refinement of the best-so-far solution. We evaluate the method on the four CEC suites (2014, 2017, 2020, and 2022) at their official budgets, across ten (suite, dimension) cells with dimensions 5--30, with 51 runs per function, and compare it with BIPOP-CMA-ES and five differential-evolution algorithms (ARRDE, jSO, j2020, NL-SHADE-RSP, and L-SRTDE). Read per function class over the $D\leq 20$ cells, the results split three ways. On composition functions MSC-CMA-ES attains the best value on all aggregate measures, with $2.7\times$ the fixed-budget target coverage of BIPOP-CMA-ES -- the highest composition coverage of any algorithm evaluated -- and leads in most suites, dimensions, and budgets. On unimodal and simple-multimodal functions it attains the best median error in aggregate but the lowest deep-target coverage, with orderings varying by suite and dimension. On hybrid functions both CMA algorithms trail the leading DE algorithms. All results and scripts are publicly available.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-14T14:07:56Z</published>
+    <arxiv:comment>13 pages, 5 figures, 4 tables. Code and full results: https://github.com/snenovgmailcom/cma_es_project</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Dimitar Nedanovski</name>
+    </author>
+    <author>
+      <name>Svetoslav Nenov</name>
+    </author>
+    <author>
+      <name>Dimitar Pilev</name>
+    </author>
+  </entry>
+</feed>

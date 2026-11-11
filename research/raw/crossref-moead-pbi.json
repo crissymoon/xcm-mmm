@@ -1,0 +1,674 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 8848642,
+    "items": [
+      {
+        "DOI": "10.32604/cmc.2025.060887",
+        "title": [
+          "Collaborative Decomposition Multi-Objective Improved Elephant Clan Optimization Based on Penalty-Based and Normal Boundary Intersection"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": [
+          "Computers, Materials &amp; Continua"
+        ],
+        "is-referenced-by-count": 1,
+        "author": [
+          {
+            "given": "Mengjiao",
+            "family": "Wei",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Wenyu",
+            "family": "Liu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.ins.2017.05.012",
+        "title": [
+          "Pareto adaptive penalty-based boundary intersection method for multi-objective optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2017,
+              11
+            ]
+          ]
+        },
+        "container-title": [
+          "Information Sciences"
+        ],
+        "is-referenced-by-count": 47,
+        "author": [
+          {
+            "given": "Mengjun",
+            "family": "Ming",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Rui",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Yabing",
+            "family": "Zha",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Tao",
+            "family": "Zhang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1162/evco_a_00276",
+        "title": [
+          "Effect of Objective Normalization and Penalty Parameter on Penalty Boundary Intersection Decomposition-Based Evolutionary Many-Objective Optimization Algorithms"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              3
+            ]
+          ]
+        },
+        "container-title": [
+          "Evolutionary Computation"
+        ],
+        "is-referenced-by-count": 18,
+        "abstract": "<jats:p> An objective normalization strategy is essential in any evolutionary multiobjective or many-objective optimization (EMO or EMaO) algorithm, due to the distance calculations between objective vectors required to compute diversity and convergence of population members. For the decomposition-based EMO/EMaO algorithms involving the Penalty Boundary Intersection (PBI) metric, normalization is an important matter due to the computation of two distance metrics. In this article, we make a theoretical analysis of the effect of instabilities in the normalization process on the performance of PBI-based MOEA/D and a proposed PBI-based NSGA-III procedure. Although the effect is well recognized in the literature, few theoretical studies have been done so far to understand its true nature and the choice of a suitable penalty parameter value for an arbitrary problem. The developed theoretical results have been corroborated with extensive experimental results on three to 15-objective convex and non-convex instances of DTLZ and WFG problems. The article, makes important theoretical conclusions on PBI-based decomposition algorithms derived from the study. </jats:p>",
+        "author": [
+          {
+            "given": "Lei",
+            "family": "Chen",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "School of Applied Mathematics, Guangdong University of Technology, Guangzhou, 51000, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Kalyanmoy",
+            "family": "Deb",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Electrical and Computer Engineering and BEACON Center for the Study of Evolution in Action, Michigan State University, East Lansing, MI 48824, USA"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Hai-Lin",
+            "family": "Liu",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Applied Mathematics, Guangdong University of Technology, Guangzhou, 51000, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Qingfu",
+            "family": "Zhang",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science, City University of Hong Kong, Hong Kong and the Shenzhen Research Institute, City University of Hong Kong, Shenzhen, 518057, China"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/cec.2016.7744053",
+        "title": [
+          "An adaptive penalty-based boundary intersection approach for multiobjective evolutionary algorithm based on decomposition"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2016,
+              7
+            ]
+          ]
+        },
+        "container-title": [
+          "2016 IEEE Congress on Evolutionary Computation (CEC)"
+        ],
+        "is-referenced-by-count": 7,
+        "author": [
+          {
+            "given": "Jinglei",
+            "family": "Guo",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Shengxiang",
+            "family": "Yang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Shouyong",
+            "family": "Jiang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.ins.2019.03.040",
+        "title": [
+          "An adaptive penalty-based boundary intersection method for many-objective optimization problem"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2020,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Information Sciences"
+        ],
+        "is-referenced-by-count": 18,
+        "author": [
+          {
+            "given": "Yutao",
+            "family": "Qi",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Dazhuang",
+            "family": "Liu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0003-0346-1526",
+            "authenticated-orcid": false,
+            "given": "Xiaodong",
+            "family": "Li",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Jiaojiao",
+            "family": "Lei",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Xiaoying",
+            "family": "Xu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Qiguang",
+            "family": "Miao",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.ins.2022.10.136",
+        "title": [
+          "A collaborative decomposition-based evolutionary algorithm integrating normal and penalty-based boundary intersection methods for many-objective optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022,
+              11
+            ]
+          ]
+        },
+        "container-title": [
+          "Information Sciences"
+        ],
+        "is-referenced-by-count": 8,
+        "author": [
+          {
+            "given": "Yu",
+            "family": "Wu",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jianle",
+            "family": "Wei",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Weiqin",
+            "family": "Ying",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Yanqi",
+            "family": "Lan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Zhen",
+            "family": "Cui",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Zhenyu",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/s10489-023-04717-y",
+        "title": [
+          "Mathematical foundation, discussion and suggestion on penalty parameter setting of penalty-based boundary intersection method for many-objective optimization problems"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023,
+              6,
+              7
+            ]
+          ]
+        },
+        "container-title": [
+          "Applied Intelligence"
+        ],
+        "is-referenced-by-count": 1,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-0834-5164",
+            "authenticated-orcid": false,
+            "given": "Chenglin",
+            "family": "Yang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Shulin",
+            "family": "Tian",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.21203/rs.3.rs-3875843/v1",
+        "title": [
+          "High-dimensional multi-objective evolutionary algorithm based on adaptive penalty parameters and improved association methods"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              1,
+              22
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "abstract": "<title>Abstract</title>\n        <p>The balance between convergence and diversity is a crucial and challenging aspect of evolutionary multi-objective optimization. In order to balance them, this paper proposes a high-dimensional multi-objective evolutionary algorithm based on adaptive penalty parameters and an improved association method (MOEAAP). An adaptive penalty parameter is first proposed and utilized in non-dominated sorting based on reference points, allowing for the dynamic assignment of Pareto ranks to the population according to changes in iteration counts and objective dimensions. Additionally, an improved association method is employed to categorize candidate solutions into associated and non-associated solutions, while associated solutions are given preferential consideration. To verify the feasibility of the proposed algorithm, it is compared with several mainstream algorithms through simulation experiments, and is applied to multiple practical applications. Experimental results show the algorithm effectively balances convergence and diversity in high-dimensional, complex multi-objective optimization.</p>",
+        "author": [
+          {
+            "given": "Shanshan",
+            "family": "Wang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jiacheng",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Siying",
+            "family": "Xiang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Liang",
+            "family": "Zeng",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.ins.2024.121837",
+        "title": [
+          "A multi/many-objective evolutionary algorithm based on normal-boundary intersection direction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              5
+            ]
+          ]
+        },
+        "container-title": [
+          "Information Sciences"
+        ],
+        "is-referenced-by-count": 4,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0003-4927-0653",
+            "authenticated-orcid": false,
+            "given": "Qinghua",
+            "family": "Gu",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Yu",
+            "family": "Chen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Dan",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Di",
+            "family": "Liu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/cis54983.2021.00012",
+        "title": [
+          "A Multi-Objective Decomposition Based Evolutionary Algorithm Using Adaptive Searching Method"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              11
+            ]
+          ]
+        },
+        "container-title": [
+          "2021 17th International Conference on Computational Intelligence and Security (CIS)"
+        ],
+        "is-referenced-by-count": 1,
+        "author": [
+          {
+            "given": "Xiaofang",
+            "family": "Guo",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "School of Science, Xi&#x0027;an Technological University Xi&#x0027;an,Shaanxi,China"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

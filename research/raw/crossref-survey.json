@@ -1,0 +1,401 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 5043860,
+    "items": [
+      {
+        "DOI": "10.1007/978-3-540-68830-3_7",
+        "title": [
+          "Multi-objective Optimization Using Differential Evolution: A Survey of the State-of-the-Art"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2008
+            ]
+          ]
+        },
+        "container-title": [
+          "Studies in Computational Intelligence",
+          "Advances in Differential Evolution"
+        ],
+        "is-referenced-by-count": 95,
+        "author": [
+          {
+            "given": "Efr\u00e9n",
+            "family": "Mezura-Montes",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Margarita",
+            "family": "Reyes-Sierra",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Carlos A. Coello",
+            "family": "Coello",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1504/ijcsm.2014.064064",
+        "title": [
+          "Enhanced versions of differential evolution: state-of-the-art survey"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2014
+            ]
+          ]
+        },
+        "container-title": [
+          "International Journal of Computing Science and Mathematics"
+        ],
+        "is-referenced-by-count": 19,
+        "author": [
+          {
+            "given": "Wali Khan",
+            "family": "Mashwani",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/tevc.2010.2059031",
+        "title": [
+          "Differential Evolution: A Survey of the State-of-the-Art"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2011,
+              2
+            ]
+          ]
+        },
+        "container-title": [
+          "IEEE Transactions on Evolutionary Computation"
+        ],
+        "is-referenced-by-count": 4836,
+        "author": [
+          {
+            "given": "Swagatam",
+            "family": "Das",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ponnuthurai Nagaratnam",
+            "family": "Suganthan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/icpcsi.2017.8392102",
+        "title": [
+          "Data optimization with differential evolution strategies: A survey of the state-of-the-art"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2017,
+              9
+            ]
+          ]
+        },
+        "container-title": [
+          "2017 IEEE International Conference on Power, Control, Signals and Instrumentation Engineering (ICPCSI)"
+        ],
+        "is-referenced-by-count": 1,
+        "author": [
+          {
+            "given": "Tarik",
+            "family": "Eltaeib",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Julius",
+            "family": "Dichter",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2172/7362128",
+        "title": [
+          "Energy from coal:  a state-of-the-art review. [State-of-the-art survey]"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1975,
+              1,
+              1
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0
+      },
+      {
+        "DOI": "10.1002/9780470823941.ch9",
+        "title": [
+          "An Introductory Survey on Differential Evolution in Electrical and Electronic Engineering"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2009,
+              6,
+              26
+            ]
+          ]
+        },
+        "container-title": [
+          "Differential Evolution"
+        ],
+        "is-referenced-by-count": 2
+      },
+      {
+        "DOI": "10.1109/access.2018.2882528",
+        "title": [
+          "State-of-the-Art Differential Evolution Algorithms Selection and Modifications for Difficult Functions"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2018
+            ]
+          ]
+        },
+        "container-title": [
+          "IEEE Access"
+        ],
+        "is-referenced-by-count": 2,
+        "author": [
+          {
+            "given": "Zhe",
+            "family": "Chen",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-0779-622X",
+            "authenticated-orcid": false,
+            "given": "Chengjun",
+            "family": "Li",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Zukai",
+            "family": "Tang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/sde.2013.6601456",
+        "title": [
+          "A brief survey of differential evolution on Graphic Processing Units"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2013,
+              4
+            ]
+          ]
+        },
+        "container-title": [
+          "2013 IEEE Symposium on Differential Evolution (SDE)"
+        ],
+        "is-referenced-by-count": 5,
+        "author": [
+          {
+            "given": "Pavel",
+            "family": "Kromer",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jan",
+            "family": "Platos",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Vaclav",
+            "family": "Snasel",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/978-3-642-12869-1_1",
+        "title": [
+          "A Literature Survey on Differential Evolution"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2010
+            ]
+          ]
+        },
+        "container-title": [
+          "Evolutionary Learning and Optimization",
+          "Differential Evolution in Electromagnetics"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Anyong",
+            "family": "Qing",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.21236/ada129063",
+        "title": [
+          "Automated Radiography: A State-of-the-Art Survey"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1978,
+              6,
+              1
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "C. G.",
+            "family": "Gardner",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}
