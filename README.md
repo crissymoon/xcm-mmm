@@ -32,6 +32,8 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Quality indicators.** Exact hypervolume in two and three dimensions, seeded Monte Carlo above that with a reported error, IGD, generational distance, spacing, and the standard ZDT and DTLZ reference fronts.
 - **Parallel and deterministic.** Evaluation runs on rayon. Mutation, selection and all random draws stay on one thread, so the result does not depend on the thread count.
 - **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
+- **Corpus cleaning and pairs.** Character folding, markup and boilerplate screening, quality rules with a called-out reason per rejection, MinHash near duplicate clustering, two selection rules (thresholded marginal relevance and target-aware importance resampling), and a pair miner that writes rank, preference and contrast banks in one schema with an audit that gates leakage, triviality and contamination.
+- **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
 
 ## Quick start
@@ -64,6 +66,17 @@ moead-best      4     0.335217   0.6949   0.820   71.0%
   keeps: x1, x2, x3, x4
   front: 4 points, knee 2, best 0
 ```
+
+From labelled rows to one trained model:
+
+```bash
+./target/release/xcm-mmm pairs mine tmp/rows.jsonl tmp/pairs.jsonl
+./target/release/xcm-mmm transformer train --pairs tmp/pairs.jsonl --out tmp/model.json
+./target/release/xcm-mmm transformer eval tmp/model.json --pairs tmp/pairs.jsonl
+./target/release/xcm-mmm transformer score tmp/model.json --rows tmp/rows.jsonl --out tmp/scores.jsonl
+```
+
+Training fills a batch in parallel and can be paused: `--checkpoint tmp/run.cp.json` writes the optimizer state after each epoch group, and `transformer train --pairs tmp/pairs.jsonl --out tmp/model.json --resume tmp/run.cp.json` continues the same plan and lands on the model the uninterrupted run produces.
 
 ## Benchmarks
 

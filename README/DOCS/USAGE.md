@@ -149,6 +149,108 @@ xcm-mmm bench --runs 10 --budget 100000 --json
 
 The single objective table reports the best, median and mean objective over the runs. The multi-objective table reports mean IGD, mean hypervolume, the point count and the time per run.
 
+### clean
+
+Cleans a corpus, drops near duplicates, and keeps a relevant budget. Each stage prints what it removed, so a run that cuts too much is visible in the first twenty lines.
+
+```bash
+xcm-mmm clean docs.jsonl.gz clean.jsonl.gz --budget 200000 --dedupe 0.80
+xcm-mmm clean docs.jsonl.gz clean.jsonl.gz --target target.jsonl --budget 50000
+```
+
+| Flag | Default | Meaning |
+|---|---|---|
+| `--dedupe` | 0.80 | Jaccard gate for near duplicates, 0 disables the pass |
+| `--budget` | 0 | rows to keep, 0 keeps every survivor |
+| `--min-words` | 5 | floor of the length rule |
+| `--max-words` | 3000 | ceiling of the length rule |
+| `--floor` | 0 | composite quality floor for the coverage pass |
+| `--theta` | 0.85 | cosine similarity at which a row is redundant |
+| `--group-cap` | 0.10 | largest share of the budget one source may take |
+| `--target` | none | curated target set, switches selection to importance resampling |
+
+Input and output may be `.jsonl.gz`; compression uses the system `gzip`, so no crate is added. Without `--target` the pass orders candidates by the composite quality score, refuses a source that has spent its cap, and refuses a row whose cosine similarity to an already accepted row is at or above `--theta`. With `--target` it fits a target density and a proposal density over hashed n-grams and draws rows with probability proportional to `p/q`, which is the importance resampling rule.
+
+### pairs
+
+Three subcommands: `mine` builds banks from labelled rows, `pack` merges pair files into one corpus with a task mix, `audit` checks a corpus and exits 1 when it finds leakage, trivial pairs or contamination.
+
+```bash
+xcm-mmm pairs mine rows.jsonl mined.jsonl --min-margin 0.02
+xcm-mmm pairs pack --input mined.jsonl,ads.jsonl --out pairs.jsonl --total 500000
+xcm-mmm pairs audit pairs.jsonl --eval eval.jsonl
+```
+
+| Command | Flag | Default | Meaning |
+|---|---|---|---|
+| mine | `--min-margin` | 0.01 | smallest outcome gap a pair may carry |
+| mine | `--max-similarity` | 0.95 | largest cosine the two sides may share |
+| mine | `--neighbours` | 5 | how many hardest negatives to choose among |
+| mine | `--max-per-task` | 0 | cap per bank, 0 keeps every pair |
+| mine | `--max-chars` | 700 | longest text copied into a pair |
+| pack | `--total` | 0 | rows in the corpus, 0 keeps every row |
+| pack | `--weights` | rank=3,contrast=2,preference=2,label=1,correction=1,retrieval=1 | task mix |
+| pack | `--max-similarity` | 0.98 | similarity at which two sides are one text |
+| pack | `--manifest` | prints | where to write the run manifest |
+| audit | `--eval` | none | evaluation rows to screen for contamination |
+| audit | `--contamination` | 0.80 | share of an evaluation text that counts as a hit |
+
+`mine` writes the three banks the market corpus supports: `rank` pairs two rows from the same session whose outcomes landed in different quartiles, `preference` pairs two rows on the same group with a clear gap in outcome, and `contrast` pairs an anchor with a positive from an earlier session and a negative from the same session in another group. Each row records `margin`, `difficulty`, `quality_a`, `quality_b` and `neg_source`, so an audit can filter without re-reading the texts.
+
+### transformer
+
+One shared encoder, one head per task, one file that holds the tokenizer, the config and the weights.
+
+```bash
+xcm-mmm transformer train --pairs pairs.jsonl --out model.json --epochs 3
+xcm-mmm transformer eval model.json --pairs pairs.jsonl
+xcm-mmm transformer score model.json --rows rows.jsonl --out scores.jsonl
+xcm-mmm transformer encode model.json "the company beat estimates as demand rose"
+```
+
+| Command | Flag | Default | Meaning |
+|---|---|---|---|
+| train | `--vocab` | 2048 | tokenizer size, control tokens included |
+| train | `--max-len` | 64 | longest token sequence |
+| train | `--dim` | 64 | residual width |
+| train | `--heads` | 4 | attention heads, must divide `--dim` |
+| train | `--ff` | 128 | feed forward width |
+| train | `--layers` | 2 | transformer blocks |
+| train | `--epochs` | 3, or the checkpoint's plan on `--resume` | passes over the corpus |
+| train | `--batch` | 8 | rows per gradient step |
+| train | `--lr` | 0.003 | peak learning rate |
+| train | `--warmup` | 0.1 | share of the schedule spent warming up |
+| train | `--clip` | 1.0 | gradient norm limit |
+| train | `--dropout` | 0.1 | dropout on the two residual branches |
+| train | `--weight-decay` | 0.01 | applied to weight matrices only |
+| train | `--task-weights` | rank=1,contrast=1,preference=1,label=0.5,correction=0.5,retrieval=1 | sampling weight per task |
+| train | `--limit` | 0 | read at most this many pairs, 0 reads everything |
+| train | `--patience` | 2 | epochs without improvement before stopping, 0 disables it |
+| train | `--min-count` | 2 | smallest pair count a merge may come from |
+| train | `--resume` | none | continue from a checkpoint written by an earlier leg |
+| train | `--stop-after` | the plan | end this leg after this many epochs, schedule unchanged |
+| train | `--checkpoint` | none | write weights, best epoch, Adam moments and tokenizer after each group |
+| train | `--checkpoint-every` | 1 | epochs between checkpoint writes |
+| eval | `--pairs` | required | pair files, comma separated |
+| eval | `--limit` | 0 | read at most this many pairs |
+| score | `--rows` | required | text rows, one JSON object per line |
+| score | `--out` | required | where the scored rows are written |
+| score | `--task` | every head | one task head per line instead of all six |
+
+`train` reads the split field each pair carries: `train` is trained on, `val`, `valid`, `dev` and `validation` are used for early stopping, and `test` or `holdout` is never trained on. When no validation split exists the last tenth of the rows is held out by position. `score` reads the same fields the cleaning stages read (`text`, `text_a` or `body`) and writes one line per row with every head unless `--task` picks one.
+
+The rows of a batch are filled in parallel: each example writes its own gradient buffer and the buffers are added in batch order, so the update is the same on one thread and on eight. Measured on the development machine over 4,191 pairs for three epochs at width 64, that is 9.8 s of training on one thread against 3.0 s on eight, with byte identical weights. Dropout draws from a per-example seed derived from the run seed, the step and the row, and the order of an epoch is drawn from the epoch number alone, which is why a batch and an epoch no longer depend on what ran before them.
+
+A long run can be split. `--checkpoint` writes the current weights, the best weights, the two Adam moments, the step counter, the tokenizer and the plan after every epoch group, and `--resume` continues from that file. With `--resume` the plan is the checkpoint's, so `--epochs` may be left out; `--stop-after` ends a leg early while the learning rate schedule still uses the plan:
+
+```bash
+xcm-mmm transformer train --pairs pairs.jsonl --out model.json --epochs 8 \
+    --stop-after 4 --checkpoint run.cp.json
+xcm-mmm transformer train --pairs pairs.jsonl --out model.json --resume run.cp.json
+```
+
+The second command runs epochs 5 to 8 and lands on the model the uninterrupted eight epoch run produces, byte for byte, which `tests/transformer_pipeline.rs` asserts. The flags that shape the model (`--dim`, `--heads`, `--ff`, `--layers`, `--max-len`) must match the checkpoint and are refused with a sentence when they do not; `--dropout` may change. A checkpoint is transient and roughly four times the size of a model file.
+
 ## Error behaviour
 
 A wrong engine for a problem is refused with an explanation rather than run. `de --problem zdt1` says that the problem has two objectives and points at `moead`; `moead --problem sphere` does the reverse. Unknown problem names, a dimension below the problem minimum, an unreadable file, a missing target column and a panel too short for the requested folds all exit with status 1 and a single line on standard error.

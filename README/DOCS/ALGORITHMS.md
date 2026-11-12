@@ -264,6 +264,113 @@ The suite includes four single objective problems and seven multi-objective ones
 
 ZDT4 keeps `x_1` in `[0, 1]` and every other variable in `[-5, 5]`. DTLZ1 and DTLZ2 use `k = n - m + 1` tail variables and the standard `g` functions.
 
+## Corpus cleaning and pair mining
+
+The optimiser answers questions about a model. This layer answers the question in front of it: which text is worth keeping, and what pairs should one model be trained on. Every rule below is a published one, and where the default differs from the paper the reason is stated.
+
+### Normalisation and screening
+
+Characters are folded rather than transliterated: curly quotes to straight, dash variants to hyphen, non breaking spaces to a space, soft hyphens and zero width marks removed, full width forms mapped to ASCII, and other control characters dropped. Text is then stripped of HTML tags, script, style and comment blocks, and the named entities that appear in wire copy are decoded. Links, emails and phone numbers are removed as tokens, so the words around them survive.
+
+Boilerplate is screened by line. A line is dropped when it carries a known consent, subscription or navigation phrase and is at most 22 words long, or when it is pure navigation (two or more pipes with few words, or a title case run with no terminator), or when it repeats an earlier line of the same document. Every removal is counted in a report, because a cleaner that silently deletes a fifth of a corpus is indistinguishable from one that corrupts it.
+
+### Quality statistics and rules
+
+Nine statistics are measured per document: word count, mean word length, share of letters, share of digits, share of function words, type to token ratio, repeated line share, most repeated content word share, and words per sentence. The rule set is in the shape of the Gopher quality filters (Rae et al 2021, arXiv:2112.11446) and the C4 line rules (Raffel et al 2020), with the length floor lowered from 50 words to 5 and the symbol ceiling raised, because this crate is pointed at headlines and ad copy rather than web pages.
+
+The defaults: 5 to 3000 words, mean word length 2.8 to 12, at least 0.04 function words, at most 0.45 uppercase, at most 0.22 punctuation plus digits, at most 0.30 repeated lines, at most 0.20 for one content word, at most 0.60 list lines. Each failure has a name, so a rejected document can be explained in one line.
+
+The composite score is a weighted sum of six bounded components: length (peaking at 40 words), letters, variety, repetition, sentence structure and function words. It is a fallback, not a truth. When labelled keep and drop sets exist, `QualityModel` fits a logistic regression over the same nine statistics, balanced by class weight, with L2 shrinkage and full batch gradient descent from zero, so two runs produce the same weights and the weights can be printed and argued with.
+
+### Near duplicate clustering
+
+MinHash over word shingles, with double hashing for the permutation family: `a_i * x + b_i mod 2^64` with `a_i` odd, coefficients from one SplitMix64 stream. The signature is cut into bands and two documents that agree on a whole band become candidates, with the standard collision law `P(s) = 1 - (1 - s^rows)^bands`.
+
+The default is 14 bands of 8 rows over 112 permutations, the configuration datatrove released with FineWeb (Penedo et al 2024, arXiv:2406.17557). Its crossing point is 0.72, so a pair at Jaccard 0.8 is found with probability 0.92. The Lee et al 2021 setting (arXiv:2107.06499) of 450 bands of 20 rows, 9000 permutations, is available by setting `perms` and `bands`; its crossing point is 0.74 with a much steeper curve. Candidates are verified with the signature estimate, which is unbiased for Jaccard and free.
+
+The shingle is 3 words by default rather than the 5 the web pipelines use, because a six word headline produces two 5-grams and a near duplicate headline is exactly the case this pass exists to catch. A body corpus should raise it to 5.
+
+Exact duplicates are merged first on a hash of the cleaned text. One survivor per cluster remains: highest quality score, then lowest index, so two runs on the same input keep the same rows.
+
+SimHash and Hamming distance are provided for callers that need a single 64 bit fingerprint; the deduplication pass does not use them, because at a Hamming threshold of 3 a 64 bit SimHash collides often enough that banded MinHash is both cheaper to reason about and better calibrated.
+
+### Selection
+
+Two rules, and they answer different questions.
+
+The coverage rule is thresholded maximum marginal relevance: order by the composite score, accept a document only when its cosine similarity to every accepted document is below `theta` (default 0.85), and refuse a source that has spent its group cap. Features are hashed unigrams and bigrams with an inverse document frequency weight, stopwords removed, vectors normalised, and the similarity test runs through an inverted index over accepted documents with an early exit, because every value is positive and a partial dot product is a lower bound.
+
+The target rule is importance resampling (DSIR, Xie et al 2023, arXiv:2302.03169): unigram and bigram counts hashed into `m` buckets (10,000 in the paper), a target density `p` from a small curated set and a proposal density `q` from the corpus, log weight `sum count * (ln p - ln q)` with a 1e-8 floor, and Gumbel top-k to draw without replacement. The paper reports +1.18 average F1 over random selection on the Pile at 25M selected documents, and a 100M document pass in 4.5 hours on one 96 core node. No weight clipping is applied, because the paper applies none.
+
+### Pair mining
+
+Three banks, one schema. `rank` pairs the top quartile of a session with the bottom quartile, from different groups. `preference` pairs two documents on the same group with a clear gap in outcome, inside a 60 row and 30 day window. `contrast` pairs an anchor with a positive from the same group in the previous five sessions and a negative from the same session in another group.
+
+Three guards come straight from the retrieval literature. The negative is drawn by similarity, never at random, so it is hard. It is sampled from the hardest five rather than the single hardest, because the hardest neighbour is often a document that agrees with the anchor and carries a different label; that false negative is the failure ANCE (arXiv:2007.00808), RocketQA (arXiv:2010.08191) and Robinson et al (arXiv:2010.04592) all report. And a pair whose two sides are more similar than 0.95 is dropped, so the model cannot win on one word.
+
+A pair never crosses a split, and a pair whose outcome gap is below `min_margin` is dropped rather than clipped. The contrast bank is the exception on margins: its label is temporal and cross group, so it records both outcomes and no margin, and the audit reports margins only where a task claims one.
+
+### Measured
+
+On this machine, a release build of `clean` over 100,000 rows of short market copy (45 MB, 12.9 million characters, 61 words per row) took 2.6 s wall clock with 240 MB peak memory: 11,256 rows dropped by the rules, 1,059 merged as near duplicates, and 20,000 kept after the cap and the second pass. Signature building is the parallel part; bucketing and selection are serial. The selection pass keeps an inverted index over the accepted rows in memory, so it is comfortable to about a million rows and should be run per shard above that.
+
+### The audit
+
+Six checks, and the command exits 1 when any of the first five finds something: a document id under two splits, a text under two splits, the same text on both sides, two sides above the triviality threshold, contamination against an evaluation set, and thin margins. Contamination has two rules: at least 80 percent of an evaluation document's 3-grams, or a verbatim run of 13 words, which is the overlap rule GPT-3 used (Brown et al 2020, arXiv:2005.14165). Length bias and the margin distribution are reported, not enforced, because a corpus can legitimately be skewed and the reader should see it.
+
+### What is not implemented
+
+Semantic deduplication (SemDeDup, arXiv:2303.09540) needs one embedding per document and removes 37 percent of LAION with no measured loss; it is the right second pass after MinHash. The crate now carries a small encoder (see The transformer), so the blocker is no longer a dependency: a pass that encodes each survivor, clusters in the pooled space and keeps one member per cluster would fit. It is still not implemented, and neither is QuRating (arXiv:2402.09739), which needs a 1.3B parameter rater rather than a small encoder. Both are named so a reader knows what the gap is rather than assuming the pass is complete.
+
+## The transformer
+
+The pair corpus feeds one model rather than six. A single pre norm encoder is shared, and the task selects a linear head over the pooled representation.
+
+### Tokenizer
+
+A byte level byte pair encoding over lowercased word types, weighted by how often each type appears. The vocabulary starts with 260 tokens (four control tokens and the 256 byte values) and grows by merging the most frequent adjacent pair until the requested size or until no pair reaches `--min-count`. Pairs are ranked by count and then by the pair itself, and word type indices are sorted before a merge rewrites them, so two runs on the same text produce the same merges. Encoding never emits an unknown token: a word outside the vocabulary is still a sequence of bytes. Training merges over word types rather than raw text keeps the pair counting linear in the number of distinct words.
+
+### Encoder
+
+For a sequence of length `n`, width `d`, `h` heads and `f` feed forward width:
+
+```text
+x0 = token embedding + position embedding
+xk+1 = xk + attention(layer_norm(xk))
+xk+2 = xk+1 + feed_forward(layer_norm(xk+1))
+pooled = mean(xL)
+h = layer_norm(pooled)
+score = w_task . h + b_task
+```
+
+Attention is bidirectional, which is what an encoder wants, and a sequence is one document, so there is no padding mask. The feed forward block is linear, the tanh approximation of GELU, then linear. The parameter count is `vocab d + max_len d + L (4 d^2 + 2 d f + 9 d + f) + 2 d + tasks (d + 1)`, where the per block terms are four attention matrices, two feed forward matrices, four biases, four layer norm parameters, and the two feed forward biases.
+
+### Losses
+
+A pairwise task pushes the difference of the two scores through a logistic, so the loss is the Bradley-Terry negative log likelihood `softplus(-(s_a - s_b))` and the gradient to the first score is `sigmoid(s_a - s_b) - 1`. A pointwise task uses binary cross entropy on the direction of the outcome, `softplus(s) - y s`, with gradient `sigmoid(s) - y`. Both are written with `softplus` rather than a logarithm of a sigmoid, so a confident wrong pair does not overflow. The tests check both gradients against a central finite difference.
+
+### Training
+
+AdamW with `beta1 = 0.9`, `beta2 = 0.999`, epsilon `1e-8`, and decoupled weight decay on matrices only: a layer norm gain and a bias are a single row, so decaying them shrinks the function rather than the weights. The learning rate warms up linearly over the first tenth of the schedule and then follows a cosine to a tenth of the peak. The global gradient norm is clipped after the batch average and before the step.
+
+An epoch samples the training rows without replacement, weighted by task. Each row draws an exponential key scaled by its task weight and the smallest keys come first, which is weighted sampling without replacement and keeps a row from appearing twice in one epoch. Gradients accumulate over a batch of sequences and are applied once. Dropout is applied to the attention projection and the feed forward projection, scaled by `1/(1-p)`.
+
+### Parallel steps and resuming
+
+A batch is filled with one gradient buffer per example, each computed on whichever rayon thread takes it, and the buffers are added into the batch gradient in batch order. Nothing is shared while a buffer is being written and nothing is reduced out of order, so the update is the serial one to the bit: thread count changes the wall clock and nothing else. On the development machine, three epochs over 4,191 pairs at width 64 and length 64 took 9.8 s on one thread, 5.2 s on two, 3.6 s on four and 3.0 s on eight, and every thread count ended on the same weights and the same validation accuracy.
+
+Two counters drive the randomness, and neither is a stream that advances with history. A dropout mask comes from a splitmix64 mix of the run seed, the optimizer step and the row position; an epoch permutation comes from the same mix of the run seed and the epoch number. A row therefore sees the same mask whether it is the first or the last of a batch, and epoch five is the same permutation in a resumed run as in an uninterrupted one. This is what makes a checkpoint a real pause rather than an approximation: the state to carry is the weights, the two Adam moments, the step counter, the epoch cursor and the tokenizer, and nothing else. The file stores floats as sixteen hex digits of their bit pattern, because the decimal JSON round trip moves some `f64` values by one unit in the last place, which a few hundred Adam steps amplify into visible drift; with the bit pattern a run resumed at an epoch boundary produces a model file identical to the uninterrupted run's, which the integration test asserts.
+
+The plan and the leg are separate. `--epochs` sets the schedule's length and `--stop-after` ends a leg early, so splitting a run at an epoch boundary does not move the cosine, and a resume without `--epochs` takes the plan from the checkpoint.
+
+Validation uses the split field the pair schema carries. Early stopping keeps the epoch with the best mean accuracy across the tasks that are present, and the file that is written is that epoch.
+
+### Correctness and cost
+
+The backward pass is hand written. The model test perturbs forty randomly chosen scalars across every parameter block, compares the analytic gradient with a central finite difference of `0.5 score^2`, and requires a relative agreement of `1e-4`. Layer normalisation, GELU and both losses have their own finite difference tests. A separate test round trips the model file and compares scores.
+
+Forward and backward cost `O(n^2 d + n d f)` per block, so a sequence of 64 tokens at width 64 with two blocks is about 3 million multiply accumulates forward. On one core in release a pair of short documents costs roughly half a millisecond at that size, which is what the measured run on 19,108 pairs reflects: 12.5 seconds for one epoch at width 48. The cost of a step is dominated by that per pair work, which is why the next speed step was threads rather than a wider model: at width 64 the 4,191 pair corpus spends 9.8 s single threaded and 3.0 s on eight threads, a factor of 3.3 on a machine with four performance cores.
+
 ## Reproducibility
 
 Every engine draws from a xoshiro256++ generator seeded by `seed`. The generator is implemented in the crate, so results do not drift with a dependency update. Parallel evaluation does not touch the generator. Two runs with the same configuration and any thread count produce identical objectives, decision vectors and history, which the test suite checks against a one thread and a four thread pool.
