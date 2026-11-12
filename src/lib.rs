@@ -11,6 +11,10 @@
 //! [`forecast`] builds a walk-forward cross-validation problem on top of the
 //! same traits, so feature selection and its accuracy against model size can be
 //! solved with either engine.
+//!
+//! [`text`] and [`pairs`] sit beside the optimiser rather than inside it: they
+//! clean a corpus, deduplicate it, select a relevant subset, and build the
+//! training pairs that one model can be fitted on.
 
 pub mod benchmarks;
 pub mod data;
@@ -20,8 +24,11 @@ pub mod forecast;
 pub mod linalg;
 pub mod metrics;
 pub mod moead;
+pub mod pairs;
 pub mod problem;
 pub mod rng;
+pub mod text;
+pub mod transformer;
 
 pub use de::{minimize as minimize_de, DeConfig, DeOutcome};
 pub use moead::{minimize as minimize_moead, MoeadConfig, MoeadOutcome};

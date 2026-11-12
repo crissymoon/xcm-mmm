@@ -22,7 +22,7 @@ use xcm_mmm::problem::Problem;
 #[command(
     name = "xcm-mmm",
     version,
-    about = "Differential evolution and MOEA/D, with a walk-forward forecasting front end",
+    about = "Differential evolution and MOEA/D, with walk-forward forecasting, corpus cleaning and pair mining",
     long_about = None
 )]
 struct Cli {
@@ -44,6 +44,150 @@ enum Command {
     Synth(SynthArgs),
     /// Run the benchmark suite.
     Bench(BenchArgs),
+    /// Clean a corpus, drop near duplicates and keep a relevant budget.
+    Clean(CleanArgs),
+    /// Mine, pack or audit the pairs a single model is trained on.
+    Pairs(PairsArgs),
+    /// Train, score or inspect the shared transformer on a pair corpus.
+    Transformer(TransformerArgs),
+}
+
+#[derive(clap::Args)]
+struct TransformerArgs {
+    #[command(subcommand)]
+    command: TransformerCommand,
+}
+
+#[derive(Subcommand)]
+enum TransformerCommand {
+    /// Train one model on a mixed pair corpus.
+    Train(TransformerTrainArgs),
+    /// Score a pair corpus with a saved model.
+    Eval(TransformerEvalArgs),
+    /// Show the shape and metadata of a saved model.
+    Info(TransformerInfoArgs),
+    /// Encode a text and score it with every task head.
+    Encode(TransformerEncodeArgs),
+    /// Score every text row in a corpus with a saved model.
+    Score(TransformerScoreArgs),
+}
+
+#[derive(clap::Args)]
+struct TransformerTrainArgs {
+    /// Pair files, comma separated.
+    #[arg(long, value_delimiter = ',', required = true)]
+    pairs: Vec<String>,
+    /// Where the model file is written.
+    #[arg(long)]
+    out: String,
+    /// Tokenizer vocabulary size, control tokens included.
+    #[arg(long, default_value_t = 2048)]
+    vocab: usize,
+    /// Longest token sequence.
+    #[arg(long, default_value_t = 64)]
+    max_len: usize,
+    /// Residual width.
+    #[arg(long, default_value_t = 64)]
+    dim: usize,
+    /// Attention heads.
+    #[arg(long, default_value_t = 4)]
+    heads: usize,
+    /// Feed forward width.
+    #[arg(long, default_value_t = 128)]
+    ff: usize,
+    /// Transformer blocks.
+    #[arg(long, default_value_t = 2)]
+    layers: usize,
+    /// Epochs in the plan, counting resumed ones. Defaults to the checkpoint's
+    /// plan when resuming, and to three otherwise.
+    #[arg(long)]
+    epochs: Option<usize>,
+    /// Rows per gradient step.
+    #[arg(long, default_value_t = 8)]
+    batch: usize,
+    /// Peak learning rate.
+    #[arg(long, default_value_t = 3e-3)]
+    lr: f64,
+    /// Decoupled weight decay.
+    #[arg(long, default_value_t = 0.01)]
+    weight_decay: f64,
+    /// Share of the schedule spent warming up.
+    #[arg(long, default_value_t = 0.1)]
+    warmup: f64,
+    /// Gradient norm limit.
+    #[arg(long, default_value_t = 1.0)]
+    clip: f64,
+    /// Dropout on the residual branches.
+    #[arg(long, default_value_t = 0.1)]
+    dropout: f64,
+    #[arg(long, default_value_t = 11)]
+    seed: u64,
+    /// Read at most this many pairs. Zero reads everything.
+    #[arg(long, default_value_t = 0)]
+    limit: usize,
+    /// Epochs without improvement before stopping. Zero disables it.
+    #[arg(long, default_value_t = 2)]
+    patience: usize,
+    /// Smallest pair count a merge may come from.
+    #[arg(long, default_value_t = 2)]
+    min_count: u64,
+    /// Sampling weight per task, as `rank=3,label=0.5`.
+    #[arg(
+        long,
+        default_value = "rank=1,contrast=1,preference=1,label=0.5,correction=0.5,retrieval=1"
+    )]
+    task_weights: String,
+    /// Continue from a checkpoint written by an earlier run.
+    #[arg(long)]
+    resume: Option<String>,
+    /// End this leg after this many epochs in total, keeping the plan's schedule.
+    #[arg(long)]
+    stop_after: Option<usize>,
+    /// Write mid-run state here after every epoch group.
+    #[arg(long)]
+    checkpoint: Option<String>,
+    /// Epochs between checkpoint writes.
+    #[arg(long, default_value_t = 1)]
+    checkpoint_every: usize,
+}
+
+#[derive(clap::Args)]
+struct TransformerEvalArgs {
+    /// Model file written by `transformer train`.
+    model: String,
+    /// Pair files, comma separated.
+    #[arg(long, value_delimiter = ',', required = true)]
+    pairs: Vec<String>,
+    /// Read at most this many pairs. Zero reads everything.
+    #[arg(long, default_value_t = 0)]
+    limit: usize,
+}
+
+#[derive(clap::Args)]
+struct TransformerInfoArgs {
+    model: String,
+}
+
+#[derive(clap::Args)]
+struct TransformerEncodeArgs {
+    model: String,
+    /// Text to encode.
+    text: String,
+}
+
+#[derive(clap::Args)]
+struct TransformerScoreArgs {
+    /// Model file written by `transformer train`.
+    model: String,
+    /// Text rows, one JSON object per line.
+    #[arg(long)]
+    rows: String,
+    /// Where the scored rows are written.
+    #[arg(long)]
+    out: String,
+    /// One task head. Omit to write every head on each line.
+    #[arg(long)]
+    task: Option<String>,
 }
 
 #[derive(clap::Args)]
@@ -249,6 +393,119 @@ struct BenchArgs {
     json: bool,
 }
 
+#[derive(clap::Args)]
+struct CleanArgs {
+    /// JSON Lines file, gzip accepted.
+    input: String,
+    /// Destination file, gzip accepted.
+    out: String,
+    /// Jaccard threshold for near duplicate merging. Zero disables the pass.
+    #[arg(long, default_value_t = 0.80)]
+    dedupe: f64,
+    /// Keep at most this many rows. Zero keeps every survivor.
+    #[arg(long, default_value_t = 0)]
+    budget: usize,
+    /// Smallest word count a row may have.
+    #[arg(long, default_value_t = 5)]
+    min_words: usize,
+    /// Largest word count a row may have.
+    #[arg(long, default_value_t = 3000)]
+    max_words: usize,
+    /// Composite quality floor for selection.
+    #[arg(long, default_value_t = 0.0)]
+    floor: f64,
+    /// Cosine similarity at which a selected row counts as redundant.
+    #[arg(long, default_value_t = 0.85)]
+    theta: f64,
+    /// Largest share of the budget one source may take.
+    #[arg(long, default_value_t = 0.10)]
+    group_cap: f64,
+    /// Curated target set, JSON Lines or plain text. Setting it replaces the
+    /// coverage pass with target-aware importance resampling.
+    #[arg(long)]
+    target: Option<String>,
+}
+
+#[derive(clap::Args)]
+struct PairsArgs {
+    #[command(subcommand)]
+    command: PairCommand,
+}
+
+#[derive(Subcommand)]
+enum PairCommand {
+    /// Build rank, preference and contrast pairs from labelled rows.
+    Mine(MineArgs),
+    /// Merge pair files into one corpus with a task mix.
+    Pack(PackArgs),
+    /// Check a pair corpus for leakage, triviality and contamination.
+    Audit(AuditArgs),
+}
+
+#[derive(clap::Args)]
+struct MineArgs {
+    /// Labelled rows: a text and a forward outcome per row.
+    rows: String,
+    out: String,
+    /// Smallest outcome gap a pair may carry.
+    #[arg(long, default_value_t = 0.01)]
+    min_margin: f64,
+    /// Largest cosine similarity the two sides may share.
+    #[arg(long, default_value_t = 0.95)]
+    max_similarity: f64,
+    /// How many of the hardest negatives to choose among.
+    #[arg(long, default_value_t = 5)]
+    neighbours: usize,
+    /// Cap per task. Zero keeps every pair.
+    #[arg(long, default_value_t = 0)]
+    max_per_task: usize,
+    /// Longest text copied into a pair.
+    #[arg(long, default_value_t = 700)]
+    max_chars: usize,
+    #[arg(long, default_value_t = 11)]
+    seed: u64,
+}
+
+#[derive(clap::Args)]
+struct PackArgs {
+    /// Pair files, comma separated.
+    #[arg(long, value_delimiter = ',', required = true)]
+    input: Vec<String>,
+    #[arg(long)]
+    out: String,
+    /// Total rows. Zero keeps every row that survives the filters.
+    #[arg(long, default_value_t = 0)]
+    total: usize,
+    /// Weight per task, as `rank=3,contrast=2`.
+    #[arg(
+        long,
+        default_value = "rank=3,contrast=2,preference=2,label=1,correction=1,retrieval=1"
+    )]
+    weights: String,
+    /// Similarity at which two sides of one pair count as the same text.
+    #[arg(long, default_value_t = 0.98)]
+    max_similarity: f64,
+    #[arg(long, default_value_t = 5)]
+    seed: u64,
+    /// Write the manifest here instead of printing it.
+    #[arg(long)]
+    manifest: Option<PathBuf>,
+}
+
+#[derive(clap::Args)]
+struct AuditArgs {
+    input: String,
+    /// JSON Lines or plain text evaluation rows.
+    #[arg(long)]
+    eval: Option<String>,
+    #[arg(long, default_value_t = 0.98)]
+    max_similarity: f64,
+    #[arg(long, default_value_t = 0.80)]
+    contamination: f64,
+    #[arg(long, default_value_t = 0.01)]
+    min_margin: f64,
+}
+
 #[derive(Copy, Clone, PartialEq, Eq, ValueEnum)]
 enum Adapter {
     Shade,
@@ -298,6 +555,9 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Forecast(args) => run_forecast(args),
         Command::Synth(args) => run_synth(args),
         Command::Bench(args) => run_bench(args),
+        Command::Clean(args) => run_clean(args),
+        Command::Pairs(args) => run_pairs(args),
+        Command::Transformer(args) => run_transformer(args),
     }
 }
 
@@ -990,4 +1250,308 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
         println!("{}", serde_json::to_string_pretty(&json)?);
     }
     Ok(())
+}
+
+fn commas(n: usize) -> String {
+    let digits = n.to_string();
+    let mut out = String::with_capacity(digits.len() + digits.len() / 3);
+    for (i, c) in digits.chars().enumerate() {
+        if i > 0 && (digits.len() - i) % 3 == 0 {
+            out.push(',');
+        }
+        out.push(c);
+    }
+    out
+}
+
+fn run_clean(args: CleanArgs) -> Result<(), Box<dyn Error>> {
+    let pipeline = xcm_mmm::text::run::Pipeline {
+        dedupe: if args.dedupe > 0.0 {
+            Some(args.dedupe)
+        } else {
+            None
+        },
+        budget: args.budget,
+        floor: args.floor,
+        theta: args.theta,
+        group_cap: args.group_cap,
+        target: args.target.clone(),
+        rules: xcm_mmm::text::quality::Rules {
+            min_words: args.min_words,
+            max_words: args.max_words,
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    let s = xcm_mmm::text::run::run(&args.input, &args.out, &pipeline)?;
+    let loss = if s.chars_in == 0 {
+        0.0
+    } else {
+        100.0 * (1.0 - s.chars_out as f64 / s.chars_in as f64)
+    };
+    println!(
+        "read      {} rows ({} malformed)",
+        commas(s.read),
+        commas(s.malformed)
+    );
+    println!(
+        "normalise {} chars of text, {:.1} percent removed with the markup",
+        commas(s.chars_in),
+        loss
+    );
+    println!(
+        "quality   {} kept, {} dropped by rules",
+        commas(s.kept + s.dropped_duplicate),
+        commas(s.dropped_rules)
+    );
+    if !s.flags.is_empty() {
+        let flags: Vec<String> = s
+            .flags
+            .iter()
+            .map(|(k, v)| format!("{k} {}", commas(*v)))
+            .collect();
+        println!("flags     {}", flags.join(", "));
+    }
+    if pipeline.dedupe.is_some() {
+        println!(
+            "dedupe    {} merged, largest cluster {}, {} survive",
+            commas(s.duplicates_merged),
+            s.largest_cluster,
+            commas(s.kept)
+        );
+    }
+    if s.target_aware {
+        println!(
+            "target    {} rows in the target set, {} drawn by weight, mean quality {:.3}",
+            commas(s.target_rows),
+            commas(s.selected),
+            s.mean_quality
+        );
+    }
+    if !s.target_aware {
+        println!(
+            "select    {} kept, {} redundant, {} over cap ({} filled after relaxing it), {:.0} percent feature coverage, mean quality {:.3}",
+            commas(s.selected),
+            commas(s.redundant),
+            commas(s.over_cap),
+            commas(s.relaxed),
+            s.feature_coverage * 100.0,
+            s.mean_quality
+        );
+    }
+    println!(
+        "out       {} rows, mean {:.1} words",
+        commas(s.selected),
+        s.mean_words
+    );
+    Ok(())
+}
+
+fn parse_weights(spec: &str) -> Result<Vec<(xcm_mmm::pairs::Task, f64)>, Box<dyn Error>> {
+    let mut out = Vec::new();
+    for part in spec.split(',') {
+        let part = part.trim();
+        if part.is_empty() {
+            continue;
+        }
+        let (name, value) = part
+            .split_once('=')
+            .ok_or_else(|| format!("weight {part:?} is not name=value"))?;
+        let task: xcm_mmm::pairs::Task = name.trim().parse()?;
+        let weight: f64 = value.trim().parse()?;
+        out.push((task, weight));
+    }
+    Ok(out)
+}
+
+fn run_transformer(args: TransformerArgs) -> Result<(), Box<dyn Error>> {
+    use xcm_mmm::transformer::run as transformer;
+    match args.command {
+        TransformerCommand::Train(a) => {
+            let weights = transformer::parse_task_weights(&a.task_weights)?;
+            let epochs = match (a.epochs, &a.resume) {
+                (Some(value), _) => value,
+                (None, Some(path)) => xcm_mmm::transformer::checkpoint::load(path)?.run.epochs,
+                (None, None) => 3,
+            };
+            let config = xcm_mmm::transformer::train::TrainConfig {
+                pairs: a.pairs,
+                out: a.out,
+                vocab: a.vocab,
+                max_len: a.max_len,
+                dim: a.dim,
+                heads: a.heads,
+                ff: a.ff,
+                layers: a.layers,
+                epochs,
+                batch: a.batch,
+                lr: a.lr,
+                weight_decay: a.weight_decay,
+                warmup: a.warmup,
+                clip: a.clip,
+                dropout: a.dropout,
+                seed: a.seed,
+                limit: a.limit,
+                patience: a.patience,
+                min_count: a.min_count,
+                task_weights: weights,
+                resume: a.resume,
+                stop_after: a.stop_after,
+                checkpoint: a.checkpoint,
+                checkpoint_every: a.checkpoint_every,
+            };
+            transformer::train_model(&config)?;
+        }
+        TransformerCommand::Eval(a) => {
+            transformer::eval_model(&a.model, &a.pairs, a.limit)?;
+        }
+        TransformerCommand::Info(a) => {
+            transformer::info_model(&a.model)?;
+        }
+        TransformerCommand::Encode(a) => {
+            transformer::encode_text(&a.model, &a.text)?;
+        }
+        TransformerCommand::Score(a) => {
+            let task = match &a.task {
+                Some(name) => Some(name.parse::<xcm_mmm::pairs::Task>()?),
+                None => None,
+            };
+            transformer::score_rows(&a.model, &a.rows, &a.out, task)?;
+        }
+    }
+    Ok(())
+}
+
+fn run_pairs(args: PairsArgs) -> Result<(), Box<dyn Error>> {
+    match args.command {
+        PairCommand::Mine(a) => {
+            let cfg = xcm_mmm::pairs::mine::Config {
+                min_margin: a.min_margin,
+                max_similarity: a.max_similarity,
+                neighbours: a.neighbours,
+                max_per_task: a.max_per_task,
+                max_chars: a.max_chars,
+                seed: a.seed,
+                ..Default::default()
+            };
+            let (report, written) = xcm_mmm::pairs::run::run_mine(&a.rows, &a.out, &cfg)?;
+            println!(
+                "rows      {} over {} days and {} groups",
+                commas(report.rows),
+                commas(report.days),
+                commas(report.groups)
+            );
+            println!(
+                "pairs     {} rank, {} preference, {} contrast, {} written",
+                commas(report.rank),
+                commas(report.preference),
+                commas(report.contrast),
+                commas(written)
+            );
+            println!(
+                "dropped   {} margin, {} trivial, {} short, {} duplicate",
+                commas(report.dropped_margin),
+                commas(report.dropped_trivial),
+                commas(report.dropped_short),
+                commas(report.dropped_duplicate)
+            );
+            println!("out       {}", a.out);
+            Ok(())
+        }
+        PairCommand::Pack(a) => {
+            let plan = xcm_mmm::pairs::pack::Plan {
+                total: a.total,
+                weights: parse_weights(&a.weights)?,
+                max_similarity: a.max_similarity,
+                seed: a.seed,
+            };
+            let (report, manifest) = xcm_mmm::pairs::run::run_pack(&a.input, &a.out, &plan)?;
+            println!(
+                "read      {} rows from {} files ({} malformed, {} duplicate, {} trivial)",
+                commas(report.read),
+                commas(report.files),
+                commas(report.malformed),
+                commas(report.duplicate_pairs),
+                commas(report.trivial)
+            );
+            let mix: Vec<String> = report
+                .by_task
+                .iter()
+                .map(|(task, n)| format!("{task} {}", commas(*n)))
+                .collect();
+            println!("tasks     {}", mix.join(", "));
+            let requested: Vec<String> = report
+                .realised
+                .iter()
+                .filter(|(task, _)| plan.weight_of(*task) > 0.0)
+                .map(|(task, share)| format!("{task} {:.2}", share))
+                .collect();
+            println!("mix       {}", requested.join(", "));
+            let splits: Vec<String> = report
+                .by_split
+                .iter()
+                .map(|(split, n)| format!("{split} {}", commas(*n)))
+                .collect();
+            println!("splits    {}", splits.join(", "));
+            println!("out       {} rows to {}", commas(report.kept), a.out);
+            match a.manifest {
+                Some(path) => std::fs::write(&path, format!("{manifest}\n"))?,
+                None => println!("manifest  {manifest}"),
+            }
+            Ok(())
+        }
+        PairCommand::Audit(a) => {
+            let cfg = xcm_mmm::pairs::audit::Config {
+                max_similarity: a.max_similarity,
+                contamination: a.contamination,
+                min_margin: a.min_margin,
+            };
+            let report = xcm_mmm::pairs::run::run_audit(&a.input, a.eval.as_deref(), &cfg)?;
+            println!("pairs     {}", commas(report.pairs));
+            for (task, n) in &report.by_task {
+                println!("  {task:<10} {}", commas(*n));
+            }
+            for (split, n) in &report.by_split {
+                println!("  split {split:<8} {}", commas(*n));
+            }
+            println!(
+                "margins   mean {:.4}, smallest {:.4}, {} below the floor",
+                report.mean_margin,
+                report.min_margin,
+                commas(report.thin_margin)
+            );
+            println!(
+                "difficulty mean {:.3}, side a longer in {:.0} percent of pairs",
+                report.mean_difficulty,
+                report.longer_side_a * 100.0
+            );
+            println!(
+                "words     mean {:.1} on side a, {:.1} on side b",
+                report.mean_words_a, report.mean_words_b
+            );
+            if report.contaminated > 0 || report.verbatim_overlap > 0 {
+                println!(
+                    "overlap   {} pairs share {:.0} percent of an evaluation text, {} share a 13 word run",
+                    commas(report.contaminated),
+                    cfg.contamination * 100.0,
+                    commas(report.verbatim_overlap)
+                );
+            }
+            for line in report.summary() {
+                println!("check     {line}");
+            }
+            if report.ok() {
+                Ok(())
+            } else {
+                Err(format!(
+                    "audit found {} leaked documents, {} leaked texts, {} identical pairs, {} contaminated pairs",
+                    report.leaked_docs,
+                    report.leaked_texts,
+                    report.identical_sides,
+                    report.contaminated
+                )
+                .into())
+            }
+        }
+    }
 }
