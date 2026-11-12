@@ -46,7 +46,7 @@ enum Command {
     Bench(BenchArgs),
     /// Clean a corpus, drop near duplicates and keep a relevant budget.
     Clean(CleanArgs),
-    /// Mine, pack or audit the pairs a single model is trained on.
+    /// Mine, pack, retain or audit the pairs a single model is trained on.
     Pairs(PairsArgs),
     /// Train, score or inspect the shared transformer on a pair corpus.
     Transformer(TransformerArgs),
@@ -440,6 +440,10 @@ enum PairCommand {
     Pack(PackArgs),
     /// Check a pair corpus for leakage, triviality and contamination.
     Audit(AuditArgs),
+    /// Keep the best pairs across runs in one growing bank.
+    Retain(RetainArgs),
+    /// Print the composition of a retention bank.
+    Bank(BankArgs),
 }
 
 #[derive(clap::Args)]
@@ -504,6 +508,50 @@ struct AuditArgs {
     contamination: f64,
     #[arg(long, default_value_t = 0.01)]
     min_margin: f64,
+}
+
+#[derive(clap::Args)]
+struct RetainArgs {
+    /// Candidate pair files, comma separated. One day's output per file.
+    #[arg(long, value_delimiter = ',', required = true)]
+    input: Vec<String>,
+    /// Corpus the bank keeps. Its index sits beside it as `<out>.idx.json`.
+    #[arg(long)]
+    out: String,
+    /// Rows the bank may hold. Better rows push out worse ones.
+    #[arg(long, default_value_t = 60_000)]
+    budget: usize,
+    /// Most rows from one label day.
+    #[arg(long, default_value_t = 4_000)]
+    per_day: usize,
+    /// Most rows from one group.
+    #[arg(long, default_value_t = 500)]
+    per_group: usize,
+    /// Most rows anchored on one document.
+    #[arg(long, default_value_t = 3)]
+    per_anchor: usize,
+    /// Most rows per task.
+    #[arg(long, default_value_t = 12_000)]
+    per_task: usize,
+    /// Smallest score a row may carry.
+    #[arg(long, default_value_t = 0.45)]
+    min_score: f64,
+    /// Smallest Hamming distance a new anchor needs, exact up to 7.
+    #[arg(long, default_value_t = 4)]
+    novelty_bits: u32,
+    /// Shortest anchor, in words.
+    #[arg(long, default_value_t = 5)]
+    min_words: usize,
+}
+
+#[derive(clap::Args)]
+struct BankArgs {
+    /// The corpus whose `<name>.idx.json` sits beside it.
+    #[arg(long)]
+    out: String,
+    /// Print this many of the best rows.
+    #[arg(long, default_value_t = 5)]
+    top: usize,
 }
 
 #[derive(Copy, Clone, PartialEq, Eq, ValueEnum)]
@@ -1552,6 +1600,110 @@ fn run_pairs(args: PairsArgs) -> Result<(), Box<dyn Error>> {
                 )
                 .into())
             }
+        }
+        PairCommand::Retain(a) => {
+            let policy = xcm_mmm::pairs::retain::Policy {
+                budget: a.budget,
+                per_day: a.per_day,
+                per_group: a.per_group,
+                per_anchor: a.per_anchor,
+                per_task: a.per_task,
+                min_score: a.min_score,
+                novelty_bits: a.novelty_bits,
+                min_words: a.min_words,
+                ..Default::default()
+            };
+            let report = xcm_mmm::pairs::retain::update(&a.input, &a.out, policy)?;
+            println!(
+                "read      {} candidates ({} malformed), {} already banked",
+                commas(report.candidates),
+                commas(report.malformed),
+                commas(report.known)
+            );
+            println!(
+                "gated     {} below floor, {} short, {} duplicate day, {} group, {} anchor, {} task",
+                commas(report.below_floor),
+                commas(report.short),
+                commas(report.rejected_day),
+                commas(report.rejected_group),
+                commas(report.rejected_anchor),
+                commas(report.rejected_task)
+            );
+            println!(
+                "admitted  {} new, {} near duplicate, {} evicted",
+                commas(report.admitted),
+                commas(report.rejected_novelty),
+                commas(report.evicted)
+            );
+            let tasks: Vec<String> = report
+                .by_task
+                .iter()
+                .map(|(task, n)| format!("{task} {}", commas(*n)))
+                .collect();
+            println!(
+                "bank      {} rows over {} days and {} groups, mean {:.3}, top {:.3}",
+                commas(report.bank_rows),
+                commas(report.by_day.len()),
+                commas(report.groups),
+                report.mean_score,
+                report.top_score
+            );
+            println!("tasks     {}", tasks.join(", "));
+            println!("out       {}", a.out);
+            println!("index     {}", xcm_mmm::pairs::retain::index_path(&a.out));
+            println!("ledger    {}", xcm_mmm::pairs::retain::ledger_path(&a.out));
+            Ok(())
+        }
+        PairCommand::Bank(a) => {
+            let path = xcm_mmm::pairs::retain::index_path(&a.out);
+            let bank = xcm_mmm::pairs::retain::Bank::open(&path)?
+                .ok_or_else(|| format!("no index at {path}, run pairs retain first"))?;
+            let report = bank.summary();
+            println!(
+                "bank      {} rows over {} days and {} groups, mean {:.3}, top {:.3}",
+                commas(report.bank_rows),
+                commas(report.by_day.len()),
+                commas(report.groups),
+                report.mean_score,
+                report.top_score
+            );
+            println!(
+                "policy    budget {}, day {}, group {}, anchor {}, task {}, floor {:.2}, novelty {}",
+                commas(bank.policy.budget),
+                commas(bank.policy.per_day),
+                commas(bank.policy.per_group),
+                commas(bank.policy.per_anchor),
+                commas(bank.policy.per_task),
+                bank.policy.min_score,
+                bank.policy.novelty_bits
+            );
+            let tasks: Vec<String> = report
+                .by_task
+                .iter()
+                .map(|(task, n)| format!("{task} {}", commas(*n)))
+                .collect();
+            println!("tasks     {}", tasks.join(", "));
+            let days: Vec<String> = report
+                .by_day
+                .iter()
+                .take(7)
+                .map(|(day, n)| format!("{day} {}", commas(*n)))
+                .collect();
+            println!("days      {}", days.join(", "));
+            for entry in bank.top(a.top) {
+                println!(
+                    "row       {:.3} {} {} {}",
+                    entry.score,
+                    entry.task,
+                    if entry.group.is_empty() {
+                        "-"
+                    } else {
+                        &entry.group
+                    },
+                    entry.id
+                );
+            }
+            Ok(())
         }
     }
 }

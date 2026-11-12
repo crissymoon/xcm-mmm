@@ -21,13 +21,15 @@
 //!   contrastive encoder.
 //!
 //! [`mine`] builds the pairs from labelled rows, [`pack`] merges files into one
-//! corpus, and [`audit`] answers the questions that have to be answered before
+//! corpus, [`retain`] keeps the best of them in one bank that improves as data
+//! arrives, and [`audit`] answers the questions that have to be answered before
 //! training: is anything leaked across splits, is any pair trivial, and is the
 //! task mix the one that was asked for.
 
 pub mod audit;
 pub mod mine;
 pub mod pack;
+pub mod retain;
 pub mod run;
 
 use std::fmt;

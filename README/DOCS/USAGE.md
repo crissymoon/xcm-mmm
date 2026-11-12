@@ -173,12 +173,14 @@ Input and output may be `.jsonl.gz`; compression uses the system `gzip`, so no c
 
 ### pairs
 
-Three subcommands: `mine` builds banks from labelled rows, `pack` merges pair files into one corpus with a task mix, `audit` checks a corpus and exits 1 when it finds leakage, trivial pairs or contamination.
+Five subcommands: `mine` builds banks from labelled rows, `pack` merges pair files into one corpus with a task mix, `retain` keeps the best pairs in one bank that improves as data arrives, `bank` prints that bank, and `audit` checks a corpus and exits 1 when it finds leakage, trivial pairs or contamination.
 
 ```bash
 xcm-mmm pairs mine rows.jsonl mined.jsonl --min-margin 0.02
 xcm-mmm pairs pack --input mined.jsonl,ads.jsonl --out pairs.jsonl --total 500000
-xcm-mmm pairs audit pairs.jsonl --eval eval.jsonl
+xcm-mmm pairs retain --input day1.jsonl,day2.jsonl --out week.jsonl --budget 60000
+xcm-mmm pairs bank --out week.jsonl
+xcm-mmm pairs audit week.jsonl --eval eval.jsonl
 ```
 
 | Command | Flag | Default | Meaning |
@@ -192,10 +194,33 @@ xcm-mmm pairs audit pairs.jsonl --eval eval.jsonl
 | pack | `--weights` | rank=3,contrast=2,preference=2,label=1,correction=1,retrieval=1 | task mix |
 | pack | `--max-similarity` | 0.98 | similarity at which two sides are one text |
 | pack | `--manifest` | prints | where to write the run manifest |
+| retain | `--budget` | 60000 | rows the bank may hold, better rows push out worse ones |
+| retain | `--per-day` | 4000 | most rows from one label day |
+| retain | `--per-group` | 500 | most rows from one group |
+| retain | `--per-anchor` | 3 | most rows anchored on one document |
+| retain | `--per-task` | 12000 | most rows per task |
+| retain | `--min-score` | 0.45 | smallest score a row may carry |
+| retain | `--novelty-bits` | 4 | smallest Hamming distance a new anchor needs, exact up to 7 |
+| retain | `--min-words` | 5 | shortest anchor |
 | audit | `--eval` | none | evaluation rows to screen for contamination |
 | audit | `--contamination` | 0.80 | share of an evaluation text that counts as a hit |
 
 `mine` writes the three banks the market corpus supports: `rank` pairs two rows from the same session whose outcomes landed in different quartiles, `preference` pairs two rows on the same group with a clear gap in outcome, and `contrast` pairs an anchor with a positive from an earlier session and a negative from the same session in another group. Each row records `margin`, `difficulty`, `quality_a`, `quality_b` and `neg_source`, so an audit can filter without re-reading the texts.
+
+`retain` is the weekly step. It scores each candidate on four things, each in [0, 1]: the outcome gap (`1 - exp(-|margin| / 0.25)`), how close the pair sits to difficulty 0.5, the composite quality of the anchor, and how near the anchor length is to 60 words. The weights are 0.40, 0.25, 0.20 and 0.15. A row must clear `--min-score`, be at least `--min-words` long, differ from every retained anchor by more than `--novelty-bits`, and sit inside the composition caps. Caps are checked against the whole bank, not the run, so one busy day cannot fill it.
+
+The bank writes three files: the corpus itself, `week.jsonl.idx.json` with one entry per retained row and the SimHash of its anchor, and `week.jsonl.ledger.jsonl` with one line per run. A second run reads the index instead of re-parsing the corpus, matches the ids it already holds, and admits nothing, so a replayed day costs only its own scoring pass. Entries are ordered best first, which makes the corpus stable and lets a training run take `--limit` and get the best rows.
+
+The near duplicate screen is an exact Hamming search up to seven bits. The 64 bit SimHash is split into eight byte stripes, and two signatures within seven bits must share one stripe, so only eight buckets are scanned per candidate. `retain` refuses to overwrite a corpus that exists without its index, because a bank that did not build a file cannot know which rows to keep. If a row's text is gone from both the corpus and the new candidates, it leaves the index and is counted in `missing`.
+
+The whole week in one command:
+
+```bash
+scripts/week.sh --bank data/week.jsonl data/day1.jsonl data/day2.jsonl
+scripts/week.sh --bank data/week.jsonl --train data/day3.jsonl
+```
+
+The script builds release, mines each day, folds the result into the bank, audits it, prints the composition, and with `--train` trains the transformer on the bank and checkpoints beside it. `--model`, `--resume`, `--train-limit`, `--budget`, `--min-margin`, `--min-score`, `--novelty`, `--per-day` and `--per-anchor` pass through. Day files may be gzipped.
 
 ### transformer
 
