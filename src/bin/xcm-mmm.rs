@@ -8,8 +8,10 @@ use std::time::Instant;
 use clap::{Parser, Subcommand, ValueEnum};
 
 use xcm_mmm::benchmarks::{Benchmark, Kind, CATALOGUE};
+use xcm_mmm::churn::cli::{run as run_churn, ChurnArgs};
 use xcm_mmm::data::{Dataset, Fold};
 use xcm_mmm::de::{self, Adaptation, Crossover, DeConfig, Strategy};
+use xcm_mmm::emotion::cli::{run as run_emotion, EmotionArgs};
 use xcm_mmm::forecast::{
     knee, score_over, Report, SelectionProblem, SparseAccuracy, DEFAULT_LAMBDA,
 };
@@ -55,6 +57,10 @@ enum Command {
     Detect(DetectArgs),
     /// Extract, fit, read or check the behavioural segments.
     Segment(SegmentArgs),
+    /// Read emotion over any English word, and measure its coverage.
+    Emotion(EmotionArgs),
+    /// Build a churn panel, read its memos and fit a retention baseline.
+    Churn(ChurnArgs),
     /// Train, score or inspect the shared transformer on a pair corpus.
     Transformer(TransformerArgs),
 }
@@ -735,6 +741,8 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Dataset(args) => run_dataset(args),
         Command::Detect(args) => run_detect(args),
         Command::Segment(args) => run_segment(args),
+        Command::Emotion(args) => run_emotion(args),
+        Command::Churn(args) => run_churn(args),
         Command::Transformer(args) => run_transformer(args),
     }
 }

@@ -1,0 +1,47 @@
+{
+  "name": "xcm-mmm-churn",
+  "version": 1,
+  "built_at": "2026-11-14T22:59:15Z",
+  "report": {
+    "rows": 7043,
+    "churned": 1869,
+    "stayed": 4720,
+    "joined": 454,
+    "churn_rate": 0.2654,
+    "months": 72,
+    "reasons": 1869,
+    "categories": 5
+  },
+  "files": [
+    {
+      "name": "source/telecom_customer_churn.csv",
+      "rows": 7043,
+      "bytes": 1435200,
+      "fnv64": "dceb6f09eb3e8419"
+    },
+    {
+      "name": "panel.csv",
+      "rows": 7043,
+      "bytes": 519554,
+      "fnv64": "86e646449879a70c"
+    },
+    {
+      "name": "series.csv",
+      "rows": 72,
+      "bytes": 1807,
+      "fnv64": "c206932eb88b0025"
+    },
+    {
+      "name": "reasons.csv",
+      "rows": 1869,
+      "bytes": 144860,
+      "fnv64": "149fb01f2ebfaf4a"
+    },
+    {
+      "name": "reasons.json",
+      "rows": 5,
+      "bytes": 1083,
+      "fnv64": "617727d10f9a0d26"
+    }
+  ]
+}

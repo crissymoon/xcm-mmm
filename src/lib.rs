@@ -19,13 +19,18 @@
 //! bank, five declared cue indices, and the artifact that ships with them.
 //! [`segment`] groups advertisers by what they did in an ad panel, with a
 //! silhouette selection, a shuffled control and a resampling audit in place of
-//! an accuracy no label could supply.
+//! an accuracy no label could supply. [`emotion`] reads eight Plutchik axes
+//! from any English word, and [`churn`] turns a customer table into a retention
+//! outcome with its memo text read on those axes.
 
 pub mod benchmarks;
+pub mod churn;
 pub mod data;
 pub mod dataset;
 pub mod de;
 pub mod detect;
+pub mod digest;
+pub mod emotion;
 pub mod eval;
 pub mod forecast;
 pub mod linalg;

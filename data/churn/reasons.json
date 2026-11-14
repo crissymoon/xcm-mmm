@@ -1,0 +1,64 @@
+{
+  "rows": 1869,
+  "overall": {
+    "rows": 1869,
+    "valence": 0.114,
+    "arousal": 0.2379,
+    "dominant": {
+      "joy": 624,
+      "neutral": 1025,
+      "trust": 220
+    }
+  },
+  "by_category": {
+    "Attitude": {
+      "rows": 314,
+      "valence": 0.2152,
+      "arousal": 0.1402,
+      "dominant": {
+        "neutral": 94,
+        "trust": 220
+      }
+    },
+    "Competitor": {
+      "rows": 841,
+      "valence": 0.2611,
+      "arousal": 0.3348,
+      "dominant": {
+        "joy": 624,
+        "neutral": 217
+      }
+    },
+    "Dissatisfaction": {
+      "rows": 321,
+      "valence": -0.1349,
+      "arousal": 0.2414,
+      "dominant": {
+        "neutral": 321
+      }
+    },
+    "Other": {
+      "rows": 182,
+      "valence": -0.0045,
+      "arousal": 0.0019,
+      "dominant": {
+        "neutral": 182
+      }
+    },
+    "Price": {
+      "rows": 211,
+      "valence": -0.1423,
+      "arousal": 0.1948,
+      "dominant": {
+        "neutral": 211
+      }
+    }
+  },
+  "drivers": [
+    "Price",
+    "Dissatisfaction",
+    "Other",
+    "Attitude",
+    "Competitor"
+  ]
+}

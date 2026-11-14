@@ -1,0 +1,60 @@
+{
+  "name": "xcm-mmm-emotion",
+  "version": 1,
+  "built_at": "2026-11-14T23:00:51Z",
+  "files": [
+    {
+      "name": "seed.json",
+      "rows": 673,
+      "bytes": 18669,
+      "fnv64": "11576acbf80e2194"
+    },
+    {
+      "name": "bank.jsonl",
+      "rows": 20,
+      "bytes": 8367,
+      "fnv64": "4bbd2f0c7b6f636f"
+    },
+    {
+      "name": "listed.tsv",
+      "rows": 7208,
+      "bytes": 109716,
+      "fnv64": "5aa92f7c57c4f5cc"
+    },
+    {
+      "name": "model.json",
+      "rows": 1,
+      "bytes": 248061,
+      "fnv64": "0aaf70f3cb80c92b"
+    }
+  ],
+  "emotions": [
+    "joy",
+    "trust",
+    "anticipation",
+    "surprise",
+    "sadness",
+    "fear",
+    "anger",
+    "disgust"
+  ],
+  "seed_words": 673,
+  "bank_rows": 20,
+  "blend": 0.35,
+  "neutral_band": 0.12,
+  "min_mass": 0.9,
+  "metrics": {
+    "rows": 20,
+    "labels": 5,
+    "fit_accuracy": 0.85,
+    "leave_one_out": 0.85,
+    "majority": 0.35,
+    "per_label": {
+      "Angry": 1.0,
+      "Confused": 0.0,
+      "Frustrated": 0.6667,
+      "Happy": 1.0,
+      "Neutral": 0.8571
+    }
+  }
+}

@@ -34,6 +34,8 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
 - **Corpus cleaning and pairs.** Character folding, markup and boilerplate screening, quality rules with a called-out reason per rejection, MinHash near duplicate clustering, two selection rules (thresholded marginal relevance and target-aware importance resampling), and a pair miner that writes rank, preference and contrast banks in one schema with an audit that gates leakage, triviality and contamination.
 - **Seven text detectors.** Two learned axes (legal register, abstraction) fitted as smoothed log odds over a labelled bank plus a logistic regression over surface readings, five declared cue indices behind a gate (fear, publicity, manipulation, followers, narrative), and an artifact that carries its terms, cuts, metrics and audit beside the data it was fitted on.
+- **Emotion readings.** Eight Plutchik axes over the whole English vocabulary: a 673 word seed, a VADER valence list, a labelled bank of twenty contact-centre transcripts, suffix and prefix derivation, and a character-analogy fallback that needs a shared opening three letters unless the spelling is very close. Seven tiers, every word in a list resolved to one of them, and `emotion coverage` counts which tier answered for a 235,976 word dictionary and for running text.
+- **Churn outcome.** A 7,043 customer telecom panel into a churn label, a retention hazard by tenure month with right censoring, and the 1,869 churn reasons read on the emotion axes. A fourteen-feature logistic with folds assigned by customer id reports held-out AUC beside the AUC of tenure and monthly charge alone.
 - **Behavioural segments.** Advertisers grouped by what they did in an ad panel: volume, cadence and its spread, banded spend, copy length, terms bought against, creative reuse and copy concentration. k-means++ with a silhouette sweep, a shuffled control and a resampling audit, and a folder that rebuilds from its own entities.
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
@@ -113,6 +115,21 @@ Four groups were chosen at a silhouette of 0.286. There are no labels, so that i
 `segment check` rebuilds the folder from its own entities, compares the result with the shipped fit and verifies each digest, so a centroid edited after the manifest was stamped is a fault rather than a note. `scripts/segment-data.sh` runs the whole path: extract the panel, fit, check.
 
 Two limits are worth stating. Recency is deliberately not a feature: the panel is a snapshot weighted towards recent ads, so the distance from a last start would measure the archive's coverage as much as the advertiser's activity. And copy concentration is bounded by the ad count, so an advertiser with one ad scores one by construction; that group is a real behaviour, the advertiser who bought once, but its concentration reading adds nothing to its volume.
+
+## Emotion and churn
+
+`data/emotion/` ships a seed, a VADER valence list (MIT), twenty labelled transcripts, the fitted artifact, a manifest and a card. `data/churn/` ships the source table, the panel, the retention series and the reason readings.
+
+```bash
+./xcm-mmm emotion fit
+./xcm-mmm emotion score --text "This is the third time the unit has failed."
+./xcm-mmm emotion coverage --examples 4
+./xcm-mmm churn extract
+./xcm-mmm churn fit
+./xcm-mmm churn info
+```
+
+On the bank the reading is 0.850 held out against a 0.350 majority baseline. Coverage over `/usr/share/dict/words` is 100% resolved: 39.0% of the list lands above the neutral prior, 9.8% of it with a reading strong enough to matter, and the rest reads neutral because a dictionary holds far more nouns and technical terms than feelings. On the transcript corpus 51.9% of content tokens read above the neutral prior. The churn baseline is AUC 0.867 held out, against 0.801 for tenure and monthly charge alone. `emotion check` and `churn check` rebuild each folder and report every disagreement.
 
 ## Quick start
 
