@@ -375,6 +375,31 @@ audit     control 0.168 (best 0.185)  resampling 0.759 (p10 0.552)
 
 `assign` places entities by the nearest centroid and reports the distance in the clipped z space, so a distant placement is visible rather than hidden. `check` answers three questions in order: is each file the file the manifest describes, does the fit rebuild from the shipped entities, and does every assignment land in a group of the size it claims. It writes nothing, and a folder that fails exits with status 1 and one line per fault.
 
+### read
+
+One text through every shipped model, in one report. The alias `profile` is the same command.
+
+```bash
+xcm-mmm read "Guaranteed returns or the crash takes your savings."
+xcm-mmm read --json --triggers 10 --terms 12 --file ad.txt
+cat ad.txt | xcm-mmm read
+```
+
+| Flag | Default | Meaning |
+|---|---|---|
+| (positional) | none | copy to read; several arguments join with a space |
+| `--file` | none | read a file as one text, conflicts with positional text |
+| `--detectors` | data/detectors/model.json | detector artifact |
+| `--emotion` | data/emotion/model.json | emotion artifact |
+| `--segments` | data/segments/model.json | segment artifact; a missing file drops that block |
+| `--triggers` | 6 | words shown in the trigger table, zero shows all |
+| `--terms` | none | targeting terms per ad, adding one observed segment column |
+| `--json` | off | print the whole report as JSON |
+
+The report has five blocks and none of them is a blend. Shape counts characters, words and sentences. Semantics reports syllables per word, words of seven characters or more, second person share, questions, exclamations, Flesch reading ease, Flesch-Kincaid grade, and the named surface readings of the two learned detector axes. Emotion is the eight Plutchik axes, the dominant axis, valence, arousal, intensity and the modifier counts. Triggers list the words that carried the mass with the axis each leans on, the tier that answered (exact, lemma, list, analogy and so on) and its valence. Detectors give the seven axes with their score, level and evidence, including the component densities per hundred words and whether the gate opened. Segment compares the text with every behavioural centre on the columns a text can supply, names the columns it could not observe, and prints the margin between the nearest and second nearest.
+
+Two things the report deliberately does not do. It does not assign a behavioural segment from a text: volume, cadence, spend, reuse and concentration are behaviour over time, so only copy length and, with `--terms`, targeting terms are compared, and the note says so. And it does not read tone pragmatically: `emotion` is a word reading, so a threat written in positive words still reads as trust and sadness, while the fear and manipulation axes are what catch the framing.
+
 ## Error behaviour
 
 A wrong engine for a problem is refused with an explanation rather than run. `de --problem zdt1` says that the problem has two objectives and points at `moead`; `moead --problem sphere` does the reverse. Unknown problem names, a dimension below the problem minimum, an unreadable file, a missing target column and a panel too short for the requested folds all exit with status 1 and a single line on standard error.

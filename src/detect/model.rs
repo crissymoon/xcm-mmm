@@ -343,6 +343,31 @@ impl Detector {
         fs::write(out, lines)?;
         Ok(written)
     }
+
+    /// The raw surface readings of one learned axis, named as the axis names
+    /// them, before the logistic turns them into a probability.
+    ///
+    /// None when the axis is not a learned one, so a caller that wants a
+    /// reading has to say which axis it expects rather than guess a number.
+    pub fn features(&self, axis: &str, text: &str) -> Option<Vec<(String, f64)>> {
+        let lex = match self.artifact.axes.get(axis)? {
+            Axis::Lexicon(lex) => lex,
+            Axis::Index(_) => return None,
+        };
+        let compiled = self.features.get(axis)?;
+        let words = token::tokens(text);
+        let values = compiled.values(text, &words, Some(&lex.lexicon));
+        let names = compiled.names();
+        Some(names.iter().cloned().zip(values).collect())
+    }
+
+    /// Component densities of one cue axis, before the weights and the gate.
+    /// Absent for a learned axis, which has no components.
+    pub fn parts(&self, axis: &str, text: &str) -> Option<BTreeMap<String, f64>> {
+        let compiled = self.indexes.get(axis)?;
+        let words = token::tokens(text);
+        Some(compiled.parts(text, &words, None))
+    }
 }
 
 /// True when a JSON value differs from another, ignoring the build time.

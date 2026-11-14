@@ -38,6 +38,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Churn outcome.** A 7,043 customer telecom panel into a churn label, a retention hazard by tenure month with right censoring, and the 1,869 churn reasons read on the emotion axes. A fourteen-feature logistic with folds assigned by customer id reports held-out AUC beside the AUC of tenure and monthly charge alone.
 - **Behavioural segments.** Advertisers grouped by what they did in an ad panel: volume, cadence and its spread, banded spend, copy length, terms bought against, creative reuse and copy concentration. k-means++ with a silhouette sweep, a shuffled control and a resampling audit, and a folder that rebuilds from its own entities.
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
+- **One report per text.** `read` puts one piece of copy through the detectors, the emotion scanner and the segment centres and prints every score beside its evidence: the words that carried the emotional mass, the cues that fired, the surface readings behind a register, Flesch ease and grade, and the segment dimensions the text cannot show.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
 
 ## Training data
@@ -131,6 +132,42 @@ Two limits are worth stating. Recency is deliberately not a feature: the panel i
 
 On the bank the reading is 0.850 held out against a 0.350 majority baseline. Coverage over `/usr/share/dict/words` is 100% resolved: 39.0% of the list lands above the neutral prior, 9.8% of it with a reading strong enough to matter, and the rest reads neutral because a dictionary holds far more nouns and technical terms than feelings. On the transcript corpus 51.9% of content tokens read above the neutral prior. The churn baseline is AUC 0.867 held out, against 0.801 for tenure and monthly charge alone. `emotion check` and `churn check` rebuild each folder and report every disagreement.
 
+## Reading one text
+
+`read` puts one piece of copy through every model the tool ships and prints each score beside the evidence for it. Nothing is blended: every number is the score of the model that owns it, and a dimension no model can see from one text is named as unobserved instead of guessed.
+
+```bash
+./xcm-mmm read "Guaranteed returns or the crash takes your savings. Only 3 seats left, and the insiders already know. Act now."
+./xcm-mmm read --json --triggers 10 --file ad.txt
+cat ad.txt | ./xcm-mmm read
+```
+
+```text
+text      110 chars  18 words  3 sentences  6.0 words/sentence
+emotion   neutral      valence -0.01  arousal 0.20  intensity 0.31
+  trust         0.31  ##########
+  sadness       0.23  #######
+  anticipation  0.10  ###
+triggers  word             axis        tier      weight  valence
+          guaranteed       trust       exact       1.00   +0.70
+          crash            sadness     listed      0.42   -0.97
+          left             sadness     exact       0.40   -1.00
+detectors axis          score  level   evidence
+          fear          0.000  none    gate closed: no cue from threat  fired: act now, now, your
+          manipulation  0.320  weak    per 100 words: clock 5.56, guarantee 5.56  fired: act now, guaranteed returns
+          narrative     0.000  none    gate closed: no cue from framing, withheld, verdict
+semantics flesch 69.15  grade 5.11  syllables/word 1.56  long words 27.8%  second person 5.6%
+          abstraction register      15.789
+segment   copy against every behavioural centre
+          *  0  rmse 1.36  share  22.7%  creative reuse high
+             2  rmse 1.46  share  45.8%  creative reuse low, ad volume low
+          copy length        text 18 words   segment 61.7
+          unobserved ad volume, time between starts, start gap spread, banded spend, targeting terms, creative reuse, copy concentration
+          1 of 8 dimensions observed; the distance compares only those, so this ranks copy length, it does not assign a segment
+```
+
+The blocks answer separate questions. *Emotion* is the eight Plutchik axes with the words trimmed away, and the modifiers the scanner saw. *Triggers* are the words that carried the mass, the axis each leans on and the tier that answered for it, so a word read by analogy is visible as one. *Detectors* is the seven axes with their level and evidence: a fired cue list, or for a cue index the component densities per hundred words and whether the gate opened at all. *Semantics* is measured rather than modelled: sentence and syllable rates, Flesch ease and grade, second person share, questions and exclamations, plus the surface readings the learned axes used (abstraction register, nominalisations, agentless passives, citations, authority words). *Segment* compares the text with every behavioural centre on the columns a text can supply, which is copy length and, with `--terms N`, targeting terms; the other six or seven columns need behaviour over time and are printed as unobserved with the nearest and second nearest rmse so the reader can see the margin is thin.
+
 ## Quick start
 
 ```bash
@@ -217,7 +254,7 @@ cargo clippy --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite has 282 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, and every CLI subcommand.
+The suite has 368 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, the reader over the shipped models including its stdin and file inputs, and every CLI subcommand.
 
 ## License
 

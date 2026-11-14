@@ -21,7 +21,9 @@
 //! silhouette selection, a shuffled control and a resampling audit in place of
 //! an accuracy no label could supply. [`emotion`] reads eight Plutchik axes
 //! from any English word, and [`churn`] turns a customer table into a retention
-//! outcome with its memo text read on those axes.
+//! outcome with its memo text read on those axes. [`profile`] puts one text
+//! through the detectors, the emotion scanner and the segment centres and
+//! prints every score beside the evidence for it.
 
 pub mod benchmarks;
 pub mod churn;
@@ -38,6 +40,7 @@ pub mod metrics;
 pub mod moead;
 pub mod pairs;
 pub mod problem;
+pub mod profile;
 pub mod rng;
 pub mod segment;
 pub mod text;
