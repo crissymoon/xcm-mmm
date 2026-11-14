@@ -12,12 +12,13 @@
 //! same traits, so feature selection and its accuracy against model size can be
 //! solved with either engine.
 //!
-//! [`text`] and [`pairs`] sit beside the optimiser rather than inside it: they
+//! [`text`], [`pairs`] and [`dataset`] sit beside the optimiser rather than inside it: they
 //! clean a corpus, deduplicate it, select a relevant subset, and build the
 //! training pairs that one model can be fitted on.
 
 pub mod benchmarks;
 pub mod data;
+pub mod dataset;
 pub mod de;
 pub mod eval;
 pub mod forecast;

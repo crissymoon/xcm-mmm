@@ -36,6 +36,25 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
 
+## Training data
+
+`data/training/` is the set this tool ships: 20,000 rank, preference and contrast pairs mined from the public marketlab news corpus, in `train.jsonl`, `valid.jsonl` and `test.jsonl` beside a generated `card.md` and a `manifest.json` that names the digest and row count of every file.
+
+The set is a stratified sample of a retention bank that keeps growing, so it is fixed rather than current. The same source and the same seed rebuild the same bytes:
+
+```bash
+./xcm-mmm dataset build --input bank.jsonl --out data/training --budget 20000 --seed 20261114
+./xcm-mmm dataset check --dir data/training
+```
+
+`dataset check` reads the folder back, parses every row and compares each file with its manifest, so a copy that lost a line or a byte is caught rather than trained on. The full path from labelled rows is one script:
+
+```bash
+scripts/train-data.sh --rows rows/ --out data/training
+```
+
+It mines each month, folds the pairs into a bank that only improves, samples the bank, and checks the result. The bank lives under `tmp/` and stays out of the repository because it grows every week; what enters version control is the sample and the card that describes it.
+
 ## Quick start
 
 ```bash

@@ -11,7 +11,8 @@
 
 # Local data, reports and scratch output
 /tmp/
-/data/
+/data/*
+!/data/training/
 *.local.csv
 synthetic.csv
 /front.csv

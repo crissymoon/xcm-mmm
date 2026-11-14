@@ -173,3 +173,80 @@ fn synth_then_forecast_runs_from_the_shell() {
     let _ = std::fs::remove_file(&csv);
     let _ = std::fs::remove_dir(&dir);
 }
+
+#[test]
+fn dataset_ships_a_folder_that_checks_clean_and_catches_an_edit() {
+    let dir = temp_dir().join("dataset");
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+
+    let bank = dir.join("bank.jsonl");
+    let splits = ["train", "train", "valid", "test"];
+    let mut lines = String::new();
+    for i in 0..12 {
+        let row = serde_json::json!({
+            "id": format!("id{i:02}"),
+            "task": "rank",
+            "split": splits[i % splits.len()],
+            "day": format!("2024-0{}-1{}", 1 + i % 9, i % 10),
+            "a": "issuer",
+            "b": "other",
+            "text_a": "the anchor document for this pair",
+            "text_b": "the other side of this pair",
+        });
+        lines.push_str(&serde_json::to_string(&row).unwrap());
+        lines.push('\n');
+    }
+    std::fs::write(&bank, lines).unwrap();
+
+    let out = dir.join("shipped");
+    let built = Command::new(binary())
+        .args(["dataset", "build", "--input"])
+        .arg(&bank)
+        .args(["--out"])
+        .arg(&out)
+        .args(["--budget", "9"])
+        .output()
+        .unwrap();
+    assert!(
+        built.status.success(),
+        "{}",
+        String::from_utf8_lossy(&built.stderr)
+    );
+    for name in [
+        "train.jsonl",
+        "valid.jsonl",
+        "test.jsonl",
+        "manifest.json",
+        "card.md",
+    ] {
+        assert!(out.join(name).exists(), "missing {name}");
+    }
+
+    let checked = Command::new(binary())
+        .args(["dataset", "check", "--dir"])
+        .arg(&out)
+        .output()
+        .unwrap();
+    assert!(
+        checked.status.success(),
+        "{}",
+        String::from_utf8_lossy(&checked.stdout)
+    );
+    let text = String::from_utf8_lossy(&checked.stdout);
+    assert!(text.contains("agrees with its manifest"), "{text}");
+
+    let train = out.join("train.jsonl");
+    let mut rows = std::fs::read_to_string(&train).unwrap();
+    rows.push('\n');
+    std::fs::write(&train, rows).unwrap();
+    let tampered = Command::new(binary())
+        .args(["dataset", "check", "--dir"])
+        .arg(&out)
+        .output()
+        .unwrap();
+    assert!(!tampered.status.success());
+    assert!(String::from_utf8_lossy(&tampered.stdout).contains("bytes on disk"));
+
+    let _ = std::fs::remove_dir_all(&dir);
+}

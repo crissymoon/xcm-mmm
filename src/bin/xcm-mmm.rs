@@ -48,6 +48,8 @@ enum Command {
     Clean(CleanArgs),
     /// Mine, pack, retain or audit the pairs a single model is trained on.
     Pairs(PairsArgs),
+    /// Ship a stratified sample of a pair bank as the training set in this repo.
+    Dataset(DatasetArgs),
     /// Train, score or inspect the shared transformer on a pair corpus.
     Transformer(TransformerArgs),
 }
@@ -447,6 +449,49 @@ enum PairCommand {
 }
 
 #[derive(clap::Args)]
+struct DatasetArgs {
+    #[command(subcommand)]
+    command: DatasetCommand,
+}
+
+#[derive(Subcommand)]
+enum DatasetCommand {
+    /// Sample a bank into train, valid and test, with a manifest and a card.
+    Build(DatasetBuildArgs),
+    /// Check a shipped folder against its own manifest.
+    Check(DatasetCheckArgs),
+}
+
+#[derive(clap::Args)]
+struct DatasetBuildArgs {
+    /// The pair bank to sample.
+    #[arg(long)]
+    input: String,
+    /// Folder the split files, manifest and card are written to.
+    #[arg(long)]
+    out: String,
+    /// Rows the sample may hold across all splits. Zero ships the whole bank.
+    #[arg(long, default_value_t = 20_000)]
+    budget: usize,
+    /// Seed of the sample. The same seed rebuilds the same bytes.
+    #[arg(long, default_value_t = 20_261_114)]
+    seed: u64,
+    /// Bytes any one shipped file may reach.
+    #[arg(long, default_value_t = 40)]
+    cap_mb: u64,
+    /// Name the card gives the set.
+    #[arg(long, default_value = "marketlab-news-pairs")]
+    name: String,
+}
+
+#[derive(clap::Args)]
+struct DatasetCheckArgs {
+    /// Folder holding manifest.json and the split files.
+    #[arg(long)]
+    dir: String,
+}
+
+#[derive(clap::Args)]
 struct MineArgs {
     /// Labelled rows: a text and a forward outcome per row.
     rows: String,
@@ -605,6 +650,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Bench(args) => run_bench(args),
         Command::Clean(args) => run_clean(args),
         Command::Pairs(args) => run_pairs(args),
+        Command::Dataset(args) => run_dataset(args),
         Command::Transformer(args) => run_transformer(args),
     }
 }
@@ -1410,6 +1456,70 @@ fn parse_weights(spec: &str) -> Result<Vec<(xcm_mmm::pairs::Task, f64)>, Box<dyn
         out.push((task, weight));
     }
     Ok(out)
+}
+
+fn run_dataset(args: DatasetArgs) -> Result<(), Box<dyn Error>> {
+    match args.command {
+        DatasetCommand::Build(a) => {
+            let cfg = xcm_mmm::dataset::BuildConfig {
+                budget: a.budget,
+                seed: a.seed,
+                cap_bytes: a.cap_mb.saturating_mul(1 << 20),
+                name: a.name,
+            };
+            let m = xcm_mmm::dataset::build(&a.input, &a.out, &cfg)?;
+            println!(
+                "source    {} rows, {} bytes from {}",
+                commas(m.source.rows),
+                commas(m.source.bytes as usize),
+                m.source.first_day
+            );
+            for split in xcm_mmm::dataset::SPLITS {
+                if let Some(c) = m.splits.get(split) {
+                    println!(
+                        "  {split:<6} {:>7} rows  {:>9} bytes  {} to {}",
+                        commas(c.rows),
+                        commas(c.bytes as usize),
+                        c.first_day,
+                        c.last_day
+                    );
+                }
+            }
+            let mix: Vec<String> = m
+                .tasks
+                .iter()
+                .map(|(task, n)| format!("{task} {}", commas(*n)))
+                .collect();
+            println!("tasks     {}", mix.join(", "));
+            println!(
+                "shipped   {} of {} source rows, {:.1} percent",
+                commas(m.rows),
+                commas(m.source.rows),
+                m.rows as f64 * 100.0 / m.source.rows as f64
+            );
+            println!("year span {} to {}", m.source.first_day, m.source.last_day);
+            for line in &m.checks {
+                println!("check     {line}");
+            }
+            println!("out       {}", a.out);
+            if m.checks.iter().any(|c| c.contains("FAILED")) {
+                return Err("a shipped check failed; the folder is not publishable".into());
+            }
+            Ok(())
+        }
+        DatasetCommand::Check(a) => {
+            let faults = xcm_mmm::dataset::check(&a.dir)?;
+            if faults.is_empty() {
+                println!("clean     {} agrees with its manifest", a.dir);
+                Ok(())
+            } else {
+                for fault in &faults {
+                    println!("fault     {fault}");
+                }
+                Err(format!("{} faults in {}", faults.len(), a.dir).into())
+            }
+        }
+    }
 }
 
 fn run_transformer(args: TransformerArgs) -> Result<(), Box<dyn Error>> {

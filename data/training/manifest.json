@@ -1,0 +1,115 @@
+{
+  "name": "marketlab-news-pairs",
+  "folder": "training",
+  "built_at": "2026-11-14T19:28:46Z",
+  "source": {
+    "path": "bank.jsonl",
+    "rows": 75390,
+    "bytes": 79686865,
+    "fnv64": "5420718ffb6de012",
+    "first_day": "2004-11-17",
+    "last_day": "2026-10-12",
+    "issuers": 75390
+  },
+  "config": {
+    "budget": 20000,
+    "seed": 20261114,
+    "cap_bytes": 41943040,
+    "name": "marketlab-news-pairs"
+  },
+  "rows": 20000,
+  "tasks": {
+    "contrast": 6808,
+    "preference": 5018,
+    "rank": 8174
+  },
+  "splits": {
+    "test": {
+      "rows": 2147,
+      "bytes": 3811259,
+      "first_day": "2022-10-17",
+      "last_day": "2026-10-12",
+      "tasks": {
+        "contrast": 1009,
+        "preference": 431,
+        "rank": 707
+      }
+    },
+    "train": {
+      "rows": 16853,
+      "bytes": 15667586,
+      "first_day": "2004-11-17",
+      "last_day": "2022-06-30",
+      "tasks": {
+        "contrast": 5489,
+        "preference": 4351,
+        "rank": 7013
+      }
+    },
+    "valid": {
+      "rows": 1000,
+      "bytes": 1685724,
+      "first_day": "2020-12-14",
+      "last_day": "2024-08-01",
+      "tasks": {
+        "contrast": 310,
+        "preference": 236,
+        "rank": 454
+      }
+    }
+  },
+  "years": {
+    "2004": 1,
+    "2005": 2,
+    "2006": 6,
+    "2007": 385,
+    "2008": 1200,
+    "2009": 1177,
+    "2010": 1185,
+    "2011": 1420,
+    "2012": 1507,
+    "2013": 1320,
+    "2014": 1312,
+    "2015": 1355,
+    "2016": 1030,
+    "2017": 884,
+    "2018": 1344,
+    "2019": 1328,
+    "2020": 1095,
+    "2021": 455,
+    "2022": 564,
+    "2023": 523,
+    "2024": 135,
+    "2025": 1470,
+    "2026": 302
+  },
+  "files": [
+    {
+      "name": "train.jsonl",
+      "rows": 16853,
+      "bytes": 15667586,
+      "fnv64": "5ef6cb5b507e5edf"
+    },
+    {
+      "name": "valid.jsonl",
+      "rows": 1000,
+      "bytes": 1685724,
+      "fnv64": "5218729e5896b5c1"
+    },
+    {
+      "name": "test.jsonl",
+      "rows": 2147,
+      "bytes": 3811259,
+      "fnv64": "59fc73cf7b425982"
+    }
+  ],
+  "checks": [
+    "every_split_present: train, valid and test each ship rows",
+    "every_task_kept: 3 tasks present",
+    "no_duplicate_ids: 20000 ids, all distinct",
+    "no_id_cross_split: no row appears in two splits",
+    "files_under_cap: largest file 15667586 bytes, cap 41943040",
+    "sides_non_empty: every row carries text on every side its task needs",
+    "days_within_source_range: 2004-11-17 to 2026-10-12"
+  ]
+}
