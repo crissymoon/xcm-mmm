@@ -13,6 +13,7 @@
 /tmp/
 /data/*
 !/data/training/
+!/data/detectors/
 *.local.csv
 synthetic.csv
 /front.csv

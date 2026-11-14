@@ -50,6 +50,8 @@ enum Command {
     Pairs(PairsArgs),
     /// Ship a stratified sample of a pair bank as the training set in this repo.
     Dataset(DatasetArgs),
+    /// Train, score or check the seven text detectors.
+    Detect(DetectArgs),
     /// Train, score or inspect the shared transformer on a pair corpus.
     Transformer(TransformerArgs),
 }
@@ -492,6 +494,83 @@ struct DatasetCheckArgs {
 }
 
 #[derive(clap::Args)]
+struct DetectArgs {
+    #[command(subcommand)]
+    command: DetectCommand,
+}
+
+#[derive(Subcommand)]
+enum DetectCommand {
+    /// Fit the seven axes from the bank, the ads and the cue table.
+    Train(DetectTrainArgs),
+    /// Score text or a JSON Lines file with a fitted model.
+    Score(DetectScoreArgs),
+    /// Print what a model holds and how well it scored.
+    Info(DetectInfoArgs),
+    /// Rebuild a shipped folder and report every disagreement.
+    Check(DetectCheckArgs),
+}
+
+#[derive(clap::Args)]
+struct DetectTrainArgs {
+    /// Labelled sentence bank: axis, label, source and text per row.
+    #[arg(long, default_value = "data/detectors/bank.jsonl")]
+    bank: String,
+    /// Ad copy at document grain, with its source split.
+    #[arg(long, default_value = "data/detectors/ads.jsonl")]
+    ads: String,
+    /// Declared cue table for the index axes.
+    #[arg(long, default_value = "data/detectors/cues.json")]
+    cues: String,
+    /// Folder the model, manifest and card are written to.
+    #[arg(long, default_value = "data/detectors")]
+    out: String,
+    /// Folds of the out of fold evaluation.
+    #[arg(long, default_value_t = 5)]
+    folds: usize,
+    /// Smallest number of rows either side of an axis may hold.
+    #[arg(long, default_value_t = 40)]
+    min_rows: usize,
+    /// Terms an axis may keep.
+    #[arg(long, default_value_t = 120)]
+    top_terms: usize,
+    /// Name the card gives the set.
+    #[arg(long, default_value = "marketlab-ad-detectors")]
+    name: String,
+}
+
+#[derive(clap::Args)]
+struct DetectScoreArgs {
+    /// Model artifact written by `detect train`.
+    #[arg(long, default_value = "data/detectors/model.json")]
+    model: String,
+    /// Text to score. Repeat the flag for more than one.
+    #[arg(long)]
+    text: Vec<String>,
+    /// JSON Lines in, one `text` field per row, scored to `--out`.
+    #[arg(long)]
+    input: Option<String>,
+    /// Where the scored rows go. Required with --input.
+    #[arg(long)]
+    out: Option<String>,
+    /// Terms or phrases printed beside each reading.
+    #[arg(long, default_value_t = 6)]
+    hits: usize,
+}
+
+#[derive(clap::Args)]
+struct DetectInfoArgs {
+    #[arg(long, default_value = "data/detectors/model.json")]
+    model: String,
+}
+
+#[derive(clap::Args)]
+struct DetectCheckArgs {
+    #[arg(long, default_value = "data/detectors")]
+    dir: String,
+}
+
+#[derive(clap::Args)]
 struct MineArgs {
     /// Labelled rows: a text and a forward outcome per row.
     rows: String,
@@ -651,6 +730,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Clean(args) => run_clean(args),
         Command::Pairs(args) => run_pairs(args),
         Command::Dataset(args) => run_dataset(args),
+        Command::Detect(args) => run_detect(args),
         Command::Transformer(args) => run_transformer(args),
     }
 }
@@ -1511,6 +1591,137 @@ fn run_dataset(args: DatasetArgs) -> Result<(), Box<dyn Error>> {
             let faults = xcm_mmm::dataset::check(&a.dir)?;
             if faults.is_empty() {
                 println!("clean     {} agrees with its manifest", a.dir);
+                Ok(())
+            } else {
+                for fault in &faults {
+                    println!("fault     {fault}");
+                }
+                Err(format!("{} faults in {}", faults.len(), a.dir).into())
+            }
+        }
+    }
+}
+
+fn run_detect(args: DetectArgs) -> Result<(), Box<dyn Error>> {
+    use xcm_mmm::detect::{self, Artifact, Axis, Detector, TrainConfig};
+
+    match args.command {
+        DetectCommand::Train(a) => {
+            let mut cfg = TrainConfig {
+                name: a.name,
+                folds: a.folds.max(2),
+                min_rows: a.min_rows.max(1),
+                ..Default::default()
+            };
+            cfg.lexicon.top_terms = a.top_terms;
+            let artifact = detect::build(&a.bank, &a.ads, &a.cues, &a.out, &cfg)?;
+            println!(
+                "source    {} rows, {} ads, {} cue axes",
+                commas(artifact.source.bank_rows),
+                commas(artifact.source.ads_rows),
+                artifact.source.cues_axes
+            );
+            for (name, axis) in &artifact.axes {
+                match axis {
+                    Axis::Lexicon(lex) => println!(
+                        "  {:<12} lexicon  {:>4} terms  balanced {:.3}  majority {:.3}  shuffled {:.3}",
+                        name,
+                        lex.lexicon.terms.len(),
+                        lex.metrics.balanced,
+                        lex.metrics.majority,
+                        lex.metrics.shuffled.unwrap_or(f64::NAN)
+                    ),
+                    Axis::Index(ind) => println!(
+                        "  {:<12} index    prevalence {:.3}  halves agree {:.2}  checks {}/{}",
+                        name,
+                        ind.audit.prevalence,
+                        ind.audit.halves_agree,
+                        ind.checks.iter().filter(|c| c.passed).count(),
+                        ind.checks.len()
+                    ),
+                }
+            }
+            println!("wrote     {}/model.json, manifest.json, card.md", a.out);
+            Ok(())
+        }
+        DetectCommand::Score(a) => {
+            let detector = Detector::load(&a.model)?;
+            if let Some(input) = a.input {
+                let out = a.out.ok_or("--input needs --out")?;
+                let rows = detector.score_rows(&input, &out)?;
+                println!("scored    {} rows into {out}", commas(rows));
+                return Ok(());
+            }
+            if a.text.is_empty() {
+                return Err("give --text or --input".into());
+            }
+            for text in &a.text {
+                println!("text      {}", text.chars().take(72).collect::<String>());
+                for reading in detector.score(text) {
+                    let hits = reading
+                        .hits
+                        .iter()
+                        .take(a.hits)
+                        .cloned()
+                        .collect::<Vec<String>>()
+                        .join(", ");
+                    println!(
+                        "  {:<12} {:<7} {:.3}  {}",
+                        reading.axis,
+                        reading.level,
+                        reading.score,
+                        if hits.is_empty() {
+                            "-".to_string()
+                        } else {
+                            hits
+                        }
+                    );
+                }
+            }
+            Ok(())
+        }
+        DetectCommand::Info(a) => {
+            let detector = Detector::load(&a.model)?;
+            let artifact: &Artifact = detector.artifact();
+            println!("name      {} v{}", artifact.name, artifact.version);
+            println!("built     {}", artifact.built_at);
+            println!(
+                "source    {} {} rows  {} ads  {} cue axes",
+                artifact.source.bank,
+                commas(artifact.source.bank_rows),
+                commas(artifact.source.ads_rows),
+                artifact.source.cues_axes
+            );
+            println!(
+                "digests   bank {}  ads {}  cues {}",
+                artifact.source.bank_fnv64, artifact.source.ads_fnv64, artifact.source.cues_fnv64
+            );
+            println!("axis         method   tag                  size    held out");
+            for (name, axis) in &artifact.axes {
+                match axis {
+                    Axis::Lexicon(lex) => println!(
+                        "  {:<12} lexicon  {:<20} {:>4}    balanced {:.3} vs majority {:.3}",
+                        name,
+                        "-",
+                        lex.lexicon.terms.len(),
+                        lex.metrics.balanced,
+                        lex.metrics.majority
+                    ),
+                    Axis::Index(ind) => println!(
+                        "  {:<12} index    {:<20} {:>4}    prevalence {:.3}",
+                        name,
+                        ind.tag,
+                        ind.cues.len(),
+                        ind.audit.prevalence
+                    ),
+                }
+            }
+            Ok(())
+        }
+        DetectCommand::Check(a) => {
+            let faults = detect::check(&a.dir)?;
+            if faults.is_empty() {
+                println!("clean     {} rebuilds from its own inputs", a.dir);
                 Ok(())
             } else {
                 for fault in &faults {

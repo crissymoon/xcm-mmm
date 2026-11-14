@@ -1,0 +1,86 @@
+{
+  "name": "marketlab-ad-detectors",
+  "version": 1,
+  "built_at": "2026-11-14T19:53:00Z",
+  "files": [
+    {
+      "name": "model.json",
+      "rows": 7,
+      "bytes": 31876,
+      "fnv64": "2869e24c26772ddf"
+    }
+  ],
+  "config": {
+    "name": "marketlab-ad-detectors",
+    "folds": 5,
+    "min_rows": 40,
+    "bins": 21,
+    "lexicon": {
+      "top_terms": 120,
+      "min_df": 3,
+      "max_rate": 0.02,
+      "max_plain_df": 0.015,
+      "min_plain_docs": 20,
+      "alpha": 0.01,
+      "cap": 6.0,
+      "prior_tokens": 20.0
+    },
+    "logistic": {
+      "steps": 800,
+      "rate": 0.5,
+      "penalty": 0.15,
+      "clip": 4.0
+    }
+  },
+  "axes": {
+    "fear": {
+      "method": "index",
+      "tag": "#IntentionalFear",
+      "rows": 518,
+      "balanced": 0.0,
+      "prevalence": 0.1062
+    },
+    "followers": {
+      "method": "index",
+      "tag": "#FollowerCount",
+      "rows": 518,
+      "balanced": 0.0,
+      "prevalence": 0.0058
+    },
+    "jargon": {
+      "method": "lexicon",
+      "tag": "",
+      "rows": 2246,
+      "balanced": 0.7658,
+      "prevalence": 0.2618
+    },
+    "legal": {
+      "method": "lexicon",
+      "tag": "",
+      "rows": 2259,
+      "balanced": 0.8397,
+      "prevalence": 0.266
+    },
+    "manipulation": {
+      "method": "index",
+      "tag": "#MarketManipulation",
+      "rows": 518,
+      "balanced": 0.0,
+      "prevalence": 0.0
+    },
+    "narrative": {
+      "method": "index",
+      "tag": "#MediaNarrative",
+      "rows": 518,
+      "balanced": 0.0,
+      "prevalence": 0.0077
+    },
+    "publicity": {
+      "method": "index",
+      "tag": "#PublicityPlay",
+      "rows": 518,
+      "balanced": 0.0,
+      "prevalence": 0.0
+    }
+  }
+}

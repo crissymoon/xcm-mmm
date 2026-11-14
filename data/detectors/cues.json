@@ -1,0 +1,265 @@
+{
+  "axes": {
+    "fear": {
+      "checks": [],
+      "components": {
+        "threat": 0.6,
+        "urgency": 0.2,
+        "victim": 0.2
+      },
+      "cues": {
+        "directive": "\\b(vote|donate|contribute|call|sign|tell|join|share|stop|fight|stand|demand|help us|act now|chip in|send|email|attend|rsvp)\\b",
+        "threat": "\\b(destroy\\w*|destruction|collaps\\w*|invasion|invad\\w*|danger\\w*|threat\\w*|crime|criminal|violent|violence|chaos|crisis|catastroph\\w*|ruin\\w*|radical|socialist|communist|corrupt\\w*|woke|groom\\w*|poison\\w*|overrun|out of control|burned|disaster)\\b",
+        "urgency": "(before it'?s too late|too late|last chance|final notice|\\bnow\\b|\\btoday\\b|\\burgent\\w*|\\bdeadline\\b|\\bdays? left\\b|\\btonight\\b|immediately|\\bonly \\d+ (?:days|hours)\\b)",
+        "victim": "\\b(you|your|yours|your family|your children|your kids|our families|our community|our neighborhoods?|our country|americans?|angelenos?)\\b"
+      },
+      "gate": [
+        "threat"
+      ],
+      "halves": [
+        [
+          "threat"
+        ],
+        [
+          "victim",
+          "urgency"
+        ]
+      ],
+      "method": "index",
+      "min_groups": 1,
+      "question": "Does the ad name a harm and tell the reader to act before a clock?",
+      "tag": "#IntentionalFear"
+    },
+    "followers": {
+      "checks": [
+        {
+          "expected": true,
+          "text": "Join 2.4 million followers of the largest channel in the county."
+        },
+        {
+          "expected": true,
+          "text": "Our guide is used by a quarter million Angelenos every election."
+        },
+        {
+          "expected": false,
+          "text": "Join us on Saturday at the community centre."
+        }
+      ],
+      "components": {
+        "badge": 0.15,
+        "join": 0.2,
+        "magnitude": 0.4,
+        "superlative": 0.25
+      },
+      "cues": {
+        "badge": "\\b(trusted by|verified|rated \\d|\\d[\\d,.]* (?:five[- ]star )?reviews|award[- ]winning|since 19\\d\\d)\\b",
+        "join": "\\b(join (?:over )?[\\d,.]+|join\\b|over [\\d,.]+ (?:people|members|supporters)|together with|alongside)\\b",
+        "magnitude": "(\\b\\d[\\d,.]*\\s*(?:k|m|million|thousand|billion)?\\+?\\s*(?:followers|subscribers|members|supporters|readers|listeners|viewers)|\\b#\\s?1\\b|\\bnumber one\\b|\\btop\\s+\\d{1,3}\\b|\\b\\d+(?:st|nd|rd|th)\\s+(?:largest|most|biggest)|\\b(?:used|trusted|joined|followed|read|watched|supported) by (?:over |more than )?(?:a |one |two |three )?(?:\\d[\\d,.]*|quarter million|half a million|half million|million|thousands|hundreds)[^.]{0,30}\\b(?:people|voters|residents|angelenos|californians|readers|members|supporters|subscribers|followers|viewers)\\b)",
+        "superlative": "\\b(largest|biggest|most followed|most watched|most popular|most trusted|leading|premier|the only|the first)\\b"
+      },
+      "gate": [
+        "magnitude"
+      ],
+      "halves": [
+        [
+          "magnitude",
+          "superlative"
+        ],
+        [
+          "join",
+          "badge"
+        ]
+      ],
+      "method": "index",
+      "min_groups": 1,
+      "question": "Is audience size the reason the ad gives to agree?",
+      "tag": "#FollowerCount"
+    },
+    "manipulation": {
+      "checks": [
+        {
+          "expected": true,
+          "text": "Guaranteed returns, risk free, before the price goes up."
+        },
+        {
+          "expected": true,
+          "text": "They don't want you to know how the market really works."
+        },
+        {
+          "expected": true,
+          "text": "The float is locked and shorts are trapped: the squeeze is coming."
+        },
+        {
+          "expected": true,
+          "text": "Buyers are accumulating the float; expect a short squeeze."
+        },
+        {
+          "expected": false,
+          "text": "Only 3 left and this offer ends tonight."
+        },
+        {
+          "expected": false,
+          "text": "The price is $4.99 and we ship on Friday."
+        }
+      ],
+      "components": {
+        "clock": 0.04,
+        "guarantee": 0.28,
+        "pump": 0.28,
+        "scarcity": 0.06,
+        "staging": 0.16,
+        "suppression": 0.18
+      },
+      "cues": {
+        "clock": "\\b(price (?:goes? (?:up|higher)|rises|increases)|before (?:it|prices?) (?:goes? up|rise)|last chance|ends (?:tonight|today|soon)|act (?:fast|now))\\b",
+        "guarantee": "\\b(guaranteed? (?:returns?|profits?|income|yield)|risk[- ]free|can'?t lose|cannot lose|100% safe|fixed (?:yield|return)|double your (?:money|investment)|no[- ]risk)\\b",
+        "pump": "\\b(to the moon|moonshot|next 100x|\\d{2,}x\\b|hold the line|pump and dump|pump(?:ing)? (?:the|a|this) (?:price|stock|market|coin)|price[- ]pump|shill(?:ing)?|explodes? (?:in value|overnight)|price target|breakout stock)\\b",
+        "scarcity": "\\b(only \\d+ (?:left|remaining|spots?)|\\d+ (?:left|remaining) (?:in stock|today)|limited (?:time|supply|spots)|sold out|almost gone|while (?:supplies|stocks) last)\\b",
+        "staging": "\\b(artificially inflat\\w+|inflat(?:e|ed|ing) (?:the )?(?:price|volume|share price)|short squeeze|naked short(?:ing|s)?|shorts? (?:are |will be |getting )?trapped|trapped shorts|squeeze (?:is )?(?:on|coming|incoming)|suppress\\w* (?:the )?(?:price|share price|stock|float)|price suppression|locked float|float (?:is )?(?:locked|tight|tiny)|coordinated (?:buying|promotion|buying pressure)|concerted (?:buying|effort)|accumulat(?:e|ing|ion) (?:shares|the float))\\b",
+        "suppression": "\\b(they don'?t want you to (?:know|own)|what (?:your )?(?:broker|bank|advisor|realtor) won'?t tell|mainstream (?:media|finance) (?:won'?t|is hiding)|hidden (?:gem|opportunity|market))\\b"
+      },
+      "gate": [
+        "pump",
+        "guarantee",
+        "suppression",
+        "staging"
+      ],
+      "halves": [
+        [
+          "pump",
+          "guarantee"
+        ],
+        [
+          "suppression",
+          "staging",
+          "scarcity",
+          "clock"
+        ]
+      ],
+      "method": "index",
+      "min_groups": 1,
+      "question": "Does the ad try to move a price by changing belief instead of informing?",
+      "tag": "#MarketManipulation"
+    },
+    "narrative": {
+      "checks": [
+        {
+          "expected": true,
+          "text": "The media won't tell you what officials say is really happening."
+        },
+        {
+          "expected": true,
+          "text": "The race could buck the national media narrative, our polling suggests."
+        },
+        {
+          "expected": true,
+          "text": "The Press Democrat recommends her; the editorial board calls her the safest choice."
+        },
+        {
+          "expected": false,
+          "text": "We repaired the sewer line on Sixth Street this spring."
+        }
+      ],
+      "components": {
+        "framing": 0.45,
+        "verdict": 0.2,
+        "withheld": 0.35
+      },
+      "cues": {
+        "framing": "\\b(reportedly|sources (?:say|close to)|according to (?:reports|officials|experts|analysts)|experts (?:say|warn)|analysts (?:say|warn)|officials say|critics (?:say|claim)|they'?re calling|is being called|in the headlines|(?:media|national|mainstream|press)\\s+narrative|editorial board)\\b|\\b(?:press|times|tribune|register|chronicle|herald|journal|gazette|observer|examiner|record|courier|dispatch|bee|inquirer|sentinel|ledger|bulletin)\\b[^.]{0,40}\\brecommends?\\b",
+        "verdict": "\\b(the narrative|narrative is|portrayed as|branded (?:as|a)|labeled|labelled|the framing|the story (?:is|they'?re|being) (?:that|told|pushed))\\b",
+        "withheld": "\\b(media won'?t|won'?t tell you|nobody(?:'s| is) talking|the media (?:is |stays )?silent|buried the story|no one is (?:talking|reporting)|cover[- ]?up|ignored by the press|blackout)\\b"
+      },
+      "gate": [
+        "framing",
+        "withheld",
+        "verdict"
+      ],
+      "halves": [
+        [
+          "framing",
+          "verdict"
+        ],
+        [
+          "withheld"
+        ]
+      ],
+      "method": "index",
+      "min_groups": 1,
+      "question": "Does the ad borrow a story frame the press is telling?",
+      "tag": "#MediaNarrative"
+    },
+    "publicity": {
+      "checks": [
+        {
+          "expected": true,
+          "text": "It went viral and you won't believe what happened on camera."
+        },
+        {
+          "expected": false,
+          "text": "Watch this clip of the stunt."
+        },
+        {
+          "expected": false,
+          "text": "We repaired the sewer line on Sixth Street this spring."
+        }
+      ],
+      "components": {
+        "coverage": 0.35,
+        "curiosity": 0.15,
+        "spectacle": 0.3,
+        "teaser": 0.2
+      },
+      "cues": {
+        "coverage": "\\b(as seen on|featured in|press coverage|the press|headlines?|went viral|made the news|reported by|media attention|national spotlight)\\b",
+        "curiosity": "\\b(what they (?:don'?t|won'?t) (?:want you to )?(?:know|tell)|the truth about|you have to see|nobody is talking about)\\b",
+        "spectacle": "\\b(viral|clip|footage|on camera|live ?stream|stunt|spectacle|watch (?:this|what)|the moment|released today)\\b",
+        "teaser": "\\b(you won'?t believe|wait for it|just announced|big announcement|big news|nobody expected|everyone is asking|guess what|stay tuned|coming soon)\\b"
+      },
+      "gate": [
+        "coverage",
+        "spectacle"
+      ],
+      "halves": [
+        [
+          "coverage"
+        ],
+        [
+          "spectacle",
+          "teaser",
+          "curiosity"
+        ]
+      ],
+      "method": "index",
+      "min_groups": 2,
+      "question": "Does the ad exist to be talked about rather than to persuade?",
+      "tag": "#PublicityPlay"
+    }
+  },
+  "features": {
+    "jargon": {
+      "names": [
+        "register",
+        "nominal",
+        "agentless",
+        "syllables"
+      ],
+      "patterns": {
+        "agentless": "\\b(?:is|are|was|were|be|been|being|has been|have been|will be)\\s+\\w+(?:ed|en)\\b",
+        "nominal": "\\b\\w{6,}(?:tion|sion|ment|ance|ence|ality|ization|isation|iveness|ness)\\b"
+      }
+    },
+    "legal": {
+      "names": [
+        "register",
+        "citation",
+        "authority"
+      ],
+      "patterns": {
+        "authority": "\\b(shall|must|hereby|pursuant|thereof|therein|thereto|herein|notwithstanding|subject to|in accordance with|under the authority|is required to|is authorized|compliance with|as amended)\\b",
+        "citation": "(?:\\u00a7+|\\bsec(?:tion)?\\.?\\s*\\d|\\bsubsection\\b|\\bparagraph\\b|\\b\\d+\\s*c\\.?\\s*f\\.?\\s*r\\.?\\b|\\bu\\.?\\s?s\\.?\\s?c\\.?\\b|\\bcode\\s+(?:of|section)\\b|\\b(?:ab|sb|h\\.?r\\.?|s\\.)\\s*-?\\s*\\d{1,4}\\b|\\bmeasure\\s+[A-Z]{1,2}\\b|\\bprop(?:osition)?\\.?\\s*\\d{1,3}\\b|\\bordinance\\s+(?:no\\.?\\s*)?\\d+)"
+      }
+    }
+  },
+  "version": 1
+}

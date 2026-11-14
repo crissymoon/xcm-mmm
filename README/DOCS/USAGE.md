@@ -276,6 +276,56 @@ xcm-mmm transformer train --pairs pairs.jsonl --out model.json --resume run.cp.j
 
 The second command runs epochs 5 to 8 and lands on the model the uninterrupted eight epoch run produces, byte for byte, which `tests/transformer_pipeline.rs` asserts. The flags that shape the model (`--dim`, `--heads`, `--ff`, `--layers`, `--max-len`) must match the checkpoint and are refused with a sentence when they do not; `--dropout` may change. A checkpoint is transient and roughly four times the size of a model file.
 
+### detect
+
+Seven text detectors over advertising copy: two learned from a labelled bank, five declared as cue indices. `train` fits them and writes a model, a manifest and a card; `score` applies the model; `check` rebuilds the folder and compares.
+
+```bash
+xcm-mmm detect train --bank data/detectors/bank.jsonl --ads data/detectors/ads.jsonl \
+    --cues data/detectors/cues.json --out data/detectors
+xcm-mmm detect score --model data/detectors/model.json --text "guaranteed returns, act now"
+xcm-mmm detect score --input ads.jsonl --out scored.jsonl
+xcm-mmm detect info
+xcm-mmm detect check --dir data/detectors
+```
+
+| Command | Flag | Default | Meaning |
+|---|---|---|---|
+| train | `--bank` | data/detectors/bank.jsonl | labelled rows: axis, label, source, text |
+| train | `--ads` | data/detectors/ads.jsonl | ad text at document grain with its split |
+| train | `--cues` | data/detectors/cues.json | declared cue table and feature list |
+| train | `--out` | data/detectors | folder for the model, manifest and card |
+| train | `--folds` | 5 | folds of the out of fold evaluation |
+| train | `--top-terms` | 120 | terms an axis may keep |
+| train | `--min-rows` | 40 | smallest bank side an axis may be fitted on |
+| train | `--name` | marketlab-ad-detectors | name on the card |
+| score | `--model` | data/detectors/model.json | artifact written by `train` |
+| score | `--text` | none | text to score, repeatable |
+| score | `--input` | none | JSON Lines in, one `text` field per row |
+| score | `--out` | none | where scored rows go, required with `--input` |
+| score | `--hits` | 6 | terms or phrases printed per axis |
+| check | `--dir` | data/detectors | folder to rebuild and compare |
+| info | `--model` | data/detectors/model.json | artifact to describe |
+
+A bank row names its axis, its label, the corpus it came from and its text. Label 1 rows are positives; label 0 rows under the axis `plain` are the shared negative side every positive axis is read against, which is how one corpus of ad copy serves both legal register and abstraction. An axis may bring its own negatives instead by naming itself in a label 0 row, and then it is fitted against those alone.
+
+Four faults stop a fit before a model exists: an axis with no positives, no negative side to read against, under `--min-rows` on a side, or a text labelled both ways. Three more stop it after the fit: an axis whose held out accuracy does not clear its own majority class, an axis that scores better on shuffled labels than on real ones, and a cue group that fails one of the declared examples in `cues.json`.
+
+Scoring prints one line per axis with the level, the score and the terms or phrases that carried it:
+
+```text
+text      Guaranteed returns, risk free, before it's too late
+  fear         none    0.000  before it's too late
+  legal        none    0.152  -
+  manipulation weak    0.280  guaranteed returns, risk free
+```
+
+Fear lists a phrase and still scores zero, which is the gate doing its job: urgency fired, harm did not, and a threat appeal needs both.
+
+With `--input`, every row is written back with an `axes` object holding `axis`, `method`, `score`, `level`, `label` and `hits`. A lexicon axis reports a probability, so its score runs from 0 to 1 and its first cut is the firing cut chosen out of fold. An index axis reports the gated mixture, which is also in 0 to 1 but is a share of its own reference, not a probability.
+
+`check` answers three questions in order: is each file the file the manifest describes, does the fit rebuild from the shipped inputs, and does every declared example still behave. It writes nothing. A folder that fails exits with status 1 and one line per fault.
+
 ## Error behaviour
 
 A wrong engine for a problem is refused with an explanation rather than run. `de --problem zdt1` says that the problem has two objectives and points at `moead`; `moead --problem sphere` does the reverse. Unknown problem names, a dimension below the problem minimum, an unreadable file, a missing target column and a panel too short for the requested folds all exit with status 1 and a single line on standard error.

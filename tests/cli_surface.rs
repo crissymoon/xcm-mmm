@@ -250,3 +250,108 @@ fn dataset_ships_a_folder_that_checks_clean_and_catches_an_edit() {
 
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+#[test]
+fn detect_trains_scores_checks_and_catches_an_edit() {
+    let dir = temp_dir().join("detect");
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+
+    let bank = dir.join("bank.jsonl");
+    let mut lines = String::new();
+    for i in 0..6 {
+        let positive = serde_json::json!({
+            "axis": "legal", "label": 1, "source": "federal-register",
+            "text": format!("The department shall promulgate section {i} pursuant to the act"),
+        });
+        let negative = serde_json::json!({
+            "axis": "plain", "label": 0, "source": "ad",
+            "text": format!("Vote with us on Tuesday at the park near the corner {i}"),
+        });
+        for row in [positive, negative] {
+            lines.push_str(&serde_json::to_string(&row).unwrap());
+            lines.push('\n');
+        }
+    }
+    std::fs::write(&bank, lines).unwrap();
+
+    let ads = dir.join("ads.jsonl");
+    let mut lines = String::new();
+    for i in 0..6 {
+        let row = serde_json::json!({
+            "id": format!("ad{i}"),
+            "split": if i < 4 { "train" } else { "test" },
+            "text": format!("We repaired the sewer line on Sixth Street this spring {i}"),
+        });
+        lines.push_str(&serde_json::to_string(&row).unwrap());
+        lines.push('\n');
+    }
+    std::fs::write(&ads, lines).unwrap();
+
+    let cues = dir.join("cues.json");
+    let table = serde_json::json!({
+        "version": 1,
+        "axes": {},
+        "features": {"legal": {"names": ["authority"], "patterns": {"authority": "(?i)\\bpursuant to\\b"}}}
+    });
+    std::fs::write(&cues, serde_json::to_string(&table).unwrap()).unwrap();
+
+    let out = dir.join("detectors");
+    let trained = Command::new(binary())
+        .args(["detect", "train", "--bank"])
+        .arg(&bank)
+        .args(["--ads"])
+        .arg(&ads)
+        .args(["--cues"])
+        .arg(&cues)
+        .args(["--out"])
+        .arg(&out)
+        .args(["--folds", "2", "--min-rows", "3"])
+        .output()
+        .unwrap();
+    assert!(
+        trained.status.success(),
+        "{}",
+        String::from_utf8_lossy(&trained.stderr)
+    );
+
+    let scored = Command::new(binary())
+        .args(["detect", "score", "--model"])
+        .arg(out.join("model.json"))
+        .args([
+            "--text",
+            "The department shall promulgate regulations pursuant to the act",
+        ])
+        .output()
+        .unwrap();
+    assert!(scored.status.success());
+    let text = String::from_utf8_lossy(&scored.stdout);
+    assert!(text.contains("legal"), "{text}");
+    assert!(
+        text.contains("weak") || text.contains("clear") || text.contains("strong"),
+        "{text}"
+    );
+
+    let checked = Command::new(binary())
+        .args(["detect", "check", "--dir"])
+        .arg(&out)
+        .output()
+        .unwrap();
+    assert!(
+        checked.status.success(),
+        "{}",
+        String::from_utf8_lossy(&checked.stdout)
+    );
+
+    // A model edited after the manifest was stamped must not check clean.
+    let model = out.join("model.json");
+    let mut body = std::fs::read_to_string(&model).unwrap();
+    body = body.replace("\"terms\"", "\"termz\"");
+    std::fs::write(&model, body).unwrap();
+    let broken = Command::new(binary())
+        .args(["detect", "check", "--dir"])
+        .arg(&out)
+        .output()
+        .unwrap();
+    assert!(!broken.status.success());
+}

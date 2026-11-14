@@ -33,6 +33,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Parallel and deterministic.** Evaluation runs on rayon. Mutation, selection and all random draws stay on one thread, so the result does not depend on the thread count.
 - **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
 - **Corpus cleaning and pairs.** Character folding, markup and boilerplate screening, quality rules with a called-out reason per rejection, MinHash near duplicate clustering, two selection rules (thresholded marginal relevance and target-aware importance resampling), and a pair miner that writes rank, preference and contrast banks in one schema with an audit that gates leakage, triviality and contamination.
+- **Seven text detectors.** Two learned axes (legal register, abstraction) fitted as smoothed log odds over a labelled bank plus a logistic regression over surface readings, five declared cue indices behind a gate (fear, publicity, manipulation, followers, narrative), and an artifact that carries its terms, cuts, metrics and audit beside the data it was fitted on.
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
 
@@ -54,6 +55,36 @@ scripts/train-data.sh --rows rows/ --out data/training
 ```
 
 It mines each month, folds the pairs into a bank that only improves, samples the bank, and checks the result. The bank lives under `tmp/` and stays out of the repository because it grows every week; what enters version control is the sample and the card that describes it.
+
+## Text detectors
+
+`data/detectors/` is the second shipped set: seven text detectors over advertising copy, fitted in Rust from the three files that travel beside the model.
+
+| axis | method | readings | held out |
+|---|---|---|---:|
+| legal | learned lexicon and logistic | 120 terms, 3 features | balanced 0.840, accuracy 0.860 |
+| jargon | learned lexicon and logistic | 120 terms, 4 features | balanced 0.766, accuracy 0.827 |
+| fear | declared cue index | 4 cue groups | fires on 10.6 percent |
+| publicity | declared cue index | 4 cue groups | fires on 0.0 percent |
+| manipulation | declared cue index | 6 cue groups | fires on 0.0 percent |
+| followers | declared cue index | 4 cue groups | fires on 0.6 percent |
+| narrative | declared cue index | 3 cue groups | fires on 0.8 percent |
+
+`bank.jsonl` holds 2,847 labelled sentences: legal register from Federal Register abstracts and abstraction from grants.gov synopses, each set against advertisers' own copy as the negative side. `ads.jsonl` holds 518 ads with their source split, so the index references are fitted on training ads and nothing else. `cues.json` holds the declared cue table and the feature list, exported from the Python module that produced the published readings rather than retyped, so a pattern cannot drift between the two.
+
+The learned axes are fitted in two steps. Smoothed log odds (Monroe, Colaresi and Quinn) give every term a z from the two banks behind three one-sided filters: occurrences only in the positive bank, a frequency ceiling on both sides, and a document frequency ceiling in the negative bank that switches off when the negative bank is too small to have a granularity. A logistic regression then reads that density beside the surface readings: citations and authority verbs for legal, nominalisations, agentless passives and syllables for jargon. Both axes are scored out of fold, with folds assigned by the digest of the text so a repeated sentence cannot straddle a fold, and the same loop runs again on shuffled labels. Legal scores 0.840 balanced against a 0.734 majority and 0.487 on its control; jargon 0.766 against 0.738 and 0.496.
+
+The other five have no labelled corpus, so nothing here is an accuracy. They ship as declared cue sets behind a gate, where a construct that names no gated component scores zero, and the audit reports whether two disjoint halves of the cues pick out the same ads. Fear's halves agree on 47 percent of the corpus and correlate at -0.08, which is the published finding rather than a defect: harm and urgency travel apart in this corpus. Publicity and manipulation never fire on these 518 ads, which is a fact about Los Angeles political and issue advertising, not a claim that the constructs are absent from the form.
+
+```bash
+./xcm-mmm detect train --bank data/detectors/bank.jsonl --ads data/detectors/ads.jsonl \
+    --cues data/detectors/cues.json --out data/detectors
+./xcm-mmm detect score --text "guaranteed returns, before it is too late"
+./xcm-mmm detect info
+./xcm-mmm detect check --dir data/detectors
+```
+
+`detect check` rebuilds the folder from its own inputs, compares the result with the shipped fit and runs every declared example in the cue table, so a model edited after its manifest was stamped is a fault rather than a note. `scripts/detect-data.sh` runs the whole path: export the three inputs, fit, check.
 
 ## Quick start
 
@@ -141,7 +172,7 @@ cargo clippy --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite has 97 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, and every CLI subcommand.
+The suite has 246 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, and every CLI subcommand.
 
 ## License
 

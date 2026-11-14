@@ -20,6 +20,16 @@
 | `src/data.rs` | CSV and JSON Lines, standardisation, fold construction |
 | `src/linalg.rs` | Cholesky, correlation, ranks |
 | `src/rng.rs` | xoshiro256++ and the sampler helpers |
+| `src/detect/mod.rs` | `TrainConfig`, the shipped folder names |
+| `src/detect/bank.rs` | the three input readers, the shared negative bank, the faults |
+| `src/detect/lexicon.rs` | smoothed log odds, the one-sided filters, the register |
+| `src/detect/feature.rs` | the surface readings and the patterns behind them |
+| `src/detect/logistic.rs` | the standardised logistic fit and its predict |
+| `src/detect/index.rs` | cue indices, the gate, quantiles, scales and levels |
+| `src/detect/eval.rs` | the confusion matrix, the cut search, the shuffle control |
+| `src/detect/train.rs` | folds, the two fits, the audit, the build and the check |
+| `src/detect/model.rs` | the artifact, the manifest, the compiled detector |
+| `src/detect/card.rs` | the generated card |
 | `src/bin/xcm-mmm.rs` | the command line |
 | `tests/` | convergence, the forecasting path, the CLI surface |
 | `examples/` | three runnable demonstrations |

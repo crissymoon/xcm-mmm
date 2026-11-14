@@ -83,7 +83,7 @@ fn iso8601(secs: u64) -> String {
 
 /// Build time as ISO 8601, honouring `SOURCE_DATE_EPOCH` so a rebuild by a
 /// packager is not a diff of one line.
-pub(super) fn built_at() -> String {
+pub fn built_at() -> String {
     let secs = std::env::var("SOURCE_DATE_EPOCH")
         .ok()
         .and_then(|v| v.parse::<u64>().ok())

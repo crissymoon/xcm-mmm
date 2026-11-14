@@ -37,7 +37,7 @@ mod manifest;
 pub use card::render;
 pub use manifest::{Manifest, Shipped, Source, SplitCount};
 
-use manifest::built_at;
+pub use manifest::built_at;
 
 /// The splits a shipped set must carry. One missing split is a refusal, since a
 /// card that promises a test file a reader cannot open is worse than no card.
