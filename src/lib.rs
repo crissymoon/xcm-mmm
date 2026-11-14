@@ -17,6 +17,9 @@
 //! training pairs that one model can be fitted on. [`detect`] fits the seven
 //! text detectors over advertising copy: two lexicons learned from a labelled
 //! bank, five declared cue indices, and the artifact that ships with them.
+//! [`segment`] groups advertisers by what they did in an ad panel, with a
+//! silhouette selection, a shuffled control and a resampling audit in place of
+//! an accuracy no label could supply.
 
 pub mod benchmarks;
 pub mod data;
@@ -31,6 +34,7 @@ pub mod moead;
 pub mod pairs;
 pub mod problem;
 pub mod rng;
+pub mod segment;
 pub mod text;
 pub mod transformer;
 

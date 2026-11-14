@@ -326,6 +326,55 @@ With `--input`, every row is written back with an `axes` object holding `axis`, 
 
 `check` answers three questions in order: is each file the file the manifest describes, does the fit rebuild from the shipped inputs, and does every declared example still behave. It writes nothing. A folder that fails exits with status 1 and one line per fault.
 
+### segment
+
+Advertisers grouped by what they did in an ad panel. `extract` folds the panel into one row per advertiser, `fit` chooses the number of groups and writes the folder, `assign` places entities against a fitted model, and `check` rebuilds the folder and compares.
+
+```bash
+xcm-mmm segment extract --ads panel.jsonl --out data/segments/features.jsonl
+xcm-mmm segment fit --features data/segments/features.jsonl --out data/segments
+xcm-mmm segment info
+xcm-mmm segment assign --model data/segments/model.json --entities data/segments/features.jsonl
+xcm-mmm segment check --dir data/segments
+```
+
+| Command | Flag | Default | Meaning |
+|---|---|---|---|
+| extract | `--ads` | none | ad panel in JSON Lines, one ad per row |
+| extract | `--out` | data/segments/features.jsonl | where the entities are written |
+| fit | `--features` | data/segments/features.jsonl | entities written by `extract` |
+| fit | `--out` | data/segments | folder for the model, manifest and card |
+| fit | `--k-min` | 3 | smallest number of groups the search considers |
+| fit | `--k-max` | 6 | largest number of groups the search considers |
+| fit | `--min-share` | 0.05 | smallest share of the panel a group may hold |
+| fit | `--seed` | 20261114 | seed for the fit and both audits |
+| fit | `--name` | marketlab-behaviour-segments | name on the card |
+| info | `--model` | data/segments/model.json | artifact to describe |
+| assign | `--model` | data/segments/model.json | artifact to read |
+| assign | `--entities` | data/segments/features.jsonl | entities to place |
+| assign | `--limit` | 25 | entities printed, zero prints all |
+| check | `--dir` | data/segments | folder to rebuild and compare |
+
+An entity is one advertiser and eight readings in their own units: ads started, the median gap between start days, the population spread of those gaps over their mean, the mean midpoint of the published spend band, the median words per ad, the mean terms per ad, the share of its ads that repeat a fingerprint, and the largest share of its ads carrying one fingerprint. The panel is read once; the shipped folder holds the entities, so a rebuild never needs the panel.
+
+Each reading is transformed as the feature table declares (`ln(1 + x)` for counts, dollars, days and words; as it stands for shares and the capped spread), standardised on the panel, and clipped at three standard deviations. That clipping is what stops one advertiser with an almost constant reading from becoming a group of its own.
+
+Selection is a sweep: every k from `--k-min` to `--k-max` is fitted with k-means++ seeding and thirty-two restarts, and the highest silhouette wins among the partitions that keep every group above `--min-share`. Three faults stop a fit before a model is written: fewer entities than the declared minimum, no k that keeps every group above the share floor, and a silhouette below its floor. Two more stop it after the fit: a silhouette that fails to beat the shuffled control by the declared margin, and a partition that resampling does not confirm.
+
+`info` prints the sweep and both audits:
+
+```text
+k         4 groups from 3 to 6 by silhouette
+  k  silhouette  smallest  inertia  sizes
+  3       0.275     0.227   1042.0  137 57 57
+  4*      0.286     0.147    923.5  57 42 115 37
+  5       0.223     0.116    818.7  29 76 58 30 58
+  6       0.234     0.116    745.6  54 29 43 43 52 30
+audit     control 0.168 (best 0.185)  resampling 0.759 (p10 0.552)
+```
+
+`assign` places entities by the nearest centroid and reports the distance in the clipped z space, so a distant placement is visible rather than hidden. `check` answers three questions in order: is each file the file the manifest describes, does the fit rebuild from the shipped entities, and does every assignment land in a group of the size it claims. It writes nothing, and a folder that fails exits with status 1 and one line per fault.
+
 ## Error behaviour
 
 A wrong engine for a problem is refused with an explanation rather than run. `de --problem zdt1` says that the problem has two objectives and points at `moead`; `moead --problem sphere` does the reverse. Unknown problem names, a dimension below the problem minimum, an unreadable file, a missing target column and a panel too short for the requested folds all exit with status 1 and a single line on standard error.

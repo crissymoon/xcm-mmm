@@ -34,6 +34,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
 - **Corpus cleaning and pairs.** Character folding, markup and boilerplate screening, quality rules with a called-out reason per rejection, MinHash near duplicate clustering, two selection rules (thresholded marginal relevance and target-aware importance resampling), and a pair miner that writes rank, preference and contrast banks in one schema with an audit that gates leakage, triviality and contamination.
 - **Seven text detectors.** Two learned axes (legal register, abstraction) fitted as smoothed log odds over a labelled bank plus a logistic regression over surface readings, five declared cue indices behind a gate (fear, publicity, manipulation, followers, narrative), and an artifact that carries its terms, cuts, metrics and audit beside the data it was fitted on.
+- **Behavioural segments.** Advertisers grouped by what they did in an ad panel: volume, cadence and its spread, banded spend, copy length, terms bought against, creative reuse and copy concentration. k-means++ with a silhouette sweep, a shuffled control and a resampling audit, and a folder that rebuilds from its own entities.
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
 
@@ -85,6 +86,33 @@ The other five have no labelled corpus, so nothing here is an accuracy. They shi
 ```
 
 `detect check` rebuilds the folder from its own inputs, compares the result with the shipped fit and runs every declared example in the cue table, so a model edited after its manifest was stamped is a fault rather than a note. `scripts/detect-data.sh` runs the whole path: export the three inputs, fit, check.
+
+## Behavioural segments
+
+`data/segments/` is the third shipped set: advertisers grouped by what they did in an ad panel, fitted in Rust. Nothing descriptive enters a feature. The eight readings are ad volume, the median gap between the days it started an ad, the spread of those gaps, the published spend band midpoint, copy length, terms bought against, creative reuse and copy concentration.
+
+`features.jsonl` holds 251 advertisers and the 1,355 ads behind them, folded from the archive panel by `segment extract`. The fit standardises each column, clips at three standard deviations, and searches k from 3 to 6, because a two way split of an advertising panel is a high and low score rather than a segmentation. The winner is the highest silhouette among the partitions that keep every group above five percent of the panel.
+
+| segment | advertisers | share | behaviour |
+|---|---:|---:|---|
+| creative reuse high | 57 | 22.7% | 4.2 ads, 0.95 of them repeating one fingerprint, 0.90 concentration |
+| start gap spread high, ad volume high | 42 | 16.7% | 20.5 ads, gap spread 1.04, 0.52 concentration |
+| creative reuse low, ad volume low | 115 | 45.8% | one ad each, bought once |
+| copy concentration low, creative reuse low | 37 | 14.7% | 3.9 ads, 0.40 concentration, 0.08 reuse |
+
+Four groups were chosen at a silhouette of 0.286. There are no labels, so that is not an accuracy: it is the separation the partition achieves. Two audits decide whether the fit ships. The same protocol on columns shuffled independently scores 0.168, so the groups are not an artefact of the method, and refitting on fifty resamples of the advertisers agrees with the full panel at 0.759 mean adjusted Rand index, tenth percentile 0.552. A fit below either floor is refused with a reason rather than written.
+
+```bash
+./xcm-mmm segment extract --ads panel.jsonl --out data/segments/features.jsonl
+./xcm-mmm segment fit --features data/segments/features.jsonl --out data/segments
+./xcm-mmm segment info
+./xcm-mmm segment assign --entities data/segments/features.jsonl
+./xcm-mmm segment check --dir data/segments
+```
+
+`segment check` rebuilds the folder from its own entities, compares the result with the shipped fit and verifies each digest, so a centroid edited after the manifest was stamped is a fault rather than a note. `scripts/segment-data.sh` runs the whole path: extract the panel, fit, check.
+
+Two limits are worth stating. Recency is deliberately not a feature: the panel is a snapshot weighted towards recent ads, so the distance from a last start would measure the archive's coverage as much as the advertiser's activity. And copy concentration is bounded by the ad count, so an advertiser with one ad scores one by construction; that group is a real behaviour, the advertiser who bought once, but its concentration reading adds nothing to its volume.
 
 ## Quick start
 
@@ -172,7 +200,7 @@ cargo clippy --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite has 246 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, and every CLI subcommand.
+The suite has 282 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, and every CLI subcommand.
 
 ## License
 

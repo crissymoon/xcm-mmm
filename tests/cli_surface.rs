@@ -355,3 +355,145 @@ fn detect_trains_scores_checks_and_catches_an_edit() {
         .unwrap();
     assert!(!broken.status.success());
 }
+
+#[test]
+fn segment_extracts_fits_assigns_checks_and_catches_an_edit() {
+    let dir = temp_dir().join("segment");
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+
+    let panel = dir.join("panel.jsonl");
+    let mut lines = String::new();
+    let mut push = |page: &str, day: &str, words: usize, creative: &str, terms: &[&str]| {
+        let row = serde_json::json!({
+            "id": format!("{page}-{day}-{creative}"),
+            "page_id": page,
+            "page_name": "A Page",
+            "start": day,
+            "spend": ["100", "199"],
+            "impressions": ["1000", "1999"],
+            "words": words,
+            "sentences": 3,
+            "terms": terms,
+            "fingerprint": creative,
+            "split": "train",
+        });
+        lines.push_str(&serde_json::to_string(&row).unwrap());
+        lines.push('\n');
+    };
+    for i in 0..21 {
+        let page = format!("repeat{i:03}");
+        for week in 0..5 {
+            push(
+                &page,
+                &format!("2026-03-{:02}", 1 + week * 7),
+                60,
+                "one",
+                &["housing"],
+            );
+        }
+    }
+    for i in 0..21 {
+        let page = format!("burst{i:03}");
+        for k in 0..12 {
+            push(
+                &page,
+                &format!("2026-{:02}-{:02}", 3 + k / 6, 1 + k % 6),
+                140,
+                &format!("burst-{k}"),
+                &["city", "issue"],
+            );
+        }
+    }
+    for i in 0..21 {
+        push(
+            &format!("once{i:03}"),
+            &format!("2026-06-{:02}", 1 + i % 20),
+            300,
+            "only",
+            &["services"],
+        );
+    }
+    std::fs::write(&panel, lines).unwrap();
+
+    let features = dir.join("features.jsonl");
+    let out = dir.join("segments");
+    let extracted = Command::new(binary())
+        .args(["segment", "extract", "--ads"])
+        .arg(&panel)
+        .args(["--out"])
+        .arg(&features)
+        .output()
+        .unwrap();
+    assert!(
+        extracted.status.success(),
+        "{}",
+        String::from_utf8_lossy(&extracted.stderr)
+    );
+
+    let fitted = Command::new(binary())
+        .args(["segment", "fit", "--features"])
+        .arg(&features)
+        .args(["--out"])
+        .arg(&out)
+        .args(["--k-min", "3", "--k-max", "4"])
+        .output()
+        .unwrap();
+    assert!(
+        fitted.status.success(),
+        "{}",
+        String::from_utf8_lossy(&fitted.stderr)
+    );
+    let text = String::from_utf8_lossy(&fitted.stdout);
+    assert!(text.contains("63 entities"), "{text}");
+
+    let info = Command::new(binary())
+        .args(["segment", "info", "--model"])
+        .arg(out.join("model.json"))
+        .output()
+        .unwrap();
+    assert!(info.status.success());
+    let text = String::from_utf8_lossy(&info.stdout);
+    assert!(text.contains("audit"), "{text}");
+    assert!(text.contains("creative reuse"), "{text}");
+
+    let assigned = Command::new(binary())
+        .args(["segment", "assign", "--model"])
+        .arg(out.join("model.json"))
+        .args(["--entities"])
+        .arg(&features)
+        .args(["--limit", "3"])
+        .output()
+        .unwrap();
+    assert!(
+        assigned.status.success(),
+        "{}",
+        String::from_utf8_lossy(&assigned.stderr)
+    );
+    let text = String::from_utf8_lossy(&assigned.stdout);
+    assert!(text.contains("placed    63 entities"), "{text}");
+
+    let checked = Command::new(binary())
+        .args(["segment", "check", "--dir"])
+        .arg(&out)
+        .output()
+        .unwrap();
+    assert!(
+        checked.status.success(),
+        "{}",
+        String::from_utf8_lossy(&checked.stdout)
+    );
+
+    // A centroid edited after the manifest was stamped must not check clean.
+    let model = out.join("model.json");
+    let body = std::fs::read_to_string(&model).unwrap();
+    let mut value: serde_json::Value = serde_json::from_str(&body).unwrap();
+    value["centroids"][0][0] = serde_json::json!(9.5);
+    std::fs::write(&model, serde_json::to_string_pretty(&value).unwrap()).unwrap();
+    let broken = Command::new(binary())
+        .args(["segment", "check", "--dir"])
+        .arg(&out)
+        .output()
+        .unwrap();
+    assert!(!broken.status.success());
+}

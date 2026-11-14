@@ -17,6 +17,7 @@ use xcm_mmm::metrics::{hypervolume_report, igd, reference_front};
 use xcm_mmm::moead::scalar::Scalarization;
 use xcm_mmm::moead::{self, MoeadConfig, MoeadOutcome};
 use xcm_mmm::problem::Problem;
+use xcm_mmm::segment::cli::{run as run_segment, SegmentArgs};
 
 #[derive(Parser)]
 #[command(
@@ -52,6 +53,8 @@ enum Command {
     Dataset(DatasetArgs),
     /// Train, score or check the seven text detectors.
     Detect(DetectArgs),
+    /// Extract, fit, read or check the behavioural segments.
+    Segment(SegmentArgs),
     /// Train, score or inspect the shared transformer on a pair corpus.
     Transformer(TransformerArgs),
 }
@@ -731,6 +734,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Pairs(args) => run_pairs(args),
         Command::Dataset(args) => run_dataset(args),
         Command::Detect(args) => run_detect(args),
+        Command::Segment(args) => run_segment(args),
         Command::Transformer(args) => run_transformer(args),
     }
 }

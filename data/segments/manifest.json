@@ -1,0 +1,64 @@
+{
+  "name": "marketlab-behaviour-segments",
+  "version": 1,
+  "built_at": "2026-11-14T20:18:09Z",
+  "files": [
+    {
+      "name": "features.jsonl",
+      "rows": 251,
+      "bytes": 65572,
+      "fnv64": "ec4bfd3dc8419f9a"
+    },
+    {
+      "name": "model.json",
+      "rows": 4,
+      "bytes": 19358,
+      "fnv64": "66378372e1f3d4b1"
+    }
+  ],
+  "config": {
+    "name": "marketlab-behaviour-segments",
+    "k_min": 3,
+    "k_max": 6,
+    "min_share": 0.05,
+    "min_entities": 60,
+    "min_silhouette": 0.15,
+    "margin": 0.08,
+    "min_stability": 0.6,
+    "restarts": 32,
+    "iterations": 200,
+    "bootstraps": 50,
+    "controls": 20,
+    "clip": 3.0,
+    "seed": 20261114
+  },
+  "k": 4,
+  "segments": [
+    {
+      "id": 0,
+      "label": "creative reuse high",
+      "size": 57
+    },
+    {
+      "id": 1,
+      "label": "start gap spread high, ad volume high",
+      "size": 42
+    },
+    {
+      "id": 2,
+      "label": "creative reuse low, ad volume low",
+      "size": 115
+    },
+    {
+      "id": 3,
+      "label": "copy concentration low, creative reuse low",
+      "size": 37
+    }
+  ],
+  "checks": [
+    "silhouette 0.286 beats the shuffled control at 0.168",
+    "resampling keeps the partition at 0.759 mean agreement",
+    "every group holds at least 14.7 percent of the entities",
+    "every feature varies across the panel"
+  ]
+}
