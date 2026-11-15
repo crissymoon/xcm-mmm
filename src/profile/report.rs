@@ -14,7 +14,8 @@ use crate::detect::{token, Axis as DetectorAxis};
 use crate::text::tokenize;
 
 use super::context::Loaded;
-use super::segment::{place, SegmentView};
+use super::language::{self, LanguageView};
+use super::segment::{place, SegmentView, Signal};
 
 /// How long the text is, and how it divides.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -103,6 +104,7 @@ pub struct Report {
     pub shape: Shape,
     pub semantics: Semantics,
     pub emotion: Emotion,
+    pub language: LanguageView,
     pub triggers: Vec<Trigger>,
     pub detectors: Vec<Axis>,
     pub segment: Option<SegmentView>,
@@ -197,6 +199,8 @@ pub fn build(loaded: &Loaded, text: &str, options: &Options) -> Report {
             .count(),
     };
 
+    let lang = language::read(text, &words, sentences, reading.hits.len());
+
     let take = if options.triggers == 0 {
         reading.hits.len()
     } else {
@@ -247,10 +251,17 @@ pub fn build(loaded: &Loaded, text: &str, options: &Options) -> Report {
         })
         .collect();
 
-    let segment = loaded
-        .segments
-        .as_ref()
-        .map(|artifact| place(artifact, count, options.terms));
+    let segment = loaded.segments.as_ref().map(|artifact| {
+        place(
+            artifact,
+            &Signal {
+                words: count,
+                terms: options.terms,
+                reuse: lang.reuse,
+                phrase: lang.top_phrase.clone(),
+            },
+        )
+    });
 
     let mut notes = Vec::new();
     if count < 5 {
@@ -280,6 +291,7 @@ pub fn build(loaded: &Loaded, text: &str, options: &Options) -> Report {
         shape,
         semantics,
         emotion,
+        language: lang,
         triggers,
         detectors,
         segment,

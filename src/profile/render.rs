@@ -10,6 +10,7 @@ use super::report::{Axis, Report, Semantics};
 pub fn print(report: &Report) {
     header(report);
     emotion(report);
+    language(report);
     triggers(report);
     detectors(report);
     semantics(&report.semantics);
@@ -142,40 +143,102 @@ fn semantics(semantics: &Semantics) {
     }
 }
 
+fn language(report: &Report) {
+    let view = &report.language;
+    println!(
+        "language  direct address {:.1}%  punch {:.1} words/sentence  specificity {:.1} numbers/100w  emotional {:.1}%",
+        view.second_person * 100.0,
+        view.sentence_words,
+        view.numbers_per_100,
+        view.emotional_density * 100.0
+    );
+    println!(
+        "          distinct {} of {} words  type/token {:.2}  reuse {:.2}  focus {:.2}{}",
+        view.distinct,
+        view.words,
+        view.type_token,
+        view.reuse,
+        view.focus,
+        if view.top_phrase.is_empty() {
+            String::new()
+        } else {
+            format!("  \"{}\"", view.top_phrase)
+        }
+    );
+    if view.too_short {
+        println!("          shorter than one four word shingle: the reuse proxies cannot be read");
+    }
+}
+
 fn segment(report: &Report) {
     let view = match &report.segment {
         Some(view) => view,
         None => return,
     };
-    println!("segment   copy against every behavioural centre");
-    for (at, placement) in view.ranked.iter().enumerate() {
+    println!(
+        "segment   copy fit against every behavioural centre (text reach {:.0}%)",
+        view.reach * 100.0
+    );
+    for placement in &view.ranked {
         println!(
-            "          {} {:>2}  rmse {:.2}  share {:>5.1}%  {}",
-            if at == 0 { "*" } else { " " },
+            "          {} {:>2} {:<34} fit {:>5.1}%  distance {:.2}  panel share {:>5.1}%",
+            if placement.id == view.ranked[0].id {
+                "*"
+            } else {
+                " "
+            },
             placement.id,
-            placement.rmse,
-            placement.share * 100.0,
-            placement.label
+            placement.label,
+            placement.fit,
+            placement.distance,
+            placement.share * 100.0
         );
     }
     if let Some(best) = view.ranked.first() {
-        for reading in &best.readings {
+        if !best.matches.is_empty() {
             println!(
-                "          {:<18} text {} {}   segment {}",
-                reading.label,
-                number(reading.value),
-                reading.unit,
-                number(reading.segment)
+                "          best {} matches on {}",
+                best.id,
+                best.matches.join(", ")
             );
         }
+        if !best.clashes.is_empty() {
+            println!(
+                "          best {} differs on {}",
+                best.id,
+                best.clashes.join(", ")
+            );
+        }
+        for reading in &best.readings {
+            let text = format!("{} {}", number(reading.value), reading.unit);
+            // The z gap says which way the text leans, which is the part a
+            // reader can argue with; the weight says how much it counted.
+            let lean = format!(
+                "{}{:.2} z  weight {:.2}",
+                if reading.gap >= 0.0 { "+" } else { "" },
+                reading.gap,
+                reading.weight
+            );
+            println!(
+                "          {:<20} text {:<7} {:<22} segment {:<7} {}",
+                reading.label,
+                text,
+                reading.source,
+                number(reading.segment),
+                lean
+            );
+        }
+    }
+    if !view.hook.is_empty() {
+        println!("          repeated hook \"{}\"", view.hook);
     }
     println!("          observed {}", view.basis.join(", "));
     println!("          unobserved {}", view.unobserved.join(", "));
     println!("          {}", view.note);
     if view.ranked.len() > 1 {
         println!(
-            "          nearest and second differ by {:.2} rmse, against distances of {:.2} and {:.2}",
-            view.margin, view.ranked[0].rmse, view.ranked[1].rmse
+            "          nearest and second differ by {:.2} distance, against distances of {:.2} and {:.2}",
+            view.margin, view.ranked[0].distance, view.ranked[1].distance
         );
     }
 }
@@ -194,8 +257,15 @@ fn label(name: &str) -> &str {
 
 /// A reading in its own units, without a decimal it does not need.
 fn number(value: f64) -> String {
+    // `-0.0` prints as "-0" under the integer format, and a segment mean of
+    // minus nothing reads as a sign error.
     if (value - value.round()).abs() < 0.05 {
-        format!("{:.0}", value)
+        let rounded = value.round();
+        if rounded == 0.0 {
+            "0".to_string()
+        } else {
+            format!("{rounded:.0}")
+        }
     } else {
         format!("{value:.1}")
     }

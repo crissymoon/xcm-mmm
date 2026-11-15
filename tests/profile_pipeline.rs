@@ -71,11 +71,20 @@ fn the_segment_view_says_what_it_could_not_observe() {
     let view = report
         .segment
         .expect("the shipped segment model is present");
-    assert_eq!(view.basis, vec!["copy length".to_string()]);
-    assert_eq!(view.unobserved.len(), 7);
+    assert_eq!(
+        view.basis,
+        vec!["copy length".to_string(), "creative reuse".to_string()]
+    );
+    assert_eq!(view.unobserved.len(), 6);
     assert_eq!(view.ranked.len(), 4);
-    assert!(view.ranked.windows(2).all(|w| w[0].rmse <= w[1].rmse));
+    assert!(view
+        .ranked
+        .windows(2)
+        .all(|w| w[0].distance <= w[1].distance));
     assert!(view.margin >= 0.0);
+    let total: f64 = view.ranked.iter().map(|at| at.fit).sum();
+    assert!((total - 100.0).abs() < 0.01, "{total}");
+    assert!(view.reach > 0.0 && view.reach < 1.0, "{}", view.reach);
     assert!(view.note.contains("does not assign"));
     let reading = &view.ranked[0].readings[0];
     assert_eq!(reading.value, 6.0);
@@ -157,7 +166,15 @@ fn the_command_line_prints_the_same_report_as_json() {
     assert_eq!(value["detectors"].as_array().unwrap().len(), 7);
     assert!(value["shape"]["words"].as_u64().unwrap() > 0);
     assert!(value["triggers"].as_array().unwrap().len() <= 3);
-    assert!(value["segment"]["basis"].as_array().unwrap().len() == 1);
+    assert_eq!(value["segment"]["basis"].as_array().unwrap().len(), 2);
+    assert!(value["language"]["reuse"].is_number());
+    let fits: Vec<f64> = value["segment"]["ranked"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|row| row["fit"].as_f64().unwrap())
+        .collect();
+    assert!((fits.iter().sum::<f64>() - 100.0).abs() < 0.01);
 }
 
 #[test]
@@ -194,4 +211,61 @@ fn the_command_line_reads_a_file_and_stdin() {
     let value: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
     assert!(value["detectors"].as_array().unwrap().len() == 7);
     std::fs::remove_dir_all(&dir).ok();
+}
+
+#[test]
+fn a_repeated_hook_scores_as_reuse_and_fits_a_reuse_segment() {
+    let repeating =
+        report("Act now, act now, act now. Only three seats left, and the insiders already know.");
+    let flat =
+        report("We opened a small office this spring and hired two people from the neighborhood.");
+    assert!(repeating.language.reuse > 0.0, "{:?}", repeating.language);
+    assert!(
+        repeating.language.reuse > flat.language.reuse,
+        "reuse {} vs {}",
+        repeating.language.reuse,
+        flat.language.reuse
+    );
+    let view = repeating.segment.as_ref().unwrap();
+    assert_eq!(view.hook, "act now act now");
+    let reuse = view
+        .ranked
+        .iter()
+        .flat_map(|at| at.readings.iter())
+        .find(|reading| reading.name == "repeat")
+        .unwrap();
+    assert_eq!(reuse.source, "phrase reuse");
+    assert!(reuse.value > 0.0);
+    let fits: f64 = view.ranked.iter().map(|at| at.fit).sum();
+    assert!((fits - 100.0).abs() < 0.01, "{fits}");
+}
+
+#[test]
+fn a_named_buy_adds_the_terms_column_and_nothing_else() {
+    let loaded = loaded();
+    let options = Options {
+        triggers: 6,
+        terms: Some(2.0),
+    };
+    let with = build(
+        &loaded,
+        "Short copy with one promise and a price.",
+        &options,
+    );
+    let without = build(
+        &loaded,
+        "Short copy with one promise and a price.",
+        &Options::default(),
+    );
+    let with_view = with.segment.as_ref().unwrap();
+    let without_view = without.segment.as_ref().unwrap();
+    assert_eq!(with_view.basis.len(), without_view.basis.len() + 1);
+    let reading = with_view
+        .ranked
+        .iter()
+        .flat_map(|at| at.readings.iter())
+        .find(|reading| reading.name == "terms")
+        .expect("the terms column is observed when the caller names the buy");
+    assert_eq!(reading.value, 2.0);
+    assert_eq!(reading.source, "terms");
 }

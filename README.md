@@ -144,10 +144,13 @@ cat ad.txt | ./xcm-mmm read
 
 ```text
 text      110 chars  18 words  3 sentences  6.0 words/sentence
+          "Guaranteed returns or the crash takes your savings. Only 3 seats left, a..."
 emotion   neutral      valence -0.01  arousal 0.20  intensity 0.31
   trust         0.31  ##########
   sadness       0.23  #######
   anticipation  0.10  ###
+language  direct address 5.6%  punch 6.0 words/sentence  specificity 5.6 numbers/100w  emotional 44.4%
+          distinct 17 of 18 words  type/token 0.94  reuse 0.00  focus 0.00
 triggers  word             axis        tier      weight  valence
           guaranteed       trust       exact       1.00   +0.70
           crash            sadness     listed      0.42   -0.97
@@ -158,15 +161,36 @@ detectors axis          score  level   evidence
           narrative     0.000  none    gate closed: no cue from framing, withheld, verdict
 semantics flesch 69.15  grade 5.11  syllables/word 1.56  long words 27.8%  second person 5.6%
           abstraction register      15.789
-segment   copy against every behavioural centre
-          *  0  rmse 1.36  share  22.7%  creative reuse high
-             2  rmse 1.46  share  45.8%  creative reuse low, ad volume low
-          copy length        text 18 words   segment 61.7
-          unobserved ad volume, time between starts, start gap spread, banded spend, targeting terms, creative reuse, copy concentration
-          1 of 8 dimensions observed; the distance compares only those, so this ranks copy length, it does not assign a segment
+segment   copy fit against every behavioural centre (text reach 22%)
+          *  2 creative reuse low, ad volume low  fit  36.1%  distance 0.15  panel share  45.8%
+             3 copy concentration low, creative reuse low fit  35.8%  distance 0.23  panel share  14.7%
+             1 start gap spread high, ad volume high fit  17.6%  distance 1.55  panel share  16.7%
+             0 creative reuse high                fit  10.4%  distance 2.04  panel share  22.7%
+          copy length          text 18 words text                   segment 67.4    -1.46 z  weight 0.09
+          creative reuse       text 0 share phrase reuse           segment 0       +0.00 z  weight 0.91
+          observed copy length, creative reuse
+          unobserved ad volume, time between starts, start gap spread, banded spend, targeting terms, copy concentration
+          the copy supplies 2 of 8 dimensions and those carry 22% of the separation between segments: the fit ranks creative style, it does not assign a segment, because volume, cadence and spend decide that
+          nearest and second differ by 0.08 distance, against distances of 0.15 and 0.23
 ```
 
-The blocks answer separate questions. *Emotion* is the eight Plutchik axes with the words trimmed away, and the modifiers the scanner saw. *Triggers* are the words that carried the mass, the axis each leans on and the tier that answered for it, so a word read by analogy is visible as one. *Detectors* is the seven axes with their level and evidence: a fired cue list, or for a cue index the component densities per hundred words and whether the gate opened at all. *Semantics* is measured rather than modelled: sentence and syllable rates, Flesch ease and grade, second person share, questions and exclamations, plus the surface readings the learned axes used (abstraction register, nominalisations, agentless passives, citations, authority words). *Segment* compares the text with every behavioural centre on the columns a text can supply, which is copy length and, with `--terms N`, targeting terms; the other six or seven columns need behaviour over time and are printed as unobserved with the nearest and second nearest rmse so the reader can see the margin is thin.
+The blocks answer separate questions. *Emotion* is the eight Plutchik axes with the words trimmed away, and the modifiers the scanner saw. *Language* reads the copy as marketing: direct address, punch per sentence, numeric specificity, the share of words that carry emotional mass, and the two shingle readings `reuse` and `focus`. *Triggers* are the words that carried the mass, the axis each leans on and the tier that answered for it, so a word read by analogy is visible as one. *Detectors* is the seven axes with their level and evidence: a fired cue list, or for a cue index the component densities per hundred words and whether the gate opened at all. *Semantics* is measured rather than modelled: sentence and syllable rates, Flesch ease and grade, second person share, questions and exclamations, plus the surface readings the learned axes used (abstraction register, nominalisations, agentless passives, citations, authority words).
+
+*Segment* is a fit score, not a label. The text supplies the columns it can actually fill: copy length, and creative reuse read as the share of the copy sitting inside a four word phrase it uses more than once, which is the same habit the panel sees as an advertiser reusing a creative across ads. `--terms N` adds the buy. Each column is weighted by how far apart the segment centres sit on it, so reuse at a full standard deviation of separation decides the fit while copy length, which moves a tenth of one across the four segments, barely moves it. `fit` is a softmax over the weighted z distance and sums to 100 across the segments, `matches` and `clashes` name only the columns that carried a real share of the distance, and `reach` states how much of the model's separation the copy can see. At 22% the note says plainly that the ranking is creative style and that volume, cadence and spend decide the segment. That is the honest ceiling of one text: cross-ad concentration and media behaviour are not in it.
+
+### Data that would sharpen the segments
+
+The eight columns were chosen because a public ad panel publishes them. The gaps are known and closable with public data; these were checked against live sources and none is vendored in this repository:
+
+- **Wesleyan Media Project, Meta 2022 election ads** (figshare 26124325, text at 26124295, CC BY 4.0): ad id, page id, delivery start and stop, spend and impression bands, platform split, plus full creative body, title, link text and video transcript. All eight columns, at hundreds of thousands of ads. The only source found that supplies per-ad text *and* time *and* money, which is what a learned text-to-segment map needs.
+- **Meta Ad Library API**: spend, impressions, delivery dates, targeting and creative body per ad, banded in the EU. Free, but the US spend field is often a single wide band and there is no click data.
+- **TikTok Commercial Content Library**: similar per-ad fields with a free API, stronger on commercial advertisers and weaker on political ones.
+- **Google Ads Transparency Center** (`bigquery-public-data.google_ads_transparency_center.creative_stats`, EEA and Turkey): advertiser id, creative id, format, first and last shown, impression bounds per region and per surface, plus demographic, geo, contextual and topic criteria. No creative text, so copy length and fingerprints need the detail page; strong on volume, cadence and targeting breadth for commercial advertisers.
+- **Criteo Sponsored Search Conversion Log** (CC BY-NC-SA): 90 days of clicks and conversions per product and partner, with audience ids and category, which supplies volume, cadence, burstiness, targeting breadth and a conversion label, but no creative text and no media spend.
+- **Outbrain Click Prediction** (Kaggle, ~36 GB): real advertiser_id, campaign_id, ad document ids, timestamps and clicks, plus a document topic taxonomy. The best public shape for native-advertiser behaviour; no copy text.
+- **KDD Cup 2012 Track 2** (Tencent): advertiser_id, ad_id, keyword_id, query, position and click, at 150M impressions. Targeting and cadence are strong; there is no spend.
+
+What none of them has is the join this crate would need to fit text to segments: one advertiser's creative text and its full behaviour history under the same stable id. The Wesleyan set is the closest, and it is the recommended next source if `copy_words` and `repeat` are to be predicted rather than proxied.
 
 ## Quick start
 

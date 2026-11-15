@@ -18,12 +18,17 @@
 //! * [`report::Emotion`] and [`report::Trigger`], the reading of each word on
 //!   eight Plutchik axes, with the words that carried the mass and the tier
 //!   that answered for each.
+//! * [`language::LanguageView`], the copy as marketing: direct address, punch,
+//!   specificity, emotional density and the two shingle readings that stand in
+//!   for cross-ad reuse and concentration.
 //! * [`report::Axis`], the seven detectors with their score, level, fired
 //!   cues and, for a cue index, the component densities behind the score.
-//! * [`segment::SegmentView`], how the text compares with the behavioural
-//!   segments on the dimensions a text can actually supply. Volume, cadence,
-//!   spend, targeting and reuse cannot be read from one text, so they are
-//!   named as unobserved instead of guessed.
+//! * [`segment::SegmentView`], a fit score against every behavioural segment on
+//!   the four dimensions a text can supply, weighted by how far apart the
+//!   segment centres actually sit on each. Volume, cadence, spend and
+//!   burstiness cannot be read from one text, so they are named as unobserved
+//!   instead of guessed, and `reach` states how much of the model the copy
+//!   can see.
 //!
 //! `xcm-mmm read "some copy"` renders the report and `--json` prints the same
 //! struct. Nothing in the render path recomputes a number; it prints the
@@ -31,12 +36,14 @@
 
 pub mod cli;
 pub mod context;
+pub mod language;
 pub mod render;
 pub mod report;
 pub mod segment;
 
 pub use cli::{run, ReadArgs};
 pub use context::Loaded;
+pub use language::LanguageView;
 pub use report::{build, Options, Report};
 pub use segment::SegmentView;
 
