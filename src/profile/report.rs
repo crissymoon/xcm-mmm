@@ -16,6 +16,7 @@ use crate::text::tokenize;
 use super::context::Loaded;
 use super::language::{self, LanguageView};
 use super::segment::{place, SegmentView, Signal};
+use super::textmap::{self, Scored};
 
 /// How long the text is, and how it divides.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -94,6 +95,31 @@ pub struct Models {
     pub detectors: String,
     pub emotion: String,
     pub segments: Option<String>,
+    pub textmap: Option<String>,
+}
+
+/// What the learned copy map believes, and how well it was measured.
+///
+/// The map is shown only where it cleared its gate. A withheld unit is still
+/// listed, because "a single ad cannot place a segment, here is the score that
+/// says so" is a reading, not a missing value.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct LearnedView {
+    /// `ad` for one text, `brand` for a supplied copy set.
+    pub unit: String,
+    /// Texts the ranking was computed from.
+    pub texts: usize,
+    /// Rows the unit was fitted on.
+    pub rows: usize,
+    pub accuracy: f64,
+    pub balanced: f64,
+    pub chance: f64,
+    pub majority: f64,
+    pub control: f64,
+    pub usable: bool,
+    /// Every segment with its share of the map's belief, best first.
+    pub ranked: Vec<Scored>,
+    pub note: String,
 }
 
 /// Everything this crate can say about one text.
@@ -108,6 +134,8 @@ pub struct Report {
     pub triggers: Vec<Trigger>,
     pub detectors: Vec<Axis>,
     pub segment: Option<SegmentView>,
+    /// The learned map's placement, when a fitted map was found.
+    pub learned: Option<LearnedView>,
     /// Anything the models could not see, stated rather than filled in.
     pub notes: Vec<String>,
 }
@@ -119,6 +147,9 @@ pub struct Options {
     pub triggers: usize,
     /// Targeting terms per ad, when the text is one ad in a known buy.
     pub terms: Option<f64>,
+    /// One advertiser's copy set, for the learned brand map. More than one text
+    /// is what lets the map read cross-ad reuse, which one ad cannot show.
+    pub set: Option<Vec<String>>,
 }
 
 impl Default for Options {
@@ -126,6 +157,7 @@ impl Default for Options {
         Self {
             triggers: 6,
             terms: None,
+            set: None,
         }
     }
 }
@@ -263,6 +295,8 @@ pub fn build(loaded: &Loaded, text: &str, options: &Options) -> Report {
         )
     });
 
+    let learned = learned(loaded, &lang, &words, &options.set);
+
     let mut notes = Vec::new();
     if count < 5 {
         notes.push("under five words: the emotion model has little mass to read and the sentence detectors read a fragment".to_string());
@@ -271,6 +305,12 @@ pub fn build(loaded: &Loaded, text: &str, options: &Options) -> Report {
         notes.push(format!(
             "no segment model at {}: run segment fit to add that view",
             loaded.segments_path
+        ));
+    }
+    if loaded.segments.is_some() && loaded.textmap.is_none() {
+        notes.push(format!(
+            "no learned copy map at {}: run segment text-fit to add it",
+            loaded.textmap_path
         ));
     }
     if semantics.surface.is_empty() {
@@ -287,6 +327,11 @@ pub fn build(loaded: &Loaded, text: &str, options: &Options) -> Report {
             } else {
                 None
             },
+            textmap: if loaded.textmap.is_some() {
+                Some(loaded.textmap_path.clone())
+            } else {
+                None
+            },
         },
         shape,
         semantics,
@@ -295,6 +340,7 @@ pub fn build(loaded: &Loaded, text: &str, options: &Options) -> Report {
         triggers,
         detectors,
         segment,
+        learned,
         notes,
     }
 }
@@ -333,6 +379,55 @@ fn axis_of(loaded: &Loaded, word: &str) -> String {
     }
     best.and_then(|(at, _)| emotions.get(at).cloned())
         .unwrap_or_else(|| "neutral".to_string())
+}
+
+/// Score one text, or one advertiser's copy set, against the learned map.
+///
+/// The brand unit is chosen only when more than one text is supplied: a single
+/// ad averaged over a set of one is the ad unit wearing a different name, and
+/// it would quote the brand unit's stronger measurement for a weaker reading.
+fn learned(
+    loaded: &Loaded,
+    view: &LanguageView,
+    words: &[String],
+    set: &Option<Vec<String>>,
+) -> Option<LearnedView> {
+    let map = loaded.textmap.as_ref()?;
+    let (unit, row, texts) = match set {
+        Some(texts) if texts.len() > 1 => {
+            let rows: Vec<Vec<f64>> = texts
+                .iter()
+                .map(|text| {
+                    let words = token::tokens(text);
+                    let sentences = tokenize::sentences(text, 1).len().max(1);
+                    let emotional = loaded.emotion.read(text).hits.len();
+                    let read = language::read(text, &words, sentences, emotional);
+                    textmap::features(&read, &words)
+                })
+                .collect();
+            (
+                "brand".to_string(),
+                textmap::brand(&rows, texts.len()),
+                texts.len(),
+            )
+        }
+        _ => ("ad".to_string(), textmap::features(view, words), 1),
+    };
+    let fitted = map.unit(&unit)?;
+    let ranking = map.predict(&unit, &row);
+    Some(LearnedView {
+        unit,
+        texts,
+        rows: fitted.rows,
+        accuracy: fitted.accuracy,
+        balanced: fitted.balanced,
+        chance: fitted.chance,
+        majority: fitted.majority,
+        control: fitted.control,
+        usable: ranking.is_some(),
+        ranked: ranking.map(|ranking| ranking.ranked).unwrap_or_default(),
+        note: fitted.note.clone(),
+    })
 }
 
 fn ratio(part: f64, whole: f64) -> f64 {
@@ -407,6 +502,7 @@ mod tests {
             &Options {
                 triggers: 2,
                 terms: None,
+                set: None,
             },
         );
         assert_eq!(report.triggers.len(), 2);
@@ -417,6 +513,7 @@ mod tests {
             &Options {
                 triggers: 0,
                 terms: None,
+                set: None,
             },
         );
         assert!(every.triggers.len() >= report.triggers.len());

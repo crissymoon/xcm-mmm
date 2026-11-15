@@ -38,6 +38,10 @@ pub struct AdRow {
     pub terms: Vec<String>,
     #[serde(default)]
     pub fingerprint: String,
+    /// The copy itself, when the export carries it. Segmentation folds ads into
+    /// entities and never reads this column; the learned copy map does.
+    #[serde(default)]
+    pub text: String,
     #[serde(default)]
     pub split: String,
 }
@@ -309,6 +313,7 @@ mod tests {
             terms: terms.iter().map(|t| t.to_string()).collect(),
             fingerprint: id.into(),
             split: "train".into(),
+            text: "an advert".into(),
         }
     }
 

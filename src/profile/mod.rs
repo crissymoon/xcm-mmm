@@ -9,7 +9,7 @@
 //! a fourth number: every score in the report is a shipped model's own score,
 //! and anything the models cannot see is listed rather than filled in.
 //!
-//! The report has four parts:
+//! The report has five parts:
 //!
 //! * [`report::Shape`] and [`report::Semantics`], the measurable part: length,
 //!   sentence and syllable rates, Flesch ease and grade, second person share,
@@ -29,6 +29,10 @@
 //!   burstiness cannot be read from one text, so they are named as unobserved
 //!   instead of guessed, and `reach` states how much of the model the copy
 //!   can see.
+//! * [`textmap::TextMap`], the learned placement: a fitted multinomial map from
+//!   one ad, or from an advertiser's copy set, onto the same segments. Only a
+//!   unit that beat chance, the largest class and its shuffled control is
+//!   applied; the rest are reported as withheld with the score that says so.
 //!
 //! `xcm-mmm read "some copy"` renders the report and `--json` prints the same
 //! struct. Nothing in the render path recomputes a number; it prints the
@@ -40,17 +44,21 @@ pub mod language;
 pub mod render;
 pub mod report;
 pub mod segment;
+pub mod textfit;
+pub mod textmap;
 
 pub use cli::{run, ReadArgs};
 pub use context::Loaded;
 pub use language::LanguageView;
 pub use report::{build, Options, Report};
 pub use segment::SegmentView;
+pub use textmap::{Ranking, TextMap};
 
 /// Shipped models this report reads, relative to the repository root.
 pub const DETECTORS: &str = "data/detectors/model.json";
 pub const EMOTION: &str = "data/emotion/model.json";
 pub const SEGMENTS: &str = "data/segments/model.json";
+pub const TEXTMAP: &str = "data/segments/textmap.json";
 
 #[cfg(test)]
 mod tests {

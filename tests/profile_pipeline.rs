@@ -246,6 +246,7 @@ fn a_named_buy_adds_the_terms_column_and_nothing_else() {
     let options = Options {
         triggers: 6,
         terms: Some(2.0),
+        set: None,
     };
     let with = build(
         &loaded,
@@ -268,4 +269,46 @@ fn a_named_buy_adds_the_terms_column_and_nothing_else() {
         .expect("the terms column is observed when the caller names the buy");
     assert_eq!(reading.value, 2.0);
     assert_eq!(reading.source, "terms");
+}
+
+#[test]
+fn the_learned_ad_map_is_withheld_and_says_why() {
+    let report = report("Act now, act now, act now. Only three seats left.");
+    let learned = report
+        .learned
+        .expect("the shipped map is loaded with the segments");
+    assert_eq!(learned.unit, "ad");
+    assert_eq!(learned.texts, 1);
+    assert!(!learned.usable);
+    assert!(learned.ranked.is_empty());
+    assert!(learned.balanced < learned.majority);
+    assert!(learned.note.contains("withheld"), "{}", learned.note);
+    assert!(report.models.textmap.is_some());
+}
+
+#[test]
+fn a_copy_set_is_scored_by_the_brand_map_and_sums_to_one_hundred() {
+    let set = vec![
+        "Fight for the neighbourhood you love. Vote on Tuesday.".to_string(),
+        "Fight for the neighbourhood you love. Vote on Tuesday.".to_string(),
+        "Our plan protects renters and funds the buses.".to_string(),
+        "Our plan protects renters and funds the buses.".to_string(),
+    ];
+    let first = set[0].clone();
+    let report = build(
+        &loaded(),
+        &first,
+        &Options {
+            set: Some(set),
+            ..Options::default()
+        },
+    );
+    let learned = report.learned.expect("a brand block");
+    assert_eq!(learned.unit, "brand");
+    assert_eq!(learned.texts, 4);
+    assert!(learned.usable, "{}", learned.note);
+    assert_eq!(learned.ranked.len(), 4);
+    let total: f64 = learned.ranked.iter().map(|scored| scored.probability).sum();
+    assert!((total - 100.0).abs() < 0.01, "{total}");
+    assert!(learned.ranked[0].probability >= learned.ranked[3].probability);
 }

@@ -497,3 +497,25 @@ fn segment_extracts_fits_assigns_checks_and_catches_an_edit() {
         .unwrap();
     assert!(!broken.status.success());
 }
+
+#[test]
+fn a_copy_set_is_read_from_a_file_of_ad_texts() {
+    let dir = temp_dir();
+    let path = dir.join("brand.jsonl");
+    std::fs::write(
+        &path,
+        "{\"text\": \"Fight for the neighbourhood you love.\"}\n\
+         {\"text\": \"Fight for the neighbourhood you love. Vote Tuesday.\"}\n\
+         {\"text\": \"Our plan protects renters and funds the buses.\"}\n",
+    )
+    .unwrap();
+    let out = Command::new(binary())
+        .args(["read", "--ads"])
+        .arg(&path)
+        .output()
+        .unwrap();
+    let text = String::from_utf8_lossy(&out.stdout);
+    assert!(out.status.success(), "{text}");
+    assert!(text.contains("learned   3 ads into segment"), "{text}");
+    assert!(text.contains("grouped folds"), "{text}");
+}

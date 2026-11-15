@@ -15,6 +15,7 @@ pub fn print(report: &Report) {
     detectors(report);
     semantics(&report.semantics);
     segment(report);
+    learned(report);
     for note in &report.notes {
         println!("note      {note}");
     }
@@ -241,6 +242,52 @@ fn segment(report: &Report) {
             view.margin, view.ranked[0].distance, view.ranked[1].distance
         );
     }
+}
+
+/// The learned map's placement, with the measurement that justifies it.
+fn learned(report: &Report) {
+    let view = match &report.learned {
+        Some(view) => view,
+        None => return,
+    };
+    let about = if view.unit == "brand" {
+        format!("{} ads", commas(view.texts))
+    } else {
+        "one ad".to_string()
+    };
+    if !view.usable {
+        println!("learned   {}", view.note);
+        return;
+    }
+    let best = match view.ranked.first() {
+        Some(best) => best,
+        None => return,
+    };
+    println!(
+        "learned   {about} into segment {} at {:.1}% ({})",
+        best.id, best.probability, best.label
+    );
+    for scored in view.ranked.iter().skip(1) {
+        if scored.probability < 0.5 {
+            break;
+        }
+        println!(
+            "          {} {:>2} {:<34} {:.1}%",
+            if scored.id == best.id { "*" } else { " " },
+            scored.id,
+            scored.label,
+            scored.probability
+        );
+    }
+    println!(
+        "          map fitted on {} rows: grouped folds {:.1}% accuracy, {:.1}% balanced against {:.1}% chance and {:.1}% on shuffled labels",
+        commas(view.rows),
+        view.accuracy * 100.0,
+        view.balanced * 100.0,
+        view.chance * 100.0,
+        view.control * 100.0
+    );
+    println!("          {}", view.note);
 }
 
 /// The words the report uses for the surface readings it knows.

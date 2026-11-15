@@ -30,6 +30,10 @@ pub enum SegmentCommand {
     Assign(SegmentAssignArgs),
     /// Rebuild a shipped folder and report every disagreement.
     Check(SegmentCheckArgs),
+    /// Fit the learned copy map against the segments.
+    TextFit(SegmentTextFitArgs),
+    /// Rebuild the learned copy map and report every disagreement.
+    TextCheck(SegmentTextCheckArgs),
 }
 
 #[derive(Args)]
@@ -87,6 +91,39 @@ pub struct SegmentAssignArgs {
 
 #[derive(Args)]
 pub struct SegmentCheckArgs {
+    #[arg(long, default_value = "data/segments")]
+    pub dir: String,
+}
+
+#[derive(Args)]
+pub struct SegmentTextFitArgs {
+    /// Ad panel in JSON Lines: one ad per row, copy in `text`.
+    #[arg(long)]
+    pub ads: String,
+    /// Segment model the labels are read from.
+    #[arg(long, default_value = "data/segments/model.json")]
+    pub model: String,
+    /// Emotion model, so a training row reads emotional density the way a
+    /// report does.
+    #[arg(long, default_value = "data/emotion/model.json")]
+    pub emotion: String,
+    /// Folder the map and its derived rows are written to.
+    #[arg(long, default_value = "data/segments")]
+    pub out: String,
+    /// Grouped folds, each holding out whole advertisers.
+    #[arg(long, default_value_t = 5)]
+    pub folds: usize,
+    #[arg(long, default_value_t = 900)]
+    pub iterations: usize,
+    /// L2 penalty on the weights.
+    #[arg(long, default_value_t = 0.03)]
+    pub l2: f64,
+    #[arg(long, default_value_t = 20261114)]
+    pub seed: u64,
+}
+
+#[derive(Args)]
+pub struct SegmentTextCheckArgs {
     #[arg(long, default_value = "data/segments")]
     pub dir: String,
 }
@@ -227,6 +264,48 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 println!("  {:<22} {:>7}  {:>8.3}", entity, segment, distance);
             }
             Ok(())
+        }
+        SegmentCommand::TextFit(a) => {
+            let cfg = crate::profile::textmap::TextConfig {
+                folds: a.folds.max(2),
+                iterations: a.iterations.max(10),
+                l2: a.l2.max(0.0),
+                seed: a.seed,
+                ..Default::default()
+            };
+            let map = crate::profile::textfit::build(&a.ads, &a.model, &a.emotion, &a.out, &cfg)?;
+            println!(
+                "source    {} ads from {} advertisers",
+                commas(map.source.ads),
+                commas(map.source.entities)
+            );
+            for unit in map.units.values() {
+                println!(
+                    "  {:<6} {:>6} rows  accuracy {:>5.1}%  balanced {:>5.1}%  chance {:>4.1}%  control {:>5.1}%  {}",
+                    unit.unit,
+                    unit.rows,
+                    unit.accuracy * 100.0,
+                    unit.balanced * 100.0,
+                    unit.chance * 100.0,
+                    unit.control * 100.0,
+                    if unit.usable { "in use" } else { "withheld" }
+                );
+            }
+            println!("wrote     {}/textmap.json, text_features.jsonl", a.out);
+            println!("note      {}", map.note);
+            Ok(())
+        }
+        SegmentCommand::TextCheck(a) => {
+            let faults = crate::profile::textfit::check(&a.dir)?;
+            if faults.is_empty() {
+                println!("clean     the learned copy map rebuilds from its own rows");
+                Ok(())
+            } else {
+                for fault in &faults {
+                    println!("fault     {fault}");
+                }
+                Err(format!("{} faults in {}", faults.len(), a.dir).into())
+            }
         }
         SegmentCommand::Check(a) => {
             let faults = super::check(&a.dir)?;

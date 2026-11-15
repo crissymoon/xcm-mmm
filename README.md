@@ -38,7 +38,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Churn outcome.** A 7,043 customer telecom panel into a churn label, a retention hazard by tenure month with right censoring, and the 1,869 churn reasons read on the emotion axes. A fourteen-feature logistic with folds assigned by customer id reports held-out AUC beside the AUC of tenure and monthly charge alone.
 - **Behavioural segments.** Advertisers grouped by what they did in an ad panel: volume, cadence and its spread, banded spend, copy length, terms bought against, creative reuse and copy concentration. k-means++ with a silhouette sweep, a shuffled control and a resampling audit, and a folder that rebuilds from its own entities.
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
-- **One report per text.** `read` puts one piece of copy through the detectors, the emotion scanner and the segment centres and prints every score beside its evidence: the words that carried the emotional mass, the cues that fired, the surface readings behind a register, Flesch ease and grade, and the segment dimensions the text cannot show.
+- **One report per text.** `read` puts one piece of copy through the detectors, the emotion scanner, the segment centres and the learned copy map and prints every score beside its evidence: the words that carried the emotional mass, the cues that fired, the surface readings behind a register, Flesch ease and grade, and the segment dimensions the text cannot show.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
 
 ## Training data
@@ -115,6 +115,27 @@ Four groups were chosen at a silhouette of 0.286. There are no labels, so that i
 
 `segment check` rebuilds the folder from its own entities, compares the result with the shipped fit and verifies each digest, so a centroid edited after the manifest was stamped is a fault rather than a note. `scripts/segment-data.sh` runs the whole path: extract the panel, fit, check.
 
+### Learned copy map
+
+`textmap.json` asks the same question with a fitted model instead of a distance: a multinomial logistic map from what copy reads as, plus 96 hashed vocabulary buckets, onto the segment the advertiser was assigned. Two units are fitted from the panel and only one of them clears its gate.
+
+| unit | input | rows | accuracy | balanced | chance | shuffled | used |
+|---|---|---|---|---|---|---|---|
+| ad | one ad's copy | 1,355 | 44.5% | 30.8% | 25.0% | 25.3% | no |
+| brand | one advertiser's copy set | 251 | 55.4% | 45.5% | 25.0% | 25.5% | yes |
+
+Both readings come from five folds that hold out whole page ids, so no ad of a scored advertiser was seen in training. The ad unit is withheld because 63.5% of the panel sits in one segment: at 44.5% overall it is worse than naming that segment every time, and its 30.8% balanced is six points over chance, real but too thin to act on. The brand unit clears the gate at 45.5% balanced and 55.4% overall, which is what a copy set adds: cross-ad reuse, vocabulary breadth and the size of the set, none of which one ad shows. Its lift is 27 percent of the way from chance to perfect.
+
+The gate is explicit: at least two points over chance, at least ten percent lift, better than the largest class, and two points over the shuffled-label control. A unit that fails is still written and still measured, and is never used to place a text.
+
+```bash
+./xcm-mmm segment text-fit --ads panel.jsonl --out data/segments
+./xcm-mmm segment text-check --dir data/segments
+./xcm-mmm read --ads brand.jsonl
+```
+
+`text_features.jsonl` ships the derived rows, readings and vocabulary buckets with no ad copy, so `segment text-check` rebuilds the map offline and the digest in `textmap.json` covers the rows it was fitted from. `read` prints the withheld measurement for one text rather than a placement, and uses the brand unit only when `--ads` names a set of more than one ad, taken from JSON Lines with a `text` field or one ad per line.
+
 Two limits are worth stating. Recency is deliberately not a feature: the panel is a snapshot weighted towards recent ads, so the distance from a last start would measure the archive's coverage as much as the advertiser's activity. And copy concentration is bounded by the ad count, so an advertiser with one ad scores one by construction; that group is a real behaviour, the advertiser who bought once, but its concentration reading adds nothing to its volume.
 
 ## Emotion and churn
@@ -172,7 +193,10 @@ segment   copy fit against every behavioural centre (text reach 22%)
           unobserved ad volume, time between starts, start gap spread, banded spend, targeting terms, copy concentration
           the copy supplies 2 of 8 dimensions and those carry 22% of the separation between segments: the fit ranks creative style, it does not assign a segment, because volume, cadence and spend decide that
           nearest and second differ by 0.08 distance, against distances of 0.15 and 0.23
+learned   an ad map over 1,355 rows is withheld: grouped folds recover 31% balanced and 45% overall, against 25% chance, 63% for the largest class and 25% on shuffled labels, so the largest class alone scores higher; it is not used to place this text
 ```
+
+With `--ads brand.jsonl` the learned block scores the whole set instead and names the segment the map believes, which the section on the learned copy map explains.
 
 The blocks answer separate questions. *Emotion* is the eight Plutchik axes with the words trimmed away, and the modifiers the scanner saw. *Language* reads the copy as marketing: direct address, punch per sentence, numeric specificity, the share of words that carry emotional mass, and the two shingle readings `reuse` and `focus`. *Triggers* are the words that carried the mass, the axis each leans on and the tier that answered for it, so a word read by analogy is visible as one. *Detectors* is the seven axes with their level and evidence: a fired cue list, or for a cue index the component densities per hundred words and whether the gate opened at all. *Semantics* is measured rather than modelled: sentence and syllable rates, Flesch ease and grade, second person share, questions and exclamations, plus the surface readings the learned axes used (abstraction register, nominalisations, agentless passives, citations, authority words).
 
@@ -182,7 +206,7 @@ The blocks answer separate questions. *Emotion* is the eight Plutchik axes with 
 
 The eight columns were chosen because a public ad panel publishes them. The gaps are known and closable with public data; these were checked against live sources and none is vendored in this repository:
 
-- **Wesleyan Media Project, Meta 2022 election ads** (figshare 26124325, text at 26124295, CC BY 4.0): ad id, page id, delivery start and stop, spend and impression bands, platform split, plus full creative body, title, link text and video transcript. All eight columns, at hundreds of thousands of ads. The only source found that supplies per-ad text *and* time *and* money, which is what a learned text-to-segment map needs.
+- **Wesleyan Media Project, Meta 2022 election ads** (figshare 26124325, text at 26124295, CC BY 4.0): ad id, page id, delivery start and stop, spend and impression bands, platform split, plus full creative body, title, link text and video transcript. All eight columns, at hundreds of thousands of ads. The only source found that supplies per-ad text *and* time *and* money, which is what would let the learned map see the behaviour columns a 251 advertiser panel cannot separate.
 - **Meta Ad Library API**: spend, impressions, delivery dates, targeting and creative body per ad, banded in the EU. Free, but the US spend field is often a single wide band and there is no click data.
 - **TikTok Commercial Content Library**: similar per-ad fields with a free API, stronger on commercial advertisers and weaker on political ones.
 - **Google Ads Transparency Center** (`bigquery-public-data.google_ads_transparency_center.creative_stats`, EEA and Turkey): advertiser id, creative id, format, first and last shown, impression bounds per region and per surface, plus demographic, geo, contextual and topic criteria. No creative text, so copy length and fingerprints need the detail page; strong on volume, cadence and targeting breadth for commercial advertisers.
@@ -278,7 +302,7 @@ cargo clippy --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite has 368 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, the reader over the shipped models including its stdin and file inputs, and every CLI subcommand.
+The suite has 395 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, the reader over the shipped models including its stdin and file inputs, the learned copy map from fit to gate to offline rebuild, and every CLI subcommand.
 
 ## License
 

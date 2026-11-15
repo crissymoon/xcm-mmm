@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Rebuild the segment folder: extract the panel, fit, check.
+# Rebuild the segment folder: extract the panel, fit, fit the learned copy map,
+# check both.
 #
 # The panel is exported by the archive reader rather than edited here, so the
 # entities cannot drift from the ads they describe. Everything is written into
@@ -45,3 +46,7 @@ fi
     --seed "$SEED"
 
 "$BIN" segment check --dir "$OUT"
+
+"$BIN" segment text-fit --ads "$PANEL" --model "$OUT/model.json" --out "$OUT"
+
+"$BIN" segment text-check --dir "$OUT"

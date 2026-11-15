@@ -26,6 +26,11 @@ pub struct ReadArgs {
     /// Read a file as one text.
     #[arg(long, value_name = "PATH", conflicts_with = "text")]
     pub file: Option<String>,
+    /// One advertiser's copy set, for the learned brand map. JSON Lines with a
+    /// `text` field, or one ad per line. With no text argument the report reads
+    /// the first ad and the map reads the set.
+    #[arg(long, value_name = "PATH", conflicts_with = "file")]
+    pub ads: Option<String>,
     /// Detector artifact to read.
     #[arg(long, default_value = DETECTORS)]
     pub detectors: String,
@@ -49,7 +54,18 @@ pub struct ReadArgs {
 
 /// Run `read`.
 pub fn run(args: ReadArgs) -> Result<(), Box<dyn Error>> {
-    let text = input(&args)?;
+    let set = match &args.ads {
+        Some(path) => Some(copy_set(path)?),
+        None => None,
+    };
+    let text = if args.text.is_empty() && args.file.is_none() {
+        match set.as_ref() {
+            Some(texts) if !texts.is_empty() => texts[0].clone(),
+            _ => input(&args)?,
+        }
+    } else {
+        input(&args)?
+    };
     if text.trim().is_empty() {
         return Err("the text is empty: give copy to read".into());
     }
@@ -60,6 +76,7 @@ pub fn run(args: ReadArgs) -> Result<(), Box<dyn Error>> {
         &Options {
             triggers: args.triggers,
             terms: args.terms,
+            set,
         },
     );
     if args.json {
@@ -68,6 +85,36 @@ pub fn run(args: ReadArgs) -> Result<(), Box<dyn Error>> {
         render::print(&report);
     }
     Ok(())
+}
+
+/// Read one advertiser's copy set: JSON Lines with a `text` field when the
+/// lines parse, otherwise one ad per line.
+fn copy_set(path: &str) -> Result<Vec<String>, Box<dyn Error>> {
+    let body = fs::read_to_string(path)?;
+    let mut out = Vec::new();
+    for line in body.lines() {
+        let line = line.trim();
+        if line.is_empty() {
+            continue;
+        }
+        let text = match serde_json::from_str::<serde_json::Value>(line) {
+            Ok(value) => value
+                .get("text")
+                .and_then(|text| text.as_str())
+                .unwrap_or("")
+                .to_string(),
+            Err(_) => line.to_string(),
+        };
+        if !text.trim().is_empty() {
+            out.push(text);
+        }
+    }
+    if out.is_empty() {
+        return Err(
+            format!("{path} holds no copy: one ad per line, or JSON Lines with `text`").into(),
+        );
+    }
+    Ok(out)
 }
 
 fn input(args: &ReadArgs) -> Result<String, Box<dyn Error>> {
@@ -94,6 +141,7 @@ mod tests {
         let args = ReadArgs {
             text: vec!["act".into(), "now".into()],
             file: None,
+            ads: None,
             detectors: DETECTORS.into(),
             emotion: EMOTION.into(),
             segments: SEGMENTS.into(),

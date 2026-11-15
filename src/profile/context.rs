@@ -17,14 +17,19 @@ use crate::detect::Detector;
 use crate::emotion::Scanner;
 use crate::segment::Artifact as SegmentArtifact;
 
+use super::textmap::{TextMap, TEXTMAP};
+
 /// The models a report reads, with the paths they came from.
 pub struct Loaded {
     pub detectors: Detector,
     pub emotion: Scanner,
     pub segments: Option<SegmentArtifact>,
+    /// The learned copy map, when one was written beside the segment model.
+    pub textmap: Option<TextMap>,
     pub detectors_path: String,
     pub emotion_path: String,
     pub segments_path: String,
+    pub textmap_path: String,
 }
 
 impl Loaded {
@@ -37,13 +42,27 @@ impl Loaded {
         } else {
             None
         };
+        // The map lives beside the model it scores: a folder that was fitted
+        // together is read together, and a model copied without its map simply
+        // reports without one.
+        let textmap_path = Path::new(segments)
+            .with_file_name(TEXTMAP)
+            .to_string_lossy()
+            .to_string();
+        let textmap = if Path::new(&textmap_path).exists() {
+            Some(TextMap::load(&textmap_path)?)
+        } else {
+            None
+        };
         Ok(Self {
             detectors: detector,
             emotion: scanner,
             segments: segments_artifact,
+            textmap,
             detectors_path: detectors.to_string(),
             emotion_path: emotion.to_string(),
             segments_path: segments.to_string(),
+            textmap_path,
         })
     }
 }
