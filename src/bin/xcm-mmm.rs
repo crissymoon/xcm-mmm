@@ -13,8 +13,8 @@ use xcm_mmm::data::{horizon_embargo, Dataset, Fold};
 use xcm_mmm::de::{self, Adaptation, Crossover, DeConfig, Strategy};
 use xcm_mmm::emotion::cli::{run as run_emotion, EmotionArgs};
 use xcm_mmm::forecast::{
-    knee, run_nested, score_over_with, NestedConfig, Report, SelectionProblem, SparseAccuracy,
-    DEFAULT_LAMBDA,
+    knee, run_cpcv, run_nested, score_over_with, Candidate, CpcvConfig, NestedConfig, Report,
+    SelectionProblem, SparseAccuracy, DEFAULT_LAMBDA,
 };
 use xcm_mmm::learn::Learner;
 use xcm_mmm::metrics::{hypervolume_report, igd, reference_front};
@@ -381,6 +381,26 @@ struct ForecastArgs {
     /// question instead, namely how much accuracy a smaller model costs.
     #[arg(long)]
     score_front: bool,
+    /// Audit the search with combinatorial purged cross-validation: the top
+    /// candidates are rescored on every combination of withheld groups, the
+    /// spread across complete paths is printed, and the probability of
+    /// backtest overfitting is reported.
+    #[arg(long)]
+    cpcv: bool,
+    /// Contiguous groups the panel is cut into, with `--cpcv`.
+    #[arg(long, default_value_t = 6)]
+    cpcv_groups: usize,
+    /// Groups withheld together per split, with `--cpcv`.
+    #[arg(long, default_value_t = 2)]
+    cpcv_test: usize,
+    /// Rows dropped on each side of a withheld run, with `--cpcv`. Zero uses
+    /// the label horizon embargo, which is the same gap the walk-forward folds
+    /// get.
+    #[arg(long, default_value_t = 0)]
+    cpcv_purge: usize,
+    /// Candidates carried into the combinatorial audit, with `--cpcv`.
+    #[arg(long, default_value_t = 8)]
+    cpcv_candidates: usize,
     /// Print a JSON report instead of a table.
     #[arg(long)]
     json: bool,
@@ -1256,6 +1276,57 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
     // one trial against the null that they were exchangeable noise.
     let gate = problem.gate(0.95);
 
+    // The combinatorial audit answers a different question from the gate. The
+    // gate asks whether the winner beats what the best of that many trials
+    // would reach on noise. This asks whether the procedure that chose it is
+    // repeatable: the top candidates are rescored under every combination of
+    // withheld groups, and the rank of the training winner on the withheld
+    // groups is what the probability of backtest overfitting counts.
+    let cpcv_result = if args.cpcv {
+        let candidate_sets = {
+            let guard = ledger.lock().map_err(|_| "ledger lock poisoned")?;
+            guard.ranked()
+        };
+        if candidate_sets.len() < 2 {
+            return Err(format!(
+                "the search left {} distinct candidate, too few for a combinatorial audit",
+                candidate_sets.len()
+            )
+            .into());
+        }
+        let mut chosen: Vec<Vec<usize>> = Vec::new();
+        for (columns, _) in candidate_sets.iter().take(args.cpcv_candidates.max(2)) {
+            chosen.push(columns.clone());
+        }
+        if let Some((winner, _, _)) = &de_result {
+            if !chosen.iter().any(|columns| columns == winner) {
+                chosen.push(winner.clone());
+            }
+        }
+        let candidates: Vec<Candidate> = chosen
+            .into_iter()
+            .map(|columns| Candidate {
+                names: columns
+                    .iter()
+                    .map(|&column| scaled.names[column].clone())
+                    .collect(),
+                columns,
+            })
+            .collect();
+        let config = CpcvConfig {
+            groups: args.cpcv_groups,
+            test_groups: args.cpcv_test,
+            purge: if args.cpcv_purge > 0 {
+                args.cpcv_purge
+            } else {
+                embargo.max(1)
+            },
+        };
+        Some(run_cpcv(&scaled, &config, &candidates, &learner)?)
+    } else {
+        None
+    };
+
     // Score the chosen subsets once on the held-out rows. This is the only
     // number in the run that the search had no hand in.
     let holdout: Vec<(String, Report)> = match &holdout_fold {
@@ -1421,6 +1492,32 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
             "skipped_rows": shared.skipped,
             "models": models,
             "gate": gate_json,
+            "cpcv": cpcv_result.as_ref().map(|c| {
+                serde_json::json!({
+                    "groups": c.config.groups,
+                    "test_groups": c.config.test_groups,
+                    "purge": c.config.purge,
+                    "splits": c.splits.len(),
+                    "paths": c.path_scores.len(),
+                    "pbo": c.pbo,
+                    "mean_logit": c.mean_logit,
+                    "path_mean": c.path_mean,
+                    "path_spread": c.path_spread,
+                    "path_scores": c.path_scores,
+                    "verdict": c.verdict(),
+                    "candidates": c
+                        .candidates
+                        .iter()
+                        .enumerate()
+                        .map(|(index, candidate)| serde_json::json!({
+                            "names": candidate.names,
+                            "train_mse": c.train_mse[index],
+                            "test_mse": c.test_mse[index],
+                            "chosen": c.selected.iter().filter(|s| **s == index).count(),
+                        }))
+                        .collect::<Vec<_>>(),
+                })
+            }),
             "holdout": holdout_json,
             "seconds": elapsed.as_secs_f64(),
         });
@@ -1536,6 +1633,39 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
                     );
                 }
             }
+        }
+        if let Some(c) = &cpcv_result {
+            println!(
+                "\ncpcv        {} groups, {} tested per split, purge {}, {} splits, {} paths",
+                c.config.groups,
+                c.config.test_groups,
+                c.config.purge,
+                c.splits.len(),
+                c.path_scores.len()
+            );
+            println!(
+                "{:<4} {:>5} {:>12} {:>12} {:>7}",
+                "cand", "feat", "train mse", "test mse", "chosen"
+            );
+            for (index, candidate) in c.candidates.iter().enumerate() {
+                println!(
+                    "{:<4} {:>5} {:>12.6} {:>12.6} {:>4}/{:<2}",
+                    index,
+                    candidate.columns.len(),
+                    c.train_mse[index],
+                    c.test_mse[index],
+                    c.selected.iter().filter(|s| **s == index).count(),
+                    c.splits.len()
+                );
+            }
+            println!(
+                "  path mse {:.6} +/- {:.6} across {} paths",
+                c.path_mean,
+                c.path_spread,
+                c.path_scores.len()
+            );
+            println!("  pbo {:.2}   mean rank logit {:+.2}", c.pbo, c.mean_logit);
+            println!("  verdict: {}", c.verdict());
         }
         println!("seconds     {:.2}", elapsed.as_secs_f64());
     }

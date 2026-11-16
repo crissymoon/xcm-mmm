@@ -32,7 +32,9 @@ use crate::learn::{Fitted, Learner};
 use crate::linalg::{mean, solve_spd, spearman};
 use crate::problem::{Bounds, Problem};
 
+pub mod cpcv;
 pub mod nested;
+pub use cpcv::{run as run_cpcv, Candidate, CpcvConfig, CpcvResult};
 pub use nested::{run as run_nested, NestedConfig, NestedResult};
 
 /// Default ridge penalty. Features are standardised first, so one is a mild

@@ -155,7 +155,7 @@ Two limits are worth stating. Recency is deliberately not a feature: the panel i
 ./xcm-mmm churn info
 ```
 
-On the bank the reading is 0.850 held out against a 0.350 majority baseline. Coverage over `/usr/share/dict/words` is 100% resolved: 39.0% of the list lands above the neutral prior, 9.8% of it with a reading strong enough to matter, and the rest reads neutral because a dictionary holds far more nouns and technical terms than feelings. On the transcript corpus 51.9% of content tokens read above the neutral prior. The churn baseline is AUC 0.867 held out, against 0.801 for tenure and monthly charge alone. `emotion check` and `churn check` rebuild each folder and report every disagreement.
+On the bank the reading is 0.850 held out against a 0.350 majority baseline. Coverage over `/usr/share/dict/words` is 100% resolved: 39.0% of the list lands above the neutral prior, 9.8% of it with a reading strong enough to matter, and the rest reads neutral because a dictionary holds far more nouns and technical terms than feelings. On the transcript corpus 51.9% of content tokens read above the neutral prior. The churn baseline is AUC 0.867 held out, against 0.801 for tenure and monthly charge alone, and the card beside that number carries what the interval is worth: measured coverage of 0.940 for the bootstrap, 0.935 for BCa and 0.925 for DeLong at 251 rows with 50 positives, so the analytic interval is the one named as missing the band. It also carries the window contract, time zero at the join, 1,869 events and 356 rows censored at month 72, and the class conditional conformal split that refuses an `alpha` its calibration rows cannot support. `emotion check` and `churn check` rebuild each folder and report every disagreement.
 
 ## Reading one text
 
@@ -234,9 +234,10 @@ A forecast needs a CSV with a header row and a numeric target column. To try the
 ```bash
 ./target/release/xcm-mmm synth --rows 800 --features 12 --informative 4 --out tmp/panel.csv
 ./target/release/xcm-mmm forecast tmp/panel.csv --method both --folds 4
+./target/release/xcm-mmm forecast tmp/panel.csv --method both --folds 4 --cpcv
 ```
 
-That prints one line per model:
+The first run prints one line per model. The second adds the audit:
 
 ```text
 rows        800   features 12   folds 4
@@ -250,6 +251,21 @@ moead-best      4     0.335217   0.6949   0.820   71.0%
   keeps: x1, x2, x3, x4
   front: 4 points, knee 2, best 0
 ```
+
+With `--cpcv` the run adds the split audit underneath:
+
+```text
+cpcv        6 groups, 2 tested per split, purge 1, 15 splits, 5 paths
+cand  feat    train mse     test mse  chosen
+0        5     0.315765     0.330183    0/15
+1        7     0.313527     0.331671   15/15
+4        4     0.317641     0.329029    0/15
+  path mse 0.331671 +/- 0.002731 across 5 paths
+  pbo 0.67   mean rank logit -0.17
+  verdict: the training winner lands in the better half on 33% of splits, so selection is no better than a coin at this candidate count
+```
+
+The audit is the point. Candidate 1 wins every training split and is beaten on the test rows by a smaller candidate, the path spread is 0.0027 in MSE, and the probability of backtest overfitting is 0.67. A run whose verdict reads like that one should not be quoted as a discovery, and the deflated gate that prices the search says the same thing from the trial count.
 
 From labelled rows to one trained model:
 
@@ -306,7 +322,7 @@ cargo clippy --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite has 395 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, the reader over the shipped models including its stdin and file inputs, the learned copy map from fit to gate to offline rebuild, and every CLI subcommand.
+The suite has 435 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, the reader over the shipped models including its stdin and file inputs, the learned copy map from fit to gate to offline rebuild, and every CLI subcommand.
 
 ## License
 

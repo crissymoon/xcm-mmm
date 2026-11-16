@@ -1,12 +1,18 @@
 # Churn baseline
 
-xcm-mmm-churn-baseline v2, built 2026-11-16T02:17:01Z. A logistic over the telecom panel, fitted so a marketing
+xcm-mmm-churn-baseline v3, built 2026-11-16T05:05:15Z. A logistic over the telecom panel, fitted so a marketing
 model has a retention baseline to beat rather than a number to quote.
 
 ## Panel
 
 7,043 customers, 1,869 churned. Five folds assigned by a digest of the customer id,
 so the split is the same on every machine.
+
+## Window
+
+Time zero is the join, so tenure month 1 is the first month at risk and number 0 cannot appear. 7,043 rows, 1,869 churn events, 356 rows still at risk at month 72 and therefore censored rather than counted as survivors. The series and the panel agree on the event count. Months below the 30-row at-risk floor: none.
+
+The last survival reading is not compared with `1 - events / rows`. The series measures a hazard over a shrinking risk set, so a customer who stops contributing without churning leaves the denominator; the crude share divides by every row at once. The two agree only when nobody is censored before the last month.
 
 ## Held out
 
@@ -20,10 +26,12 @@ so the split is the same on every machine.
 | folds | 5 |
 | AUC 95% interval | [0.857, 0.876] |
 | AUC 95% interval, DeLong logit | [0.858, 0.876] |
+| AUC 95% interval, BCa | [0.858, 0.877] |
 | AUC standard error | 0.0046 |
-| Brier score | 0.134 |
+| Brier score | 0.134 [0.130, 0.138] |
 | log loss | 0.418 |
-| expected calibration error | 0.075 |
+| expected calibration error | 0.075 [0.069, 0.084] |
+| expected calibration error after the beta map, in sample | 0.006 |
 | conformal coverage at 90% nominal | 0.917 |
 | conformal mean set size | 1.24 |
 | gradient boosted trees, AUC | 0.898 [0.890, 0.905] |
@@ -36,19 +44,42 @@ Fold AUC: 0.864, 0.859, 0.876, 0.862, 0.878
 
 ## Uncertainty
 
-The bootstrap interval is a percentile interval over the held-out rows,
-400 resamples, seeded so a rebuild reproduces it. The DeLong interval is
-asymptotic, and its bounds are read on the logit scale, so it cannot leave
-(0, 1); it is centred on the continuity corrected AUC rather than on the raw
-reading, which is why its two ends are not equidistant from the point. Quote
-the wider of the two, here the bootstrap reading at [0.857, 0.876]. The logit is not
-decoration: DeLong's normal interval is liberal when positives are under about
-fifty, and without the transform the upper bound of a near perfect classifier
-crosses one and stops bounding anything. The conformal threshold is fitted on
-the first half of the held-out rows and coverage is measured on the second
-half, so the coverage number is not the calibration set scored against itself.
-The tree ensemble uses the same folds, features and target as the logistic; it
-is the tabular comparison the card previously lacked, not a second headline.
+Three intervals are reported and the widest is the one to quote, here the
+bootstrap reading at [0.857, 0.876]. The bootstrap is a percentile interval over 400
+seeded resamples. The DeLong interval is asymptotic and its bounds are read on
+the logit scale, so they cannot leave (0, 1); it is centred on the continuity
+corrected AUC rather than the raw reading, which is why its ends are not
+equidistant from the point. BCa corrects the percentile interval for bias
+(z0 +0.037) and for the skew of a bounded metric near a ceiling (acceleration
++0.0287), both read off the same resamples at no extra data cost. The logit is
+not decoration: DeLong's normal interval is liberal when positives are under
+about fifty, and without the transform the upper bound of a near perfect
+classifier crosses one and stops bounding anything. The conformal threshold is
+fitted on the first half of the held-out rows and coverage is measured on the
+second half, so the coverage number is not the calibration set scored against
+itself. The tree ensemble uses the same folds, features and target as the
+logistic; it is the tabular comparison the card previously lacked, not a second
+headline.
+
+### Does the interval hold?
+
+Coverage was measured by simulation at 251 rows with 50 positives, a
+generating world whose true area under the curve is known in closed form
+(0.760), and 200 independent trials per method. Nominal is 95% and the band
+is 0.93 to 0.97.
+
+| interval | measured coverage | mean width | inside the band |
+|---|---:|---:|:---:|
+| bootstrap-percentile | 0.940 | 0.145 | yes |
+| bca | 0.935 | 0.146 | yes |
+| delong-logit | 0.925 | 0.147 | no |
+
+bootstrap-percentile, bca held nominal 0.95 inside [0.93, 0.97] at 251 rows with 50 positives
+
+### Calibration
+
+The expected calibration error is a mean of ten noisy bin ratios, so it is
+reported with a percentile interval: 0.075 [0.069, 0.084]. beta map fitted on these rows: a 1.716, b -2.093, c +0.333, in-sample ECE 0.006 against raw 0.075. An in-sample error understates both, so the honest comparison needs a held-out split.
 
 ## Class conditional conformal
 

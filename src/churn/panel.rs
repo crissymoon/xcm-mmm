@@ -56,7 +56,11 @@ pub struct Month {
 }
 
 /// The churn hazard by tenure month, with right censoring.
-pub fn series(rows: &[Row]) -> Vec<Month> {
+///
+/// Takes the two columns the hazard needs rather than a whole source row, so
+/// the window contract in [`super::contract`] can rebuild the same series from
+/// a rendered panel and compare like with like.
+pub fn series(rows: &[super::contract::Tenure]) -> Vec<Month> {
     let longest = rows.iter().map(|row| row.tenure).max().unwrap_or(0);
     let mut out = Vec::with_capacity(longest as usize);
     let mut survival = 1.0;
@@ -236,7 +240,12 @@ pub fn extract(dir: &str) -> io::Result<Report> {
     let table = csvx::read(&source_path)?;
     let rows = load::read(&table)?;
     let model = EmotionModel::load(&format!("{dir}/{EMOTION_MODEL}"))?;
-    let months = series(&rows);
+    let months = series(
+        &rows
+            .iter()
+            .map(super::contract::Tenure::from_row)
+            .collect::<Vec<_>>(),
+    );
     let reasons = reasons(&rows, &model);
     let summary = summarise(&reasons);
 
@@ -321,8 +330,26 @@ pub fn check(dir: &str) -> io::Result<Vec<String>> {
     let table = csvx::read(&format!("{dir}/{SOURCE}"))?;
     let rows = load::read(&table)?;
     let model = EmotionModel::load(&format!("{dir}/{EMOTION_MODEL}"))?;
-    let months = series(&rows);
+    let months = series(
+        &rows
+            .iter()
+            .map(super::contract::Tenure::from_row)
+            .collect::<Vec<_>>(),
+    );
     let reasons = reasons(&rows, &model);
+    // The window is a data contract, so a broken one is a fault beside the
+    // rebuild comparison rather than a footnote: a panel that counts a row
+    // before time zero scores well for the wrong reason.
+    let window = super::contract::check(
+        &rows
+            .iter()
+            .map(super::contract::Tenure::from_row)
+            .collect::<Vec<_>>(),
+        &months,
+    );
+    for violation in &window.violations {
+        faults.push(format!("window: {violation}"));
+    }
     for (name, rebuilt) in [
         (PANEL, render_panel(&rows)),
         (SERIES, render_series(&months)),
@@ -335,6 +362,19 @@ pub fn check(dir: &str) -> io::Result<Vec<String>> {
             Ok(_) => {}
             Err(_) => faults.push(format!("{name} is missing")),
         }
+    }
+    // The window is a data contract, so a broken one is a fault beside the
+    // rebuild comparison rather than a footnote: a panel that counts a row
+    // before time zero scores well for the wrong reason.
+    let window = super::contract::check(
+        &rows
+            .iter()
+            .map(super::contract::Tenure::from_row)
+            .collect::<Vec<_>>(),
+        &months,
+    );
+    for violation in &window.violations {
+        faults.push(format!("window: {violation}"));
     }
     let summary = summarise(&reasons);
     let rebuilt = serde_json::to_string_pretty(&summary).map_err(io::Error::other)?;
@@ -398,9 +438,7 @@ fn quote(cell: &str) -> String {
     format!("\"{}\"", cell.replace('"', "\"\""))
 }
 
-fn round4(value: f64) -> f64 {
-    (value * 10_000.0).round() / 10_000.0
-}
+use crate::num::round4;
 
 /// True when a path exists.
 pub fn exists(path: &str) -> bool {
@@ -426,7 +464,12 @@ mod tests {
 
     #[test]
     fn the_hazard_uses_everyone_who_reached_the_month() {
-        let months = series(&rows());
+        let months = series(
+            &rows()
+                .iter()
+                .map(crate::churn::contract::Tenure::from_row)
+                .collect::<Vec<_>>(),
+        );
         assert_eq!(months.len(), 3);
         assert_eq!(months[0].at_risk, 3);
         assert_eq!(months[0].churned, 1);
@@ -437,7 +480,12 @@ mod tests {
 
     #[test]
     fn survival_falls_by_the_hazard() {
-        let months = series(&rows());
+        let months = series(
+            &rows()
+                .iter()
+                .map(crate::churn::contract::Tenure::from_row)
+                .collect::<Vec<_>>(),
+        );
         let product: f64 = months.iter().map(|m| 1.0 - m.hazard).product();
         assert!((months.last().unwrap().survival - product).abs() < 1e-9);
     }

@@ -1,7 +1,7 @@
 {
   "name": "xcm-mmm-churn-baseline",
-  "version": 2,
-  "built_at": "2026-11-16T02:17:01Z",
+  "version": 3,
+  "built_at": "2026-11-16T05:05:15Z",
   "features": [
     "tenure",
     "monthly",
@@ -152,6 +152,59 @@
     "brier": 0.1341,
     "log_loss": 0.4185,
     "ece": 0.0747,
+    "ece_low": 0.0693,
+    "ece_high": 0.0836,
+    "brier_low": 0.1301,
+    "brier_high": 0.1383,
+    "calibrated_ece": 0.0065,
+    "calibration_map": {
+      "a": 1.716314142702593,
+      "b": -2.093121366027484,
+      "c": 0.33261564062659404,
+      "rows": 7043,
+      "converged": true,
+      "iterations": 7,
+      "method": "beta"
+    },
+    "calibration_note": "beta map fitted on these rows: a 1.716, b -2.093, c +0.333, in-sample ECE 0.006 against raw 0.075. An in-sample error understates both, so the honest comparison needs a held-out split.",
+    "auc_bca_low": 0.8584,
+    "auc_bca_high": 0.8773,
+    "auc_bca_bias": 0.0375,
+    "auc_bca_acceleration": 0.0287,
+    "coverage": {
+      "nominal": 0.95,
+      "true_auc": 0.7602500081523734,
+      "rows": 251,
+      "positives": 50,
+      "methods": [
+        {
+          "method": "bootstrap-percentile",
+          "covered": 0.94,
+          "mean_width": 0.14488300293182083,
+          "trials": 200,
+          "within_band": true
+        },
+        {
+          "method": "bca",
+          "covered": 0.935,
+          "mean_width": 0.1458738948227258,
+          "trials": 200,
+          "within_band": true
+        },
+        {
+          "method": "delong-logit",
+          "covered": 0.925,
+          "mean_width": 0.14716551241761225,
+          "trials": 200,
+          "within_band": false
+        }
+      ],
+      "band": [
+        0.9299999999999999,
+        0.97
+      ],
+      "note": "bootstrap-percentile, bca held nominal 0.95 inside [0.93, 0.97] at 251 rows with 50 positives"
+    },
     "calibration": [
       {
         "low": 0.0,
@@ -257,5 +310,18 @@
     "precision": 0.7645,
     "majority": 0.7346,
     "shuffled": null
+  },
+  "window": {
+    "declared": "join",
+    "first_month": 1,
+    "last_month": 72,
+    "rows": 7043,
+    "events": 1869,
+    "censored": 356,
+    "thin_months": [],
+    "entered": 0,
+    "before_zero": 0,
+    "gaps": [],
+    "violations": []
   }
 }

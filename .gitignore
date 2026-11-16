@@ -20,3 +20,7 @@
 *.local.csv
 synthetic.csv
 /front.csv
+
+# python bytecode
+__pycache__/
+*.pyc

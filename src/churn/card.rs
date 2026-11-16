@@ -23,6 +23,41 @@ pub fn render(model: &ChurnModel) -> String {
         commas(score.rows),
         commas(score.positives)
     ));
+    if let Some(window) = &model.window {
+        let thin = match window.thin_months.len() {
+            0 => "none".to_string(),
+            1 => "1".to_string(),
+            n => commas(n),
+        };
+        out.push_str("## Window\n\n");
+        out.push_str(&format!(
+            "Time zero is the {}, so tenure month {} is the first month at risk and \
+number 0 cannot appear. {} rows, {} churn events, {} rows still at risk at \
+month {} and therefore censored rather than counted as survivors. The series \
+and the panel agree on the event count{}. Months below the {}-row at-risk \
+floor: {}.\n\n",
+            window.declared,
+            window.first_month,
+            commas(window.rows),
+            commas(window.events),
+            commas(window.censored),
+            window.last_month,
+            if window.ok() {
+                ""
+            } else {
+                ", but the contract is broken and `churn check` reports why"
+            },
+            crate::churn::contract::MIN_AT_RISK,
+            thin
+        ));
+        out.push_str(
+            "The last survival reading is not compared with `1 - events / rows`. The \
+series measures a hazard over a shrinking risk set, so a customer who stops \
+contributing without churning leaves the denominator; the crude share divides by \
+every row at once. The two agree only when nobody is censored before the last \
+month.\n\n",
+        );
+    }
     out.push_str("## Held out\n\n");
     out.push_str("| reading | value |\n|---|---:|\n");
     out.push_str(&format!("| AUC | {:.3} |\n", score.auc));
@@ -51,12 +86,23 @@ pub fn render(model: &ChurnModel) -> String {
         "| AUC 95% interval, DeLong logit | [{:.3}, {:.3}] |\n",
         score.auc_logit_low, score.auc_logit_high
     ));
+    out.push_str(&format!(
+        "| AUC 95% interval, BCa | [{:.3}, {:.3}] |\n",
+        score.auc_bca_low, score.auc_bca_high
+    ));
     out.push_str(&format!("| AUC standard error | {:.4} |\n", score.auc_se));
-    out.push_str(&format!("| Brier score | {:.3} |\n", score.brier));
+    out.push_str(&format!(
+        "| Brier score | {:.3} [{:.3}, {:.3}] |\n",
+        score.brier, score.brier_low, score.brier_high
+    ));
     out.push_str(&format!("| log loss | {:.3} |\n", score.log_loss));
     out.push_str(&format!(
-        "| expected calibration error | {:.3} |\n",
-        score.ece
+        "| expected calibration error | {:.3} [{:.3}, {:.3}] |\n",
+        score.ece, score.ece_low, score.ece_high
+    ));
+    out.push_str(&format!(
+        "| expected calibration error after the beta map, in sample | {:.3} |\n",
+        score.calibrated_ece
     ));
     out.push_str(&format!(
         "| conformal coverage at {:.0}% nominal | {:.3} |\n",
@@ -88,14 +134,53 @@ pub fn render(model: &ChurnModel) -> String {
     out.push_str("## Uncertainty\n\n");
     let bootstrap_width = (score.auc_high - score.auc_low).abs();
     let logit_width = (score.auc_logit_high - score.auc_logit_low).abs();
-    let (wider, wider_low, wider_high) = if logit_width > bootstrap_width {
-        ("DeLong logit", score.auc_logit_low, score.auc_logit_high)
-    } else {
-        ("bootstrap", score.auc_low, score.auc_high)
-    };
+    let bca_width = (score.auc_bca_high - score.auc_bca_low).abs();
+    let (wider, wider_low, wider_high) =
+        if logit_width >= bootstrap_width && logit_width >= bca_width {
+            ("DeLong logit", score.auc_logit_low, score.auc_logit_high)
+        } else if bca_width >= bootstrap_width {
+            ("BCa", score.auc_bca_low, score.auc_bca_high)
+        } else {
+            ("bootstrap", score.auc_low, score.auc_high)
+        };
     out.push_str(&format!(
-        "The bootstrap interval is a percentile interval over the held-out rows,\n400 resamples, seeded so a rebuild reproduces it. The DeLong interval is\nasymptotic, and its bounds are read on the logit scale, so it cannot leave\n(0, 1); it is centred on the continuity corrected AUC rather than on the raw\nreading, which is why its two ends are not equidistant from the point. Quote\nthe wider of the two, here the {} reading at [{:.3}, {:.3}]. The logit is not\ndecoration: DeLong's normal interval is liberal when positives are under about\nfifty, and without the transform the upper bound of a near perfect classifier\ncrosses one and stops bounding anything. The conformal threshold is fitted on\nthe first half of the held-out rows and coverage is measured on the second\nhalf, so the coverage number is not the calibration set scored against itself.\nThe tree ensemble uses the same folds, features and target as the logistic; it\nis the tabular comparison the card previously lacked, not a second headline.\n\n",
-        wider, wider_low, wider_high
+        "Three intervals are reported and the widest is the one to quote, here the\n{} reading at [{:.3}, {:.3}]. The bootstrap is a percentile interval over 400\nseeded resamples. The DeLong interval is asymptotic and its bounds are read on\nthe logit scale, so they cannot leave (0, 1); it is centred on the continuity\ncorrected AUC rather than the raw reading, which is why its ends are not\nequidistant from the point. BCa corrects the percentile interval for bias\n(z0 {:+.3}) and for the skew of a bounded metric near a ceiling (acceleration\n{:+.4}), both read off the same resamples at no extra data cost. The logit is\nnot decoration: DeLong's normal interval is liberal when positives are under\nabout fifty, and without the transform the upper bound of a near perfect\nclassifier crosses one and stops bounding anything. The conformal threshold is\nfitted on the first half of the held-out rows and coverage is measured on the\nsecond half, so the coverage number is not the calibration set scored against\nitself. The tree ensemble uses the same folds, features and target as the\nlogistic; it is the tabular comparison the card previously lacked, not a second\nheadline.\n\n",
+        wider,
+        wider_low,
+        wider_high,
+        score.auc_bca_bias,
+        score.auc_bca_acceleration
+    ));
+    if !score.coverage.methods.is_empty() {
+        out.push_str("### Does the interval hold?\n\n");
+        out.push_str(&format!(
+            "Coverage was measured by simulation at {} rows with {} positives, a\ngenerating world whose true area under the curve is known in closed form\n({:.3}), and {} independent trials per method. Nominal is {:.0}% and the band\nis {:.2} to {:.2}.\n\n",
+            score.coverage.rows,
+            score.coverage.positives,
+            score.coverage.true_auc,
+            score.coverage.methods.first().map(|entry| entry.trials).unwrap_or(0),
+            score.coverage.nominal * 100.0,
+            score.coverage.band.0,
+            score.coverage.band.1
+        ));
+        out.push_str("| interval | measured coverage | mean width | inside the band |\n");
+        out.push_str("|---|---:|---:|:---:|\n");
+        for entry in &score.coverage.methods {
+            out.push_str(&format!(
+                "| {} | {:.3} | {:.3} | {} |\n",
+                entry.method,
+                entry.covered,
+                entry.mean_width,
+                if entry.within_band { "yes" } else { "no" }
+            ));
+        }
+        out.push('\n');
+        out.push_str(&format!("{}\n\n", score.coverage.note));
+    }
+    out.push_str("### Calibration\n\n");
+    out.push_str(&format!(
+        "The expected calibration error is a mean of ten noisy bin ratios, so it is\nreported with a percentile interval: {:.3} [{:.3}, {:.3}]. {}\n\n",
+        score.ece, score.ece_low, score.ece_high, score.calibration_note
     ));
     out.push_str("## Class conditional conformal\n\n");
     if score.conformal_pos_rows == 0 && score.conformal_neg_rows == 0 {

@@ -28,7 +28,7 @@ use crate::digest::fnv64_str;
 use crate::learn::{Learner, TreeConfig};
 use crate::rng::Rng;
 use crate::support::{self, LearningPoint};
-use crate::uncertainty::{bootstrap_auc, calibration, delong_auc, mondrian, MondrianConformal};
+use crate::uncertainty::{bootstrap_auc, delong_auc, mondrian, MondrianConformal};
 
 pub const MODEL: &str = "model.json";
 pub const CARD: &str = "card.md";
@@ -152,6 +152,30 @@ pub struct Score {
     pub brier: f64,
     pub log_loss: f64,
     pub ece: f64,
+    /// Percentile interval on the expected calibration error.
+    pub ece_low: f64,
+    /// Upper end of that interval.
+    pub ece_high: f64,
+    /// Percentile interval on the Brier score.
+    pub brier_low: f64,
+    /// Upper end of that interval.
+    pub brier_high: f64,
+    /// Reliability after the beta map, in sample.
+    pub calibrated_ece: f64,
+    /// The fitted beta map, with the note that describes what it did.
+    pub calibration_map: crate::uncertainty::BetaCalibration,
+    /// Plain reading of the calibration table.
+    pub calibration_note: String,
+    /// Bias corrected and accelerated interval for AUC.
+    pub auc_bca_low: f64,
+    /// Upper end of the BCa interval.
+    pub auc_bca_high: f64,
+    /// Bias correction the BCa interval used.
+    pub auc_bca_bias: f64,
+    /// Acceleration the BCa interval used.
+    pub auc_bca_acceleration: f64,
+    /// Coverage simulation for the three intervals at the challenged shape.
+    pub coverage: crate::uncertainty::CoverageReport,
     pub calibration: Vec<crate::uncertainty::CalibrationBin>,
     pub conformal_alpha: f64,
     pub conformal_threshold: f64,
@@ -191,6 +215,11 @@ pub struct ChurnModel {
     pub coefficients: Vec<Coefficient>,
     pub score: Score,
     pub metrics: Metrics,
+    /// The observation window the panel was measured over. Absent on an
+    /// artifact built before the contract existed, which reads as "unknown"
+    /// rather than as a failure.
+    #[serde(default)]
+    pub window: Option<crate::churn::contract::TimeZero>,
 }
 
 /// Fit the folds, choose a cut on the training side, and report the held-out score.
@@ -251,7 +280,10 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
     let learning = learning_curve(samples, folds);
     let interval = bootstrap_auc(&scores, &labels, 400, 0.95, 0x5EED);
     let delong = delong_auc(&scores, &labels, 0.95);
-    let reliability = calibration(&scores, &labels, 10);
+    let accelerated = crate::uncertainty::bca(&scores, &labels, 400, 0.95, 0x5EED, 20, auc);
+    let reliability =
+        crate::uncertainty::calibration_report(&scores, &labels, 10, 200, 0.95, 0xCA1B);
+    let coverage = crate::uncertainty::simulate_coverage(&coverage_config());
     let class_report = mondrian(&scores, &labels, 0.10);
     let pooled = &class_report.pooled;
     let churn_class = class_reading(&class_report, true);
@@ -260,7 +292,7 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
     let tree_interval = bootstrap_auc(&tree_scores, &labels, 200, 0.95, 0x7A11);
     ChurnModel {
         name: "xcm-mmm-churn-baseline".to_string(),
-        version: 2,
+        version: 3,
         built_at: built_at(),
         features: names.clone(),
         model: full,
@@ -280,10 +312,22 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
             tenure_auc: round4(tenure_auc),
             folds,
             per_fold: per_fold.iter().map(|value| round4(*value)).collect(),
-            brier: round4(reliability.brier),
-            log_loss: round4(reliability.log_loss),
-            ece: round4(reliability.ece),
-            calibration: reliability.bins,
+            brier: round4(reliability.raw.brier),
+            log_loss: round4(reliability.raw.log_loss),
+            ece: round4(reliability.raw.ece),
+            ece_low: round4(reliability.ece.low),
+            ece_high: round4(reliability.ece.high),
+            brier_low: round4(reliability.brier.low),
+            brier_high: round4(reliability.brier.high),
+            calibrated_ece: round4(reliability.calibrated.ece),
+            calibration_map: reliability.map.clone(),
+            calibration_note: reliability.note.clone(),
+            auc_bca_low: round4(accelerated.interval.low),
+            auc_bca_high: round4(accelerated.interval.high),
+            auc_bca_bias: round4(accelerated.bias),
+            auc_bca_acceleration: round4(accelerated.acceleration),
+            coverage,
+            calibration: reliability.raw.bins.clone(),
             conformal_alpha: round4(pooled.alpha),
             conformal_threshold: round4(pooled.threshold),
             conformal_coverage: round4(pooled.coverage),
@@ -304,7 +348,19 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
             learning,
         },
         metrics,
+        window: None,
     }
+}
+
+/// The coverage simulation, run at the shape the intervals were challenged at.
+///
+/// Coverage is a property of the estimator at a bank shape, not of this panel,
+/// so it is measured at 251 rows with 50 positives, where an asymptotic variance
+/// is defensible and a failure is visible. Rerunning it at seven thousand rows
+/// would cost minutes and answer the same question less sharply: every interval
+/// covers at that size, which is why nobody quotes a small-bank result.
+fn coverage_config() -> crate::uncertainty::CoverageConfig {
+    crate::uncertainty::CoverageConfig::default()
 }
 
 /// Held-out AUC at four training fractions, same folds and same model.
@@ -461,7 +517,8 @@ pub fn build(dir: &str) -> io::Result<ChurnModel> {
 /// [`build`] with a fold count, for a caller that wants to test the split.
 pub fn build_with(dir: &str, folds: usize) -> io::Result<ChurnModel> {
     let samples = load(&format!("{dir}/panel.csv"))?;
-    let model = fit(&samples, folds);
+    let mut model = fit(&samples, folds);
+    model.window = super::contract::check_files(dir).ok();
     let text = serde_json::to_string_pretty(&model).map_err(io::Error::other)?;
     fs::write(format!("{dir}/{MODEL}"), format!("{text}\n"))?;
     fs::write(format!("{dir}/{CARD}"), super::card::render(&model))?;
@@ -505,9 +562,7 @@ fn class_reading(report: &MondrianConformal, label: bool) -> (usize, f64, f64, b
         .unwrap_or((0, 0.0, 0.0, false))
 }
 
-fn round4(value: f64) -> f64 {
-    (value * 10_000.0).round() / 10_000.0
-}
+use crate::num::round4;
 
 #[cfg(test)]
 mod tests {

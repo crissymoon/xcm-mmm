@@ -538,9 +538,7 @@ impl Scanner {
 }
 
 /// Four decimal places, so a rebuild writes the same bytes.
-pub fn round4(value: f64) -> f64 {
-    (value * 10_000.0).round() / 10_000.0
-}
+pub use crate::num::round4;
 
 /// True when two artifacts are the same fit, ignoring when the fit ran.
 pub fn same_fit(left: &EmotionModel, right: &EmotionModel) -> bool {

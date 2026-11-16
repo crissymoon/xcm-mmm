@@ -52,6 +52,7 @@ pub mod linalg;
 pub mod metrics;
 pub mod moead;
 pub mod monitor;
+pub mod num;
 pub mod pairs;
 pub mod problem;
 pub mod profile;

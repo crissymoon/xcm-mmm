@@ -22,6 +22,7 @@
 
 pub mod card;
 pub mod cli;
+pub mod contract;
 pub mod csvx;
 pub mod fit;
 pub mod load;

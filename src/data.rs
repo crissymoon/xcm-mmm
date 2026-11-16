@@ -308,6 +308,29 @@ impl Dataset {
         }
     }
 
+    /// A copy of an arbitrary row selection, keeping the feature names.
+    ///
+    /// [`Dataset::slice`] can only take one contiguous window. Combinatorial
+    /// purged cross-validation trains on every group except the ones it tests,
+    /// which is a union of disjoint windows, so it needs this instead. Indices
+    /// out of range are skipped rather than panicking.
+    pub fn gather(&self, rows: &[usize]) -> Dataset {
+        let mut features = Vec::with_capacity(rows.len());
+        let mut target = Vec::with_capacity(rows.len());
+        for &row in rows {
+            if row < self.len() {
+                features.push(self.features[row].clone());
+                target.push(self.target[row]);
+            }
+        }
+        Dataset {
+            names: self.names.clone(),
+            features,
+            target,
+            skipped: 0,
+        }
+    }
+
     /// Re-apply a mean and deviation per column, as returned by
     /// [`Dataset::standardize`].
     ///

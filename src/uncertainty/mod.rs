@@ -19,6 +19,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::rng::Rng;
 
+pub mod bca;
+pub mod calibrate;
+pub mod coverage;
+
+pub use bca::{bca, Bca};
+pub use calibrate::{beta_calibration, calibration_report, BetaCalibration, CalibrationReport};
+pub use coverage::{simulate as simulate_coverage, CoverageConfig, CoverageReport, MethodCoverage};
+
 /// A point estimate with a percentile interval.
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct Interval {
@@ -118,23 +126,7 @@ where
             resamples: 0,
         };
     }
-    let mut rng = Rng::new(seed);
-    let mut draws = Vec::with_capacity(reps);
-    let mut picked_scores = Vec::with_capacity(scores.len());
-    let mut picked_labels = Vec::with_capacity(labels.len());
-    for _ in 0..reps {
-        picked_scores.clear();
-        picked_labels.clear();
-        for _ in 0..scores.len() {
-            let at = rng.below(scores.len());
-            picked_scores.push(scores[at]);
-            picked_labels.push(labels[at]);
-        }
-        let value = statistic(&picked_scores, &picked_labels);
-        if value.is_finite() {
-            draws.push(value);
-        }
-    }
+    let draws = draws(scores, labels, reps, seed, &mut statistic);
     if draws.is_empty() {
         return Interval {
             point,
@@ -152,6 +144,48 @@ where
         level,
         resamples: draws.len(),
     }
+}
+
+/// The bootstrap resamples a percentile interval is read from.
+///
+/// Split out so a caller that needs the whole distribution, rather than its two
+/// tails, does not reimplement the resampling loop. BCa in
+/// [`bca::bca`] is exactly such a caller: it maps the tails through a bias and
+/// an acceleration correction before reading the same draws.
+///
+/// Non-finite values are dropped rather than clamped, so a resample that cannot
+/// be scored does not drag an interval towards a half.
+pub fn draws<F>(
+    scores: &[f64],
+    labels: &[bool],
+    reps: usize,
+    seed: u64,
+    statistic: &mut F,
+) -> Vec<f64>
+where
+    F: FnMut(&[f64], &[bool]) -> f64,
+{
+    if scores.len() != labels.len() || scores.len() < 4 || reps == 0 {
+        return Vec::new();
+    }
+    let mut rng = Rng::new(seed);
+    let mut out = Vec::with_capacity(reps);
+    let mut picked_scores = Vec::with_capacity(scores.len());
+    let mut picked_labels = Vec::with_capacity(labels.len());
+    for _ in 0..reps {
+        picked_scores.clear();
+        picked_labels.clear();
+        for _ in 0..scores.len() {
+            let at = rng.below(scores.len());
+            picked_scores.push(scores[at]);
+            picked_labels.push(labels[at]);
+        }
+        let value = statistic(&picked_scores, &picked_labels);
+        if value.is_finite() {
+            out.push(value);
+        }
+    }
+    out
 }
 
 /// Percentile bootstrap interval for AUC.
@@ -641,6 +675,14 @@ fn class_test(scores: &[f64], labels: &[bool], label: bool, threshold: f64) -> (
     let rows = rows.max(1) as f64;
     (covered as f64 / rows, size_total / rows)
 }
+
+/// Round to four decimals, the precision the artifacts store.
+///
+/// Every printed metric goes through this first, because a value rounded one
+/// way in a table and formatted from full precision in the prose beside it can
+/// disagree in the last digit. On the churn panel it did: the table said 0.006
+/// and the note said 0.007 for the same error.
+pub use crate::num::round4;
 
 /// Effective sample size for a mean under a finite population, `n`.
 pub fn effective_n(positives: usize, negatives: usize) -> f64 {

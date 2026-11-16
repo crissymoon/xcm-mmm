@@ -244,9 +244,7 @@ fn document_frequency(bank: &[Vec<String>]) -> BTreeMap<String, f64> {
 }
 
 /// Four decimal places, so a rebuild writes the same bytes.
-pub fn round4(value: f64) -> f64 {
-    (value * 10_000.0).round() / 10_000.0
-}
+pub use crate::num::round4;
 
 #[cfg(test)]
 mod tests {

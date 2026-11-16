@@ -307,9 +307,7 @@ pub fn now_iso8601() -> String {
 }
 
 /// Round to four places, the precision a reader is expected to act on.
-pub fn round4(value: f64) -> f64 {
-    (value * 10_000.0).round() / 10_000.0
-}
+pub use crate::num::round4;
 
 #[cfg(test)]
 mod tests {

@@ -368,6 +368,12 @@ fn info(dir: &str) -> Result<(), Box<dyn Error>> {
     let churned = series.require("churned")?;
     let hazard = series.require("hazard")?;
     let survival = series.require("survival")?;
+    if let Ok(window) = super::contract::check_files(dir) {
+        println!("window    {}", window.summary());
+        for violation in &window.violations {
+            println!("  broken  {violation}");
+        }
+    }
     println!("series    {} months", commas(series.rows.len()));
     println!("month  at risk  churned  hazard  survival");
     for row in &series.rows {

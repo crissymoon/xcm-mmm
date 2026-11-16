@@ -129,6 +129,21 @@ impl Ledger {
         self.best.values().map(|f| mean(f)).collect()
     }
 
+    /// Every distinct set with its mean fold score, best mean first.
+    ///
+    /// The order is total: the mean decides, and the column set breaks a tie,
+    /// so a caller that takes the first `n` of these gets the same candidates
+    /// on every run. That is what makes the combinatorial audit repeatable.
+    pub fn ranked(&self) -> Vec<(Vec<usize>, f64)> {
+        let mut out: Vec<(Vec<usize>, f64)> = self
+            .best
+            .iter()
+            .map(|(columns, scores)| (columns.clone(), mean(scores)))
+            .collect();
+        out.sort_by(|a, b| a.1.total_cmp(&b.1).then_with(|| a.0.cmp(&b.0)));
+        out
+    }
+
     /// The best set and its mean fold score, lowest mean first.
     pub fn best(&self) -> Option<(Vec<usize>, f64)> {
         let mut winner: Option<(Vec<usize>, f64)> = None;
