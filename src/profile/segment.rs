@@ -473,7 +473,11 @@ mod tests {
         };
         let repeating = place(&artifact, &signal(0.9));
         let flat = place(&artifact, &signal(0.0));
-        assert_eq!(repeating.ranked[0].label, "creative reuse high");
+        assert!(
+            repeating.ranked[0].label.starts_with("creative reuse high"),
+            "fitted {}, expected the reuse segment",
+            repeating.ranked[0].label
+        );
         assert_ne!(flat.ranked[0].id, repeating.ranked[0].id);
     }
 

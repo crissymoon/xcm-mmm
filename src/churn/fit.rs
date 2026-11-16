@@ -20,10 +20,15 @@ use std::io;
 use serde::{Deserialize, Serialize};
 
 use super::csvx;
+use crate::data::Dataset;
 use crate::dataset::built_at;
 use crate::detect::eval::{best_cut, evaluate, Metrics};
 use crate::detect::logistic::{FitParams, Logistic};
 use crate::digest::fnv64_str;
+use crate::learn::{Learner, TreeConfig};
+use crate::rng::Rng;
+use crate::support::{self, LearningPoint};
+use crate::uncertainty::{bootstrap_auc, calibration, conformal};
 
 pub const MODEL: &str = "model.json";
 pub const CARD: &str = "card.md";
@@ -128,16 +133,32 @@ pub fn fold(id: &str, folds: usize) -> usize {
 
 /// What the held-out folds said.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
+#[serde(default)]
 pub struct Score {
     pub rows: usize,
     pub positives: usize,
     pub auc: f64,
+    pub auc_low: f64,
+    pub auc_high: f64,
     pub balanced: f64,
     pub accuracy: f64,
     pub cut: f64,
     pub tenure_auc: f64,
     pub folds: usize,
     pub per_fold: Vec<f64>,
+    pub brier: f64,
+    pub log_loss: f64,
+    pub ece: f64,
+    pub calibration: Vec<crate::uncertainty::CalibrationBin>,
+    pub conformal_alpha: f64,
+    pub conformal_threshold: f64,
+    pub conformal_coverage: f64,
+    pub conformal_set: f64,
+    pub tree_auc: f64,
+    pub tree_auc_low: f64,
+    pub tree_auc_high: f64,
+    pub events_per_feature: f64,
+    pub learning: Vec<LearningPoint>,
 }
 
 /// One coefficient, on the standardised scale the fit uses.
@@ -202,7 +223,7 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
     let predicted: Vec<bool> = scores.iter().map(|score| *score >= 0.5).collect();
     let metrics = evaluate(&labels, &predicted);
     let cut = cuts.iter().sum::<f64>() / cuts.len().max(1) as f64;
-    let calibrated = evaluate(&labels, &flags);
+    let cut_metrics = evaluate(&labels, &flags);
     let rows_all: Vec<Vec<f64>> = samples.iter().map(|s| s.values.clone()).collect();
     let full = Logistic::fit(&rows_all, &labels, &FitParams::default());
     let coefficients: Vec<Coefficient> = names
@@ -214,26 +235,160 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
         })
         .collect();
     let tenure_auc = auc(&narrow_scores, &labels);
+    let positives = labels.iter().filter(|label| **label).count();
+    let learning = learning_curve(samples, folds);
+    let interval = bootstrap_auc(&scores, &labels, 400, 0.95, 0x5EED);
+    let reliability = calibration(&scores, &labels, 10);
+    let conformal = conformal(&scores, &labels, 0.10);
+    let tree_scores = tree_baseline(samples, folds);
+    let tree_interval = bootstrap_auc(&tree_scores, &labels, 200, 0.95, 0x7A11);
     ChurnModel {
         name: "xcm-mmm-churn-baseline".to_string(),
-        version: 1,
+        version: 2,
         built_at: built_at(),
-        features: names,
+        features: names.clone(),
         model: full,
         coefficients,
         score: Score {
             rows: samples.len(),
-            positives: labels.iter().filter(|label| **label).count(),
+            positives,
             auc: round4(auc(&scores, &labels)),
-            balanced: calibrated.balanced,
-            accuracy: calibrated.accuracy,
+            auc_low: round4(interval.low),
+            auc_high: round4(interval.high),
+            balanced: cut_metrics.balanced,
+            accuracy: cut_metrics.accuracy,
             cut: round4(cut),
             tenure_auc: round4(tenure_auc),
             folds,
             per_fold: per_fold.iter().map(|value| round4(*value)).collect(),
+            brier: round4(reliability.brier),
+            log_loss: round4(reliability.log_loss),
+            ece: round4(reliability.ece),
+            calibration: reliability.bins,
+            conformal_alpha: round4(conformal.alpha),
+            conformal_threshold: round4(conformal.threshold),
+            conformal_coverage: round4(conformal.coverage),
+            conformal_set: round4(conformal.mean_set),
+            tree_auc: round4(tree_interval.point),
+            tree_auc_low: round4(tree_interval.low),
+            tree_auc_high: round4(tree_interval.high),
+            events_per_feature: round4(support::events_per_feature(positives, names.len())),
+            learning,
         },
         metrics,
     }
+}
+
+/// Held-out AUC at four training fractions, same folds and same model.
+///
+/// A curve still rising at the largest fraction says the bank is limited by
+/// rows. A flat curve says the ceiling is the features or the operator. The
+/// subsets are drawn deterministically from the training side of each fold, so
+/// the diagnostic rebuilds with the artifact.
+fn learning_curve(samples: &[Sample], folds: usize) -> Vec<LearningPoint> {
+    let fractions = [0.25, 0.5, 0.75, 1.0];
+    let mut out = Vec::with_capacity(fractions.len());
+    for (index, fraction) in fractions.iter().enumerate() {
+        let mut total = 0.0;
+        let mut used = 0usize;
+        let mut rows = 0usize;
+        for fold_at in 0..folds {
+            let train: Vec<usize> = (0..samples.len())
+                .filter(|at| fold(&samples[*at].id, folds) != fold_at)
+                .collect();
+            let test: Vec<usize> = (0..samples.len())
+                .filter(|at| fold(&samples[*at].id, folds) == fold_at)
+                .collect();
+            if train.is_empty() || test.is_empty() {
+                continue;
+            }
+            let mut rng = Rng::new(0x1EAF_u64.wrapping_add(index as u64 * 31 + fold_at as u64));
+            let mut order = train.clone();
+            for i in (1..order.len()).rev() {
+                let j = rng.below(i + 1);
+                order.swap(i, j);
+            }
+            let keep = ((order.len() as f64 * fraction).ceil() as usize)
+                .max(10)
+                .min(order.len());
+            let chosen = &order[..keep];
+            let labels: Vec<bool> = chosen.iter().map(|at| samples[*at].churn).collect();
+            if labels.iter().all(|label| *label) || labels.iter().all(|label| !*label) {
+                continue;
+            }
+            let rows_fit: Vec<Vec<f64>> = chosen
+                .iter()
+                .map(|at| samples[*at].values.clone())
+                .collect();
+            let model = Logistic::fit(&rows_fit, &labels, &FitParams::default());
+            let test_labels: Vec<bool> = test.iter().map(|at| samples[*at].churn).collect();
+            if test_labels.iter().all(|label| *label) || test_labels.iter().all(|label| !*label) {
+                continue;
+            }
+            let test_scores: Vec<f64> = test
+                .iter()
+                .map(|at| model.predict(&samples[*at].values))
+                .collect();
+            total += auc(&test_scores, &test_labels);
+            used += 1;
+            rows += chosen.len();
+        }
+        out.push(LearningPoint {
+            fraction: *fraction,
+            rows: rows.checked_div(used).unwrap_or(0),
+            auc: if used == 0 {
+                0.5
+            } else {
+                round4(total / used as f64)
+            },
+        });
+    }
+    out
+}
+
+/// A gradient boosted tree baseline on the same folds and features.
+///
+/// The review's claim is that a tree ensemble often beats a linear model on
+/// medium tabular data. This is how the crate tests it on the panel instead of
+/// asserting it: same rows, same fold assignment, same target, a different
+/// hypothesis class. Predictions are probabilities because the target is 0/1,
+/// so the raw ensemble output is clipped to `[0, 1]` before ranking.
+fn tree_baseline(samples: &[Sample], folds: usize) -> Vec<f64> {
+    let names = feature_names();
+    let all: Vec<usize> = (0..names.len()).collect();
+    let learner = Learner::Trees(TreeConfig {
+        estimators: 32,
+        depth: 3,
+        min_leaf: 20,
+        learning_rate: 0.1,
+    });
+    let mut scores = vec![0.5; samples.len()];
+    for fold_at in 0..folds {
+        let train: Vec<usize> = (0..samples.len())
+            .filter(|at| fold(&samples[*at].id, folds) != fold_at)
+            .collect();
+        let test: Vec<usize> = (0..samples.len())
+            .filter(|at| fold(&samples[*at].id, folds) == fold_at)
+            .collect();
+        if train.len() < 20 || test.is_empty() {
+            continue;
+        }
+        let features: Vec<Vec<f64>> = train.iter().map(|at| samples[*at].values.clone()).collect();
+        let target: Vec<f64> = train
+            .iter()
+            .map(|at| f64::from(u8::from(samples[*at].churn)))
+            .collect();
+        let Ok(dataset) = Dataset::new(names.clone(), features, target) else {
+            continue;
+        };
+        let Some(model) = learner.fit(&dataset, 0..dataset.len(), &all) else {
+            continue;
+        };
+        for at in test {
+            scores[at] = model.predict(&samples[at].values).clamp(0.0, 1.0);
+        }
+    }
+    scores
 }
 
 /// Area under the ROC curve, ties counted at half credit.

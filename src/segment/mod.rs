@@ -23,12 +23,16 @@
 //! folder, `segment assign` places an entity against it and `segment check`
 //! rebuilds from the shipped entities and reports every disagreement.
 //!
-//! Two design choices are worth stating. The search starts at three groups: a
+//! Three design choices are worth stating. The search starts at three groups: a
 //! two-way split of an advertising panel is a high and low score, not a
-//! segmentation, and it wins on silhouette for that reason alone. And the z is
+//! segmentation, and it wins on silhouette for that reason alone. The z is
 //! clipped at three standard deviations, because an advertiser with an almost
 //! constant reading would otherwise form a group of one and drag a centroid
-//! with it.
+//! with it. And the shape of a group is chosen per panel rather than assumed:
+//! `mixture` states what a spherical, a diagonal and a full covariance each
+//! believe, and `select` picks between them on held-out likelihood with a BIC
+//! choice of k and a stated margin, so the answer a two-way split can never give
+//! is written down instead of inherited from k-means.
 
 use serde::{Deserialize, Serialize};
 
@@ -37,15 +41,33 @@ pub mod card;
 pub mod cli;
 pub mod feature;
 pub mod kmeans;
+pub mod mixture;
 pub mod model;
+pub mod pipeline;
+pub mod select;
 pub mod stability;
 pub mod train;
 
 pub use ad::{AdRow, Day, Entity};
 pub use feature::{FeatureSpec, Matrix, Scaling, Transform};
 pub use kmeans::{Fit, Sweep};
+pub use mixture::{Component, Family, Mixture};
 pub use model::{Artifact, Manifest, Metrics, ProfileRow, Segment};
-pub use train::{build, check, extract, fit};
+pub use pipeline::fit;
+pub use select::{Baseline, Candidate, Choice, Dependence, Pair, Shuffle};
+pub use train::{build, check, extract};
+
+fn default_folds() -> usize {
+    5
+}
+
+fn default_gain() -> f64 {
+    0.02
+}
+
+fn default_restarts() -> usize {
+    4
+}
 
 /// The folder this crate ships, relative to the repository root.
 pub const FOLDER: &str = "data/segments";
@@ -79,6 +101,18 @@ pub struct SegmentConfig {
     pub controls: usize,
     /// Standard deviations at which a reading is clipped.
     pub clip: f64,
+    /// Folds the held-out likelihood is read on.
+    #[serde(default = "default_folds")]
+    pub folds: usize,
+    /// Nats per entity a freer family must add before it is preferred.
+    #[serde(default = "default_gain")]
+    pub min_gain: f64,
+    /// Starts per expectation maximisation fit; half are soft, half k-means.
+    #[serde(default = "default_restarts")]
+    pub em_restarts: usize,
+    /// A family held fixed for this run, or `None` to let the panel choose.
+    #[serde(default)]
+    pub family: Option<Family>,
     pub seed: u64,
 }
 
@@ -98,6 +132,10 @@ impl Default for SegmentConfig {
             bootstraps: 50,
             controls: 20,
             clip: 3.0,
+            folds: 5,
+            min_gain: 0.02,
+            em_restarts: 4,
+            family: None,
             seed: 20261114,
         }
     }
@@ -122,6 +160,8 @@ mod tests {
         assert!(cfg.margin > 0.0 && cfg.min_stability > 0.0);
         assert!(cfg.restarts >= 8 && cfg.bootstraps >= 10 && cfg.controls >= 5);
         assert!(cfg.clip >= 1.0);
+        assert!(cfg.folds >= 2 && cfg.min_gain > 0.0 && cfg.em_restarts >= 2);
+        assert!(cfg.family.is_none());
         assert!(!cfg.name.is_empty());
     }
 }

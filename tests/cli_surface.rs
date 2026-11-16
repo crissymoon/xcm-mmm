@@ -175,6 +175,73 @@ fn synth_then_forecast_runs_from_the_shell() {
 }
 
 #[test]
+fn scoring_the_front_prices_every_point_out_of_sample() {
+    let dir = temp_dir().join("curve");
+    std::fs::create_dir_all(&dir).unwrap();
+    let csv = dir.join("panel.csv");
+    let made = Command::new(binary())
+        .args([
+            "synth",
+            "--rows",
+            "240",
+            "--features",
+            "9",
+            "--informative",
+            "3",
+            "--seed",
+            "6",
+            "--out",
+        ])
+        .arg(&csv)
+        .output()
+        .unwrap();
+    assert!(made.status.success());
+
+    let out = Command::new(binary())
+        .args(["forecast"])
+        .arg(&csv)
+        .args([
+            "--method",
+            "moead",
+            "--folds",
+            "3",
+            "--budget",
+            "900",
+            "--holdout",
+            "0.25",
+            "--score-front",
+            "--json",
+        ])
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let value: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let front = value["models"]["moead"]["front"].as_array().unwrap();
+    let curve = value["models"]["moead"]["curve"].as_array().unwrap();
+    // One held-out score per front point, and every score a real number: a
+    // curve that skipped a point could not be used to choose a knee.
+    assert_eq!(
+        curve.len(),
+        front.len(),
+        "curve {} front {}",
+        curve.len(),
+        front.len()
+    );
+    for point in curve {
+        assert!(point["r2"].as_f64().unwrap_or(f64::NAN).is_finite());
+        assert!(point["features"].as_u64().unwrap() >= 1);
+        assert!(!point["names"].as_array().unwrap().is_empty());
+    }
+    assert!(value["holdout"]["moead-knee"]["r2"].is_f64());
+
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+#[test]
 fn dataset_ships_a_folder_that_checks_clean_and_catches_an_edit() {
     let dir = temp_dir().join("dataset");
     let _ = std::fs::remove_dir_all(&dir);

@@ -163,6 +163,8 @@ What this crate does not do is model transaction costs, turnover, position sizin
 ## Limits
 
 - Ridge is linear. A nonlinear learner can be plugged in by implementing `Problem` over a different fit, but the mask decoding, the folds and the metrics stay the same.
+- The embargo must be at least the label horizon. `--horizon h` raises it, and `data::horizon_embargo` is the only place the two are reconciled; a gap shorter than `h` lets a training row see the target of a test row.
+- Every candidate the search evaluates is a trial, and the report does not yet deflate for that count. A selection out of thousands on four folds needs a deflated reading before it is called a discovery; the roadmap in [Development](DEVELOPMENT.md) carries the gate.
 - Missing values are handled by skipping rows, not by imputation. A panel with many gaps loses rows.
 - The search treats each feature independently. Interaction features have to be built before the search.
 - The fold count is fixed in advance. Very short panels return fewer folds than requested rather than empty windows.

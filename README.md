@@ -94,16 +94,20 @@ The other five have no labelled corpus, so nothing here is an accuracy. They shi
 
 `data/segments/` is the third shipped set: advertisers grouped by what they did in an ad panel, fitted in Rust. Nothing descriptive enters a feature. The eight readings are ad volume, the median gap between the days it started an ad, the spread of those gaps, the published spend band midpoint, copy length, terms bought against, creative reuse and copy concentration.
 
-`features.jsonl` holds 251 advertisers and the 1,355 ads behind them, folded from the archive panel by `segment extract`. The fit standardises each column, clips at three standard deviations, and searches k from 3 to 6, because a two way split of an advertising panel is a high and low score rather than a segmentation. The winner is the highest silhouette among the partitions that keep every group above five percent of the panel.
+`features.jsonl` holds 251 advertisers and the 1,355 ads behind them, folded from the archive panel by `segment extract`. The fit standardises each column, clips at three standard deviations, and searches k from 3 to 6 in three covariance families, because a two way split of an advertising panel is a high and low score rather than a segmentation, and because the shape of a group is a choice the folder used to make without saying so.
+
+A k-means fit is the maximum likelihood fit of a mixture whose groups are spheres of one shared width: equally spread on every column, no two columns co-varying. This panel is not that. The mean absolute correlation between its columns is 0.21, and ad volume and gap spread run together at 0.74, so a sphere cannot use most of the signal. Three beliefs are therefore fitted and compared: one width per group (the k-means shape), one width per group per column, and a covariance per group. Each is scored on rows it never saw, and the comparison is paired by fold: a larger k or a freer family had to read 0.020 nats per entity better than its own standard error before it was preferred, so fold noise cannot buy parameters. A partition also has to keep its placement: a fold model has to put its held-out rows where the shipped model puts them, at 0.60 agreement or better.
 
 | segment | advertisers | share | behaviour |
 |---|---:|---:|---|
-| creative reuse high | 57 | 22.7% | 4.2 ads, 0.95 of them repeating one fingerprint, 0.90 concentration |
-| start gap spread high, ad volume high | 42 | 16.7% | 20.5 ads, gap spread 1.04, 0.52 concentration |
+| copy concentration low, creative reuse low | 18 | 7.2% | 2.3 ads, none repeating a fingerprint, 0.44 concentration, 85 word copy |
+| start gap spread high, time between starts high | 65 | 25.9% | 8.4 ads, 9.9 days between starts, gap spread 0.75 |
+| creative reuse high, start gap spread low | 53 | 21.1% | 3.6 ads, 0.96 of them repeating one fingerprint, 0.88 concentration |
 | creative reuse low, ad volume low | 115 | 45.8% | one ad each, bought once |
-| copy concentration low, creative reuse low | 37 | 14.7% | 3.9 ads, 0.40 concentration, 0.08 reuse |
 
-Four groups were chosen at a silhouette of 0.286. There are no labels, so that is not an accuracy: it is the separation the partition achieves. Two audits decide whether the fit ships. The same protocol on columns shuffled independently scores 0.168, so the groups are not an artefact of the method, and refitting on fifty resamples of the advertisers agrees with the full panel at 0.759 mean adjusted Rand index, tenth percentile 0.552. A fit below either floor is refused with a reason rather than written.
+Four groups, read through a full covariance. On rows it never saw the fit reads 0.609 nats per entity against -9.777 for the k-means partition the folder used to ship, a gain of 10.4 with a fold spread of 2.4; that spread is wide and it is printed rather than smoothed. A fold model places its held-out rows at 0.813 agreement with the shipped partition. The Euclidean silhouette is 0.222 against 0.168 for the same k-means protocol on columns shuffled independently and 0.286 for k-means itself, so it clears the control but not the incumbent: a partition read through a covariance is not a sphere, and silhouette charges it for the shape that lets it predict better. Refitting on fifty resamples of the advertisers agrees with the full panel at 0.712 mean adjusted Rand index, tenth percentile 0.451. A fit that fails any of those floors is refused with the reason it failed, not written.
+
+Every candidate keeps its verdict in the card, so the table accounts for all twelve rows and not only for the winner, and BIC is printed beside the held-out reading. BIC is not the rule here: at 251 entities the freest candidate holds 224 parameters, and its in-sample BIC beats the whole grid while its held-out reading is worse than the fit that ships.
 
 ```bash
 ./xcm-mmm segment extract --ads panel.jsonl --out data/segments/features.jsonl
@@ -121,10 +125,10 @@ Four groups were chosen at a silhouette of 0.286. There are no labels, so that i
 
 | unit | input | rows | accuracy | balanced | chance | shuffled | used |
 |---|---|---|---|---|---|---|---|
-| ad | one ad's copy | 1,355 | 44.5% | 30.8% | 25.0% | 25.3% | no |
-| brand | one advertiser's copy set | 251 | 55.4% | 45.5% | 25.0% | 25.5% | yes |
+| ad | one ad's copy | 1,355 | 56.2% | 33.7% | 25.0% | 24.9% | no |
+| brand | one advertiser's copy set | 251 | 62.2% | 46.0% | 25.0% | 25.4% | yes |
 
-Both readings come from five folds that hold out whole page ids, so no ad of a scored advertiser was seen in training. The ad unit is withheld because 63.5% of the panel sits in one segment: at 44.5% overall it is worse than naming that segment every time, and its 30.8% balanced is six points over chance, real but too thin to act on. The brand unit clears the gate at 45.5% balanced and 55.4% overall, which is what a copy set adds: cross-ad reuse, vocabulary breadth and the size of the set, none of which one ad shows. Its lift is 27 percent of the way from chance to perfect.
+Both readings come from five folds that hold out whole page ids, so no ad of a scored advertiser was seen in training. The ad unit is withheld because ads are weighted by how many each advertiser bought: 70.8% of the 1,355 ads belong to the 26% of advertisers in one segment, so naming that segment every time scores 70.8% and the map's 56.2% is below it. Its 33.7% balanced is nine points over chance, real but too thin to act on. The brand unit clears the gate at 46.0% balanced and 62.2% overall, which is what a copy set adds: cross-ad reuse, vocabulary breadth and the size of the set, none of which one ad shows. Its lift is 28 percent of the way from chance to perfect.
 
 The gate is explicit: at least two points over chance, at least ten percent lift, better than the largest class, and two points over the shuffled-label control. A unit that fails is still written and still measured, and is never used to place a text.
 

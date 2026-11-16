@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
-  "version": 1,
-  "built_at": "2026-11-14T20:18:09Z",
+  "version": 2,
+  "built_at": "2026-11-16T00:12:41Z",
   "files": [
     {
       "name": "features.jsonl",
@@ -12,8 +12,8 @@
     {
       "name": "model.json",
       "rows": 4,
-      "bytes": 19358,
-      "fnv64": "66378372e1f3d4b1"
+      "bytes": 36401,
+      "fnv64": "e8ccebd7af0e64ff"
     }
   ],
   "config": {
@@ -30,35 +30,43 @@
     "bootstraps": 50,
     "controls": 20,
     "clip": 3.0,
+    "folds": 5,
+    "min_gain": 0.02,
+    "em_restarts": 4,
+    "family": null,
     "seed": 20261114
   },
   "k": 4,
   "segments": [
     {
       "id": 0,
-      "label": "creative reuse high",
-      "size": 57
+      "label": "copy concentration low, creative reuse low",
+      "size": 18
     },
     {
       "id": 1,
-      "label": "start gap spread high, ad volume high",
-      "size": 42
+      "label": "start gap spread high, time between starts high",
+      "size": 65
     },
     {
       "id": 2,
-      "label": "creative reuse low, ad volume low",
-      "size": 115
+      "label": "creative reuse high, start gap spread low",
+      "size": 53
     },
     {
       "id": 3,
-      "label": "copy concentration low, creative reuse low",
-      "size": 37
+      "label": "creative reuse low, ad volume low",
+      "size": 115
     }
   ],
   "checks": [
-    "silhouette 0.286 beats the shuffled control at 0.168",
-    "resampling keeps the partition at 0.759 mean agreement",
-    "every group holds at least 14.7 percent of the entities",
+    "read through a full covariance at k = 4, chosen on 0.609 nats per entity held out",
+    "10.386 nats per entity better than the k-means partition the folder used to ship at -9.777",
+    "held-out likelihood 0.609 stands clear of the same fit on shuffled columns at -8.592",
+    "a fold model places its own held-out rows at 0.813 agreement with the shipped partition",
+    "silhouette 0.222 beats the shuffled control at 0.168",
+    "resampling keeps the partition at 0.712 mean agreement",
+    "every group holds at least 7.2 percent of the entities",
     "every feature varies across the panel"
   ]
 }

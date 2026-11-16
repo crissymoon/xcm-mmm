@@ -10,17 +10,29 @@
 //! single-objective wrapper turns it into a penalised objective for
 //! [`crate::de`].
 //!
-//! Ridge is used rather than a gradient boosted model because it is closed form,
-//! deterministic, fast enough to evaluate tens of thousands of times inside an
-//! evolutionary loop, and honest about its own uncertainty through the ridge
-//! penalty.
+//! Two hypothesis classes sit behind the same folds: ridge, which is closed
+//! form, deterministic and fast enough to evaluate tens of thousands of times
+//! inside an evolutionary loop, and a small gradient boosted tree ensemble from
+//! [`crate::learn`], which can represent an interaction that ridge cannot
+//! unless the interaction was constructed before the search. The folds, the
+//! metrics and the report are identical, so the two readings are comparable.
+//!
+//! [`nested`] is the procedure-level answer for selection. The plain command
+//! holds back one tail block and scores the chosen subset on it; nested
+//! walk-forward repeats the search inside every outer training prefix and
+//! scores on the outer block, so the reported spread describes the selection
+//! procedure and not only the final fit.
 
 use std::ops::Range;
 use std::sync::Arc;
 
 use crate::data::{walk_forward, Dataset, Fold};
+use crate::learn::{Fitted, Learner};
 use crate::linalg::{mean, solve_spd, spearman};
 use crate::problem::{Bounds, Problem};
+
+pub mod nested;
+pub use nested::{run as run_nested, NestedConfig, NestedResult};
 
 /// Default ridge penalty. Features are standardised first, so one is a mild
 /// shrinkage rather than a strong one.
@@ -243,20 +255,41 @@ pub struct SelectionProblem {
     pub dataset: Arc<Dataset>,
     /// Walk-forward windows.
     pub folds: Vec<Fold>,
-    /// Ridge penalty.
+    /// Ridge penalty, kept for a caller that still reports it.
     pub lambda: f64,
+    /// Hypothesis class used inside every fold.
+    pub learner: Learner,
     bounds: Bounds,
 }
 
 impl SelectionProblem {
-    /// Build a problem with a walk-forward split.
+    /// Build a problem with a walk-forward split and ridge as the learner.
     pub fn new(dataset: Arc<Dataset>, folds: usize, embargo: usize, lambda: f64) -> Self {
+        Self::with_learner(dataset, folds, embargo, Learner::ridge(lambda))
+    }
+
+    /// Build a problem with an explicit learner.
+    ///
+    /// The folds and the metrics do not change: only the model fitted inside
+    /// each training window. That is what makes a nonlinear selection run
+    /// comparable with the ridge run beside it.
+    pub fn with_learner(
+        dataset: Arc<Dataset>,
+        folds: usize,
+        embargo: usize,
+        learner: Learner,
+    ) -> Self {
         let windows = walk_forward(dataset.len(), folds, embargo);
         let bounds = Bounds::unit(dataset.n_features());
+        let lambda = match &learner {
+            Learner::Ridge { lambda } => *lambda,
+            Learner::Trees(_) => 0.0,
+        };
         Self {
             dataset,
             folds: windows,
             lambda,
+            learner,
             bounds,
         }
     }
@@ -270,14 +303,14 @@ impl SelectionProblem {
             .collect()
     }
 
-    /// Mean cross-validated error of a column subset.
+    /// Mean cross-validated error of a column subset under the chosen learner.
     pub fn cv_mse(&self, columns: &[usize]) -> f64 {
         if columns.is_empty() || self.folds.is_empty() {
             return FAILED_FIT;
         }
         let mut total = 0.0;
         for fold in &self.folds {
-            let model = match fit_ridge(&self.dataset, fold.train(), columns, self.lambda) {
+            let model = match self.learner.fit(&self.dataset, fold.train(), columns) {
                 Some(m) => m,
                 None => return FAILED_FIT,
             };
@@ -298,22 +331,33 @@ impl SelectionProblem {
 
     /// Full out-of-sample report for a column subset.
     pub fn report(&self, columns: &[usize]) -> Report {
-        score_over(&self.dataset, &self.folds, columns, self.lambda)
+        score_over_with(&self.dataset, &self.folds, columns, &self.learner)
     }
 }
 
-/// Score a column subset over an explicit set of folds.
+/// Score a column subset over an explicit set of folds with ridge.
+pub fn score_over(dataset: &Dataset, folds: &[Fold], columns: &[usize], lambda: f64) -> Report {
+    score_over_with(dataset, folds, columns, &Learner::ridge(lambda))
+}
+
+/// Score a column subset over an explicit set of folds with an explicit learner.
 ///
 /// Taking the folds as an argument is what lets a caller hold rows back: a
 /// selection search can run on one window and the chosen subset be scored on a
-/// window the search never saw.
-pub fn score_over(dataset: &Dataset, folds: &[Fold], columns: &[usize], lambda: f64) -> Report {
+/// window the search never saw. Taking the learner as an argument is what lets
+/// the same held-out rows score a linear and a nonlinear model.
+pub fn score_over_with(
+    dataset: &Dataset,
+    folds: &[Fold],
+    columns: &[usize],
+    learner: &Learner,
+) -> Report {
     let mut predicted = Vec::new();
     let mut actual = Vec::new();
     let mut baseline = Vec::new();
     let mut scores = Vec::new();
     for fold in folds {
-        let model = fit_ridge(dataset, fold.train(), columns, lambda);
+        let model: Option<Fitted> = learner.fit(dataset, fold.train(), columns);
         let train_mean = mean(&dataset.target[fold.train()]);
         let mut fold_actual = Vec::new();
         let mut fold_predicted = Vec::new();

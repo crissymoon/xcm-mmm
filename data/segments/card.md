@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-14T20:18:09Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-16T00:12:41Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -14,14 +14,39 @@ Start dates run from 2022-10-25 to 2026-11-10. 493 of the ads arrived on the arc
 
 ## Segments
 
-251 entities, 4 groups, chosen from k = 3 to 6 by silhouette among the partitions that keep every group above the declared 5.0 percent floor. The chosen partition's smallest group holds 14.7 percent. `z` is the group's mean against the whole panel in standard deviations; the reading beside it is the same column in its own units.
+251 entities, 4 groups, each group allowed a covariance per group. The search ran k = 3 to 6 in three families, and every group holds at least the declared 5.0 percent of the panel; the smallest here holds 7.2 percent. `z` is the group's mean against the whole panel in standard deviations; the reading beside it is the same column in its own units.
 
 | segment | label | entities | share | strongest readings |
 |---:|---|---:|---:|---|
-| 0 | creative reuse high | 57 | 0.227 | repeat +1.36 (0.95 share), burstiness -0.36 (0.04 coefficient of variation), concentrate +0.32 (0.90 share) |
-| 1 | start gap spread high, ad volume high | 42 | 0.167 | burstiness +1.81 (1.04 coefficient of variation), ads +1.49 (12.54 ads), cadence +1.22 (10.22 days) |
-| 2 | creative reuse low, ad volume low | 115 | 0.458 | repeat -0.78 (0.00 share), ads -0.74 (1.00 ads), concentrate +0.68 (1.00 share) |
-| 3 | copy concentration low, creative reuse low | 37 | 0.147 | concentrate -1.46 (0.40 share), repeat -0.61 (0.08 share), cadence +0.38 (2.69 days) |
+| 0 | copy concentration low, creative reuse low | 18 | 0.072 | concentrate -1.29 (0.44 share), repeat -0.78 (0.00 share), cadence -0.48 (0.12 days) |
+| 1 | start gap spread high, time between starts high | 65 | 0.259 | burstiness +1.20 (0.75 coefficient of variation), cadence +1.18 (9.93 days), ads +1.07 (8.36 ads) |
+| 2 | creative reuse high, start gap spread low | 53 | 0.211 | repeat +1.38 (0.96 share), burstiness -0.46 (0.00 coefficient of variation), spend_mid +0.30 (265.44 usd per ad) |
+| 3 | creative reuse low, ad volume low | 115 | 0.458 | repeat -0.78 (0.00 share), ads -0.74 (1.00 ads), concentrate +0.68 (1.00 share) |
+
+## Choice
+
+full covariance at k = 4: 0.609 nats per entity on rows it did not see, spread 2.418 across folds, against -9.777 for the k-means partition this folder used to ship, a gain of 10.386. A fold model places its own held-out rows at 0.813 agreement with it, and it costs 179 parameters.
+
+A k-means fit is the maximum likelihood fit of a mixture whose groups are spheres of one shared width. That is a claim that the eight readings are equally spread inside a group and that none of them co-vary. This panel says otherwise: the mean absolute correlation between columns is 0.21, and `ads` and `burstiness` at +0.74 run together. A sphere cannot use that, so three families were fitted and compared: one width per group, one width per group per column, and a covariance per group. Held-out likelihood chooses between families, because a comparison of predictions can only be settled by rows the fit never saw. Placement agreement is the gate that says the groups a fold model predicts are the groups that ship. And the comparison is paired by fold, because every candidate is read on the same rows: a larger k or a richer family had to add 0.020 nats per entity more than its own standard error before it was preferred, so fold noise cannot buy parameters.
+
+BIC is reported because it is the reading a mixture is usually chosen on, and it is not the rule here, because it is read in sample: the lowest BIC on the grid is full at k = 5 with 224 parameters against 251 entities, and its held-out reading is -2.623 nats per entity against 0.609 for the fit that won. A criterion that lets a model hold nearly one parameter per entity is a reading to print, not a rule to follow.
+
+| family | k | held out, nats per entity | spread over folds | placement agreement | BIC | parameters | smallest group | verdict |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| spherical | 3 | -9.884 | 0.825 | 0.975 | 5020 | 27 | 0.223 | set aside: k 3 reads -9.884 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| spherical | 4 | -9.786 | 0.776 | 0.823 | 4921 | 36 | 0.112 | set aside: k 4 reads -9.786 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| spherical | 5 | -9.587 | 0.994 | 0.753 | 4868 | 45 | 0.068 | set aside: -9.587 nats per entity against 0.609 for the fit that won, a gap of 10.195 |
+| spherical | 6 | -9.566 | 0.990 | 0.807 | 4816 | 54 | 0.064 | set aside: k 6 reads -9.566 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| diagonal | 3 | -2.145 | 1.532 | 0.923 | 710 | 50 | 0.251 | set aside: k 3 reads -2.145 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| diagonal | 4 | -1.316 | 1.711 | 0.785 | 638 | 67 | 0.151 | set aside: k 4 reads -1.316 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| diagonal | 5 | -0.935 | 1.498 | 0.626 | 250 | 84 | 0.132 | set aside: -0.935 nats per entity against 0.609 for the fit that won, a gap of 1.543 |
+| diagonal | 6 | -0.100 | 1.528 | 0.745 | 115 | 101 | 0.024 | set aside: k 6 puts a group at 2.4 percent, below the 5.0 percent floor |
+| full | 3 | -2.653 | 0.943 | 0.725 | 1701 | 134 | 0.199 | set aside: k 3 reads -2.653 nats against 0.609 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
+| full **chosen** | 4 | 0.609 | 2.418 | 0.813 | 920 | 179 | 0.072 | chosen: 0.609 nats per entity held out at 0.813 placement agreement |
+| full | 5 | -2.623 | 2.766 | 0.678 | -1028 | 224 | 0.072 | set aside: k 5 reads -2.622 nats against 0.609 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
+| full | 6 | -1.782 | 3.466 | 0.427 | -227 | 269 | 0.020 | set aside: k 6 puts a group at 2.0 percent, below the 5.0 percent floor |
+
+Silhouette is a Euclidean reading, so it structurally rewards the spherical shape k-means produces: the chosen partition scores 0.222 on it against 0.286 for the k-means partition the folder used to ship, and 0.168 for the same protocol on columns shuffled independently. It clears the control. That is why the family is settled on likelihood and placement, and silhouette is kept as a floor and a comparison rather than as the selector.
 
 ## Features
 
@@ -38,7 +63,9 @@ Start dates run from 2022-10-25 to 2026-11-10. 493 of the ads arrived on the arc
 
 Each column is standardised and clipped at 3.0 standard deviations before the fit. The mean and the standard deviation travel in the model, so a z can be recomputed by hand from the readings file.
 
-## Selection
+## The k-means reading
+
+The sweep the folder used to gate on, kept so the old reading sits beside the new one. It is the same k-means protocol at every k: Euclidean silhouette, within-group inertia, and the size of the smallest group.
 
 | k | silhouette | smallest group | inertia | sizes |
 |---:|---:|---:|---:|---|
@@ -49,24 +76,34 @@ Each column is standardised and clipped at 3.0 standard deviations before the fi
 
 ## Audit
 
-There are no labels, so nothing below is an accuracy. What is measured is whether the partition stands up to its own protocol: the same fit on columns shuffled independently, and the same fit on resamples of the entities scored against the full panel by adjusted Rand index.
+There are no labels, so nothing here is a truth. What is measured is how well the fit predicts rows it never saw, and whether the groups survive the two protocols that try to break a partition: the same fit on columns shuffled independently, and the same fit on resamples of the entities scored against the full panel by adjusted Rand index.
 
 | question | reading | gate |
 |---|---:|---|
-| silhouette | 0.286 | at least 0.15 |
+| held-out likelihood, nats per entity | 0.609 | gate: clear of the shuffled control by 0.020 |
+| held-out spread over 5 folds | 2.418 | reported, not gated |
+| held-out placement agreement | 0.813 | at least 0.60 |
+| the same fit on shuffled columns, mean of 20 | -8.592 | reported, not gated |
+| the same fit on shuffled columns, best | -6.922 | reported, not gated |
+| the k-means partition this folder used to ship | -9.777 | the incumbent's held-out reading |
+| silhouette | 0.222 | at least 0.15 |
 | shuffled control, mean | 0.168 | margin 0.08 |
 | shuffled control, best of 20 | 0.185 | reported, not gated |
-| resampling, mean agreement | 0.759 | at least 0.60 |
-| resampling, tenth percentile | 0.552 | reported, not gated |
-| resampling, worst of 50 | 0.537 | reported, not gated |
+| resampling, mean agreement | 0.712 | at least 0.60 |
+| resampling, tenth percentile | 0.451 | reported, not gated |
+| resampling, worst of 50 | 0.382 | reported, not gated |
 
-A silhouette near 0.29 is ordinary for behavioural data whose columns share a scale factor. It is a statement that the groups are separated, not that they are the only reading of the panel.
+A silhouette of 0.22 is ordinary for behavioural data whose columns share a scale factor, and a partition read through a covariance scores lower on it by construction: a stretched group is not a sphere, and the reading measures distance from a centre, not the shape a group actually has. The separated groups are 0.22 against 0.17 for columns with their pairing destroyed, so the structure is real; the shape is the part silhouette cannot see.
 
 ## Checks
 
-- silhouette 0.286 beats the shuffled control at 0.168
-- resampling keeps the partition at 0.759 mean agreement
-- every group holds at least 14.7 percent of the entities
+- read through a full covariance at k = 4, chosen on 0.609 nats per entity held out
+- 10.386 nats per entity better than the k-means partition the folder used to ship at -9.777
+- held-out likelihood 0.609 stands clear of the same fit on shuffled columns at -8.592
+- a fold model places its own held-out rows at 0.813 agreement with the shipped partition
+- silhouette 0.222 beats the shuffled control at 0.168
+- resampling keeps the partition at 0.712 mean agreement
+- every group holds at least 7.2 percent of the entities
 - every feature varies across the panel
 
 ## Reproduce
@@ -90,5 +127,7 @@ A silhouette near 0.29 is ordinary for behavioural data whose columns share a sc
 - Reuse is read from the archive's copy fingerprint. Two ads that differ by a word count as two, so reuse understates what a reader would call the same creative.
 - Copy concentration is bounded by the number of ads: an advertiser with one ad scores one by construction. That group is a real behaviour, the advertiser who bought once, but its concentration reading carries no information beyond its volume.
 - Recency is deliberately not a feature. The panel is a snapshot weighted towards recent ads, so the distance from a last start to the snapshot day would measure the archive's coverage as much as the advertiser's activity.
+- The accuracy reported is predictive: how well the fitted belief explains rows it was not fitted on, in nats per entity. It is not a measure of whether a group is the right group, because no label says which advertiser belongs where. A richer family can predict better and still be the less stable reading of the panel, which is why the resampling agreement is reported beside it.
+- The family choice is made on one panel. A diagonal covariance winning here says the columns of this archive are not equally spread inside an advertiser group; it is not a claim about advertising in general, and a different register or city could choose differently.
 - A group is a description of behaviour, not a target. Nothing here says that moving an advertiser between groups would change an outcome.
 

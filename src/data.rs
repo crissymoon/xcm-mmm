@@ -436,6 +436,10 @@ impl Fold {
 /// which is the usual guard against a label that overlaps its own future.
 ///
 /// Returns fewer folds when the data is too short for the request.
+///
+/// `embargo` is a floor: a label that reaches `horizon` rows forward needs at
+/// least that many rows dropped, or the last training rows still see the target
+/// of the first test rows. Use [`horizon_embargo`] to raise it.
 pub fn walk_forward(rows: usize, folds: usize, embargo: usize) -> Vec<Fold> {
     if rows < 8 || folds == 0 {
         return Vec::new();
@@ -463,9 +467,39 @@ pub fn walk_forward(rows: usize, folds: usize, embargo: usize) -> Vec<Fold> {
     out
 }
 
+/// The embargo a split needs for a label horizon.
+///
+/// A label computed over the next `horizon` rows overlaps any row within that
+/// distance. A shorter embargo than the horizon lets a training row see the
+/// target of the row immediately after it, which inflates every score. The
+/// caller's embargo is kept when it is already the larger of the two, so a
+/// deliberately wider gap is never narrowed.
+pub fn horizon_embargo(embargo: usize, horizon: usize) -> usize {
+    embargo.max(horizon)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_embargo_never_falls_below_the_label_horizon() {
+        assert_eq!(horizon_embargo(1, 5), 5);
+        assert_eq!(horizon_embargo(2500, 5), 2500);
+        assert_eq!(horizon_embargo(0, 0), 0);
+        assert_eq!(horizon_embargo(3, 0), 3);
+    }
+
+    #[test]
+    fn a_horizon_widens_the_gap_between_train_and_test() {
+        let narrow = walk_forward(200, 4, 1);
+        let wide = walk_forward(200, 4, horizon_embargo(1, 6));
+        for (a, b) in narrow.iter().zip(&wide) {
+            assert_eq!(a.test_start, b.test_start);
+            assert_eq!(a.test_start - a.train_end, 1);
+            assert_eq!(b.test_start - b.train_end, 6);
+        }
+    }
 
     #[test]
     fn csv_round_trip() {

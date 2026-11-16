@@ -246,3 +246,104 @@ fn an_unreadable_start_date_is_refused_before_it_becomes_a_cadence() {
     assert!(!features.exists());
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+/// The folder has to say which belief the panel was read through, and account
+/// for every (family, k) it turned down rather than only for the winner.
+#[test]
+fn the_fit_records_the_likelihood_it_chose_and_every_row_it_set_aside() {
+    let dir = folder("choice");
+    let panel_path = dir.join("panel.jsonl");
+    let features = dir.join("features.jsonl");
+    let out = dir.join("segments");
+    panel(&panel_path);
+    segment::extract(panel_path.to_str().unwrap(), features.to_str().unwrap()).unwrap();
+    let cfg = config();
+    let artifact = segment::build(features.to_str().unwrap(), out.to_str().unwrap(), &cfg).unwrap();
+    let m = &artifact.metrics;
+
+    assert!(m.choice.contains("nats per entity"), "{}", m.choice);
+    assert_eq!(
+        m.candidates.len(),
+        3 * (cfg.k_max - cfg.k_min + 1),
+        "every family and k is accounted for"
+    );
+    assert_eq!(
+        m.candidates
+            .iter()
+            .filter(|c| c.verdict.starts_with("chosen"))
+            .count(),
+        1
+    );
+    assert!(m.candidates.iter().all(|c| !c.verdict.is_empty()));
+    assert_eq!(m.parameters, m.family.parameters(m.k, m.features));
+    assert_eq!(artifact.components.len(), artifact.k);
+    assert!(m.heldout.is_finite() && m.heldout_sd.is_finite());
+    assert!(
+        m.heldout > m.likelihood_control.mean,
+        "held out {:.3} against a shuffled control at {:.3}",
+        m.heldout,
+        m.likelihood_control.mean
+    );
+    assert_eq!(m.folds, cfg.folds);
+
+    let card = std::fs::read_to_string(out.join("card.md")).unwrap();
+    assert!(card.contains("## Choice"), "no choice section");
+    assert!(card.contains("nats per entity"), "card states no accuracy");
+    assert!(
+        card.contains(m.family.name()),
+        "card does not name the family"
+    );
+    for candidate in &m.candidates {
+        assert!(card.contains(&candidate.verdict), "card drops a verdict");
+    }
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// Holding the shape fixed is allowed, and the folder says the panel did not
+/// choose rather than pretending it did.
+#[test]
+fn a_declared_family_is_held_and_says_so() {
+    let dir = folder("declared");
+    let panel_path = dir.join("panel.jsonl");
+    let features = dir.join("features.jsonl");
+    panel(&panel_path);
+    segment::extract(panel_path.to_str().unwrap(), features.to_str().unwrap()).unwrap();
+    let mut cfg = config();
+    cfg.family = Some(segment::Family::Spherical);
+    let artifact = segment::fit(features.to_str().unwrap(), &cfg).unwrap();
+    assert_eq!(artifact.family, segment::Family::Spherical);
+    assert_eq!(artifact.metrics.family, segment::Family::Spherical);
+    assert!(artifact.metrics.choice.contains("declared"));
+    assert!(artifact
+        .components
+        .iter()
+        .all(|component| component.covariance.len() == artifact.metrics.features));
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// The artifact places an entity by posterior, and the distance it prints is in
+/// the group's own covariance rather than in a bare Euclidean space.
+#[test]
+fn placing_an_entity_reads_the_fitted_belief() {
+    let dir = folder("place");
+    let panel_path = dir.join("panel.jsonl");
+    let features = dir.join("features.jsonl");
+    let out = dir.join("segments");
+    panel(&panel_path);
+    let entities =
+        segment::extract(panel_path.to_str().unwrap(), features.to_str().unwrap()).unwrap();
+    segment::build(features.to_str().unwrap(), out.to_str().unwrap(), &config()).unwrap();
+    let loaded = Artifact::load(out.join("model.json").to_str().unwrap()).unwrap();
+    for entity in &entities {
+        let (segment, distance) = loaded.classify(&entity.obs).unwrap();
+        assert!(segment < loaded.k);
+        assert!(distance.is_finite() && distance >= 0.0);
+        let stored = loaded
+            .assignments
+            .get(&entity.id)
+            .copied()
+            .unwrap_or(usize::MAX);
+        assert_eq!(stored, segment, "entity {} moved on reload", entity.id);
+    }
+    let _ = std::fs::remove_dir_all(&dir);
+}

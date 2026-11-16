@@ -63,6 +63,19 @@ pub struct SegmentFitArgs {
     /// Smallest share of the panel any one group may hold.
     #[arg(long, default_value_t = 0.05)]
     pub min_share: f64,
+    /// Hold the shape of a group fixed: spherical, diagonal or full. Left out,
+    /// the panel chooses on held-out likelihood.
+    #[arg(long)]
+    pub family: Option<String>,
+    /// Folds the held-out likelihood is read on.
+    #[arg(long, default_value_t = 5)]
+    pub folds: usize,
+    /// Nats per entity a freer family must add before it is preferred.
+    #[arg(long, default_value_t = 0.02)]
+    pub min_gain: f64,
+    /// Starts per expectation maximisation fit, half soft and half k-means.
+    #[arg(long, default_value_t = 4)]
+    pub em_restarts: usize,
     /// Seed for every draw in the fit and its audits.
     #[arg(long, default_value_t = 20261114)]
     pub seed: u64,
@@ -144,11 +157,21 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
         }
         SegmentCommand::Fit(a) => {
             let k_min = a.k_min.max(2);
+            let family = match a.family.as_deref() {
+                None => None,
+                Some(text) => Some(crate::segment::Family::parse(text).ok_or_else(|| {
+                    format!("unknown family {text:?}; use spherical, diagonal or full")
+                })?),
+            };
             let cfg = SegmentConfig {
                 name: a.name,
                 k_min,
                 k_max: a.k_max.max(k_min),
                 min_share: a.min_share.clamp(0.0, 1.0),
+                family,
+                folds: a.folds.max(2),
+                min_gain: a.min_gain.max(0.0),
+                em_restarts: a.em_restarts.max(2),
                 seed: a.seed,
                 ..Default::default()
             };
@@ -161,8 +184,15 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 artifact.k
             );
             println!(
-                "fit       silhouette {:.3}  control {:.3}  resampling {:.3}",
-                m.silhouette, m.control.mean, m.stability.mean
+                "choice    {} covariance at k = {}, {:.3} nats per entity held out, {:.3} better than k-means",
+                m.family.name(),
+                m.k,
+                m.heldout,
+                m.gain
+            );
+            println!(
+                "fit       silhouette {:.3}  control {:.3}  resampling {:.3}  shuffled likelihood {:.3}",
+                m.silhouette, m.control.mean, m.stability.mean, m.likelihood_control.mean
             );
             for segment in &artifact.segments {
                 println!(
@@ -190,9 +220,13 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
             );
             println!("digest    features {}", artifact.source.fnv64);
             println!(
-                "k         {} groups from {} to {} by silhouette",
-                m.k, artifact.config.k_min, artifact.config.k_max
+                "k         {} groups from {} to {}, {} covariance",
+                m.k,
+                artifact.config.k_min,
+                artifact.config.k_max,
+                m.family.name()
             );
+            println!("choice    {}", m.choice);
             println!("  k  silhouette  smallest  inertia  sizes");
             for point in &m.sweep {
                 let sizes: Vec<String> = point.sizes.iter().map(|n| n.to_string()).collect();
@@ -210,6 +244,24 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 "audit     control {:.3} (best {:.3})  resampling {:.3} (p10 {:.3})",
                 m.control.mean, m.control.max, m.stability.mean, m.stability.p10
             );
+            println!(
+                "likelihood {:.3} held out (spread {:.3})  shuffled {:.3}  k-means baseline {:.3}",
+                m.heldout, m.heldout_sd, m.likelihood_control.mean, m.baseline.heldout
+            );
+            println!("family    k   held out    spread       BIC  params  smallest  verdict");
+            for candidate in &m.candidates {
+                println!(
+                    "  {:<8} {:>2}  {:>9.3}  {:>9.3}  {:>8.0}  {:>6}  {:>8.3}  {}",
+                    candidate.family.name(),
+                    candidate.k,
+                    candidate.heldout,
+                    candidate.heldout_sd,
+                    candidate.bic,
+                    candidate.parameters,
+                    candidate.min_share,
+                    candidate.verdict
+                );
+            }
             println!("segment                      entities  share  strongest readings");
             for segment in &artifact.segments {
                 let readings: Vec<String> = segment

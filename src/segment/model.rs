@@ -20,6 +20,8 @@ use serde::{Deserialize, Serialize};
 use super::ad::Day;
 use super::feature::{FeatureSpec, Scaling};
 use super::kmeans::{Fit, Sweep};
+use super::mixture::{Component, Family};
+use super::select::{Baseline, Candidate, Dependence, Shuffle};
 use super::stability::{Control, Stability};
 use super::SegmentConfig;
 
@@ -62,6 +64,39 @@ pub struct Metrics {
     pub entities: usize,
     pub features: usize,
     pub k: usize,
+    /// The shape the groups are read through, chosen on held-out likelihood.
+    #[serde(default)]
+    pub family: Family,
+    /// Held-out log likelihood per entity, in nats, and its spread over folds.
+    #[serde(default)]
+    pub heldout: f64,
+    #[serde(default)]
+    pub heldout_sd: f64,
+    /// Mean agreement between a fold model's placement and the shipped one.
+    #[serde(default)]
+    pub agreement: f64,
+    #[serde(default)]
+    pub folds: usize,
+    /// Free parameters of the chosen mixture.
+    #[serde(default)]
+    pub parameters: usize,
+    /// Held-out gain over the k-means partition the folder used to ship.
+    #[serde(default)]
+    pub gain: f64,
+    /// The paragraph that says why this family and this k.
+    #[serde(default)]
+    pub choice: String,
+    #[serde(default)]
+    pub candidates: Vec<Candidate>,
+    #[serde(default)]
+    pub baseline: Baseline,
+    /// The same fit on columns shuffled independently, read the same way.
+    #[serde(default)]
+    pub likelihood_control: Shuffle,
+    #[serde(default)]
+    pub dependence: Dependence,
+    /// The k-means readings, kept because they are what the folder used to gate
+    /// on and a reader may want them beside the likelihood.
     pub inertia: f64,
     pub silhouette: f64,
     pub min_share: f64,
@@ -82,6 +117,12 @@ pub struct Artifact {
     pub features: Vec<FeatureSpec>,
     pub scaling: Scaling,
     pub k: usize,
+    #[serde(default)]
+    pub family: Family,
+    /// The fitted mixture: what each group believes about itself.
+    #[serde(default)]
+    pub components: Vec<Component>,
+    /// The component means, in z, so a reader has one row per group.
     pub centroids: Vec<Vec<f64>>,
     pub segments: Vec<Segment>,
     pub assignments: BTreeMap<String, usize>,
@@ -148,11 +189,20 @@ impl Artifact {
         Ok(row)
     }
 
-    /// The nearest segment and the distance to its centre.
+    /// The segment a reading belongs to, and how far it sits from that group's
+    /// centre in the group's own covariance, in standard deviations.
+    ///
+    /// The posterior decides, not Euclidean distance, because a group that is
+    /// tight on one column and loose on another is not a sphere. A model with no
+    /// components left falls back to the nearest centroid so an older artifact
+    /// still places entities rather than refusing them.
     pub fn classify(&self, obs: &BTreeMap<String, f64>) -> io::Result<(usize, f64)> {
         let row = self.z(obs)?;
-        let (id, distance) = super::kmeans::nearest(&row, &self.centroids);
-        Ok((id, distance.sqrt()))
+        if self.components.is_empty() {
+            let (id, distance) = super::kmeans::nearest(&row, &self.centroids);
+            return Ok((id, distance.sqrt()));
+        }
+        Ok(super::mixture::classify(&self.components, &row))
     }
 
     pub fn segment(&self, id: usize) -> Option<&Segment> {

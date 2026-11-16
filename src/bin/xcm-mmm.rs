@@ -9,12 +9,14 @@ use clap::{Parser, Subcommand, ValueEnum};
 
 use xcm_mmm::benchmarks::{Benchmark, Kind, CATALOGUE};
 use xcm_mmm::churn::cli::{run as run_churn, ChurnArgs};
-use xcm_mmm::data::{Dataset, Fold};
+use xcm_mmm::data::{horizon_embargo, Dataset, Fold};
 use xcm_mmm::de::{self, Adaptation, Crossover, DeConfig, Strategy};
 use xcm_mmm::emotion::cli::{run as run_emotion, EmotionArgs};
 use xcm_mmm::forecast::{
-    knee, score_over, Report, SelectionProblem, SparseAccuracy, DEFAULT_LAMBDA,
+    knee, run_nested, score_over_with, NestedConfig, Report, SelectionProblem, SparseAccuracy,
+    DEFAULT_LAMBDA,
 };
+use xcm_mmm::learn::Learner;
 use xcm_mmm::metrics::{hypervolume_report, igd, reference_front};
 use xcm_mmm::moead::scalar::Scalarization;
 use xcm_mmm::moead::{self, MoeadConfig, MoeadOutcome};
@@ -331,9 +333,27 @@ struct ForecastArgs {
     /// Rows dropped between train and test.
     #[arg(long, default_value_t = 1)]
     embargo: usize,
+    /// Rows the target reaches forward. The embargo is raised to at least this,
+    /// because a shorter gap lets a training row see a test row's target.
+    #[arg(long, default_value_t = 0)]
+    horizon: usize,
     /// Ridge penalty.
     #[arg(long, default_value_t = DEFAULT_LAMBDA)]
     lambda: f64,
+    /// Hypothesis class fitted inside every fold. Trees add a nonlinear learner
+    /// behind the same folds and the same metrics.
+    #[arg(long, value_enum, default_value_t = LearnerChoice::Ridge)]
+    learner: LearnerChoice,
+    /// Run nested walk-forward selection: the inner loop chooses and the outer
+    /// loop scores. Slower, and honest about the selection procedure.
+    #[arg(long)]
+    nested: bool,
+    /// Validation folds inside each outer training prefix, with `--nested`.
+    #[arg(long, default_value_t = 3)]
+    inner_folds: usize,
+    /// Evaluation budget for each inner search, with `--nested`.
+    #[arg(long, default_value_t = 1_500)]
+    nested_budget: usize,
     /// Search to run. Both is the default because the two answer different
     /// questions: one best subset, or the whole accuracy against size curve.
     #[arg(long, value_enum, default_value_t = Method::Both)]
@@ -355,6 +375,12 @@ struct ForecastArgs {
     /// the selection then scores itself on rows it already saw.
     #[arg(long, default_value_t = 0.0)]
     holdout: f64,
+    /// Score every point on the Pareto front on the held-out rows, not just the
+    /// knee and the best. The search picks its knee on the training objective;
+    /// a curve of genuine held-out scores is what lets a caller ask the honest
+    /// question instead, namely how much accuracy a smaller model costs.
+    #[arg(long)]
+    score_front: bool,
     /// Print a JSON report instead of a table.
     #[arg(long)]
     json: bool,
@@ -725,6 +751,12 @@ enum Method {
     Both,
 }
 
+#[derive(Copy, Clone, PartialEq, Eq, ValueEnum)]
+enum LearnerChoice {
+    Ridge,
+    Trees,
+}
+
 fn main() {
     if let Err(message) = run() {
         eprintln!("error: {message}");
@@ -992,6 +1024,127 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
     }
     let features = dataset.n_features();
     let rows = dataset.len();
+    // A label that reaches forward overlaps the rows it reaches over, so the
+    // gap between train and test cannot be shorter than the horizon.
+    let embargo = horizon_embargo(args.embargo, args.horizon);
+
+    if args.nested {
+        let mut scaled = dataset;
+        scaled.standardize();
+        let config = NestedConfig {
+            outer_folds: args.folds.max(2),
+            inner_folds: args.inner_folds.max(1),
+            embargo,
+            budget: args.nested_budget,
+            population: 30,
+            sparsity: args.sparsity,
+            seed: args.seed,
+            learner: match args.learner {
+                LearnerChoice::Ridge => Learner::ridge(args.lambda),
+                LearnerChoice::Trees => Learner::trees(),
+            },
+        };
+        let result = run_nested(&scaled, &config)?;
+        if let Some(path) = &args.out {
+            let mut text =
+                String::from("fold,train_end,test_start,test_end,mse,r2,ic,skill,features\n");
+            for outer in &result.outer {
+                text.push_str(&format!(
+                    "{},{},{},{},{:.10},{:.10},{:.10},{:.10},{}\n",
+                    outer.fold,
+                    outer.train_end,
+                    outer.test_start,
+                    outer.test_end,
+                    outer.mse,
+                    outer.r2,
+                    outer.ic,
+                    outer.skill,
+                    outer.columns.len()
+                ));
+            }
+            std::fs::write(path, text)?;
+        }
+        if args.json {
+            let outer: Vec<serde_json::Value> = result
+                .outer
+                .iter()
+                .map(|score| {
+                    serde_json::json!({
+                        "fold": score.fold,
+                        "train_end": score.train_end,
+                        "test_start": score.test_start,
+                        "test_end": score.test_end,
+                        "names": score.names,
+                        "mse": score.mse,
+                        "r2": score.r2,
+                        "ic": score.ic,
+                        "skill": score.skill,
+                    })
+                })
+                .collect();
+            let selection: Vec<serde_json::Value> = result
+                .selection
+                .iter()
+                .map(|(column, name, count)| {
+                    serde_json::json!({"column": column, "name": name, "folds": count})
+                })
+                .collect();
+            let report = serde_json::json!({
+                "rows": rows,
+                "features": features,
+                "learner": result.learner,
+                "nested": true,
+                "outer_folds": result.outer.len(),
+                "inner_folds": config.inner_folds,
+                "mean_skill": result.mean_skill,
+                "spread": result.spread,
+                "mean_features": result.mean_features,
+                "outer": outer,
+                "selection": selection,
+            });
+            println!("{}", serde_json::to_string_pretty(&report)?);
+        } else {
+            println!(
+                "rows        {rows}   features {features}   outer {}   inner {}   learner {}",
+                result.outer.len(),
+                config.inner_folds,
+                result.learner
+            );
+            println!(
+                "{:<6} {:>9} {:>9} {:>11} {:>7} {:>7} {:>6}",
+                "fold", "train_end", "test", "mse", "r2", "ic", "feat"
+            );
+            for score in &result.outer {
+                println!(
+                    "{:<6} {:>9} {:>9} {:>11.6} {:>7.4} {:>7.3} {:>6}",
+                    score.fold,
+                    score.train_end,
+                    format!("{}-{}", score.test_start, score.test_end),
+                    score.mse,
+                    score.r2,
+                    score.ic,
+                    score.columns.len()
+                );
+            }
+            println!(
+                "nested      skill {:.1}% +/- {:.1}   features {:.1}   {}",
+                result.mean_skill * 100.0,
+                result.spread * 100.0,
+                result.mean_features,
+                result.summary()
+            );
+            let chosen: Vec<String> = result
+                .selection
+                .iter()
+                .take(10)
+                .map(|(_, name, count)| format!("{name} {count}"))
+                .collect();
+            if !chosen.is_empty() {
+                println!("selected    {}", chosen.join(", "));
+            }
+        }
+        return Ok(());
+    }
 
     // A holdout carves the last fraction of rows off before the search runs, so
     // the subsets are chosen on the development prefix and then scored once on
@@ -1004,10 +1157,10 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
         rows
     }
     .min(rows);
-    if cut < args.folds + args.embargo + 2 {
+    if cut < args.folds + embargo + 2 {
         return Err(format!(
             "{cut} development rows is too few for {} folds with an embargo of {}",
-            args.folds, args.embargo
+            args.folds, embargo
         )
         .into());
     }
@@ -1020,7 +1173,7 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
         Some(Fold {
             train_start: 0,
             train_end: cut,
-            test_start: (cut + args.embargo).min(rows),
+            test_start: (cut + embargo).min(rows),
             test_end: rows,
         })
     } else {
@@ -1028,7 +1181,12 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
     };
     let shared = Arc::new(scaled.slice(0..cut));
 
-    let problem = SelectionProblem::new(shared.clone(), args.folds, args.embargo, args.lambda);
+    let learner = match args.learner {
+        LearnerChoice::Ridge => Learner::ridge(args.lambda),
+        LearnerChoice::Trees => Learner::trees(),
+    };
+    let problem =
+        SelectionProblem::with_learner(shared.clone(), args.folds, embargo, learner.clone());
     if problem.folds.is_empty() {
         return Err(format!("{cut} rows is too few for {} folds", args.folds).into());
     }
@@ -1095,12 +1253,12 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
         Some(fold) if fold.test_len() > 0 => {
             let mut scored = vec![(
                 "all".to_string(),
-                score_over(&scaled, std::slice::from_ref(fold), &all, args.lambda),
+                score_over_with(&scaled, std::slice::from_ref(fold), &all, &learner),
             )];
             if let Some((columns, _, _)) = &de_result {
                 scored.push((
                     "de".to_string(),
-                    score_over(&scaled, std::slice::from_ref(fold), columns, args.lambda),
+                    score_over_with(&scaled, std::slice::from_ref(fold), columns, &learner),
                 ));
             }
             if let Some(run) = &front_result {
@@ -1110,7 +1268,7 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
                 ] {
                     scored.push((
                         label.to_string(),
-                        score_over(&scaled, std::slice::from_ref(fold), columns, args.lambda),
+                        score_over_with(&scaled, std::slice::from_ref(fold), columns, &learner),
                     ));
                 }
             }
@@ -1118,6 +1276,23 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
         }
         _ => Vec::new(),
     };
+
+    // Every front point scored on the same held-out rows, so the knee can be
+    // chosen for what it costs out of sample rather than on the objective the
+    // search spent its budget minimising.
+    let mut front_curve: Vec<(usize, usize, Report)> = Vec::new();
+    if args.score_front {
+        if let (Some(fold), Some(run)) = (&holdout_fold, &front_result) {
+            if fold.test_len() > 0 {
+                for (index, solution) in run.outcome.solutions.iter().enumerate() {
+                    let columns = problem.decode(&solution.x);
+                    let report =
+                        score_over_with(&scaled, std::slice::from_ref(fold), &columns, &learner);
+                    front_curve.push((index, columns.len(), report));
+                }
+            }
+        }
+    }
 
     if let Some(path) = &args.out {
         if let Some(run) = &front_result {
@@ -1174,6 +1349,23 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
                 "front": run.outcome.front(),
             });
         }
+        if !front_curve.is_empty() {
+            let scored: Vec<serde_json::Value> = front_curve
+                .iter()
+                .map(|(index, features, report)| {
+                    serde_json::json!({
+                        "index": index,
+                        "features": features,
+                        "names": report.names,
+                        "mse": report.mse,
+                        "r2": report.r2,
+                        "ic": report.ic,
+                        "skill": report.skill,
+                    })
+                })
+                .collect();
+            models["moead"]["curve"] = serde_json::Value::Array(scored);
+        }
         let holdout_json: serde_json::Value = holdout
             .iter()
             .map(|(label, r)| {
@@ -1195,6 +1387,8 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
             "rows": rows,
             "features": features,
             "folds": problem.folds.len(),
+            "learner": learner.name(),
+            "nested": false,
             "holdout_rows": holdout_fold.as_ref().map(|f| f.test_len()).unwrap_or(0),
             "skipped_rows": shared.skipped,
             "models": models,
@@ -1204,8 +1398,9 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
         println!("{}", serde_json::to_string_pretty(&report)?);
     } else {
         println!(
-            "rows        {rows}   features {features}   folds {}",
-            problem.folds.len()
+            "rows        {rows}   features {features}   folds {}   learner {}",
+            problem.folds.len(),
+            learner.name()
         );
         println!(
             "{:<10} {:>6} {:>12} {:>8} {:>7} {:>7}",
@@ -1274,6 +1469,14 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
                         report.r2,
                         report.ic,
                         report.skill * 100.0
+                    );
+                }
+                if let Some((index, features, report)) =
+                    front_curve.iter().max_by(|a, b| a.2.r2.total_cmp(&b.2.r2))
+                {
+                    println!(
+                        "  front scored: best point {} keeps {} features at r2 {:.4}",
+                        index, features, report.r2
                     );
                 }
             }

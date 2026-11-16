@@ -65,33 +65,28 @@ pub fn ari(a: &[usize], b: &[usize]) -> f64 {
     }
 }
 
-/// Resample entities with replacement, refit, and score the agreement of the
-/// labels each resample gives the whole panel.
-pub fn bootstrap(
-    rows: &[Vec<f64>],
-    k: usize,
-    base: &Fit,
+/// Resample entities with replacement, refit through `refit`, and score the
+/// agreement of the labels each resample gives the whole panel.
+///
+/// The refit is a closure so the audit is the same piece of arithmetic for
+/// k-means and for a mixture: only the model that answers differs, and the
+/// protocol compared is identical.
+pub fn resample(
+    panel: &[Vec<f64>],
+    base: &[usize],
     runs: usize,
-    restarts: usize,
-    iterations: usize,
     seed: u64,
+    mut refit: impl FnMut(&[Vec<f64>], u64) -> Vec<usize>,
 ) -> Stability {
-    let n = rows.len();
+    let n = panel.len();
     let runs = runs.max(1);
     let mut scores = Vec::with_capacity(runs);
     for run in 0..runs {
         let mut rng = Rng::stream(seed ^ 0x5bf0_3641, run as u64 + 1);
         let draw: Vec<usize> = (0..n).map(|_| rng.below(n)).collect();
-        let sample: Vec<Vec<f64>> = draw.iter().map(|&i| rows[i].clone()).collect();
-        let fit = kmeans::fit(
-            &sample,
-            k,
-            restarts,
-            iterations,
-            seed.wrapping_add(run as u64),
-        );
-        let labels = kmeans::assign(rows, &fit.centroids);
-        scores.push(ari(&base.labels, &labels));
+        let sample: Vec<Vec<f64>> = draw.iter().map(|&i| panel[i].clone()).collect();
+        let labels = refit(&sample, run as u64);
+        scores.push(ari(base, &labels));
     }
     scores.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
     let mean = scores.iter().sum::<f64>() / scores.len() as f64;
@@ -104,6 +99,59 @@ pub fn bootstrap(
         p10: scores[rank],
         min: scores[0],
     }
+}
+
+/// Resample entities with replacement, refit, and score the agreement of the
+/// labels each resample gives the whole panel.
+pub fn bootstrap(
+    rows: &[Vec<f64>],
+    k: usize,
+    base: &Fit,
+    runs: usize,
+    restarts: usize,
+    iterations: usize,
+    seed: u64,
+) -> Stability {
+    resample(rows, &base.labels, runs, seed, |sample, run| {
+        let fit = kmeans::fit(
+            sample,
+            k,
+            restarts,
+            iterations,
+            seed.wrapping_add(run).wrapping_add(1),
+        );
+        kmeans::assign(rows, &fit.centroids)
+    })
+}
+
+/// What a resampling audit has to refit, in one place so the call stays short.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Plan {
+    pub k: usize,
+    pub family: super::mixture::Family,
+    pub runs: usize,
+    pub restarts: usize,
+    pub iterations: usize,
+    pub seed: u64,
+}
+
+/// The same audit for a fitted mixture: resample, refit, re-place the panel by
+/// posterior, and report the agreement with the shipped partition.
+pub fn mixture_bootstrap(rows: &[Vec<f64>], base: &[usize], plan: &Plan) -> Stability {
+    resample(rows, base, plan.runs, plan.seed, |sample, run| {
+        let fit = super::mixture::Mixture::fit(
+            sample,
+            plan.k,
+            plan.family,
+            plan.restarts,
+            plan.iterations,
+            plan.seed.wrapping_add(run).wrapping_add(1),
+        );
+        if fit.components.is_empty() {
+            return vec![0; rows.len()];
+        }
+        fit.assign(rows)
+    })
 }
 
 /// Refit on columns shuffled independently and report the silhouette.

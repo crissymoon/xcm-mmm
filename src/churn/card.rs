@@ -42,10 +42,77 @@ pub fn render(model: &ChurnModel) -> String {
         "| majority baseline | {:.3} |\n",
         model.metrics.majority
     ));
-    out.push_str(&format!("| folds | {} |\n\n", score.folds));
+    out.push_str(&format!("| folds | {} |\n", score.folds));
+    out.push_str(&format!(
+        "| AUC 95% interval | [{:.3}, {:.3}] |\n",
+        score.auc_low, score.auc_high
+    ));
+    out.push_str(&format!("| Brier score | {:.3} |\n", score.brier));
+    out.push_str(&format!("| log loss | {:.3} |\n", score.log_loss));
+    out.push_str(&format!(
+        "| expected calibration error | {:.3} |\n",
+        score.ece
+    ));
+    out.push_str(&format!(
+        "| conformal coverage at {:.0}% nominal | {:.3} |\n",
+        (1.0 - score.conformal_alpha) * 100.0,
+        score.conformal_coverage
+    ));
+    out.push_str(&format!(
+        "| conformal mean set size | {:.2} |\n",
+        score.conformal_set
+    ));
+    out.push_str(&format!(
+        "| gradient boosted trees, AUC | {:.3} [{:.3}, {:.3}] |\n\n",
+        score.tree_auc, score.tree_auc_low, score.tree_auc_high
+    ));
+    if score.tree_auc > score.auc {
+        out.push_str(&format!(
+            "On this snapshot the tree ensemble ranks better ({:.3} against {:.3}).\nThat is the tabular comparison the review asked to test rather than assume;\nit is one panel, not a law about neural models.\n\n",
+            score.tree_auc, score.auc
+        ));
+    } else {
+        out.push_str(&format!(
+            "On this snapshot the logistic matches or beats the tree ensemble ({:.3}\nagainst {:.3}), so the simpler model is not paying for itself in accuracy.\n\n",
+            score.auc, score.tree_auc
+        ));
+    }
     out.push_str("Fold AUC: ");
     let per_fold: Vec<String> = score.per_fold.iter().map(|v| format!("{v:.3}")).collect();
     out.push_str(&format!("{}\n\n", per_fold.join(", ")));
+    out.push_str("## Uncertainty\n\n");
+    out.push_str(
+        "The interval is a percentile bootstrap over the held-out rows, 400 resamples,\nseeded so a rebuild reproduces it. The conformal threshold is fitted on the\nfirst half of the held-out rows and coverage is measured on the second half, so\nthe coverage number is not the calibration set scored against itself. The tree\nensemble uses the same folds, features and target as the logistic; it is the\ntabular comparison the card previously lacked, not a second headline.\n\n",
+    );
+    out.push_str("## Calibration\n\n");
+    out.push_str("| bin | rows | predicted | observed |\n|---|---:|---:|---:|\n");
+    for bin in &score.calibration {
+        out.push_str(&format!(
+            "| {:.1}-{:.1} | {} | {:.3} | {:.3} |\n",
+            bin.low, bin.high, bin.rows, bin.predicted, bin.observed
+        ));
+    }
+    out.push_str("\n## Support\n\n");
+    out.push_str(&format!(
+        "{} churned rows across {} coefficients, {:.1} events per feature. {}.\n\n",
+        commas(score.positives),
+        model.features.len(),
+        score.events_per_feature,
+        crate::support::support_level(score.events_per_feature)
+    ));
+    out.push_str("| training fraction | rows | held-out AUC |\n|---|---:|---:|\n");
+    for point in &score.learning {
+        out.push_str(&format!(
+            "| {:.0}% | {} | {:.3} |\n",
+            point.fraction * 100.0,
+            commas(point.rows),
+            point.auc
+        ));
+    }
+    out.push_str(&format!(
+        "\nLast-doubling gain {:.2} AUC points. A positive number means the bank was\nstill buying accuracy at the largest fraction; a flat one means the ceiling is\nthe features or the operator, not the row count. Neither reading transports to\na new operator.\n\n",
+        crate::support::doubling_gain(&score.learning)
+    ));
     out.push_str("## Coefficients\n\n");
     out.push_str(
         "On the standardised scale the fit uses. A sign is a direction, not a\ncause.\n\n",
@@ -66,9 +133,13 @@ pub fn render(model: &ChurnModel) -> String {
     out.push_str("- Dates. The table carries tenure, not calendar time, so this baseline\n  cannot attribute a campaign; it can only say how much churn the panel\n  explains before attribution starts.\n");
     out.push_str("- Geography. City and zip are in the source and are left out: at this\n  sample size they encode the operator's footprint more than customer\n  behaviour.\n\n");
     out.push_str("## Limits\n\n");
-    out.push_str("- One operator, one snapshot. A coefficient here is not a market law.\n");
+    out.push_str("- One operator, one snapshot. A coefficient here is not a market law. The\n  interval is a statement about this panel's sampling noise, not about a new\n  city or a new register.\n");
     out.push_str("- Right censoring: a customer who stayed twelve months is at risk for\n  twelve months and no longer, which the series respects and the regression\n  does not attempt to correct.\n");
     out.push_str("- `Joined` customers are censored rather than counted as non-churners.\n");
+    out.push_str("- The coefficients are directions, not effects. The shipped panel has no\n  treatment column, so it cannot answer an intervention question. A panel that\n  carries one is read by `churn uplift`, which reports a cross-fitted T-learner\n  and an inverse probability weighted average effect with bootstrap intervals,\n  a Qini ranking, a decile table and a placebo p-value. That estimator still\n  adjusts for observed covariates only; unmeasured confounding is not repaired.\n");
+    out.push_str("- Selection on the forecasting path is nested when `forecast --nested` is\n  used: the inner loop chooses and the outer loop scores. The plain command\n  remains a single holdout and the report says which one ran.\n");
+    out.push_str("- Drift and rollback are commands, not a daemon. `churn monitor` compares a\n  reference panel with a current one by PSI and KS; `churn rollback` moves the\n  artifact pointer back one version. A scheduler still has to call them.\n");
+    out.push_str("- Calibration, conformal coverage and the tree comparison are measured on\n  the same held-out rows as the AUC. None of them transports to a new operator.\n");
     out
 }
 

@@ -1,17 +1,19 @@
-//! Extract, fit, ship and check the behavioural segmentation.
+//! Extract, ship and check the behavioural segmentation.
 //!
 //! The extraction step reads the ad panel once and writes the entities to
 //! `features.jsonl`, which is the file that ships. The fit reads only that file,
 //! so a rebuild needs nothing from the machine that built it and the panel
 //! itself never has to be in the repository.
 //!
-//! The fold count is chosen, not assumed: every k in the declared range is
-//! fitted and scored, and the winner is the highest silhouette among the
-//! partitions that keep every group above the declared share. Two further
-//! questions decide whether the winner ships at all: does it beat a partition
-//! found in the same columns with their pairing destroyed, and do the groups
-//! survive resampling. A fit that cannot answer both is refused rather than
-//! written.
+//! Fitting lives in [`super::pipeline`] and the choice it makes in
+//! [`super::select`]; this module is the file surface around them: place the
+//! entities, stamp the manifest, and rebuild the folder from its own rows to see
+//! whether it still agrees with itself.
+//!
+//! The manifest carries the choice in words as well as numbers. A reader who
+//! opens only `manifest.json` should learn which likelihood the panel was read
+//! through and what it gained over the k-means fit the folder used to ship, not
+//! only that some digests matched.
 
 use std::fs;
 use std::io;
@@ -19,10 +21,8 @@ use std::path::Path;
 
 use super::ad::{self, Entity};
 use super::card;
-use super::feature::{self, Matrix};
-use super::kmeans::{self, Fit, Sweep};
-use super::model::{self, Artifact, FileStamp, Manifest, SegmentStamp, Source};
-use super::stability::{self, Control, Stability};
+use super::model::{Artifact, FileStamp, Manifest, SegmentStamp};
+use super::pipeline;
 use super::{SegmentConfig, CARD, FEATURES, MANIFEST, MODEL};
 use crate::text::hash::{fnv1a, hex64};
 
@@ -63,181 +63,9 @@ pub fn read_entities(path: &str) -> io::Result<Vec<Entity>> {
     Ok(out)
 }
 
-/// Fit the artifact from the entities file and check it against its own gates.
-pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
-    let entities = read_entities(features_path)?;
-    if entities.len() < cfg.min_entities {
-        return Err(bad(&format!(
-            "{} entities is below the declared minimum of {}",
-            entities.len(),
-            cfg.min_entities
-        )));
-    }
-    let specs = feature::specs();
-    let matrix = Matrix::build(&entities, &specs, cfg.clip)?;
-    let rows = &matrix.z;
-
-    let k_high = cfg
-        .k_max
-        .min(entities.len().saturating_sub(1))
-        .max(cfg.k_min);
-    if cfg.k_min < 2 || entities.len() <= cfg.k_min {
-        return Err(bad("the k range cannot hold a segmentation"));
-    }
-    let mut sweep = Vec::new();
-    let mut fits: Vec<Fit> = Vec::new();
-    for k in cfg.k_min..=k_high {
-        let fit = kmeans::fit(rows, k, cfg.restarts, cfg.iterations, cfg.seed);
-        let sizes = kmeans::sizes(&fit.labels, k);
-        let share = sizes.iter().copied().min().unwrap_or(0) as f64 / rows.len() as f64;
-        sweep.push(Sweep {
-            k,
-            silhouette: kmeans::silhouette(rows, &fit.labels, k),
-            inertia: fit.inertia,
-            sizes,
-            min_share: share,
-        });
-        fits.push(fit);
-    }
-
-    let eligible: Vec<usize> = (0..sweep.len())
-        .filter(|&i| sweep[i].min_share + 1e-12 >= cfg.min_share)
-        .collect();
-    if eligible.is_empty() {
-        let widest = sweep.iter().map(|s| s.min_share).fold(0.0f64, f64::max);
-        return Err(bad(&format!(
-            "no k keeps every group above {:.1} percent; the widest smallest group is {:.1} percent",
-            cfg.min_share * 100.0,
-            widest * 100.0
-        )));
-    }
-    let chosen = eligible
-        .iter()
-        .copied()
-        .max_by(|&a, &b| {
-            sweep[a]
-                .silhouette
-                .partial_cmp(&sweep[b].silhouette)
-                .unwrap_or(std::cmp::Ordering::Equal)
-                .then_with(|| sweep[b].k.cmp(&sweep[a].k))
-        })
-        .expect("a non empty eligible set");
-    let best = &sweep[chosen];
-    if best.silhouette < cfg.min_silhouette {
-        return Err(bad(&format!(
-            "k {} scores a silhouette of {:.3}, below the declared floor of {:.3}",
-            best.k, best.silhouette, cfg.min_silhouette
-        )));
-    }
-    let k = best.k;
-    let fit = fits.swap_remove(chosen);
-
-    let control = stability::control(
-        rows,
-        k,
-        cfg.controls,
-        cfg.restarts,
-        cfg.iterations,
-        cfg.seed,
-    );
-    if best.silhouette < control.mean + cfg.margin {
-        return Err(bad(&format!(
-            "silhouette {:.3} is within {:.3} of the shuffled control at {:.3}",
-            best.silhouette, cfg.margin, control.mean
-        )));
-    }
-    let boot = stability::bootstrap(
-        rows,
-        k,
-        &fit,
-        cfg.bootstraps,
-        cfg.restarts,
-        cfg.iterations,
-        cfg.seed,
-    );
-    if boot.mean < cfg.min_stability {
-        return Err(bad(&format!(
-            "the partition survives resampling at {:.3}, below the declared floor of {:.3}",
-            boot.mean, cfg.min_stability
-        )));
-    }
-
-    let segments = model::segments_of(&fit, &specs, &matrix);
-    let mut assignments = std::collections::BTreeMap::new();
-    for (i, entity) in entities.iter().enumerate() {
-        assignments.insert(entity.id.clone(), fit.labels[i]);
-    }
-    let bytes = fs::read(features_path)?;
-    let shipped = Path::new(features_path)
-        .file_name()
-        .map(|n| n.to_string_lossy().to_string())
-        .unwrap_or_else(|| FEATURES.to_string());
-    let source = Source {
-        path: shipped,
-        entities: entities.len(),
-        ads: entities.iter().map(|e| e.ads).sum(),
-        test_ads: entities.iter().map(|e| e.test_ads).sum(),
-        first_day: entities
-            .iter()
-            .map(|e| e.first.clone())
-            .min()
-            .unwrap_or_default(),
-        last_day: entities
-            .iter()
-            .map(|e| e.last.clone())
-            .max()
-            .unwrap_or_default(),
-        fnv64: hex64(fnv1a(&bytes)),
-    };
-    let metrics = model::Metrics {
-        entities: entities.len(),
-        features: specs.len(),
-        k,
-        inertia: model::round4(fit.inertia),
-        silhouette: model::round4(best.silhouette),
-        min_share: model::round4(best.min_share),
-        sweep: sweep
-            .iter()
-            .map(|s| Sweep {
-                k: s.k,
-                silhouette: model::round4(s.silhouette),
-                inertia: model::round4(s.inertia),
-                sizes: s.sizes.clone(),
-                min_share: model::round4(s.min_share),
-            })
-            .collect(),
-        stability: Stability {
-            bootstraps: boot.bootstraps,
-            mean: model::round4(boot.mean),
-            p10: model::round4(boot.p10),
-            min: model::round4(boot.min),
-        },
-        control: Control {
-            runs: control.runs,
-            mean: model::round4(control.mean),
-            max: model::round4(control.max),
-        },
-        flat: matrix.flat.clone(),
-    };
-    Ok(Artifact {
-        name: cfg.name.clone(),
-        version: 1,
-        built_at: model::now_iso8601(),
-        source,
-        config: cfg.clone(),
-        features: specs,
-        scaling: matrix.scaling.clone(),
-        k,
-        centroids: fit.centroids.clone(),
-        segments,
-        assignments,
-        metrics,
-    })
-}
-
 /// Fit and write a folder: the entities, the model, the manifest and the card.
 pub fn build(features_path: &str, out: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
-    let artifact = fit(features_path, cfg)?;
+    let artifact = pipeline::fit(features_path, cfg)?;
     fs::create_dir_all(out)?;
     place(features_path, out)?;
     artifact.save(&format!("{out}/{MODEL}"))?;
@@ -276,7 +104,7 @@ pub fn check(dir: &str) -> io::Result<Vec<String>> {
     }
     let artifact = Artifact::load(&format!("{dir}/{MODEL}"))?;
     let features_path = format!("{dir}/{FEATURES}");
-    let rebuilt = match fit(&features_path, &manifest.config) {
+    let rebuilt = match pipeline::fit(&features_path, &manifest.config) {
         Ok(artifact) => artifact,
         Err(e) => {
             faults.push(format!("the fit no longer rebuilds: {e}"));
@@ -293,6 +121,13 @@ pub fn check(dir: &str) -> io::Result<Vec<String>> {
             "{} assignments for {} entities",
             artifact.assignments.len(),
             artifact.metrics.entities
+        ));
+    }
+    if artifact.components.len() != artifact.k {
+        faults.push(format!(
+            "{} components for k = {}",
+            artifact.components.len(),
+            artifact.k
         ));
     }
     let mut counted = vec![0usize; artifact.k];
@@ -339,27 +174,51 @@ fn manifest_of(artifact: &Artifact, out: &str) -> io::Result<Manifest> {
             });
         }
     }
-    let mut checks = vec![
+    let metrics = &artifact.metrics;
+    let silhouette = if metrics.silhouette > metrics.control.mean {
         format!(
             "silhouette {:.3} beats the shuffled control at {:.3}",
-            artifact.metrics.silhouette, artifact.metrics.control.mean
+            metrics.silhouette, metrics.control.mean
+        )
+    } else {
+        format!(
+            "silhouette {:.3} sits under its shuffled control at {:.3}, because a partition read through a covariance is not a sphere; the likelihood gate carries that reading instead",
+            metrics.silhouette, metrics.control.mean
+        )
+    };
+    let mut checks = vec![
+        format!(
+            "read through a {} covariance at k = {}, chosen on {:.3} nats per entity held out",
+            metrics.family.name(),
+            metrics.k,
+            metrics.heldout
         ),
         format!(
+            "{:.3} nats per entity better than the k-means partition the folder used to ship at {:.3}",
+            metrics.gain, metrics.baseline.heldout
+        ),
+        format!(
+            "held-out likelihood {:.3} stands clear of the same fit on shuffled columns at {:.3}",
+            metrics.heldout, metrics.likelihood_control.mean
+        ),
+        format!(
+            "a fold model places its own held-out rows at {:.3} agreement with the shipped partition",
+            metrics.agreement
+        ),
+        silhouette,
+        format!(
             "resampling keeps the partition at {:.3} mean agreement",
-            artifact.metrics.stability.mean
+            metrics.stability.mean
         ),
         format!(
             "every group holds at least {:.1} percent of the entities",
-            artifact.metrics.min_share * 100.0
+            metrics.min_share * 100.0
         ),
     ];
-    if artifact.metrics.flat.is_empty() {
+    if metrics.flat.is_empty() {
         checks.push("every feature varies across the panel".to_string());
     } else {
-        checks.push(format!(
-            "flat features: {}",
-            artifact.metrics.flat.join(", ")
-        ));
+        checks.push(format!("flat features: {}", metrics.flat.join(", ")));
     }
     Ok(Manifest {
         name: artifact.name.clone(),

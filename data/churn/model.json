@@ -1,7 +1,7 @@
 {
   "name": "xcm-mmm-churn-baseline",
-  "version": 1,
-  "built_at": "2026-11-14T22:59:27Z",
+  "version": 2,
+  "built_at": "2026-11-15T23:36:10Z",
   "features": [
     "tenure",
     "monthly",
@@ -132,6 +132,8 @@
     "rows": 7043,
     "positives": 1869,
     "auc": 0.8671,
+    "auc_low": 0.8572,
+    "auc_high": 0.8763,
     "balanced": 0.7855,
     "accuracy": 0.786,
     "cut": 0.3097,
@@ -143,6 +145,90 @@
       0.8763,
       0.8618,
       0.8783
+    ],
+    "brier": 0.1341,
+    "log_loss": 0.4185,
+    "ece": 0.0747,
+    "calibration": [
+      {
+        "low": 0.0,
+        "high": 0.1,
+        "rows": 1582,
+        "predicted": 0.06403764271973496,
+        "observed": 0.01327433628318584
+      },
+      {
+        "low": 0.1,
+        "high": 0.2,
+        "rows": 1565,
+        "predicted": 0.146244634957275,
+        "observed": 0.07795527156549521
+      },
+      {
+        "low": 0.2,
+        "high": 0.3,
+        "rows": 1209,
+        "predicted": 0.25115877945587073,
+        "observed": 0.18858560794044665
+      },
+      {
+        "low": 0.3,
+        "high": 0.4,
+        "rows": 968,
+        "predicted": 0.34773659541343627,
+        "observed": 0.3522727272727273
+      },
+      {
+        "low": 0.4,
+        "high": 0.5,
+        "rows": 755,
+        "predicted": 0.44732520881238924,
+        "observed": 0.5562913907284768
+      },
+      {
+        "low": 0.5,
+        "high": 0.6,
+        "rows": 594,
+        "predicted": 0.552095195597123,
+        "observed": 0.7138047138047138
+      },
+      {
+        "low": 0.6,
+        "high": 0.7,
+        "rows": 370,
+        "predicted": 0.6288597016581324,
+        "observed": 0.845945945945946
+      }
+    ],
+    "conformal_alpha": 0.1,
+    "conformal_threshold": 0.622,
+    "conformal_coverage": 0.9171,
+    "conformal_set": 1.2368,
+    "tree_auc": 0.8982,
+    "tree_auc_low": 0.8901,
+    "tree_auc_high": 0.9051,
+    "events_per_feature": 133.5,
+    "learning": [
+      {
+        "fraction": 0.25,
+        "rows": 1409,
+        "auc": 0.867
+      },
+      {
+        "fraction": 0.5,
+        "rows": 2817,
+        "auc": 0.8672
+      },
+      {
+        "fraction": 0.75,
+        "rows": 4226,
+        "auc": 0.8674
+      },
+      {
+        "fraction": 1.0,
+        "rows": 5634,
+        "auc": 0.8679
+      }
     ]
   },
   "metrics": {

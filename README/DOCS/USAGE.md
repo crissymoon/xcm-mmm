@@ -117,6 +117,11 @@ Selects features, fits ridge regressions on walk-forward folds, and reports out-
 | `--target` | target | target column name |
 | `--folds` | 4 | walk-forward folds |
 | `--embargo` | 1 | rows dropped before each test block |
+| `--horizon` | 0 | rows the target reaches forward; raises the embargo to at least this |
+| `--learner` | ridge | `ridge` or `trees`, fitted behind the same folds and metrics |
+| `--nested` | off | inner loop selects, outer loop scores |
+| `--inner-folds` | 3 | validation folds inside each outer training prefix, with `--nested` |
+| `--nested-budget` | 1 500 | evaluations for each inner search, with `--nested` |
 | `--lambda` | 1.0 | ridge penalty |
 | `--method` | both | `de`, `moead` or `both` |
 | `--sparsity` | 0.01 | error per unit of feature fraction, single objective run |

@@ -12,6 +12,9 @@ use clap::{Args, Subcommand};
 
 use super::fit;
 use super::panel::{self, Report, Summary};
+use crate::causal::{self, CausalConfig};
+use crate::data::Dataset;
+use crate::monitor::{self, Registry};
 
 #[derive(Args)]
 pub struct ChurnArgs {
@@ -29,6 +32,14 @@ pub enum ChurnCommand {
     Info(ChurnInfoArgs),
     /// Rebuild the folder from its source and report every disagreement.
     Check(ChurnCheckArgs),
+    /// Estimate an uplift from a panel that carries a treatment column.
+    Uplift(ChurnUpliftArgs),
+    /// Compare a reference panel with a current one by PSI and KS.
+    Monitor(ChurnMonitorArgs),
+    /// Publish the current artifact as the next registry version.
+    Publish(ChurnPublishArgs),
+    /// Restore the previous registry version and move the pointer back.
+    Rollback(ChurnRollbackArgs),
 }
 
 #[derive(Args)]
@@ -55,6 +66,71 @@ pub struct ChurnInfoArgs {
 pub struct ChurnCheckArgs {
     #[arg(long, default_value = "data/churn")]
     pub dir: String,
+}
+
+#[derive(Args)]
+pub struct ChurnUpliftArgs {
+    /// CSV with a treatment column and a binary outcome.
+    #[arg(long, default_value = "data/churn/panel.csv")]
+    pub data: String,
+    /// Outcome column. A churn panel uses `churn`.
+    #[arg(long, default_value = "churn")]
+    pub outcome: String,
+    /// Treatment column, coded 1/0, true/false, treated/control.
+    #[arg(long)]
+    pub treatment: String,
+    /// Cross-fitting folds.
+    #[arg(long, default_value_t = 5)]
+    pub folds: usize,
+    /// Bootstrap resamples for the average effect.
+    #[arg(long, default_value_t = 400)]
+    pub bootstrap: usize,
+    /// Placebo permutations.
+    #[arg(long, default_value_t = 200)]
+    pub permutations: usize,
+    /// Write the report as JSON to this path.
+    #[arg(long)]
+    pub out: Option<String>,
+    /// Print JSON instead of a table.
+    #[arg(long)]
+    pub json: bool,
+}
+
+#[derive(Args)]
+pub struct ChurnMonitorArgs {
+    /// Reference panel, usually the rows the model was fitted on.
+    #[arg(long, default_value = "data/churn/panel.csv")]
+    pub reference: String,
+    /// Current panel.
+    #[arg(long)]
+    pub current: String,
+    /// Target column that [`Dataset`] keeps out of the feature matrix.
+    #[arg(long, default_value = "churn")]
+    pub target: String,
+    /// PSI above which a feature is called drifted.
+    #[arg(long, default_value_t = 0.2)]
+    pub threshold: f64,
+    /// Reference quantile bins.
+    #[arg(long, default_value_t = 10)]
+    pub bins: usize,
+    #[arg(long)]
+    pub json: bool,
+}
+
+#[derive(Args)]
+pub struct ChurnPublishArgs {
+    #[arg(long, default_value = "data/churn/registry")]
+    pub registry: String,
+    #[arg(long, default_value = "data/churn/model.json")]
+    pub model: String,
+}
+
+#[derive(Args)]
+pub struct ChurnRollbackArgs {
+    #[arg(long, default_value = "data/churn/registry")]
+    pub registry: String,
+    #[arg(long, default_value = "data/churn/model.json")]
+    pub target: String,
 }
 
 /// Run one `churn` subcommand.
@@ -102,7 +178,138 @@ pub fn run(args: ChurnArgs) -> Result<(), Box<dyn Error>> {
                 Err(format!("{} faults in {}", faults.len(), a.dir).into())
             }
         }
+        ChurnCommand::Uplift(a) => uplift(a),
+        ChurnCommand::Monitor(a) => monitor(a),
+        ChurnCommand::Publish(a) => {
+            let registry = Registry::open(&a.registry)?;
+            let version = registry.publish(&a.model)?;
+            println!(
+                "published v{:04} {} from {}",
+                version.id, version.file, a.model
+            );
+            Ok(())
+        }
+        ChurnCommand::Rollback(a) => {
+            let registry = Registry::open(&a.registry)?;
+            let version = registry.rollback(&a.target)?;
+            println!(
+                "rolled back to v{:04} {} -> {}",
+                version.id, version.file, a.target
+            );
+            Ok(())
+        }
     }
+}
+
+fn uplift(args: ChurnUpliftArgs) -> Result<(), Box<dyn Error>> {
+    let data = causal::load_csv(&args.data, &args.outcome, &args.treatment)?;
+    let fit = causal::fit(
+        &data,
+        &CausalConfig {
+            folds: args.folds,
+            bootstrap: args.bootstrap,
+            permutations: args.permutations,
+            ..CausalConfig::default()
+        },
+    )?;
+    let report = &fit.report;
+    if let Some(path) = &args.out {
+        fs::write(path, format!("{}\n", serde_json::to_string_pretty(report)?))?;
+    }
+    if args.json {
+        println!("{}", serde_json::to_string_pretty(report)?);
+        return Ok(());
+    }
+    println!(
+        "rows      {}  treated {}  control {}  features {}",
+        commas(report.rows),
+        commas(report.treated),
+        commas(report.control),
+        report.features
+    );
+    println!(
+        "T-learner ATE {:+.4}  [{:+.4}, {:+.4}]  {} resamples",
+        report.ate,
+        report.ate_interval.low,
+        report.ate_interval.high,
+        report.ate_interval.resamples
+    );
+    println!(
+        "IPW ATE      {:+.4}  [{:+.4}, {:+.4}]  clipped {:.1}%",
+        report.ipw_ate,
+        report.ipw_interval.low,
+        report.ipw_interval.high,
+        report.clipped * 100.0
+    );
+    println!(
+        "qini {:+.3}  overlap {:.1}%  placebo p {:.3}",
+        report.qini,
+        report.overlap * 100.0,
+        report.placebo_p
+    );
+    println!("\ndecile  rows  treated  predicted  observed treated  control  difference");
+    for decile in &report.deciles {
+        println!(
+            "{:>6}  {:>4}  {:>7}  {:>+9.4}  {:>16.4}  {:>7.4}  {:>+10.4}",
+            decile.decile,
+            decile.rows,
+            decile.treated,
+            decile.predicted,
+            decile.observed_treated,
+            decile.observed_control,
+            decile.difference
+        );
+    }
+    println!("\nheterogeneity across the median");
+    println!("feature                 low      high   difference       z");
+    for row in report.heterogeneity.iter().take(8) {
+        println!(
+            "{:<22} {:>+8.4} {:>+8.4} {:>+12.4} {:>+7.2}",
+            row.feature, row.low, row.high, row.difference, row.z
+        );
+    }
+    println!("\n{}", report.note);
+    Ok(())
+}
+
+fn monitor(args: ChurnMonitorArgs) -> Result<(), Box<dyn Error>> {
+    let reference = Dataset::load(&args.reference, &args.target)?;
+    let current = Dataset::load(&args.current, &args.target)?;
+    let report = monitor::compare(&reference, &current, args.threshold, args.bins)?;
+    if args.json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+        return Ok(());
+    }
+    println!(
+        "reference {} rows  current {} rows  threshold {:.2}  drifted {}",
+        commas(report.reference_rows),
+        commas(report.current_rows),
+        report.threshold,
+        report.drifted
+    );
+    println!("feature                       psi      ks  mean shift  alarm");
+    let mut features = report.features.clone();
+    features.sort_by(|a, b| b.psi.total_cmp(&a.psi));
+    for feature in &features {
+        println!(
+            "{:<26} {:>8.4} {:>7.3}  {:>+10.4}  {}",
+            feature.name,
+            feature.psi,
+            feature.ks,
+            feature.mean_shift,
+            if feature.drifted { "yes" } else { "no" }
+        );
+    }
+    if !report.missing.is_empty() {
+        println!("missing   {}", report.missing.join(", "));
+    }
+    let alarms = report.alarms();
+    if alarms.is_empty() {
+        println!("verdict   stable at this threshold");
+    } else {
+        println!("verdict   drift in {}", alarms.join(", "));
+    }
+    Ok(())
 }
 
 fn info(dir: &str) -> Result<(), Box<dyn Error>> {
@@ -169,8 +376,17 @@ fn info(dir: &str) -> Result<(), Box<dyn Error>> {
         let model = fit::read(&format!("{dir}/model.json"))?;
         let score = &model.score;
         println!(
-            "fit       AUC {:.3}  tenure only {:.3}  balanced {:.3}  cut {:.3}",
-            score.auc, score.tenure_auc, score.balanced, score.cut
+            "fit       AUC {:.3} [{:.3}, {:.3}]  tenure only {:.3}  balanced {:.3}  cut {:.3}",
+            score.auc, score.auc_low, score.auc_high, score.tenure_auc, score.balanced, score.cut
+        );
+        println!(
+            "quality   brier {:.3}  log loss {:.3}  ece {:.3}  conformal {:.3}/{:.2}  trees {:.3}",
+            score.brier,
+            score.log_loss,
+            score.ece,
+            score.conformal_coverage,
+            score.conformal_set,
+            score.tree_auc
         );
         let mut weights = model.coefficients.clone();
         weights.sort_by(|a, b| b.weight.abs().total_cmp(&a.weight.abs()));

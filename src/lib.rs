@@ -24,8 +24,19 @@
 //! outcome with its memo text read on those axes. [`profile`] puts one text
 //! through the detectors, the emotion scanner and the segment centres and
 //! prints every score beside the evidence for it.
+//!
+//! Four modules sit around the models rather than inside them. [`learn`] puts
+//! ridge and a gradient boosted tree ensemble behind the same fold interface.
+//! [`uncertainty`] supplies bootstrap intervals, calibration and split
+//! conformal sets. [`causal`] estimates uplift from a table with an observed
+//! treatment, with cross-fitting, IPW, Qini, deciles and a placebo test.
+//! [`monitor`] measures PSI and KS drift, tracks coverage over batches and keeps
+//! a versioned artifact with a rollback path. [`support`] reports events per
+//! feature and a learning curve so a small bank is visible as a slope rather
+//! than a caveat.
 
 pub mod benchmarks;
+pub mod causal;
 pub mod churn;
 pub mod data;
 pub mod dataset;
@@ -35,16 +46,20 @@ pub mod digest;
 pub mod emotion;
 pub mod eval;
 pub mod forecast;
+pub mod learn;
 pub mod linalg;
 pub mod metrics;
 pub mod moead;
+pub mod monitor;
 pub mod pairs;
 pub mod problem;
 pub mod profile;
 pub mod rng;
 pub mod segment;
+pub mod support;
 pub mod text;
 pub mod transformer;
+pub mod uncertainty;
 
 pub use de::{minimize as minimize_de, DeConfig, DeOutcome};
 pub use moead::{minimize as minimize_moead, MoeadConfig, MoeadOutcome};
