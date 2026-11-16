@@ -56,7 +56,7 @@ impl Default for CoverageConfig {
         Self {
             rows: 251,
             positives: 50,
-            trials: 200,
+            trials: 2_000,
             reps: 300,
             level: 0.95,
             effect: 1.0,
@@ -80,12 +80,55 @@ pub struct MethodCoverage {
     pub method: String,
     /// Share of trials whose interval held the true value.
     pub covered: f64,
+    /// Lower end of the Wilson interval on that share, so a reader can see how
+    /// much of the gap from nominal is Monte Carlo noise.
+    pub mc_low: f64,
+    /// Upper end of the Wilson interval.
+    pub mc_high: f64,
     /// Mean width across trials.
     pub mean_width: f64,
     /// Trials that produced a usable interval.
     pub trials: usize,
     /// True when the coverage sits inside the band.
     pub within_band: bool,
+}
+
+impl MethodCoverage {
+    /// The band edge this method is nearest to, and whether the Monte Carlo
+    /// interval reaches it.
+    ///
+    /// A method that measures 0.925 against a 0.93 floor has missed on the
+    /// point estimate. Whether it missed, rather than landed low by luck,
+    /// depends on the number of trials: at two hundred the Wilson interval is
+    /// three points wide on each side, so it still reaches the floor.
+    pub fn missed(&self, band: (f64, f64)) -> Option<MissKind> {
+        let floor = band.0;
+        let ceiling = band.1;
+        if self.covered < floor {
+            Some(if self.mc_high < floor {
+                MissKind::Resolved
+            } else {
+                MissKind::Unresolved
+            })
+        } else if self.covered > ceiling {
+            Some(if self.mc_low > ceiling {
+                MissKind::Resolved
+            } else {
+                MissKind::Unresolved
+            })
+        } else {
+            None
+        }
+    }
+}
+
+/// Whether a measured miss is larger than the simulation's own noise.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum MissKind {
+    /// The Monte Carlo interval clears the band: this is a real miss.
+    Resolved,
+    /// The point estimate is outside the band but the interval reaches it.
+    Unresolved,
 }
 
 /// The simulation result.
@@ -181,9 +224,12 @@ pub fn simulate(config: &CoverageConfig) -> CoverageReport {
     let (low_band, high_band) = config.band();
     let method = |name: &str, hits: usize, width: f64| {
         let covered = hits as f64 / count;
+        let (mc_low, mc_high) = super::wilson(hits, usable, config.level);
         MethodCoverage {
             method: name.to_string(),
             covered,
+            mc_low,
+            mc_high,
             mean_width: width / count,
             trials: usable,
             within_band: covered >= low_band && covered <= high_band,
@@ -199,27 +245,56 @@ pub fn simulate(config: &CoverageConfig) -> CoverageReport {
         .filter(|entry| entry.within_band)
         .map(|entry| entry.method.as_str())
         .collect();
-    let note = if held.is_empty() {
+    let resolved: Vec<String> = methods
+        .iter()
+        .filter_map(|entry| match entry.missed((low_band, high_band)) {
+            Some(MissKind::Resolved) => Some(format!("{} at {:.3}", entry.method, entry.covered)),
+            _ => None,
+        })
+        .collect();
+    let unresolved: Vec<String> = methods
+        .iter()
+        .filter_map(|entry| match entry.missed((low_band, high_band)) {
+            Some(MissKind::Unresolved) => Some(format!(
+                "{} at {:.3} (Monte Carlo [{:.3}, {:.3}])",
+                entry.method, entry.covered, entry.mc_low, entry.mc_high
+            )),
+            Some(MissKind::Resolved) | None => None,
+        })
+        .collect();
+    let mut note = if held.is_empty() {
         format!(
-            "no interval held nominal {:.2} inside [{:.2}, {:.2}] at {} rows with {} positives; the shortest is reported with its measured coverage",
+            "no interval held nominal {:.2} inside [{:.2}, {:.2}] at {} rows with {} positives",
             config.level, low_band, high_band, rows, positives
         )
     } else {
         format!(
-            "{} held nominal {:.2} inside [{:.2}, {:.2}] at {} rows with {} positives{}",
+            "{} held nominal {:.2} inside [{:.2}, {:.2}] at {} rows with {} positives",
             held.join(", "),
             config.level,
             low_band,
             high_band,
             rows,
-            positives,
-            if bca_fallbacks > 0 {
-                format!("; bca fell back to the percentile interval on {bca_fallbacks} trials")
-            } else {
-                String::new()
-            }
+            positives
         )
     };
+    if !resolved.is_empty() {
+        note.push_str(&format!(
+            "; missed beyond simulation noise: {}",
+            resolved.join(", ")
+        ));
+    }
+    if !unresolved.is_empty() {
+        note.push_str(&format!(
+            "; outside the band but not settled at {usable} trials: {}",
+            unresolved.join(", ")
+        ));
+    }
+    if bca_fallbacks > 0 {
+        note.push_str(&format!(
+            "; bca fell back to the percentile interval on {bca_fallbacks} trials"
+        ));
+    }
     CoverageReport {
         nominal: config.level,
         true_auc,
@@ -268,6 +343,52 @@ mod tests {
             report.nominal
         );
         assert!(report.note.contains("nominal"));
+    }
+
+    #[test]
+    fn a_miss_is_only_called_when_the_trials_can_see_it() {
+        let band = (0.93, 0.97);
+        let noisy = MethodCoverage {
+            method: "delong-logit".to_string(),
+            covered: 0.925,
+            mc_low: 0.897,
+            mc_high: 0.946,
+            trials: 200,
+            ..MethodCoverage::default()
+        };
+        assert_eq!(noisy.missed(band), Some(MissKind::Unresolved));
+        let settled = MethodCoverage {
+            covered: 0.925,
+            mc_low: 0.918,
+            mc_high: 0.929,
+            trials: 20_000,
+            ..noisy.clone()
+        };
+        assert_eq!(settled.missed(band), Some(MissKind::Resolved));
+        let inside = MethodCoverage {
+            covered: 0.940,
+            mc_low: 0.930,
+            mc_high: 0.950,
+            trials: 2_000,
+            ..noisy
+        };
+        assert_eq!(inside.missed(band), None);
+    }
+
+    #[test]
+    fn every_method_reports_how_precise_its_own_coverage_is() {
+        let config = CoverageConfig {
+            trials: 200,
+            reps: 40,
+            ..CoverageConfig::default()
+        };
+        let report = simulate(&config);
+        for entry in &report.methods {
+            assert!(entry.mc_low <= entry.covered, "{}", entry.method);
+            assert!(entry.mc_high >= entry.covered, "{}", entry.method);
+            assert!(entry.mc_high - entry.mc_low > 0.0);
+        }
+        assert!(report.note.contains("251 rows with 50 positives"));
     }
 
     #[test]

@@ -1,6 +1,6 @@
 # Churn baseline
 
-xcm-mmm-churn-baseline v3, built 2026-11-16T05:05:15Z. A logistic over the telecom panel, fitted so a marketing
+xcm-mmm-churn-baseline v3, built 2026-11-16T05:13:42Z. A logistic over the telecom panel, fitted so a marketing
 model has a retention baseline to beat rather than a number to quote.
 
 ## Panel
@@ -65,16 +65,18 @@ headline.
 
 Coverage was measured by simulation at 251 rows with 50 positives, a
 generating world whose true area under the curve is known in closed form
-(0.760), and 200 independent trials per method. Nominal is 95% and the band
+(0.760), and 2000 independent trials per method. Nominal is 95% and the band
 is 0.93 to 0.97.
 
-| interval | measured coverage | mean width | inside the band |
-|---|---:|---:|:---:|
-| bootstrap-percentile | 0.940 | 0.145 | yes |
-| bca | 0.935 | 0.146 | yes |
-| delong-logit | 0.925 | 0.147 | no |
+| interval | measured coverage | Monte Carlo 95% | mean width | inside the band |
+|---|---:|---:|---:|:---:|
+| bootstrap-percentile | 0.938 | [0.927, 0.948] | 0.144 | yes |
+| bca | 0.936 | [0.924, 0.946] | 0.145 | yes |
+| delong-logit | 0.947 | [0.936, 0.956] | 0.146 | yes |
 
-bootstrap-percentile, bca held nominal 0.95 inside [0.93, 0.97] at 251 rows with 50 positives
+The Monte Carlo column is the Wilson interval on the measured share, and it is not decoration. An earlier run of this simulation used 200 trials and reported 0.925 for DeLong against a 0.930 floor, which read as a failure of the analytic interval. Rerunning at 2,000 trials put the same estimator at 0.947 and inside the band, so the gap was the simulation's own noise: two hundred trials leave a standard error near 0.015, which is wider than any difference the band can resolve.
+
+bootstrap-percentile, bca, delong-logit held nominal 0.95 inside [0.93, 0.97] at 251 rows with 50 positives
 
 ### Calibration
 
@@ -89,14 +91,18 @@ A rank of `ceil((n + 1)(1 - alpha))` needs at least `1 / alpha` calibration
 rows of that class; a class with fewer is refused rather than given a number
 it cannot support.
 
-| class | calibration rows | coverage | mean set size |
-|---|---:|---:|---:|
-| churn | 974 | 0.896 | 1.90 |
-| stayed | 2547 | 0.907 | 0.92 |
+| class | calibration rows | coverage | coverage 95% Wilson | mean set size |
+|---|---:|---:|---:|---:|
+| churn | 974 | 0.896 | [0.876, 0.914] | 1.90 |
+| stayed | 2547 | 0.907 | [0.895, 0.918] | 0.92 |
 
 The pooled reading is 0.917 coverage at a mean set of 1.24. It is a
-marginal number, and it hides a class whose calibration rows are too few for
-the requested tail.
+marginal number, and it hides the class the reader cares about: the churn
+class covers less than nominal while the stayed class covers more, so the
+marginal figure is a weighted average of an under-covering tail and an
+over-covering body. The Wilson column is what makes the difference readable.
+At 974 churn rows it reaches nominal, so the churn shortfall is at the edge
+of resolution rather than established.
 
 ## Calibration
 

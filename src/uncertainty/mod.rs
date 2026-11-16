@@ -684,6 +684,47 @@ fn class_test(scores: &[f64], labels: &[bool], label: bool, threshold: f64) -> (
 /// and the note said 0.007 for the same error.
 pub use crate::num::round4;
 
+/// Wilson score interval for a share, `hits` out of `trials`.
+///
+/// A measured coverage of 0.925 from two hundred trials is not the same claim
+/// as 0.925 from twenty thousand, and the difference is what decides whether an
+/// interval missed its nominal level or might have. Wilson is used rather than
+/// the normal approximation because the share is often near one, where the
+/// normal interval runs past one and collapses to zero width at 100 percent.
+pub fn wilson(hits: usize, trials: usize, level: f64) -> (f64, f64) {
+    if trials == 0 {
+        return (0.0, 1.0);
+    }
+    let n = trials as f64;
+    let p = hits as f64 / n;
+    let z = normal_quantile(0.5 + level / 2.0);
+    let denominator = 1.0 + z * z / n;
+    let centre = (p + z * z / (2.0 * n)) / denominator;
+    let spread = z * ((p * (1.0 - p) / n + z * z / (4.0 * n * n)).sqrt()) / denominator;
+    ((centre - spread).max(0.0), (centre + spread).min(1.0))
+}
+
+/// The standard normal quantile for `p` in `(0, 1)`, by bisection on the cdf.
+fn normal_quantile(p: f64) -> f64 {
+    if p <= 0.0 {
+        return f64::NEG_INFINITY;
+    }
+    if p >= 1.0 {
+        return f64::INFINITY;
+    }
+    let mut low = -10.0;
+    let mut high = 10.0;
+    for _ in 0..200 {
+        let mid = 0.5 * (low + high);
+        if crate::stats::normal_cdf(mid) < p {
+            low = mid;
+        } else {
+            high = mid;
+        }
+    }
+    0.5 * (low + high)
+}
+
 /// Effective sample size for a mean under a finite population, `n`.
 pub fn effective_n(positives: usize, negatives: usize) -> f64 {
     let n = positives + negatives;
@@ -700,6 +741,35 @@ pub fn effective_n(positives: usize, negatives: usize) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn wilson_keeps_a_share_inside_the_unit_interval() {
+        let (low, high) = wilson(200, 200, 0.95);
+        assert!((0.0..=1.0).contains(&low) && (0.0..=1.0).contains(&high));
+        assert!(high <= 1.0);
+        assert!(low < 1.0, "a full share still has a lower bound below one");
+    }
+
+    #[test]
+    fn wilson_narrows_as_trials_grow() {
+        let small = wilson(925, 1_000, 0.95);
+        let large = wilson(9_250, 10_000, 0.95);
+        assert!(large.1 - large.0 < small.1 - small.0);
+        assert!(small.0 <= 0.925 && small.1 >= 0.925);
+    }
+
+    #[test]
+    fn a_half_point_gap_needs_ten_thousand_trials_to_settle() {
+        // 0.925 against a 0.930 floor. The standard error at n trials is
+        // sqrt(0.925 * 0.075 / n), so excluding the floor takes about eleven
+        // thousand trials. Two hundred and two thousand both reach it.
+        let short = wilson(185, 200, 0.95);
+        let medium = wilson(1_850, 2_000, 0.95);
+        let long = wilson(18_500, 20_000, 0.95);
+        assert!(short.1 > 0.930, "200 trials reach the floor: {short:?}");
+        assert!(medium.1 > 0.930, "2000 trials still reach it: {medium:?}");
+        assert!(long.1 < 0.930, "20000 trials separate it: {long:?}");
+    }
     use crate::rng::Rng;
 
     fn separable() -> (Vec<f64>, Vec<bool>) {
