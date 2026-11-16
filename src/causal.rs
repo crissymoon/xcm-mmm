@@ -21,159 +21,49 @@
 //! effect under the sharp null of no effect. None of this is identification
 //! from observational data alone: unmeasured confounding is not repaired by a
 //! propensity score, and the card says so.
-
-use std::collections::BTreeSet;
-use std::io;
+//!
+//! The headline average effect is a doubly robust (AIPW) estimate built from
+//! the same cross-fitted nuisances. Each row contributes
+//! `mu1 - mu0 + t (y - mu1) / e - (1 - t) (y - mu0) / (1 - e)`, where `mu0` and
+//! `mu1` are the control and treated arm probabilities and `e` is the
+//! propensity. Averaging that pseudo-outcome is Neyman orthogonal to first
+//! order in the nuisances (Chernozhukov, Chetverikov, Demirer, Duflo, Hansen,
+//! Newey and Robins, 2018): a small nuisance error moves the estimate by second
+//! order, which the plain difference of two arm models does not provide.
+//!
+//! What that buys is robustness to approximation error, not identification. The
+//! estimate still adjusts for the observed covariates only, so a confounder
+//! nobody measured is untouched. The E-value (VanderWeele and Ding, 2017) says
+//! how strong such a confounder would have to be, on the risk ratio scale, to
+//! explain the estimate away; a large E-value is a statement about how much
+//! confounding the reading tolerates, never proof that confounding is absent.
+//!
+//! Two overlap estimands read the same pseudo-outcomes. The overlap weighted
+//! effect weights rows by `e (1 - e)` (Li, Morgan and Zaslavsky, 2018), which
+//! targets the population where a decision is actually possible. The Crump
+//! trimmed effect keeps the rows inside a propensity bound chosen by the rule
+//! of Crump, Hotz, Imbens and Mitnik (2009). The policy value curve gives the
+//! decision reading: what a rule that treats the top fraction of a ranking is
+//! worth, next to treating everyone and treating nobody. Qini stays as a
+//! descriptive summary of the same ranking.
 
 use serde::{Deserialize, Serialize};
 
-use crate::churn::csvx;
 use crate::detect::logistic::{FitParams, Logistic};
 use crate::rng::Rng;
+use crate::stats::z_for_level;
 use crate::uncertainty::{bootstrap, Interval};
 
-/// One row of the causal table.
-#[derive(Clone, Debug)]
-pub struct Row {
-    pub features: Vec<f64>,
-    pub treatment: bool,
-    pub outcome: f64,
-}
+mod estimators;
+mod table;
 
-/// A causal table with named covariates.
-#[derive(Clone, Debug)]
-pub struct CausalData {
-    pub names: Vec<String>,
-    pub rows: Vec<Row>,
-}
+pub use estimators::PolicyPoint;
+pub use table::{load_csv, CausalData, Row};
 
-impl CausalData {
-    /// Rows in the treated arm.
-    pub fn treated(&self) -> usize {
-        self.rows.iter().filter(|row| row.treatment).count()
-    }
-
-    /// Rows in the control arm.
-    pub fn control(&self) -> usize {
-        self.rows.len() - self.treated()
-    }
-
-    /// Feature matrix for the rows selected by `index`.
-    pub fn design(&self, index: &[usize]) -> Vec<Vec<f64>> {
-        index
-            .iter()
-            .map(|&at| self.rows[at].features.clone())
-            .collect()
-    }
-}
-
-/// Read a CSV with a binary treatment column and a numeric outcome.
-///
-/// Numeric covariates are used as they stand. A non-numeric column with at most
-/// twelve levels becomes one indicator per level after the first, which is the
-/// baseline. A column with one value per row is treated as an identifier and
-/// skipped. A missing or unparseable numeric covariate is a refusal rather than
-/// a zero, because a zero lands in the propensity model as data.
-pub fn load_csv(path: &str, outcome: &str, treatment: &str) -> io::Result<CausalData> {
-    let table = csvx::read(path)?;
-    let outcome_at = table.require(outcome)?;
-    let treatment_at = table.require(treatment)?;
-    if outcome_at == treatment_at {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            "the outcome and the treatment are the same column",
-        ));
-    }
-    if table.rows.is_empty() {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            format!("{path} holds no rows"),
-        ));
-    }
-    let rows = table.rows.len();
-    let mut numeric = Vec::new();
-    let mut categorical = Vec::new();
-    for column in 0..table.header.len() {
-        if column == outcome_at || column == treatment_at {
-            continue;
-        }
-        let values: Vec<&str> = table.rows.iter().map(|row| row[column].trim()).collect();
-        if values.iter().all(|value| value.parse::<f64>().is_ok()) {
-            numeric.push(column);
-            continue;
-        }
-        let levels: BTreeSet<String> = values
-            .iter()
-            .filter(|value| !value.is_empty())
-            .map(|value| value.to_lowercase())
-            .collect();
-        if levels.len() >= 2 && levels.len() <= 12 && levels.len() < rows {
-            categorical.push((column, levels.into_iter().collect::<Vec<_>>()));
-        }
-    }
-    let mut names = Vec::new();
-    for &column in &numeric {
-        names.push(table.header[column].clone());
-    }
-    for (column, levels) in &categorical {
-        for level in levels.iter().skip(1) {
-            names.push(format!("{}={level}", table.header[*column]));
-        }
-    }
-    if names.is_empty() {
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            "the table has no usable covariates",
-        ));
-    }
-    let mut out = Vec::with_capacity(rows);
-    for (number, cells) in table.rows.iter().enumerate() {
-        let at = number + 2;
-        let outcome = cells[outcome_at].trim().parse::<f64>().map_err(|_| {
-            io::Error::new(
-                io::ErrorKind::InvalidData,
-                format!("row {at} has a non numeric outcome {:?}", cells[outcome_at]),
-            )
-        })?;
-        let treatment = parse_treatment(&cells[treatment_at], at)?;
-        let mut features = Vec::with_capacity(names.len());
-        for &column in &numeric {
-            let value = cells[column].trim().parse::<f64>().map_err(|_| {
-                io::Error::new(
-                    io::ErrorKind::InvalidData,
-                    format!(
-                        "row {at} has a non numeric {} {:?}",
-                        table.header[column], cells[column]
-                    ),
-                )
-            })?;
-            features.push(value);
-        }
-        for (column, levels) in &categorical {
-            let value = cells[*column].trim().to_lowercase();
-            for level in levels.iter().skip(1) {
-                features.push(f64::from(u8::from(&value == level)));
-            }
-        }
-        out.push(Row {
-            features,
-            treatment,
-            outcome,
-        });
-    }
-    Ok(CausalData { names, rows: out })
-}
-
-fn parse_treatment(cell: &str, at: usize) -> io::Result<bool> {
-    match cell.trim().to_lowercase().as_str() {
-        "1" | "true" | "yes" | "y" | "treated" | "treatment" | "t" => Ok(true),
-        "0" | "false" | "no" | "n" | "control" | "c" => Ok(false),
-        other => Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            format!("row {at} has an unrecognised treatment value {other:?}"),
-        )),
-    }
-}
+use estimators::{
+    crump_rule, dr_mean, e_value_of_difference, overlap_weighted, policy_curve, pseudo_outcomes,
+    CRUMP_FLOOR,
+};
 
 /// How a causal fit is configured.
 #[derive(Clone, Debug)]
@@ -234,6 +124,9 @@ pub struct Heterogeneity {
 }
 
 /// What the causal fit found.
+///
+/// Every field added after the first release carries `serde(default)`, so a
+/// report written by an older build still parses.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct CausalReport {
     pub rows: usize,
@@ -257,6 +150,58 @@ pub struct CausalReport {
     pub deciles: Vec<Decile>,
     pub heterogeneity: Vec<Heterogeneity>,
     pub note: String,
+    /// Doubly robust (AIPW) average effect, the headline estimate.
+    #[serde(default)]
+    pub dr_ate: f64,
+    /// Influence function standard error of `dr_ate`.
+    #[serde(default)]
+    pub dr_se: f64,
+    /// Normal interval on `dr_ate`, built from its influence function.
+    #[serde(default)]
+    pub dr_interval: Interval,
+    /// Rows whose bias correction term hit the declared cap.
+    #[serde(default)]
+    pub dr_clipped: usize,
+    /// Overlap weighted average effect, weights `e (1 - e)` scaled to mean one.
+    #[serde(default)]
+    pub overlap_weighted_ate: f64,
+    /// Influence function standard error of the overlap weighted effect.
+    #[serde(default)]
+    pub overlap_weighted_se: f64,
+    /// Crump trimmed average effect on the retained rows.
+    #[serde(default)]
+    pub crump_ate: f64,
+    /// Influence function standard error of the Crump trimmed effect.
+    #[serde(default)]
+    pub crump_se: f64,
+    /// Rows the Crump rule retained.
+    #[serde(default)]
+    pub crump_rows: usize,
+    /// Propensity bound the Crump rule selected, zero when it selected none.
+    #[serde(default)]
+    pub crump_bound: f64,
+    /// True when the rule retained too few rows and the untrimmed value stands.
+    #[serde(default)]
+    pub crump_refused: bool,
+    /// E-value of `dr_ate`, which is the better estimator here, so the reading
+    /// is built on it rather than on the T-learner difference: an unmeasured
+    /// confounder would need an association with both the treatment and the
+    /// outcome of at least this risk ratio to explain the estimate away.
+    #[serde(default)]
+    pub e_value: f64,
+    /// E-value of the `dr_interval` bound nearest the null, which is the
+    /// confounding the interval itself tolerates.
+    #[serde(default)]
+    pub e_value_ci: f64,
+    /// Policy value curve of the T-learner ranking, from treating nobody up.
+    #[serde(default)]
+    pub policy: Vec<PolicyPoint>,
+    /// Value of treating every row, the mean pseudo-outcome.
+    #[serde(default)]
+    pub policy_value_all: f64,
+    /// Value of treating no row, which is zero by construction.
+    #[serde(default)]
+    pub policy_value_none: f64,
 }
 
 /// A fitted model that scores a new row's uplift.
@@ -326,8 +271,34 @@ pub fn fit(data: &CausalData, config: &CausalConfig) -> Result<CausalFit, String
         steps: 400,
         ..FitParams::default()
     };
-    let mut uplift = vec![0.0; data.rows.len()];
-    let mut propensity = vec![0.0; data.rows.len()];
+    // Cross-fitted nuisances. A fold that is skipped keeps these priors, which
+    // are honest marginal rates rather than zeros that would distort a
+    // pseudo-outcome.
+    let control_prior = if data.control() == 0 {
+        0.5
+    } else {
+        data.rows
+            .iter()
+            .filter(|row| !row.treatment)
+            .map(|row| row.outcome)
+            .sum::<f64>()
+            / data.control() as f64
+    };
+    let treated_prior = if data.treated() == 0 {
+        0.5
+    } else {
+        data.rows
+            .iter()
+            .filter(|row| row.treatment)
+            .map(|row| row.outcome)
+            .sum::<f64>()
+            / data.treated() as f64
+    };
+    let propensity_prior = data.treated() as f64 / data.rows.len().max(1) as f64;
+    let mut mu0 = vec![control_prior; data.rows.len()];
+    let mut mu1 = vec![treated_prior; data.rows.len()];
+    let mut uplift = vec![treated_prior - control_prior; data.rows.len()];
+    let mut propensity = vec![propensity_prior; data.rows.len()];
     for fold in 0..folds {
         let train: Vec<usize> = (0..data.rows.len())
             .filter(|row| assignment[*row] != fold)
@@ -370,7 +341,9 @@ pub fn fit(data: &CausalData, config: &CausalConfig) -> Result<CausalFit, String
         let propensity_model = Logistic::fit(&design, &treatment, &params);
         for row in test {
             let features = &data.rows[row].features;
-            uplift[row] = treated_model.predict(features) - control_model.predict(features);
+            mu1[row] = treated_model.predict(features);
+            mu0[row] = control_model.predict(features);
+            uplift[row] = mu1[row] - mu0[row];
             propensity[row] = propensity_model.predict(features);
         }
     }
@@ -402,6 +375,39 @@ pub fn fit(data: &CausalData, config: &CausalConfig) -> Result<CausalFit, String
     let (qini, deciles) = qini_and_deciles(data, &uplift, &weights);
     let heterogeneity = heterogeneity(data, &uplift);
     let placebo_p = placebo(data, &propensity, ate, config);
+
+    let (psi, dr_clipped) = pseudo_outcomes(data, &mu0, &mu1, &propensity);
+    let (dr_ate, dr_se) = dr_mean(&psi, &(0..psi.len()).collect::<Vec<_>>());
+    let z = z_for_level(config.level);
+    let dr_interval = Interval {
+        point: dr_ate,
+        low: dr_ate - z * dr_se,
+        high: dr_ate + z * dr_se,
+        level: config.level,
+        resamples: 0,
+    };
+    let (overlap_weighted_ate, overlap_weighted_se) = overlap_weighted(&psi, &propensity);
+    let (crump_bound_value, kept) = crump_rule(&propensity);
+    let crump_refused = kept.len() < CRUMP_FLOOR;
+    let (crump_value, crump_error) = dr_mean(&psi, &kept);
+    let (crump_ate, crump_se) = if crump_refused {
+        (dr_ate, dr_se)
+    } else {
+        (crump_value, crump_error)
+    };
+    // The E-value reads the risk difference against the control arm risk, and
+    // it is built on the doubly robust point rather than the T-learner because
+    // the doubly robust reading is the less nuisance sensitive of the two.
+    let e_value_point = e_value_of_difference(dr_ate, control_prior);
+    let near_null = if dr_ate >= 0.0 {
+        dr_interval.low
+    } else {
+        dr_interval.high
+    };
+    let e_value_ci = e_value_of_difference(near_null, control_prior);
+    let policy = policy_curve(&uplift, &psi);
+    let policy_value_all = dr_ate;
+    let policy_value_none = 0.0;
 
     let design = data.design(&(0..data.rows.len()).collect::<Vec<_>>());
     let treatment: Vec<bool> = data.rows.iter().map(|row| row.treatment).collect();
@@ -452,7 +458,23 @@ pub fn fit(data: &CausalData, config: &CausalConfig) -> Result<CausalFit, String
             placebo_p,
             deciles,
             heterogeneity,
-            note: "Observational estimate. Adjusts for observed covariates only; unmeasured confounding is not repaired by a propensity score.".to_string(),
+            note: "Observational estimate. The doubly robust mean is Neyman orthogonal to first order in the nuisances; it still adjusts for observed covariates only, and an E-value states what unmeasured confounding it would take, not that none exists.".to_string(),
+            dr_ate,
+            dr_se,
+            dr_interval,
+            dr_clipped,
+            overlap_weighted_ate,
+            overlap_weighted_se,
+            crump_ate,
+            crump_se,
+            crump_rows: kept.len(),
+            crump_bound: crump_bound_value,
+            crump_refused,
+            e_value: e_value_point,
+            e_value_ci,
+            policy,
+            policy_value_all,
+            policy_value_none,
         },
         model,
     })
@@ -504,36 +526,35 @@ fn ipw(data: &CausalData, propensity: &[f64], trim: f64) -> (f64, f64, Vec<f64>)
     (ate, clipped as f64 / weights.len().max(1) as f64, scores)
 }
 
+/// Decile table of the uplift ranking and the Qini coefficient of its curve.
+///
+/// The curve is the cumulative within-decile treated-minus-control difference,
+/// which is the usual uplift chart and therefore descriptive under confounding.
+/// The random baseline is that same within-decile total spread evenly over the
+/// ranking, not the marginal treated-minus-control difference across the whole
+/// table. The two coincide only when the treated share is equal in every
+/// decile, which it never is: in a confounded table the top decile can be
+/// mostly treated while the bottom is mostly control, the marginal difference
+/// is then much larger than the average within-decile difference, and a
+/// correctly ranked model reports a negative Qini. That was the shipped
+/// behaviour and it is fixed here.
+///
+/// The IPW `effect` column beside the observed difference is the adjusted
+/// reading; neither is a substitute for a randomized experiment.
 fn qini_and_deciles(data: &CausalData, uplift: &[f64], transform: &[f64]) -> (f64, Vec<Decile>) {
     let mut order: Vec<usize> = (0..data.rows.len()).collect();
     order.sort_by(|a, b| uplift[*b].total_cmp(&uplift[*a]));
     let n = order.len();
-    let overall_treated: Vec<f64> = data
-        .rows
-        .iter()
-        .filter(|row| row.treatment)
-        .map(|row| row.outcome)
-        .collect();
-    let overall_control: Vec<f64> = data
-        .rows
-        .iter()
-        .filter(|row| !row.treatment)
-        .map(|row| row.outcome)
-        .collect();
-    let overall_diff = mean(&overall_treated) - mean(&overall_control);
     let bins = 10.min(n.max(1));
-    let mut cumulative_effect = 0.0;
-    let mut cumulative_rows = 0usize;
-    let mut model_area = 0.0;
-    let mut random_area = 0.0;
     let mut deciles = Vec::with_capacity(bins);
+    // Within-decile difference and rows in the bin.
+    let mut parts: Vec<(f64, usize)> = Vec::with_capacity(bins);
 
     for bin in 0..bins {
         let start = bin * n / bins;
         let end = (bin + 1) * n / bins;
         let slice = &order[start..end];
         let effect: f64 = slice.iter().map(|row| transform[*row]).sum();
-
         let treated: Vec<&Row> = slice
             .iter()
             .map(|row| &data.rows[*row])
@@ -555,16 +576,7 @@ fn qini_and_deciles(data: &CausalData, uplift: &[f64], transform: &[f64]) -> (f6
             control.iter().map(|row| row.outcome).sum::<f64>() / control.len() as f64
         };
         let difference = observed_treated - observed_control;
-        let weighted = if difference.is_finite() {
-            difference * slice.len() as f64 / n.max(1) as f64
-        } else {
-            0.0
-        };
-        cumulative_effect += weighted;
-        cumulative_rows += slice.len();
-        model_area += cumulative_effect;
-        random_area += overall_diff * cumulative_rows as f64 / n.max(1) as f64;
-
+        parts.push((difference, slice.len()));
         deciles.push(Decile {
             decile: bin + 1,
             rows: slice.len(),
@@ -576,11 +588,35 @@ fn qini_and_deciles(data: &CausalData, uplift: &[f64], transform: &[f64]) -> (f6
             effect,
         });
     }
-    // The curve uses the observed decile difference, which is the usual uplift
-    // chart, and is therefore descriptive under confounding. The IPW `effect`
-    // column beside it is the adjusted reading; neither is a substitute for a
-    // randomized experiment.
-    let qini = (model_area - random_area) / (bins as f64 * overall_diff.abs().max(1e-9));
+
+    let share = |rows: usize| rows as f64 / n.max(1) as f64;
+    let total: f64 = parts
+        .iter()
+        .map(|(difference, rows)| {
+            if difference.is_finite() {
+                difference * share(*rows)
+            } else {
+                0.0
+            }
+        })
+        .sum();
+    let mut cumulative = 0.0;
+    let mut cumulative_rows = 0usize;
+    let mut model_area = 0.0;
+    let mut random_area = 0.0;
+    for (difference, rows) in &parts {
+        if difference.is_finite() {
+            cumulative += difference * share(*rows);
+        }
+        cumulative_rows += *rows;
+        model_area += cumulative;
+        random_area += total * share(cumulative_rows);
+    }
+    let qini = if total.abs() > 1e-12 {
+        (model_area - random_area) / (bins as f64 * total.abs())
+    } else {
+        0.0
+    };
     (qini, deciles)
 }
 
@@ -678,19 +714,23 @@ fn variance(values: &[f64]) -> f64 {
 mod tests {
     use super::*;
 
-    /// A panel with a known positive effect on half the rows.
-    fn synthetic() -> CausalData {
+    /// A panel with a known logit effect on half the rows, or a flat outcome
+    /// when `constant` is set, which is how a null panel is expressed.
+    fn panel(rows: usize, effect: f64, constant: Option<f64>) -> CausalData {
         let mut rng = Rng::new(77);
-        let mut rows = Vec::new();
-        for _ in 0..600 {
+        let mut out = Vec::with_capacity(rows);
+        for _ in 0..rows {
             let x0 = rng.normal(0.0, 1.0);
             let x1 = rng.normal(0.0, 1.0);
             let base = 1.0 / (1.0 + (-(-1.0 + 0.8 * x0)).exp());
             let treatment = rng.next_f64() < base;
-            let effect = if treatment && x1 > 0.0 { 1.5 } else { 0.0 };
-            let probability = (1.0 / (1.0 + (-(0.2 + 0.9 * x0 + effect)).exp())).clamp(0.02, 0.98);
-            let outcome = f64::from(u8::from(rng.next_f64() < probability));
-            rows.push(Row {
+            let shift = if treatment && x1 > 0.0 { effect } else { 0.0 };
+            let probability = (1.0 / (1.0 + (-(0.2 + 0.9 * x0 + shift)).exp())).clamp(0.02, 0.98);
+            let outcome = match constant {
+                Some(value) => value,
+                None => f64::from(u8::from(rng.next_f64() < probability)),
+            };
+            out.push(Row {
                 features: vec![x0, x1],
                 treatment,
                 outcome,
@@ -698,8 +738,139 @@ mod tests {
         }
         CausalData {
             names: vec!["x0".to_string(), "x1".to_string()],
-            rows,
+            rows: out,
         }
+    }
+
+    /// A panel with a known positive effect on half the rows.
+    fn synthetic() -> CausalData {
+        panel(600, 1.5, None)
+    }
+
+    /// A panel with no treatment effect at all, for readings that must vanish.
+    fn no_effect() -> CausalData {
+        panel(1200, 0.0, None)
+    }
+
+    /// A panel whose outcome is the same number on every row.
+    fn flat_outcome() -> CausalData {
+        panel(1200, 0.0, Some(0.4))
+    }
+
+    fn quick(data: &CausalData) -> CausalReport {
+        fit(
+            data,
+            &CausalConfig {
+                bootstrap: 60,
+                permutations: 20,
+                ..CausalConfig::default()
+            },
+        )
+        .expect("a causal fit")
+        .report
+    }
+
+    #[test]
+    fn the_doubly_robust_estimate_agrees_with_the_t_learner() {
+        let report = quick(&synthetic());
+        assert!(report.dr_ate > 0.0, "dr {}", report.dr_ate);
+        assert!(
+            (report.dr_ate - report.ate).abs() < 0.06,
+            "dr {} t-learner {}",
+            report.dr_ate,
+            report.ate
+        );
+        assert!(report.dr_se > 0.0, "se {}", report.dr_se);
+    }
+
+    #[test]
+    fn the_doubly_robust_interval_brackets_its_point() {
+        let report = quick(&synthetic());
+        assert!(report.dr_interval.low <= report.dr_ate);
+        assert!(report.dr_interval.high >= report.dr_ate);
+        assert_eq!(report.dr_interval.resamples, 0);
+        assert!((report.dr_interval.level - 0.95).abs() < 1e-12);
+    }
+
+    #[test]
+    fn a_planted_effect_survives_an_e_value_of_one_and_a_half() {
+        let report = quick(&synthetic());
+        assert!(
+            report.e_value > 1.5,
+            "e-value {} for dr {}",
+            report.e_value,
+            report.dr_ate
+        );
+        assert!(report.e_value_ci > 1.0, "e-value ci {}", report.e_value_ci);
+    }
+
+    #[test]
+    fn a_flat_outcome_gives_an_e_value_near_one() {
+        let report = quick(&flat_outcome());
+        assert!(
+            (report.dr_ate).abs() < 0.02,
+            "dr {} on a constant outcome",
+            report.dr_ate
+        );
+        assert!(
+            report.e_value < 1.5,
+            "e-value {} should be near one",
+            report.e_value
+        );
+        assert!(report.e_value >= 1.0);
+    }
+
+    #[test]
+    fn the_overlap_weighted_reading_is_finite_with_a_positive_error() {
+        let report = quick(&synthetic());
+        assert!(report.overlap_weighted_ate.is_finite());
+        assert!(report.overlap_weighted_se > 0.0);
+    }
+
+    #[test]
+    fn the_crump_rule_trims_some_rows_but_not_the_panel() {
+        let report = quick(&synthetic());
+        assert!(!report.crump_refused, "the rule should keep enough rows");
+        assert!(
+            report.crump_rows > 50,
+            "kept {} of {}",
+            report.crump_rows,
+            report.rows
+        );
+        assert!(report.crump_rows < report.rows);
+        assert!((0.0..0.5).contains(&report.crump_bound));
+        assert!(report.crump_se > 0.0);
+    }
+
+    #[test]
+    fn the_top_decile_is_worth_more_than_treating_everyone() {
+        let report = quick(&synthetic());
+        let top = report
+            .policy
+            .iter()
+            .find(|point| (point.fraction - 0.1).abs() < 1e-12)
+            .expect("a tenth of the rows");
+        assert!(top.rows > 0);
+        assert!(
+            top.value > report.policy_value_all,
+            "top decile {} against all {}",
+            top.value,
+            report.policy_value_all
+        );
+        assert_eq!(report.policy_value_none, 0.0);
+        assert_eq!(report.policy.len(), 11);
+        assert!((report.policy_value_all - report.dr_ate).abs() < 1e-12);
+    }
+
+    #[test]
+    fn a_no_effect_panel_reports_no_effect() {
+        let report = quick(&no_effect());
+        assert!(
+            report.dr_ate.abs() < 0.08,
+            "dr {} on a null panel",
+            report.dr_ate
+        );
+        assert!(report.e_value < 1.5, "e-value {}", report.e_value);
     }
 
     #[test]
@@ -750,6 +921,52 @@ mod tests {
     }
 
     #[test]
+    fn an_older_report_still_parses_without_the_new_fields() {
+        let old = r#"{"rows":100,"treated":50,"control":50,"features":2,"ate":0.1,
+            "ate_interval":{"point":0.1,"low":0.0,"high":0.2,"level":0.95,"resamples":20},
+            "ipw_ate":0.1,"ipw_interval":{"point":0.1,"low":0.0,"high":0.2,"level":0.95,"resamples":20},
+            "qini":0.0,"overlap":0.8,"clipped":0.0,"placebo_p":0.5,"deciles":[],
+            "heterogeneity":[],"note":""}"#;
+        let report: CausalReport = serde_json::from_str(old).expect("an older report parses");
+        assert_eq!(report.rows, 100);
+        assert_eq!(report.dr_ate, 0.0);
+        assert!(report.policy.is_empty());
+        assert_eq!(report.crump_rows, 0);
+    }
+
+    /// A panel whose outcome rises with one feature only under treatment, with
+    /// the arms alternating so every decile holds both.
+    fn ranked_panel() -> CausalData {
+        CausalData {
+            names: vec!["x".to_string()],
+            rows: (0..200)
+                .map(|i| {
+                    let treated = i % 2 == 0;
+                    Row {
+                        features: vec![i as f64],
+                        treatment: treated,
+                        outcome: f64::from(u8::from(treated && i >= 100)),
+                    }
+                })
+                .collect(),
+        }
+    }
+
+    #[test]
+    fn the_qini_is_positive_when_the_ranking_is_right() {
+        let data = ranked_panel();
+        let weights = vec![1.0; data.rows.len()];
+        let high_first: Vec<f64> = data.rows.iter().map(|row| row.features[0]).collect();
+        let low_first: Vec<f64> = high_first.iter().map(|x| -x).collect();
+        let (good, deciles) = qini_and_deciles(&data, &high_first, &weights);
+        let (bad, _) = qini_and_deciles(&data, &low_first, &weights);
+        assert!(good > 0.2, "qini {good}");
+        assert!(bad < 0.0, "qini {bad}");
+        // The deciles have to be front-loaded for the top bin to be the point.
+        assert!(deciles[0].difference > deciles[9].difference);
+    }
+
+    #[test]
     fn a_constant_treatment_is_refused() {
         let data = CausalData {
             names: vec!["x".to_string()],
@@ -762,28 +979,5 @@ mod tests {
                 .collect(),
         };
         assert!(fit(&data, &CausalConfig::default()).is_err());
-    }
-
-    #[test]
-    fn a_csv_round_trip_reads_numeric_and_categorical_covariates() {
-        let dir = std::env::temp_dir().join(format!("xcm-mmm-causal-{}", std::process::id()));
-        let _ = std::fs::remove_dir_all(&dir);
-        std::fs::create_dir_all(&dir).unwrap();
-        let path = dir.join("causal.csv");
-        let mut text = String::from("id,y,t,x,plan\n");
-        for i in 0..60 {
-            let treatment = u8::from(i % 2 == 0);
-            let outcome = u8::from(i % 3 == 0);
-            text.push_str(&format!(
-                "c{i},{outcome},{treatment},{i},{}\n",
-                if i % 4 == 0 { "basic" } else { "plus" }
-            ));
-        }
-        std::fs::write(&path, text).unwrap();
-        let data = load_csv(path.to_str().unwrap(), "y", "t").unwrap();
-        assert_eq!(data.names, vec!["x".to_string(), "plan=plus".to_string()]);
-        assert_eq!(data.treated(), 30);
-        assert_eq!(data.control(), 30);
-        let _ = std::fs::remove_dir_all(&dir);
     }
 }

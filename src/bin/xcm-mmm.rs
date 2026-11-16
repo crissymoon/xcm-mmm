@@ -2,7 +2,7 @@
 
 use std::error::Error;
 use std::path::PathBuf;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
 use clap::{Parser, Subcommand, ValueEnum};
@@ -1185,8 +1185,13 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
         LearnerChoice::Ridge => Learner::ridge(args.lambda),
         LearnerChoice::Trees => Learner::trees(),
     };
+    // The ledger is shared: the DE path scores a clone of the problem inside
+    // SparseAccuracy and the MOEA/D path scores the problem itself, and both
+    // must land in one trial count.
+    let ledger = Arc::new(Mutex::new(xcm_mmm::deflate::Ledger::new()));
     let problem =
-        SelectionProblem::with_learner(shared.clone(), args.folds, embargo, learner.clone());
+        SelectionProblem::with_learner(shared.clone(), args.folds, embargo, learner.clone())
+            .with_ledger(ledger.clone());
     if problem.folds.is_empty() {
         return Err(format!("{cut} rows is too few for {} folds", args.folds).into());
     }
@@ -1247,6 +1252,10 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
     }
     let elapsed = started.elapsed();
 
+    // The gate prices the search: every distinct subset either engine scored is
+    // one trial against the null that they were exchangeable noise.
+    let gate = problem.gate(0.95);
+
     // Score the chosen subsets once on the held-out rows. This is the only
     // number in the run that the search had no hand in.
     let holdout: Vec<(String, Report)> = match &holdout_fold {
@@ -1303,6 +1312,25 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
             std::fs::write(path, text)?;
         }
     }
+
+    let gate_json = gate.as_ref().map(|g| {
+        serde_json::json!({
+            "trials": g.trials,
+            "effective_trials": g.effective_trials,
+            "mean_correlation": g.mean_correlation,
+            "best": g.best,
+            "best_columns": g.best_columns,
+            "z": g.z,
+            "expected_max": g.expected_max,
+            "expected_max_naive": g.expected_max_naive,
+            "expected_max_adjusted": g.expected_max_adjusted,
+            "margin": g.margin,
+            "p": g.p,
+            "level": g.level,
+            "budget": g.budget(),
+            "verdict": g.verdict,
+        })
+    });
 
     if args.json {
         let mut models = serde_json::json!({
@@ -1392,6 +1420,7 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
             "holdout_rows": holdout_fold.as_ref().map(|f| f.test_len()).unwrap_or(0),
             "skipped_rows": shared.skipped,
             "models": models,
+            "gate": gate_json,
             "holdout": holdout_json,
             "seconds": elapsed.as_secs_f64(),
         });
@@ -1448,6 +1477,33 @@ fn run_forecast(args: ForecastArgs) -> Result<(), Box<dyn Error>> {
                 run.outcome.solutions.len(),
                 run.knee_index,
                 run.best_index
+            );
+        }
+        if let Some(g) = &gate {
+            println!(
+                "{:<10} {} distinct subsets   rho {:.2}   N_eff {:.1}   best z {:.2}   E[max|noise] {:.2}   margin {:+.2}   p {:.3}",
+                "gate",
+                g.trials,
+                g.mean_correlation,
+                g.effective_trials,
+                g.z,
+                g.expected_max,
+                g.margin,
+                g.p
+            );
+            println!(
+                "  floor {:.2} from {} raw trials and {:.2} after the correlation correction, and the larger is the one quoted.",
+                g.expected_max_naive, g.trials, g.expected_max_adjusted
+            );
+            println!("  verdict: {}", g.verdict);
+            println!(
+                "  the gate prices the search and the holdout is the separate protection, and at this level the data supports about {} candidates.",
+                g.budget()
+            );
+        } else {
+            println!(
+                "{:<10} not enough distinct trials to price the selection",
+                "gate"
             );
         }
         if let Some(fold) = &holdout_fold {

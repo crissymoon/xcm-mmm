@@ -28,7 +28,7 @@ use crate::digest::fnv64_str;
 use crate::learn::{Learner, TreeConfig};
 use crate::rng::Rng;
 use crate::support::{self, LearningPoint};
-use crate::uncertainty::{bootstrap_auc, calibration, conformal};
+use crate::uncertainty::{bootstrap_auc, calibration, delong_auc, mondrian, MondrianConformal};
 
 pub const MODEL: &str = "model.json";
 pub const CARD: &str = "card.md";
@@ -140,6 +140,9 @@ pub struct Score {
     pub auc: f64,
     pub auc_low: f64,
     pub auc_high: f64,
+    pub auc_se: f64,
+    pub auc_logit_low: f64,
+    pub auc_logit_high: f64,
     pub balanced: f64,
     pub accuracy: f64,
     pub cut: f64,
@@ -154,6 +157,15 @@ pub struct Score {
     pub conformal_threshold: f64,
     pub conformal_coverage: f64,
     pub conformal_set: f64,
+    pub conformal_pos_rows: usize,
+    pub conformal_pos_coverage: f64,
+    pub conformal_pos_set: f64,
+    pub conformal_pos_supported: bool,
+    pub conformal_neg_rows: usize,
+    pub conformal_neg_coverage: f64,
+    pub conformal_neg_set: f64,
+    pub conformal_neg_supported: bool,
+    pub conformal_refused: Option<String>,
     pub tree_auc: f64,
     pub tree_auc_low: f64,
     pub tree_auc_high: f64,
@@ -238,8 +250,12 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
     let positives = labels.iter().filter(|label| **label).count();
     let learning = learning_curve(samples, folds);
     let interval = bootstrap_auc(&scores, &labels, 400, 0.95, 0x5EED);
+    let delong = delong_auc(&scores, &labels, 0.95);
     let reliability = calibration(&scores, &labels, 10);
-    let conformal = conformal(&scores, &labels, 0.10);
+    let class_report = mondrian(&scores, &labels, 0.10);
+    let pooled = &class_report.pooled;
+    let churn_class = class_reading(&class_report, true);
+    let stayed_class = class_reading(&class_report, false);
     let tree_scores = tree_baseline(samples, folds);
     let tree_interval = bootstrap_auc(&tree_scores, &labels, 200, 0.95, 0x7A11);
     ChurnModel {
@@ -255,6 +271,9 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
             auc: round4(auc(&scores, &labels)),
             auc_low: round4(interval.low),
             auc_high: round4(interval.high),
+            auc_se: round4(delong.se),
+            auc_logit_low: round4(delong.low),
+            auc_logit_high: round4(delong.high),
             balanced: cut_metrics.balanced,
             accuracy: cut_metrics.accuracy,
             cut: round4(cut),
@@ -265,10 +284,19 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
             log_loss: round4(reliability.log_loss),
             ece: round4(reliability.ece),
             calibration: reliability.bins,
-            conformal_alpha: round4(conformal.alpha),
-            conformal_threshold: round4(conformal.threshold),
-            conformal_coverage: round4(conformal.coverage),
-            conformal_set: round4(conformal.mean_set),
+            conformal_alpha: round4(pooled.alpha),
+            conformal_threshold: round4(pooled.threshold),
+            conformal_coverage: round4(pooled.coverage),
+            conformal_set: round4(pooled.mean_set),
+            conformal_pos_rows: churn_class.0,
+            conformal_pos_coverage: round4(churn_class.1),
+            conformal_pos_set: round4(churn_class.2),
+            conformal_pos_supported: churn_class.3,
+            conformal_neg_rows: stayed_class.0,
+            conformal_neg_coverage: round4(stayed_class.1),
+            conformal_neg_set: round4(stayed_class.2),
+            conformal_neg_supported: stayed_class.3,
+            conformal_refused: class_report.refused.clone(),
             tree_auc: round4(tree_interval.point),
             tree_auc_low: round4(tree_interval.low),
             tree_auc_high: round4(tree_interval.high),
@@ -456,6 +484,27 @@ pub fn weights(model: &ChurnModel) -> BTreeMap<String, f64> {
         .collect()
 }
 
+/// Calibration rows, coverage, mean set size and support for one class.
+///
+/// A report with no rows for the class, which an artifact built before the
+/// class conditional split carries, reads as unsupported rather than as zero
+/// coverage.
+fn class_reading(report: &MondrianConformal, label: bool) -> (usize, f64, f64, bool) {
+    report
+        .classes
+        .iter()
+        .find(|class| class.label == label)
+        .map(|class| {
+            (
+                class.calibration_rows,
+                class.coverage,
+                class.mean_set,
+                class.supported,
+            )
+        })
+        .unwrap_or((0, 0.0, 0.0, false))
+}
+
 fn round4(value: f64) -> f64 {
     (value * 10_000.0).round() / 10_000.0
 }
@@ -488,6 +537,37 @@ mod tests {
     }
 
     #[test]
+    fn an_older_artifact_without_the_new_fields_still_reads() {
+        let samples: Vec<Sample> = (0..20)
+            .map(|at| sample(&format!("id-{at}"), at % 2 == 0, at as f64))
+            .collect();
+        let model = fit(&samples, 2);
+        let mut value = serde_json::to_value(&model).expect("json");
+        let score = value["score"].as_object_mut().expect("a score object");
+        for key in [
+            "auc_se",
+            "auc_logit_low",
+            "auc_logit_high",
+            "conformal_pos_rows",
+            "conformal_pos_coverage",
+            "conformal_pos_set",
+            "conformal_pos_supported",
+            "conformal_neg_rows",
+            "conformal_neg_coverage",
+            "conformal_neg_set",
+            "conformal_neg_supported",
+            "conformal_refused",
+        ] {
+            score.remove(key);
+        }
+        let older: ChurnModel = serde_json::from_value(value).expect("an older artifact");
+        assert_eq!(older.score.auc, model.score.auc);
+        assert_eq!(older.score.auc_se, 0.0);
+        assert!(!older.score.conformal_pos_supported);
+        assert!(older.score.conformal_refused.is_none());
+    }
+
+    #[test]
     fn folds_are_stable_and_in_range() {
         for id in ["1-AAA", "2-BBB", "abc-123"] {
             let at = fold(id, 5);
@@ -498,13 +578,35 @@ mod tests {
 
     #[test]
     fn a_fit_reports_more_than_the_base_rate() {
+        // Interleaved ids so the positional conformal split finds both classes
+        // in its calibration half; churn follows tenure, so the panel is easy.
         let samples: Vec<Sample> = (0..60)
-            .map(|at| sample(&format!("id-{at}"), at >= 30, at as f64))
+            .map(|index| {
+                let at = if index % 2 == 0 {
+                    30 + index / 2
+                } else {
+                    index / 2
+                };
+                sample(&format!("id-{at}"), at >= 30, at as f64)
+            })
             .collect();
         let model = fit(&samples, 5);
         assert_eq!(model.score.rows, 60);
         assert!(model.score.auc > 0.5);
         assert_eq!(model.features.len(), feature_names().len());
         assert_eq!(model.coefficients.len(), feature_names().len());
+        // The synthetic panel is separated by tenure, so the ranking is perfect
+        // and the DeLong standard error is zero; the interval still stays
+        // inside the unit interval through the logit transform.
+        assert!(model.score.auc_se >= 0.0);
+        assert!(model.score.auc_logit_low > 0.0 && model.score.auc_logit_high <= 1.0);
+        assert!(model.score.conformal_pos_rows > 0);
+        assert!(model.score.conformal_neg_rows > 0);
+        assert!(model.score.conformal_pos_supported);
+        assert!(model.score.conformal_refused.is_none());
+        assert_eq!(
+            model.score.conformal_pos_rows + model.score.conformal_neg_rows,
+            model.score.rows / 2
+        );
     }
 }

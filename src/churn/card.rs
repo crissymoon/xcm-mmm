@@ -47,6 +47,11 @@ pub fn render(model: &ChurnModel) -> String {
         "| AUC 95% interval | [{:.3}, {:.3}] |\n",
         score.auc_low, score.auc_high
     ));
+    out.push_str(&format!(
+        "| AUC 95% interval, DeLong logit | [{:.3}, {:.3}] |\n",
+        score.auc_logit_low, score.auc_logit_high
+    ));
+    out.push_str(&format!("| AUC standard error | {:.4} |\n", score.auc_se));
     out.push_str(&format!("| Brier score | {:.3} |\n", score.brier));
     out.push_str(&format!("| log loss | {:.3} |\n", score.log_loss));
     out.push_str(&format!(
@@ -81,9 +86,51 @@ pub fn render(model: &ChurnModel) -> String {
     let per_fold: Vec<String> = score.per_fold.iter().map(|v| format!("{v:.3}")).collect();
     out.push_str(&format!("{}\n\n", per_fold.join(", ")));
     out.push_str("## Uncertainty\n\n");
-    out.push_str(
-        "The interval is a percentile bootstrap over the held-out rows, 400 resamples,\nseeded so a rebuild reproduces it. The conformal threshold is fitted on the\nfirst half of the held-out rows and coverage is measured on the second half, so\nthe coverage number is not the calibration set scored against itself. The tree\nensemble uses the same folds, features and target as the logistic; it is the\ntabular comparison the card previously lacked, not a second headline.\n\n",
-    );
+    let bootstrap_width = (score.auc_high - score.auc_low).abs();
+    let logit_width = (score.auc_logit_high - score.auc_logit_low).abs();
+    let (wider, wider_low, wider_high) = if logit_width > bootstrap_width {
+        ("DeLong logit", score.auc_logit_low, score.auc_logit_high)
+    } else {
+        ("bootstrap", score.auc_low, score.auc_high)
+    };
+    out.push_str(&format!(
+        "The bootstrap interval is a percentile interval over the held-out rows,\n400 resamples, seeded so a rebuild reproduces it. The DeLong interval is\nasymptotic, and its bounds are read on the logit scale, so it cannot leave\n(0, 1); it is centred on the continuity corrected AUC rather than on the raw\nreading, which is why its two ends are not equidistant from the point. Quote\nthe wider of the two, here the {} reading at [{:.3}, {:.3}]. The logit is not\ndecoration: DeLong's normal interval is liberal when positives are under about\nfifty, and without the transform the upper bound of a near perfect classifier\ncrosses one and stops bounding anything. The conformal threshold is fitted on\nthe first half of the held-out rows and coverage is measured on the second\nhalf, so the coverage number is not the calibration set scored against itself.\nThe tree ensemble uses the same folds, features and target as the logistic; it\nis the tabular comparison the card previously lacked, not a second headline.\n\n",
+        wider, wider_low, wider_high
+    ));
+    out.push_str("## Class conditional conformal\n\n");
+    if score.conformal_pos_rows == 0 && score.conformal_neg_rows == 0 {
+        out.push_str(
+            "This artifact predates the class conditional split, so per class coverage\nis not reported here. Rebuild with `churn fit` to populate it.\n\n",
+        );
+    } else {
+        out.push_str(&format!(
+            "At {:.0}% nominal each class is calibrated on its own rows, so the\nguarantee is conditional on the class rather than marginal over the panel.\nA rank of `ceil((n + 1)(1 - alpha))` needs at least `1 / alpha` calibration\nrows of that class; a class with fewer is refused rather than given a number\nit cannot support.\n\n",
+            (1.0 - score.conformal_alpha) * 100.0
+        ));
+        out.push_str("| class | calibration rows | coverage | mean set size |\n");
+        out.push_str("|---|---:|---:|---:|\n");
+        out.push_str(&class_row(
+            "churn",
+            score.conformal_pos_rows,
+            score.conformal_pos_supported,
+            score.conformal_pos_coverage,
+            score.conformal_pos_set,
+        ));
+        out.push_str(&class_row(
+            "stayed",
+            score.conformal_neg_rows,
+            score.conformal_neg_supported,
+            score.conformal_neg_coverage,
+            score.conformal_neg_set,
+        ));
+        out.push_str(&format!(
+            "\nThe pooled reading is {:.3} coverage at a mean set of {:.2}. It is a\nmarginal number, and it hides a class whose calibration rows are too few for\nthe requested tail.\n\n",
+            score.conformal_coverage, score.conformal_set
+        ));
+        if let Some(refusal) = &score.conformal_refused {
+            out.push_str(&format!("Refused: {refusal}.\n\n"));
+        }
+    }
     out.push_str("## Calibration\n\n");
     out.push_str("| bin | rows | predicted | observed |\n|---|---:|---:|---:|\n");
     for bin in &score.calibration {
@@ -140,7 +187,17 @@ pub fn render(model: &ChurnModel) -> String {
     out.push_str("- Selection on the forecasting path is nested when `forecast --nested` is\n  used: the inner loop chooses and the outer loop scores. The plain command\n  remains a single holdout and the report says which one ran.\n");
     out.push_str("- Drift and rollback are commands, not a daemon. `churn monitor` compares a\n  reference panel with a current one by PSI and KS; `churn rollback` moves the\n  artifact pointer back one version. A scheduler still has to call them.\n");
     out.push_str("- Calibration, conformal coverage and the tree comparison are measured on\n  the same held-out rows as the AUC. None of them transports to a new operator.\n");
+    out.push_str("- Marginal coverage is not class conditional coverage. The pooled number\n  holds across the held-out rows as a whole; the per-class numbers are the\n  ones the card now quotes, and a class whose calibration rows cannot support\n  the requested alpha is refused rather than given a reading.\n");
     out
+}
+
+/// One row of the class conditional table, or a refusal in the coverage cell.
+fn class_row(name: &str, rows: usize, supported: bool, coverage: f64, set: f64) -> String {
+    if supported {
+        format!("| {name} | {rows} | {coverage:.3} | {set:.2} |\n")
+    } else {
+        format!("| {name} | {rows} | refused | - |\n")
+    }
 }
 
 fn commas(n: usize) -> String {
@@ -169,6 +226,10 @@ mod tests {
         let model = fit(&samples, 5);
         let card = render(&model);
         assert!(card.contains("AUC, tenure and monthly only"));
+        assert!(card.contains("AUC 95% interval, DeLong logit"));
+        assert!(card.contains("AUC standard error"));
+        assert!(card.contains("Class conditional conformal"));
+        assert!(card.contains("Marginal coverage is not class conditional coverage"));
         assert!(card.contains("right censoring") || card.contains("Right censoring"));
         assert!(card.contains("Churn reason text"));
     }

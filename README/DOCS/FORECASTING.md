@@ -96,6 +96,18 @@ println!("{}", report.summary());
 
 Skill is the number to read first. A model with a high R2 on a target that barely moves can still have no skill; a model with a modest R2 and a positive skill has found something. The information coefficient is the one to read when the target is a return, because the ordering of predictions matters more than their level.
 
+## The selection gate
+
+The search is a multiple comparison, and the forecast report now prices it. Every candidate subset the two engines score is a trial. The ledger counts each distinct set once, so a mask the crossover revisits is not a new bet: duplicate evaluations of one subset are the same bet taken twice and never raise the trial count. Failed fits are not observations of a candidate and are not trials either.
+
+Candidates are not independent. They are scored on the same folds, so their fold profiles move together, and the gate measures that with the mean pairwise correlation of those profiles. The trial count shrinks to an effective count, `N_eff = N / (1 + (N - 1) * rho)`, floored at one. This is the Bailey and Lopez de Prado correction, applied to the trial count rather than to a Sharpe ratio. Correlated candidates spend less of the selection budget than independent ones, and the correction is first order, not an exact solution for a search whose dependence changes from one candidate to the next.
+
+The winning mean error is then read in trial units: `z` is how many standard deviations of quality (negative error) the winner sits above the average trial. Under the null that all trials were exchangeable noise, the best of `N_eff` standard normals sits near `E[max|noise]`, the expected maximum the stats module computes from the trial count. The margin is `z - E[max|noise]`, and `p` is the one sided probability of reaching that margin, `Phi(-margin)`. At level 0.95 a p of 0.05 or less clears the noise floor.
+
+The budget rule is the actionable reading. It is the largest number of candidates whose expected maximum still sits below the observed winner: if the search evaluated more subsets than that, its winner is not above what the same number of noise trials would have produced. The citation is Bailey, Borwein, Lopez de Prado and Zhu, The Deflated Sharpe Ratio, Journal of Portfolio Management 2014. The same paper shows that at a unit Sharpe ratio a two year holdout supports only about seven candidates, which is the scale to keep in mind when a run reports thousands.
+
+What the gate refuses matters as much as what it reports. It prices the search, it does not repair it: reusing the winning subset without accounting for the search that found it is still a biased procedure. Nested selection, repeated inside every training window, remains the procedure level answer, and `--nested` runs it.
+
 ## Worked example
 
 The example panel has 800 rows, 12 standardised features, four of which drive the target, and an autoregressive term that makes the split meaningful.
@@ -116,6 +128,9 @@ moead-knee      2     0.480321   0.5086   0.722   56.5%
 moead-best      4     0.325792   0.6667   0.810   70.5%
   keeps: x1, x2, x3, x4
   front: 4 points, knee 2, best 0
+gate       1196 distinct subsets   N_eff 1.4   best z 1.36   E[max|noise] 0.00   margin 1.36   p 0.087
+  verdict: no better than the best of 1196 noise trials (1.4 effective), budget 6 candidates
+  the gate prices the search and the holdout is the separate protection, and at this level the data supports about 6 candidates.
 
 holdout     rows 601..800   trained on 0..600   never seen by the search
 model        feat          mse       r2      ic   skill
@@ -127,7 +142,7 @@ moead-best      4     0.366311   0.7075   0.838   71.5%
 
 The single objective search recovers exactly the four informative features. Inside the search window that looks like a clear win: R2 0.6019 for all twelve columns against 0.6667 for the four. The holdout table says otherwise. On the last 200 rows, which the search never saw, all twelve score 0.7103 and the selected four score 0.7075. The apparent gain was the search choosing columns on the same folds the report scores, which is the standard way feature selection flatters itself.
 
-That is the reason the flag exists. Read the first table to see what the search believes, and the holdout table to see what it can deliver. When the two disagree, believe the second one.
+That is the reason the flag exists. Read the first table to see what the search believes, and the holdout table to see what it can deliver. When the two disagree, believe the second one. The gate line reads the same run from the other side: 1196 distinct subsets of twelve columns behaved like about one independent bet after the correlation correction, and the winner sat 1.36 trial standard deviations above the average, a margin that six candidates worth of noise could reach. It does not clear at 0.95, which is the correct reading of a selection whose apparent gain was the folds talking.
 
 The same test on a real panel of 324,539 rows and 36 numeric columns, search budget 2000, four folds, holdout of the last quarter:
 
@@ -164,7 +179,7 @@ What this crate does not do is model transaction costs, turnover, position sizin
 
 - Ridge is linear. A nonlinear learner can be plugged in by implementing `Problem` over a different fit, but the mask decoding, the folds and the metrics stay the same.
 - The embargo must be at least the label horizon. `--horizon h` raises it, and `data::horizon_embargo` is the only place the two are reconciled; a gap shorter than `h` lets a training row see the target of a test row.
-- Every candidate the search evaluates is a trial, and the report does not yet deflate for that count. A selection out of thousands on four folds needs a deflated reading before it is called a discovery; the roadmap in [Development](DEVELOPMENT.md) carries the gate.
+- Every candidate the search evaluates is a trial, and the gate line prices that count against the null. A selection out of thousands on four folds still needs the holdout, because the gate compares the winner with noise and the holdout measures it on rows the search never saw.
 - Missing values are handled by skipping rows, not by imputation. A panel with many gaps loses rows.
 - The search treats each feature independently. Interaction features have to be built before the search.
 - The fold count is fixed in advance. Very short panels return fewer folds than requested rather than empty windows.

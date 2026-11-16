@@ -29,9 +29,10 @@ pub fn erf(x: f64) -> f64 {
     let sign = if x < 0.0 { -1.0 } else { 1.0 };
     let x = x.abs();
     let t = 1.0 / (1.0 + 0.327_591_1 * x);
-    let poly = t * (0.254_829_592
-        + t * (-0.284_496_736
-            + t * (1.421_413_741 + t * (-1.453_152_027 + t * 1.061_405_429))));
+    let poly = t
+        * (0.254_829_592
+            + t * (-0.284_496_736
+                + t * (1.421_413_741 + t * (-1.453_152_027 + t * 1.061_405_429))));
     sign * (1.0 - poly * (-x * x).exp())
 }
 
@@ -121,19 +122,26 @@ pub fn z_for_level(level: f64) -> f64 {
     normal_quantile(0.5 + level.clamp(0.0, 1.0) / 2.0)
 }
 
-/// Expected maximum of `n` independent standard normals.
+/// Expected maximum of `n` independent standard normals, at a fractional count.
 ///
 /// The approximation is the standard one from multiple testing theory, usable
-/// within a few thousandths for `n` above two and reported as zero for a single
-/// trial: `(1 - gamma) Phi^-1(1 - 1/n) + gamma Phi^-1(1 - 1/(n e))`. A caller
-/// comparing a selected maximum against noise needs this number, not zero.
-pub fn expected_max(n: usize) -> f64 {
-    if n <= 1 {
+/// within a few thousandths for `n` above two and reported as zero at or below
+/// one: `(1 - gamma) Phi^-1(1 - 1/n) + gamma Phi^-1(1 - 1/(n e))`. A caller
+/// comparing a selected maximum against noise needs this number, not zero. It
+/// takes a real count rather than an integer because a correlation correction
+/// produces an effective count like 1.42 and rounding it would make the floor
+/// jump in steps the data does not have.
+pub fn expected_max_at(n: f64) -> f64 {
+    if !n.is_finite() || n <= 1.0 {
         return 0.0;
     }
-    let n = n as f64;
     (1.0 - EULER_GAMMA) * normal_quantile(1.0 - 1.0 / n)
         + EULER_GAMMA * normal_quantile(1.0 - 1.0 / (n * std::f64::consts::E))
+}
+
+/// [`expected_max_at`] for a whole trial count.
+pub fn expected_max(n: usize) -> f64 {
+    expected_max_at(n as f64)
 }
 
 #[cfg(test)]
@@ -185,7 +193,17 @@ mod tests {
         assert!(expected_max(10) > expected_max(2));
         assert!(expected_max(1_000) > expected_max(10));
         // The textbook value for ten trials is about 1.54.
-        assert!((expected_max(10) - 1.54).abs() < 0.05, "{}", expected_max(10));
+        assert!(
+            (expected_max(10) - 1.54).abs() < 0.05,
+            "{}",
+            expected_max(10)
+        );
+        // A fractional count has to keep moving; the gate depends on it.
+        assert_eq!(expected_max_at(10.0), expected_max(10));
+        assert!(expected_max_at(1.42) > 0.0);
+        assert!(expected_max_at(1.42) < expected_max_at(2.0));
+        assert_eq!(expected_max_at(1.0), 0.0);
+        assert_eq!(expected_max_at(0.5), 0.0);
     }
 
     #[test]

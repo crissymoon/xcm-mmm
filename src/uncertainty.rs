@@ -348,6 +348,300 @@ pub fn conformal_set(probability: f64, threshold: f64) -> (bool, bool) {
     (p <= threshold, (1.0 - p) <= threshold)
 }
 
+/// Name reported by [`delong_auc`], so an artifact names its own estimator.
+pub const DELONG_METHOD: &str = "delong-logit";
+
+/// A DeLong standard error and interval for AUC, read on the logit scale.
+///
+/// `point` is the raw Mann-Whitney AUC with ties at half credit. `low` and
+/// `high` are back transformed from a normal interval on the logit scale, so
+/// the interval is centred on the continuity corrected AUC rather than on
+/// `point`. That asymmetry is deliberate and visible on a near perfect
+/// classifier, where the upper bound sits closer to the reading than the lower
+/// bound does.
+///
+/// DeLong, DeLong and Clarke-Pearson (1988) supply the structural components
+/// and the variance; Sun and Xu (2014) supply the fast placement algorithm
+/// used here to count, for each positive, how many negatives it outranks. The
+/// interval is asymptotic and liberal when positives are under about fifty, so
+/// a caller should quote the wider of this interval and the percentile
+/// bootstrap. The logit transform keeps the bounds inside the unit interval,
+/// which a raw `point +/- z * se` does not: at an AUC of 0.995 with a hundred
+/// positives the symmetric bounds cross one and the upper limit stops meaning
+/// anything.
+#[derive(Clone, Debug, PartialEq)]
+pub struct DelongAuc {
+    /// Raw Mann-Whitney AUC, ties at half credit.
+    pub point: f64,
+    /// Standard error of the AUC under the DeLong variance.
+    pub se: f64,
+    /// Lower end of the interval, back transformed from the logit scale.
+    pub low: f64,
+    /// Upper end of the interval, back transformed from the logit scale.
+    pub high: f64,
+    /// Nominal level the caller asked for.
+    pub level: f64,
+    /// Positive rows used.
+    pub positives: usize,
+    /// Negative rows used.
+    pub negatives: usize,
+    /// Estimator name, always `delong-logit`.
+    pub method: &'static str,
+}
+
+/// AUC with a DeLong standard error and a logit scale interval.
+///
+/// With one class empty, fewer than four rows, or mismatched lengths the
+/// reading is degenerate: `se` is zero and `low` and `high` both equal `point`,
+/// which is how a caller tells "no noise estimated" from "noise estimated as
+/// zero".
+pub fn delong_auc(scores: &[f64], labels: &[bool], level: f64) -> DelongAuc {
+    let level = level.clamp(0.5, 0.999_999);
+    let positives = labels.iter().filter(|label| **label).count();
+    let negatives = labels.len().saturating_sub(positives);
+    let flat = |point: f64, se: f64, low: f64, high: f64| DelongAuc {
+        point,
+        se,
+        low,
+        high,
+        level,
+        positives,
+        negatives,
+        method: DELONG_METHOD,
+    };
+    if scores.len() != labels.len() || positives == 0 || negatives == 0 {
+        return flat(0.5, 0.0, 0.5, 0.5);
+    }
+    let mut positive_scores = Vec::with_capacity(positives);
+    let mut negative_scores = Vec::with_capacity(negatives);
+    for (score, label) in scores.iter().zip(labels) {
+        if *label {
+            positive_scores.push(*score);
+        } else {
+            negative_scores.push(*score);
+        }
+    }
+    positive_scores.sort_by(f64::total_cmp);
+    negative_scores.sort_by(f64::total_cmp);
+    let mut v10 = Vec::with_capacity(positives);
+    for score in &positive_scores {
+        let (below, equal) = place(&negative_scores, *score);
+        v10.push((below as f64 + 0.5 * equal as f64) / negatives as f64);
+    }
+    let mut v01 = Vec::with_capacity(negatives);
+    for score in &negative_scores {
+        let (below, equal) = place(&positive_scores, *score);
+        let above = positives - below - equal;
+        v01.push((above as f64 + 0.5 * equal as f64) / positives as f64);
+    }
+    let point = v10.iter().sum::<f64>() / positives as f64;
+    if scores.len() < 4 {
+        return flat(point, 0.0, point, point);
+    }
+    let variance = sample_var(&v10) / positives as f64 + sample_var(&v01) / negatives as f64;
+    let se = variance.max(0.0).sqrt();
+    let pairs = (positives * negatives) as f64;
+    let corrected = ((point * pairs + 0.5) / (pairs + 1.0)).clamp(1e-6, 1.0 - 1e-6);
+    let centre = (corrected / (1.0 - corrected)).ln();
+    let scale = se / (corrected * (1.0 - corrected));
+    let z = crate::stats::z_for_level(level);
+    flat(
+        point,
+        se,
+        back_logit(centre - z * scale),
+        back_logit(centre + z * scale),
+    )
+}
+
+/// How many sorted values sit below `score`, and how many equal it.
+fn place(sorted: &[f64], score: f64) -> (usize, usize) {
+    let below = sorted.partition_point(|value| value.total_cmp(&score).is_lt());
+    let through = sorted.partition_point(|value| value.total_cmp(&score).is_le());
+    (below, through - below)
+}
+
+/// Sample variance with `ddof` one, zero when there is nothing to estimate.
+fn sample_var(values: &[f64]) -> f64 {
+    if values.len() < 2 {
+        return 0.0;
+    }
+    let n = values.len() as f64;
+    let mean = values.iter().sum::<f64>() / n;
+    let spread: f64 = values.iter().map(|value| (value - mean).powi(2)).sum();
+    spread / (n - 1.0)
+}
+
+/// Inverse logit, kept strictly inside the unit interval.
+fn back_logit(value: f64) -> f64 {
+    (1.0 / (1.0 + (-value).exp())).clamp(1e-9, 1.0 - 1e-9)
+}
+
+/// One class of a Mondrian conformal split.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ClassCoverage {
+    /// The label this row describes.
+    pub label: bool,
+    /// Calibration rows of this class, on the first half.
+    pub calibration_rows: usize,
+    /// Test rows of this class, on the second half.
+    pub test_rows: usize,
+    /// Nonconformity threshold for this class.
+    pub threshold: f64,
+    /// Empirical coverage on the test rows of this class.
+    pub coverage: f64,
+    /// Mean prediction set size on the test rows of this class.
+    pub mean_set: f64,
+    /// False when the calibration rows cannot support `alpha`.
+    pub supported: bool,
+}
+
+/// Mondrian, class conditional, split conformal for a binary label.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct MondrianConformal {
+    /// Miscoverage the caller asked for.
+    pub alpha: f64,
+    /// The pooled marginal reading, kept so the two sit side by side.
+    pub pooled: Conformal,
+    /// One row per class, churn then stayed.
+    pub classes: Vec<ClassCoverage>,
+    /// Why a class was refused, when one was.
+    pub refused: Option<String>,
+}
+
+/// Split conformal with a threshold per class.
+///
+/// Vovk's Mondrian conformal gives a guarantee that is class conditional
+/// rather than marginal: each class is calibrated on its own rows, so coverage
+/// holds inside the churn rows and inside the stayed rows separately.
+/// Angelopoulos and Bates (2021) state the same guarantee for the split case.
+///
+/// The rank `ceil((n_c + 1)(1 - alpha))` only exists when `alpha >= 1 / n_c`.
+/// Below that the class has fewer calibration rows than the requested tail
+/// needs, and a printed coverage number would be arithmetic without a
+/// guarantee. Such a class is marked unsupported, falls back to the pooled
+/// threshold so the set still means something, and names the smallest alpha it
+/// could support. The refusal is the deliverable, not an error.
+pub fn mondrian(scores: &[f64], labels: &[bool], alpha: f64) -> MondrianConformal {
+    let alpha = alpha.clamp(1e-6, 0.5);
+    let pooled = conformal(scores, labels, alpha);
+    let mut classes = Vec::with_capacity(2);
+    let mut refusals = Vec::new();
+    if scores.len() != labels.len() || scores.len() < 8 {
+        return MondrianConformal {
+            alpha,
+            pooled,
+            classes,
+            refused: None,
+        };
+    }
+    let split = scores.len() / 2;
+    for label in [true, false] {
+        let mut calibration: Vec<f64> = scores[..split]
+            .iter()
+            .zip(&labels[..split])
+            .filter(|(_, row)| **row == label)
+            .map(|(score, row)| nonconformity(*score, *row))
+            .collect();
+        let n_c = calibration.len();
+        let test_rows = labels[split..].iter().filter(|row| **row == label).count();
+        let floor = smallest_alpha(n_c);
+        let supported = alpha >= floor;
+        let threshold = if supported {
+            calibration.sort_by(f64::total_cmp);
+            let rank = (((n_c + 1) as f64) * (1.0 - alpha)).ceil() as usize;
+            calibration[rank.saturating_sub(1).min(n_c - 1)].clamp(0.0, 1.0)
+        } else {
+            refusals.push(refusal(label, n_c, alpha, floor));
+            pooled.threshold
+        };
+        let (coverage, mean_set) = class_test(&scores[split..], &labels[split..], label, threshold);
+        classes.push(ClassCoverage {
+            label,
+            calibration_rows: n_c,
+            test_rows,
+            threshold,
+            coverage,
+            mean_set,
+            supported,
+        });
+    }
+    MondrianConformal {
+        alpha,
+        pooled,
+        classes,
+        refused: if refusals.is_empty() {
+            None
+        } else {
+            Some(refusals.join("; "))
+        },
+    }
+}
+
+/// Nonconformity of one row under its own label, `1 - p(true label)`.
+fn nonconformity(score: f64, label: bool) -> f64 {
+    let p = score.clamp(0.0, 1.0);
+    if label {
+        1.0 - p
+    } else {
+        p
+    }
+}
+
+/// The smallest miscoverage a class with `n` calibration rows can support.
+fn smallest_alpha(n: usize) -> f64 {
+    if n == 0 {
+        f64::INFINITY
+    } else {
+        1.0 / n as f64
+    }
+}
+
+fn class_name(label: bool) -> &'static str {
+    if label {
+        "churn"
+    } else {
+        "stayed"
+    }
+}
+
+fn refusal(label: bool, rows: usize, alpha: f64, floor: f64) -> String {
+    if rows == 0 {
+        format!(
+            "{}: no calibration rows, no alpha is supported",
+            class_name(label)
+        )
+    } else {
+        format!(
+            "{}: {} calibration rows support alpha {:.3} at the smallest, alpha {:.3} refused",
+            class_name(label),
+            rows,
+            floor,
+            alpha
+        )
+    }
+}
+
+/// Coverage and mean set size on one class of the test half.
+fn class_test(scores: &[f64], labels: &[bool], label: bool, threshold: f64) -> (f64, f64) {
+    let mut rows = 0usize;
+    let mut covered = 0usize;
+    let mut size_total = 0.0;
+    for (score, row) in scores.iter().zip(labels) {
+        if *row != label {
+            continue;
+        }
+        let (include_zero, include_one) = conformal_set(*score, threshold);
+        rows += 1;
+        size_total += f64::from(u8::from(include_zero)) + f64::from(u8::from(include_one));
+        let truth_in = if label { include_one } else { include_zero };
+        if truth_in {
+            covered += 1;
+        }
+    }
+    let rows = rows.max(1) as f64;
+    (covered as f64 / rows, size_total / rows)
+}
+
 /// Effective sample size for a mean under a finite population, `n`.
 pub fn effective_n(positives: usize, negatives: usize) -> f64 {
     let n = positives + negatives;
@@ -442,5 +736,163 @@ mod tests {
         assert_eq!(conformal_set(0.95, 0.2), (false, true));
         assert_eq!(conformal_set(0.05, 0.2), (true, false));
         assert_eq!(conformal_set(0.5, 0.9), (true, true));
+    }
+
+    fn near_perfect() -> (Vec<f64>, Vec<bool>) {
+        let mut rng = Rng::new(11);
+        let mut scores = Vec::with_capacity(300);
+        let mut labels = Vec::with_capacity(300);
+        for _ in 0..300 {
+            let positive = rng.next_f64() < 0.5;
+            labels.push(positive);
+            let base = rng.next_f64();
+            scores.push(if positive {
+                0.45 + 0.5 * base
+            } else {
+                0.5 * base
+            });
+        }
+        (scores, labels)
+    }
+
+    fn balanced(n: usize, seed: u64) -> (Vec<f64>, Vec<bool>) {
+        let mut rng = Rng::new(seed);
+        let mut scores = Vec::with_capacity(n);
+        let mut labels = Vec::with_capacity(n);
+        for _ in 0..n {
+            let positive = rng.next_f64() < 0.5;
+            labels.push(positive);
+            let base = rng.next_f64();
+            scores.push(if positive {
+                0.45 + 0.5 * base
+            } else {
+                0.15 + 0.5 * base
+            });
+        }
+        (scores, labels)
+    }
+
+    #[test]
+    fn the_delong_point_is_the_rank_auc() {
+        let cases: Vec<(Vec<f64>, Vec<bool>)> = vec![
+            (vec![0.9, 0.8, 0.2, 0.1], vec![true, true, false, false]),
+            (vec![0.5, 0.5, 0.5], vec![true, false, true]),
+            (
+                vec![0.1, 0.4, 0.35, 0.8, 0.2, 0.9],
+                vec![true, false, false, true, false, true],
+            ),
+            (separable().0, separable().1),
+        ];
+        for (scores, labels) in cases {
+            let report = delong_auc(&scores, &labels, 0.95);
+            let rank = auc(&scores, &labels);
+            assert!(
+                (report.point - rank).abs() < 1e-9,
+                "point {} against {}",
+                report.point,
+                rank
+            );
+            assert_eq!(report.method, DELONG_METHOD);
+        }
+    }
+
+    #[test]
+    fn the_delong_interval_brackets_a_near_perfect_reading() {
+        let (scores, labels) = near_perfect();
+        let report = delong_auc(&scores, &labels, 0.95);
+        assert_eq!(report.positives + report.negatives, 300);
+        assert!(report.point > 0.95, "point {}", report.point);
+        assert!(report.se > 0.0, "se {}", report.se);
+        assert!(
+            report.low <= report.point,
+            "low {} point {}",
+            report.low,
+            report.point
+        );
+        assert!(report.high >= report.point);
+        assert!(report.low > 0.0 && report.high < 1.0);
+        assert!(report.high - report.low > 0.0);
+    }
+
+    #[test]
+    fn the_delong_standard_error_shrinks_as_rows_grow() {
+        let build = |n: usize| {
+            let mut rng = Rng::new(5);
+            let mut scores = Vec::with_capacity(n);
+            let mut labels = Vec::with_capacity(n);
+            for at in 0..n {
+                let positive = at % 2 == 0;
+                labels.push(positive);
+                let base = rng.next_f64();
+                scores.push(if positive {
+                    0.3 + 0.6 * base
+                } else {
+                    0.1 + 0.6 * base
+                });
+            }
+            (scores, labels)
+        };
+        let (small_scores, small_labels) = build(100);
+        let (large_scores, large_labels) = build(800);
+        let small = delong_auc(&small_scores, &small_labels, 0.95);
+        let large = delong_auc(&large_scores, &large_labels, 0.95);
+        assert!(small.se > 0.0);
+        assert!(
+            large.se < small.se,
+            "large se {} small se {}",
+            large.se,
+            small.se
+        );
+    }
+
+    #[test]
+    fn a_single_class_reports_no_error() {
+        let report = delong_auc(&[0.1, 0.2, 0.3, 0.4], &[true, true, true, true], 0.95);
+        assert_eq!(report.se, 0.0);
+        assert_eq!(report.low, report.high);
+        assert_eq!(report.positives, 4);
+        assert_eq!(report.negatives, 0);
+        let short = delong_auc(&[0.4, 0.2], &[true, false], 0.95);
+        assert_eq!(short.se, 0.0);
+        assert_eq!(short.low, short.point);
+    }
+
+    #[test]
+    fn mondrian_measures_coverage_inside_each_class() {
+        let (scores, labels) = balanced(200, 17);
+        let report = mondrian(&scores, &labels, 0.1);
+        assert_eq!(report.classes.len(), 2);
+        for class in &report.classes {
+            assert!(class.supported, "class {} refused", class.label);
+            assert!(
+                class.coverage >= 0.8,
+                "class {} coverage {}",
+                class.label,
+                class.coverage
+            );
+            assert!(
+                class.calibration_rows > 30,
+                "class {}",
+                class.calibration_rows
+            );
+            assert!(class.mean_set >= 1.0 && class.mean_set <= 2.0);
+        }
+        assert!(report.refused.is_none());
+        assert!(report.pooled.coverage >= 0.8);
+    }
+
+    #[test]
+    fn mondrian_refuses_an_alpha_the_calibration_rows_cannot_support() {
+        let (scores, labels) = balanced(60, 23);
+        let report = mondrian(&scores, &labels, 0.01);
+        assert_eq!(report.classes.len(), 2);
+        for class in &report.classes {
+            assert!(!class.supported, "class {} claimed support", class.label);
+            assert!(class.calibration_rows < 20);
+            assert_eq!(class.threshold, report.pooled.threshold);
+        }
+        let refused = report.refused.expect("a refusal");
+        assert!(refused.contains("alpha"), "{refused}");
+        assert!(refused.contains("alpha 0.010 refused"), "{refused}");
     }
 }

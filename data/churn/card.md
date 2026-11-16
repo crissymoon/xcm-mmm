@@ -1,6 +1,6 @@
 # Churn baseline
 
-xcm-mmm-churn-baseline v2, built 2026-11-15T23:36:10Z. A logistic over the telecom panel, fitted so a marketing
+xcm-mmm-churn-baseline v2, built 2026-11-16T02:17:01Z. A logistic over the telecom panel, fitted so a marketing
 model has a retention baseline to beat rather than a number to quote.
 
 ## Panel
@@ -19,6 +19,8 @@ so the split is the same on every machine.
 | majority baseline | 0.735 |
 | folds | 5 |
 | AUC 95% interval | [0.857, 0.876] |
+| AUC 95% interval, DeLong logit | [0.858, 0.876] |
+| AUC standard error | 0.0046 |
 | Brier score | 0.134 |
 | log loss | 0.418 |
 | expected calibration error | 0.075 |
@@ -34,12 +36,36 @@ Fold AUC: 0.864, 0.859, 0.876, 0.862, 0.878
 
 ## Uncertainty
 
-The interval is a percentile bootstrap over the held-out rows, 400 resamples,
-seeded so a rebuild reproduces it. The conformal threshold is fitted on the
-first half of the held-out rows and coverage is measured on the second half, so
-the coverage number is not the calibration set scored against itself. The tree
-ensemble uses the same folds, features and target as the logistic; it is the
-tabular comparison the card previously lacked, not a second headline.
+The bootstrap interval is a percentile interval over the held-out rows,
+400 resamples, seeded so a rebuild reproduces it. The DeLong interval is
+asymptotic, and its bounds are read on the logit scale, so it cannot leave
+(0, 1); it is centred on the continuity corrected AUC rather than on the raw
+reading, which is why its two ends are not equidistant from the point. Quote
+the wider of the two, here the bootstrap reading at [0.857, 0.876]. The logit is not
+decoration: DeLong's normal interval is liberal when positives are under about
+fifty, and without the transform the upper bound of a near perfect classifier
+crosses one and stops bounding anything. The conformal threshold is fitted on
+the first half of the held-out rows and coverage is measured on the second
+half, so the coverage number is not the calibration set scored against itself.
+The tree ensemble uses the same folds, features and target as the logistic; it
+is the tabular comparison the card previously lacked, not a second headline.
+
+## Class conditional conformal
+
+At 90% nominal each class is calibrated on its own rows, so the
+guarantee is conditional on the class rather than marginal over the panel.
+A rank of `ceil((n + 1)(1 - alpha))` needs at least `1 / alpha` calibration
+rows of that class; a class with fewer is refused rather than given a number
+it cannot support.
+
+| class | calibration rows | coverage | mean set size |
+|---|---:|---:|---:|
+| churn | 974 | 0.896 | 1.90 |
+| stayed | 2547 | 0.907 | 0.92 |
+
+The pooled reading is 0.917 coverage at a mean set of 1.24. It is a
+marginal number, and it hides a class whose calibration rows are too few for
+the requested tail.
 
 ## Calibration
 
@@ -55,7 +81,7 @@ tabular comparison the card previously lacked, not a second headline.
 
 ## Support
 
-1,869 churned rows across 14 coefficients, 133.5 events per feature. adequate for a logistic on this feature set.
+1,869 churned rows across 14 coefficients, 133.5 events per feature. Adequate for a logistic on this feature set.
 
 | training fraction | rows | held-out AUC |
 |---|---:|---:|
@@ -137,3 +163,7 @@ measured; the reason text is where a driver is named.
   artifact pointer back one version. A scheduler still has to call them.
 - Calibration, conformal coverage and the tree comparison are measured on
   the same held-out rows as the AUC. None of them transports to a new operator.
+- Marginal coverage is not class conditional coverage. The pooled number
+  holds across the held-out rows as a whole; the per-class numbers are the
+  ones the card now quotes, and a class whose calibration rows cannot support
+  the requested alpha is refused rather than given a reading.

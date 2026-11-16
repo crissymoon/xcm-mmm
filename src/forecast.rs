@@ -24,9 +24,10 @@
 //! procedure and not only the final fit.
 
 use std::ops::Range;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use crate::data::{walk_forward, Dataset, Fold};
+use crate::deflate::{self, Ledger};
 use crate::learn::{Fitted, Learner};
 use crate::linalg::{mean, solve_spd, spearman};
 use crate::problem::{Bounds, Problem};
@@ -259,6 +260,12 @@ pub struct SelectionProblem {
     pub lambda: f64,
     /// Hypothesis class used inside every fold.
     pub learner: Learner,
+    /// Optional record of every distinct candidate the search scores.
+    ///
+    /// Clones share the same handle, so the copy inside a
+    /// [`SparseAccuracy`] writes to the same ledger as the problem the report
+    /// reads. Set through [`SelectionProblem::with_ledger`].
+    pub ledger: Option<Arc<Mutex<Ledger>>>,
     bounds: Bounds,
 }
 
@@ -290,7 +297,31 @@ impl SelectionProblem {
             folds: windows,
             lambda,
             learner,
+            ledger: None,
             bounds,
+        }
+    }
+
+    /// Attach a shared ledger so every cross-validated evaluation is recorded
+    /// as one trial of the selection search.
+    ///
+    /// The builder is separate from the constructors because a caller that
+    /// only wants a score should not pay for the bookkeeping, and because the
+    /// same ledger is attached to a problem and to the single objective
+    /// wrapper built from a clone of it.
+    pub fn with_ledger(mut self, ledger: Arc<Mutex<Ledger>>) -> Self {
+        self.ledger = Some(ledger);
+        self
+    }
+
+    /// Record a successful evaluation into the shared ledger, if there is one.
+    fn record(&self, columns: &[usize], folds: &[f64]) {
+        if let Some(ledger) = &self.ledger {
+            // The lock covers one map write and nothing else, so a parallel
+            // search never holds it across a fit.
+            if let Ok(mut guard) = ledger.lock() {
+                guard.record(columns, folds.to_vec());
+            }
         }
     }
 
@@ -303,17 +334,19 @@ impl SelectionProblem {
             .collect()
     }
 
-    /// Mean cross-validated error of a column subset under the chosen learner.
-    pub fn cv_mse(&self, columns: &[usize]) -> f64 {
+    /// Per fold test error of a column subset under the chosen learner.
+    ///
+    /// Returns `None` for an empty column set, an empty fold list, a fold that
+    /// fails to fit or a fold with no test rows, which are exactly the cases
+    /// [`SelectionProblem::cv_mse`] reports as [`FAILED_FIT`]. A successful
+    /// evaluation is recorded in the shared ledger, if one is attached.
+    pub fn cv_fold_scores(&self, columns: &[usize]) -> Option<Vec<f64>> {
         if columns.is_empty() || self.folds.is_empty() {
-            return FAILED_FIT;
+            return None;
         }
-        let mut total = 0.0;
+        let mut scores = Vec::with_capacity(self.folds.len());
         for fold in &self.folds {
-            let model = match self.learner.fit(&self.dataset, fold.train(), columns) {
-                Some(m) => m,
-                None => return FAILED_FIT,
-            };
+            let model = self.learner.fit(&self.dataset, fold.train(), columns)?;
             let mut sum = 0.0;
             let mut count = 0usize;
             for i in fold.test() {
@@ -322,11 +355,29 @@ impl SelectionProblem {
                 count += 1;
             }
             if count == 0 {
-                return FAILED_FIT;
+                return None;
             }
-            total += sum / count as f64;
+            scores.push(sum / count as f64);
         }
-        total / self.folds.len() as f64
+        self.record(columns, &scores);
+        Some(scores)
+    }
+
+    /// Mean cross-validated error of a column subset under the chosen learner.
+    pub fn cv_mse(&self, columns: &[usize]) -> f64 {
+        match self.cv_fold_scores(columns) {
+            Some(scores) => scores.iter().sum::<f64>() / scores.len() as f64,
+            None => FAILED_FIT,
+        }
+    }
+
+    /// Price the search that produced the attached ledger.
+    ///
+    /// `None` when no ledger is attached or when it holds too few distinct
+    /// trials for a gate to be defined. See [`crate::deflate::gate`].
+    pub fn gate(&self, level: f64) -> Option<deflate::Gate> {
+        let guard = self.ledger.as_ref()?.lock().ok()?;
+        deflate::gate(&guard, level)
     }
 
     /// Full out-of-sample report for a column subset.
@@ -658,6 +709,20 @@ mod tests {
         assert!(report.mse.is_finite() && report.mse >= 0.0);
         assert!(report.r2.is_finite());
         assert_eq!(report.columns, all);
+    }
+
+    #[test]
+    fn clones_share_one_ledger_and_failed_fits_are_not_trials() {
+        let dataset = standardised(200, 6, 2, 3);
+        let ledger = Arc::new(Mutex::new(crate::deflate::Ledger::new()));
+        let problem =
+            SelectionProblem::new(dataset, 3, 1, DEFAULT_LAMBDA).with_ledger(ledger.clone());
+        let wrapper = SparseAccuracy::new(problem.clone(), 0.001);
+        assert!(problem.cv_mse(&[0, 1]).is_finite());
+        assert!(wrapper.inner.cv_mse(&[1, 2]).is_finite());
+        assert_eq!(problem.cv_mse(&[]), FAILED_FIT);
+        assert_eq!(ledger.lock().unwrap().len(), 2);
+        assert!(problem.gate(0.95).is_none());
     }
 
     #[test]

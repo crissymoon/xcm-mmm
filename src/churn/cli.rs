@@ -242,11 +242,52 @@ fn uplift(args: ChurnUpliftArgs) -> Result<(), Box<dyn Error>> {
         report.clipped * 100.0
     );
     println!(
+        "DR ATE       {:+.4}  [{:+.4}, {:+.4}]  se {:.4}  clipped {} rows",
+        report.dr_ate,
+        report.dr_interval.low,
+        report.dr_interval.high,
+        report.dr_se,
+        report.dr_clipped
+    );
+    println!(
+        "overlap weighted {:+.4}  se {:.4}",
+        report.overlap_weighted_ate, report.overlap_weighted_se
+    );
+    println!(
+        "crump trimmed    {:+.4}  se {:.4}  rows {} of {}  bound {:.3}{}",
+        report.crump_ate,
+        report.crump_se,
+        report.crump_rows,
+        report.rows,
+        report.crump_bound,
+        if report.crump_refused {
+            "  too few rows, untrimmed value kept"
+        } else {
+            ""
+        }
+    );
+    println!(
+        "E-value      {:.2}  near null bound {:.2}",
+        report.e_value, report.e_value_ci
+    );
+    println!(
         "qini {:+.3}  overlap {:.1}%  placebo p {:.3}",
         report.qini,
         report.overlap * 100.0,
         report.placebo_p
     );
+    println!("\nfraction  rows  policy value");
+    for point in &report.policy {
+        println!(
+            "{:>8.1}  {:>4}  {:>+12.4}",
+            point.fraction, point.rows, point.value
+        );
+    }
+    println!(
+        "policy value: treat all {:+.4}  treat none {:+.4}",
+        report.policy_value_all, report.policy_value_none
+    );
+    println!("qini is descriptive; the policy value column is the decision reading");
     println!("\ndecile  rows  treated  predicted  observed treated  control  difference");
     for decile in &report.deciles {
         println!(
