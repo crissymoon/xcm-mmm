@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T04:49:53Z",
+  "built_at": "2026-11-17T05:45:54Z",
   "source": {
     "path": "features.jsonl",
     "entities": 251,
@@ -1732,6 +1732,205 @@
         "rate": 0.6414,
         "folds": 5
       }
-    ]
+    ],
+    "sharpness": {
+      "rows": 251,
+      "sharp": 250,
+      "contested": 1,
+      "soft": 0,
+      "mean_posterior": 0.9994,
+      "p10_posterior": 0.9999,
+      "min_posterior": 0.8827,
+      "mean_margin": 0.9988,
+      "min_margin": 0.7655,
+      "cushion": 0.5,
+      "cushioned_posterior": 0.9681,
+      "cushioned_kept": 0.9841,
+      "cushioned_moved": 4,
+      "held_out_kept": 0.8446,
+      "held_out_rows": 251,
+      "confusion": [
+        [
+          12,
+          1,
+          0,
+          5
+        ],
+        [
+          7,
+          51,
+          7,
+          0
+        ],
+        [
+          14,
+          5,
+          34,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          115
+        ]
+      ],
+      "groups": [
+        {
+          "component": 0,
+          "size": 18,
+          "axes": 4,
+          "pinned": [
+            "burstiness",
+            "terms",
+            "repeat"
+          ],
+          "condition": 6089.33,
+          "posterior": 1.0,
+          "held_out_kept": 0.6667
+        },
+        {
+          "component": 1,
+          "size": 65,
+          "axes": 0,
+          "pinned": [],
+          "condition": 17.6939,
+          "posterior": 1.0,
+          "held_out_kept": 0.7846
+        },
+        {
+          "component": 2,
+          "size": 53,
+          "axes": 1,
+          "pinned": [
+            "burstiness"
+          ],
+          "condition": 1361.1395,
+          "posterior": 0.9971,
+          "held_out_kept": 0.6415
+        },
+        {
+          "component": 3,
+          "size": 115,
+          "axes": 5,
+          "pinned": [
+            "ads",
+            "cadence",
+            "burstiness",
+            "repeat",
+            "concentrate"
+          ],
+          "condition": 1252.445,
+          "posterior": 1.0,
+          "held_out_kept": 1.0
+        }
+      ],
+      "pairs": [
+        {
+          "a": 0,
+          "b": 1,
+          "distance": 4.7434,
+          "overlap": 0.0177
+        },
+        {
+          "a": 0,
+          "b": 2,
+          "distance": 13.8781,
+          "overlap": 0.0
+        },
+        {
+          "a": 0,
+          "b": 3,
+          "distance": 24.4726,
+          "overlap": 0.0
+        },
+        {
+          "a": 1,
+          "b": 2,
+          "distance": 4.0158,
+          "overlap": 0.0447
+        },
+        {
+          "a": 1,
+          "b": 3,
+          "distance": 6.5727,
+          "overlap": 0.001
+        },
+        {
+          "a": 2,
+          "b": 3,
+          "distance": 15.2876,
+          "overlap": 0.0
+        }
+      ],
+      "closest": [
+        {
+          "id": "111862318543076",
+          "name": "RivCo Supervisor Yxstian Gutierrez",
+          "assigned": 2,
+          "rival": 1,
+          "posterior": 0.8827,
+          "rival_posterior": 0.1173,
+          "margin": 0.7655,
+          "held_out": 1,
+          "cushioned": 2
+        },
+        {
+          "id": "106617034825517",
+          "name": "Our Future Los Angeles",
+          "assigned": 2,
+          "rival": 1,
+          "posterior": 0.9813,
+          "rival_posterior": 0.0187,
+          "margin": 0.9626,
+          "held_out": 2,
+          "cushioned": 2
+        },
+        {
+          "id": "107559048042701",
+          "name": "Barry Wernick for Dallas County Commissioner District 2",
+          "assigned": 2,
+          "rival": 1,
+          "posterior": 0.9966,
+          "rival_posterior": 0.0034,
+          "margin": 0.9933,
+          "held_out": 2,
+          "cushioned": 2
+        },
+        {
+          "id": "540043829202263",
+          "name": "Angela Gonzales-Torres",
+          "assigned": 2,
+          "rival": 1,
+          "posterior": 0.9969,
+          "rival_posterior": 0.0031,
+          "margin": 0.9938,
+          "held_out": 2,
+          "cushioned": 2
+        },
+        {
+          "id": "173368876048068",
+          "name": "EAA",
+          "assigned": 2,
+          "rival": 1,
+          "posterior": 0.9984,
+          "rival_posterior": 0.0016,
+          "margin": 0.9967,
+          "held_out": 0,
+          "cushioned": 2
+        },
+        {
+          "id": "280096628527985",
+          "name": "Steven Wright 2024 For Congress",
+          "assigned": 2,
+          "rival": 1,
+          "posterior": 0.9984,
+          "rival_posterior": 0.0016,
+          "margin": 0.9968,
+          "held_out": 2,
+          "cushioned": 2
+        }
+      ]
+    }
   }
 }

@@ -46,6 +46,7 @@ pub mod mixture;
 pub mod model;
 pub mod pipeline;
 pub mod select;
+pub mod sharp;
 pub mod stability;
 pub mod train;
 
@@ -57,6 +58,7 @@ pub use mixture::{Component, Family, Mixture};
 pub use model::{Artifact, Manifest, Metrics, ProfileRow, Segment};
 pub use pipeline::fit;
 pub use select::{Baseline, Candidate, Choice, Dependence, Pair, Shuffle};
+pub use sharp::{Group as SharpGroup, Separation, Sharpness};
 pub use train::{build, check, extract};
 
 fn default_folds() -> usize {

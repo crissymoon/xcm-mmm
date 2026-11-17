@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T04:49:53Z",
+  "built_at": "2026-11-17T05:45:54Z",
   "files": [
     {
       "name": "features.jsonl",
@@ -12,8 +12,8 @@
     {
       "name": "model.json",
       "rows": 4,
-      "bytes": 42729,
-      "fnv64": "7033c3538ba0fade"
+      "bytes": 47116,
+      "fnv64": "1fb248c106943ea7"
     }
   ],
   "config": {
@@ -71,6 +71,8 @@
     "every group holds at least 7.2 percent of the entities",
     "the repeat gate gives the observed value +0.109 nats over the Gaussian conditional law, and calls the edge right on 84.1 percent of held-out rows against 60.1 percent for the panel rate",
     "the concentrate gate gives the observed value +0.139 nats over the Gaussian conditional law, and calls the edge right on 81.2 percent of held-out rows against 64.1 percent for the panel rate",
+    "the mean winning posterior is 0.9994 and falls to 0.9681 once no component may use a flattened axis, with 4 of 251 rows changing group",
+    "a model fitted without each row's fold keeps 84.5 percent of them in the group this card gives",
     "every feature varies across the panel"
   ]
 }

@@ -8,6 +8,33 @@ use crate::num::commas;
 use super::mixture;
 use super::model::{Artifact, Manifest, Metrics};
 
+/// The distance between two groups, in either order.
+fn pair_distance(pairs: &[super::sharp::Separation], a: usize, b: usize) -> Option<f64> {
+    pairs
+        .iter()
+        .find(|pair| (pair.a == a && pair.b == b) || (pair.a == b && pair.b == a))
+        .map(|pair| pair.distance)
+}
+
+/// The largest movement between two groups in a held-out confusion matrix.
+///
+/// Off the diagonal only: a group keeping its own rows is the reading the table
+/// already carries, and the question here is where the rows that leave go.
+fn worst_flow(confusion: &[Vec<usize>]) -> Option<(usize, usize, usize)> {
+    let mut best: Option<(usize, usize, usize)> = None;
+    for (from, row) in confusion.iter().enumerate() {
+        for (to, count) in row.iter().enumerate() {
+            if from == to || *count == 0 {
+                continue;
+            }
+            if best.map_or(true, |(_, _, seen)| *count > seen) {
+                best = Some((from, to, *count));
+            }
+        }
+    }
+    best
+}
+
 /// Render `card.md` for a fitted folder.
 pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     let metrics = &artifact.metrics;
@@ -425,6 +452,174 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     );
     let _ = writeln!(out);
 
+    let sharp = &metrics.sharpness;
+    if sharp.rows == 0 {
+        let _ = writeln!(out, "## How sharp the groups are");
+        let _ = writeln!(out);
+        let _ = writeln!(out, "Not measured for this artifact.");
+        let _ = writeln!(out);
+    } else {
+        let _ = writeln!(out, "## How sharp the groups are");
+        let _ = writeln!(out);
+        let _ = writeln!(out, "| winning posterior | entities |");
+        let _ = writeln!(out, "|---|---:|");
+        let _ = writeln!(
+            out,
+            "| at or above {:.3} | {} |",
+            super::sharp::SHARP,
+            commas(sharp.sharp)
+        );
+        let _ = writeln!(
+            out,
+            "| between {:.3} and {:.3} | {} |",
+            super::sharp::CONTESTED,
+            super::sharp::SHARP,
+            commas(sharp.contested)
+        );
+        let _ = writeln!(
+            out,
+            "| below {:.3} | {} |",
+            super::sharp::CONTESTED,
+            commas(sharp.soft)
+        );
+        let _ = writeln!(out);
+        let _ = writeln!(
+            out,
+            "The mean winning posterior is {:.4}, the tenth percentile {:.4} and the lowest reading {:.4}, with a mean margin of {:.4} over the runner-up and a lowest of {:.4}. Taken alone that would say the groups are almost perfectly separated. It is partly the clip. A component whose covariance carries an axis at the width floor has no spread in that direction, so the density it reports there is enormous for a row on the sheet and negligible off it; three of the four shipped components are in that state, because the z is clipped at three standard deviations and a group whose members all sit on the clip has no variation left. The flat readings are listed per group below.",
+            sharp.mean_posterior, sharp.p10_posterior, sharp.min_posterior, sharp.mean_margin, sharp.min_margin
+        );
+        let _ = writeln!(out);
+        let _ = writeln!(
+            out,
+            "Read again with every covariance axis raised to at least {:.1} standard deviations, so no component can lean on a flattened axis, the mean winning posterior falls to {:.4} and {} entities change group, which leaves {:.1} percent of the panel where it was. That is the honest split of the claim: the partition survives the clip being taken away, the confidence does not. A leave-one-fold-out model, fitted without each row's fold and matched to the shipped components by the ordering that minimises the distance between their centres, places {:.1} percent of the {} rows it could read in the group this card gives them.",
+            sharp.cushion,
+            sharp.cushioned_posterior,
+            commas(sharp.cushioned_moved),
+            sharp.cushioned_kept * 100.0,
+            sharp.held_out_kept * 100.0,
+            commas(sharp.held_out_rows)
+        );
+        let _ = writeln!(out);
+        let _ = writeln!(
+            out,
+            "| group | entities | axes at the floor | readings flat inside the group | condition | mean posterior | held out keeps |"
+        );
+        let _ = writeln!(out, "|---|---:|---:|---|---:|---:|---:|");
+        for group in &sharp.groups {
+            let label = artifact
+                .segment(group.component)
+                .map(|segment| segment.label.clone())
+                .unwrap_or_else(|| format!("group {}", group.component));
+            let _ = writeln!(
+                out,
+                "| {} | {} | {} | {} | {:.0} | {:.3} | {:.1} percent |",
+                label,
+                commas(group.size),
+                group.axes,
+                if group.pinned.is_empty() {
+                    "none".to_string()
+                } else {
+                    group
+                        .pinned
+                        .iter()
+                        .map(|name| format!("`{name}`"))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                },
+                group.condition,
+                group.posterior,
+                group.held_out_kept * 100.0
+            );
+        }
+        let _ = writeln!(out);
+        if !sharp.confusion.is_empty() {
+            let ids: Vec<String> = sharp
+                .groups
+                .iter()
+                .map(|group| group.component.to_string())
+                .collect();
+            let _ = writeln!(
+                out,
+                "| this card's group, by the group a model fitted without its fold gave it | {} |",
+                ids.join(" | ")
+            );
+            let _ = writeln!(
+                out,
+                "|---|{}",
+                ids.iter().map(|_| "---:|").collect::<Vec<_>>().join("")
+            );
+            for (from, row) in sharp.confusion.iter().enumerate() {
+                let cells: Vec<String> = row.iter().map(|count| commas(*count)).collect();
+                let _ = writeln!(out, "| {} | {} |", from, cells.join(" | "));
+            }
+            let _ = writeln!(out);
+        }
+        if let Some((from, to, count)) = worst_flow(&sharp.confusion) {
+            let across = pair_distance(&sharp.pairs, from, to);
+            let _ = writeln!(
+                out,
+                "The largest movement is {} entities from group {} to group {}{}. Movement is not only proximity: a group of this size refits its own shape on four fifths of the panel, and a member that sits on the thin part of one group's sheet falls inside the other's. The reading to take from the table is which groups a new draw would reproduce and which it would rearrange, and it agrees with the per-group Jaccard above rather than repeating the posterior.",
+                commas(count),
+                from,
+                to,
+                across
+                    .map(|distance| format!(
+                        ", two centres {distance:.2} apart under their pooled shape"
+                    ))
+                    .unwrap_or_default()
+            );
+            let _ = writeln!(out);
+        }
+        let _ = writeln!(
+            out,
+            "| pair | distance between centres | share a boundary would confuse |"
+        );
+        let _ = writeln!(out, "|---|---:|---:|");
+        for pair in &sharp.pairs {
+            let _ = writeln!(
+                out,
+                "| {} and {} | {:.2} | {:.3} |",
+                pair.a, pair.b, pair.distance, pair.overlap
+            );
+        }
+        let _ = writeln!(out);
+        let _ = writeln!(
+            out,
+            "The distance is Mahalanobis under the two groups' pooled shape and the share is `2 Phi(-d/2)`, the overlap of two equal Gaussians at that distance. It is the closest thing to a margin a partition without labels can have, and it is why the nearest pair matters more than the mean posterior does."
+        );
+        let _ = writeln!(out);
+        if !sharp.closest.is_empty() {
+            let _ = writeln!(
+                out,
+                "| entity | group | nearest rival | posterior | rival | margin | fitted without its fold | cushioned |"
+            );
+            let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|---:|");
+            for point in &sharp.closest {
+                let _ = writeln!(
+                    out,
+                    "| {} | {} | {} | {:.4} | {:.4} | {:.4} | {} | {} |",
+                    point.name.replace('|', "/"),
+                    point.assigned,
+                    point.rival,
+                    point.posterior,
+                    point.rival_posterior,
+                    point.margin,
+                    point
+                        .held_out
+                        .map(|group| group.to_string())
+                        .unwrap_or_else(|| "unmeasured".to_string()),
+                    point.cushioned
+                );
+            }
+            let _ = writeln!(out);
+            let _ = writeln!(
+                out,
+                "An entity listed here sits nearest a boundary. The held-out column is where a model that never saw it placed it and the cushioned column is where it lands once no component may use a flattened axis. When the two agree with the group this card gives, the placement is the entity's; when they disagree, the row is a region rather than a membership, and the card says which rather than rounding the disagreement away."
+            );
+            let _ = writeln!(out);
+        }
+    }
+
     let _ = writeln!(out, "## Checks");
     let _ = writeln!(out);
     for line in &manifest.checks {
@@ -498,6 +693,44 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     let _ = writeln!(
         out,
         "- The gate describes the two shares inside a partition fitted without it. A partition fitted with the gate in the loop would draw different boundaries, and settling which is better needs a measure both models share; the held-out lattice score above is that measure for the shares alone, not for the partition."
+    );
+    let _ = writeln!(
+        out,
+        "- A winning posterior here is not a probability that the group is right. {} of the {} components carry axes at the width floor, which is what the clip leaves behind, and a density with a zero axis is enormous on the sheet and negligible off it. The cushioned reading and the held-out confusion above are the two corrections, and both are lower than the nominal number: read the table before quoting {:.3}.",
+        sharp.groups.iter().filter(|group| group.axes > 0).count(),
+        sharp.groups.len(),
+        sharp.mean_posterior
+    );
+    if let Some(largest) = sharp.groups.iter().max_by_key(|group| group.size) {
+        let smaller: Vec<f64> = sharp
+            .groups
+            .iter()
+            .filter(|group| group.component != largest.component)
+            .map(|group| group.held_out_kept)
+            .collect();
+        if let (Some(low), Some(high)) = (
+            smaller.iter().copied().reduce(f64::min),
+            smaller.iter().copied().reduce(f64::max),
+        ) {
+            let _ = writeln!(
+                out,
+                "- The confidence a row carries and the stability of its group are separate readings. Group {} holds {:.0} percent of its {} entities when a model is fitted without them, while the smaller groups keep between {:.0} and {:.0} percent of theirs at a mean posterior of {:.3} or better. A stable large group and a small unstable one can both be sharp on this panel.",
+                largest.component,
+                largest.held_out_kept * 100.0,
+                largest.size,
+                low * 100.0,
+                high * 100.0,
+                sharp
+                    .groups
+                    .iter()
+                    .map(|group| group.posterior)
+                    .fold(1.0f64, f64::min)
+            );
+        }
+    }
+    let _ = writeln!(
+        out,
+        "- The held-out vote places each row with a model fitted on four fifths of the panel, matched to the shipped groups by the ordering that minimises the distance between centres. A row that moves there is not mislabelled by this card: the two models answer the same question with different evidence, and the disagreement is the reading."
     );
     let _ = writeln!(out);
     out
@@ -699,6 +932,14 @@ mod tests {
             assert!(card.contains(&format!("`{}`", spec.name)));
         }
         assert!(card.contains("## Audit") && card.contains("## Limits"));
+        assert!(card.contains("## How sharp the groups are"));
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn the_largest_movement_is_read_off_the_diagonal() {
+        let confusion = vec![vec![10, 4, 1], vec![2, 20, 0], vec![0, 1, 7]];
+        assert_eq!(worst_flow(&confusion), Some((0, 1, 4)));
+        assert_eq!(worst_flow(&[vec![5, 0], vec![0, 5]]), None);
     }
 }

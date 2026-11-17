@@ -67,6 +67,14 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         return Err(bad("the chosen family could not be fitted to the panel"));
     }
     let labels = choice.labels.clone();
+    let column_names: Vec<String> = specs.iter().map(|spec| spec.name.clone()).collect();
+    let people: Vec<(String, String)> = entities
+        .iter()
+        .map(|entity| (entity.id.clone(), entity.name.clone()))
+        .collect();
+    let sharpness =
+        super::sharp::measure(rows, &mixture, &labels, &column_names, &people, &folds, cfg)
+            .rounded();
     let boot = stability::mixture_bootstrap(
         rows,
         &labels,
@@ -244,6 +252,7 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         },
         flat: matrix.flat.clone(),
         gates: audited.clone(),
+        sharpness: sharpness.clone(),
     };
     Ok(Artifact {
         name: cfg.name.clone(),

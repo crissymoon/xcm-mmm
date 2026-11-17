@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T04:49:53Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T05:45:54Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -130,6 +130,56 @@ The adjusted Rand index above is one number for the whole partition, and it weig
 
 A silhouette of 0.22 is ordinary for behavioural data whose columns share a scale factor, and a partition read through a covariance scores lower on it by construction: a stretched group is not a sphere, and the reading measures distance from a centre, not the shape a group actually has. The separated groups are 0.22 against 0.17 for columns with their pairing destroyed, so the structure is real; the shape is the part silhouette cannot see.
 
+## How sharp the groups are
+
+| winning posterior | entities |
+|---|---:|
+| at or above 0.900 | 250 |
+| between 0.600 and 0.900 | 1 |
+| below 0.600 | 0 |
+
+The mean winning posterior is 0.9994, the tenth percentile 0.9999 and the lowest reading 0.8827, with a mean margin of 0.9988 over the runner-up and a lowest of 0.7655. Taken alone that would say the groups are almost perfectly separated. It is partly the clip. A component whose covariance carries an axis at the width floor has no spread in that direction, so the density it reports there is enormous for a row on the sheet and negligible off it; three of the four shipped components are in that state, because the z is clipped at three standard deviations and a group whose members all sit on the clip has no variation left. The flat readings are listed per group below.
+
+Read again with every covariance axis raised to at least 0.5 standard deviations, so no component can lean on a flattened axis, the mean winning posterior falls to 0.9681 and 4 entities change group, which leaves 98.4 percent of the panel where it was. That is the honest split of the claim: the partition survives the clip being taken away, the confidence does not. A leave-one-fold-out model, fitted without each row's fold and matched to the shipped components by the ordering that minimises the distance between their centres, places 84.5 percent of the 251 rows it could read in the group this card gives them.
+
+| group | entities | axes at the floor | readings flat inside the group | condition | mean posterior | held out keeps |
+|---|---:|---:|---|---:|---:|---:|
+| copy concentration low, creative reuse low | 18 | 4 | `burstiness`, `terms`, `repeat` | 6089 | 1.000 | 66.7 percent |
+| start gap spread high, time between starts high | 65 | 0 | none | 18 | 1.000 | 78.5 percent |
+| creative reuse high, start gap spread low | 53 | 1 | `burstiness` | 1361 | 0.997 | 64.1 percent |
+| creative reuse low, ad volume low | 115 | 5 | `ads`, `cadence`, `burstiness`, `repeat`, `concentrate` | 1252 | 1.000 | 100.0 percent |
+
+| this card's group, by the group a model fitted without its fold gave it | 0 | 1 | 2 | 3 |
+|---|---:|---:|---:|---:|
+| 0 | 12 | 1 | 0 | 5 |
+| 1 | 7 | 51 | 7 | 0 |
+| 2 | 14 | 5 | 34 | 0 |
+| 3 | 0 | 0 | 0 | 115 |
+
+The largest movement is 14 entities from group 2 to group 0, two centres 13.88 apart under their pooled shape. Movement is not only proximity: a group of this size refits its own shape on four fifths of the panel, and a member that sits on the thin part of one group's sheet falls inside the other's. The reading to take from the table is which groups a new draw would reproduce and which it would rearrange, and it agrees with the per-group Jaccard above rather than repeating the posterior.
+
+| pair | distance between centres | share a boundary would confuse |
+|---|---:|---:|
+| 0 and 1 | 4.74 | 0.018 |
+| 0 and 2 | 13.88 | 0.000 |
+| 0 and 3 | 24.47 | 0.000 |
+| 1 and 2 | 4.02 | 0.045 |
+| 1 and 3 | 6.57 | 0.001 |
+| 2 and 3 | 15.29 | 0.000 |
+
+The distance is Mahalanobis under the two groups' pooled shape and the share is `2 Phi(-d/2)`, the overlap of two equal Gaussians at that distance. It is the closest thing to a margin a partition without labels can have, and it is why the nearest pair matters more than the mean posterior does.
+
+| entity | group | nearest rival | posterior | rival | margin | fitted without its fold | cushioned |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| RivCo Supervisor Yxstian Gutierrez | 2 | 1 | 0.8827 | 0.1173 | 0.7655 | 1 | 2 |
+| Our Future Los Angeles | 2 | 1 | 0.9813 | 0.0187 | 0.9626 | 2 | 2 |
+| Barry Wernick for Dallas County Commissioner District 2 | 2 | 1 | 0.9966 | 0.0034 | 0.9933 | 2 | 2 |
+| Angela Gonzales-Torres | 2 | 1 | 0.9969 | 0.0031 | 0.9938 | 2 | 2 |
+| EAA | 2 | 1 | 0.9984 | 0.0016 | 0.9967 | 0 | 2 |
+| Steven Wright 2024 For Congress | 2 | 1 | 0.9984 | 0.0016 | 0.9968 | 2 | 2 |
+
+An entity listed here sits nearest a boundary. The held-out column is where a model that never saw it placed it and the cushioned column is where it lands once no component may use a flattened axis. When the two agree with the group this card gives, the placement is the entity's; when they disagree, the row is a region rather than a membership, and the card says which rather than rounding the disagreement away.
+
 ## Checks
 
 - read through a full covariance at k = 4, chosen on 0.543 nats per entity held out
@@ -142,6 +192,8 @@ A silhouette of 0.22 is ordinary for behavioural data whose columns share a scal
 - every group holds at least 7.2 percent of the entities
 - the repeat gate gives the observed value +0.109 nats over the Gaussian conditional law, and calls the edge right on 84.1 percent of held-out rows against 60.1 percent for the panel rate
 - the concentrate gate gives the observed value +0.139 nats over the Gaussian conditional law, and calls the edge right on 81.2 percent of held-out rows against 64.1 percent for the panel rate
+- the mean winning posterior is 0.9994 and falls to 0.9681 once no component may use a flattened axis, with 4 of 251 rows changing group
+- a model fitted without each row's fold keeps 84.5 percent of them in the group this card gives
 - every feature varies across the panel
 
 ## Reproduce
@@ -170,4 +222,7 @@ A silhouette of 0.22 is ordinary for behavioural data whose columns share a scal
 - The family choice is made on one panel. A diagonal covariance winning here says the columns of this archive are not equally spread inside an advertiser group; it is not a claim about advertising in general, and a different register or city could choose differently.
 - A group is a description of behaviour, not a target. Nothing here says that moving an advertiser between groups would change an outcome.
 - The gate describes the two shares inside a partition fitted without it. A partition fitted with the gate in the loop would draw different boundaries, and settling which is better needs a measure both models share; the held-out lattice score above is that measure for the shares alone, not for the partition.
+- A winning posterior here is not a probability that the group is right. 3 of the 4 components carry axes at the width floor, which is what the clip leaves behind, and a density with a zero axis is enormous on the sheet and negligible off it. The cushioned reading and the held-out confusion above are the two corrections, and both are lower than the nominal number: read the table before quoting 0.999.
+- The confidence a row carries and the stability of its group are separate readings. Group 3 holds 100 percent of its 115 entities when a model is fitted without them, while the smaller groups keep between 64 and 78 percent of theirs at a mean posterior of 0.997 or better. A stable large group and a small unstable one can both be sharp on this panel.
+- The held-out vote places each row with a model fitted on four fifths of the panel, matched to the shipped groups by the ordering that minimises the distance between centres. A row that moves there is not mislabelled by this card: the two models answer the same question with different evidence, and the disagreement is the reading.
 

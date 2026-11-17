@@ -226,6 +226,17 @@ fn manifest_of(artifact: &Artifact, out: &str) -> io::Result<Manifest> {
             audit.rate * 100.0
         ));
     }
+    let sharp = &metrics.sharpness;
+    if sharp.rows > 0 {
+        checks.push(format!(
+            "the mean winning posterior is {:.4} and falls to {:.4} once no component may use a flattened axis, with {} of {} rows changing group",
+            sharp.mean_posterior, sharp.cushioned_posterior, sharp.cushioned_moved, sharp.rows
+        ));
+        checks.push(format!(
+            "a model fitted without each row's fold keeps {:.1} percent of them in the group this card gives",
+            sharp.held_out_kept * 100.0
+        ));
+    }
     if metrics.flat.is_empty() {
         checks.push("every feature varies across the panel".to_string());
     } else {

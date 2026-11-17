@@ -224,6 +224,16 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 crate::segment::mixture::conditioning(&artifact.components),
                 crate::segment::mixture::CONDITION_MAX
             );
+            println!(
+                "sharp     {:.4} mean posterior, {} of {} above {:.1}; cushioned {:.4}, {} moved; held-out keeps {:.1}%",
+                m.sharpness.mean_posterior,
+                commas(m.sharpness.sharp),
+                commas(m.sharpness.rows),
+                crate::segment::sharp::SHARP,
+                m.sharpness.cushioned_posterior,
+                commas(m.sharpness.cushioned_moved),
+                m.sharpness.held_out_kept * 100.0
+            );
             for gate in &artifact.gates {
                 let audit = artifact
                     .metrics
@@ -284,6 +294,41 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 crate::segment::mixture::conditioning(&artifact.components),
                 crate::segment::mixture::CONDITION_MAX
             );
+            let sharp = &m.sharpness;
+            if sharp.rows == 0 {
+                println!("sharp     not measured");
+            } else {
+                println!(
+                    "sharp     {:.4} mean posterior (lowest {:.4}), {} sharp, {} contested, {} soft",
+                    sharp.mean_posterior,
+                    sharp.min_posterior,
+                    commas(sharp.sharp),
+                    commas(sharp.contested),
+                    commas(sharp.soft)
+                );
+                println!(
+                    "cushion   {:.1} sd: {:.4} mean posterior, {} moved, {:.1}% kept; held-out keeps {:.1}%",
+                    sharp.cushion,
+                    sharp.cushioned_posterior,
+                    commas(sharp.cushioned_moved),
+                    sharp.cushioned_kept * 100.0,
+                    sharp.held_out_kept * 100.0
+                );
+                for point in sharp.closest.iter().take(3) {
+                    println!(
+                        "  nearest {:>2} vs {:>2}  posterior {:.4}  held-out {}  cushioned {}  {}",
+                        point.assigned,
+                        point.rival,
+                        point.posterior,
+                        point
+                            .held_out
+                            .map(|group| group.to_string())
+                            .unwrap_or_else(|| "-".to_string()),
+                        point.cushioned,
+                        point.name
+                    );
+                }
+            }
             for gate in &artifact.gates {
                 let audit = m.gates.iter().find(|audit| audit.name == gate.name);
                 println!(

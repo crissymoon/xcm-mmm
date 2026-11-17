@@ -114,6 +114,10 @@ pub struct Metrics {
     /// Gaussian conditional law it replaces.
     #[serde(default)]
     pub gates: Vec<super::gate::GateAudit>,
+    /// How sharply rows sit in their groups, and whether that sharpness is the
+    /// clip rather than the separation.
+    #[serde(default)]
+    pub sharpness: super::sharp::Sharpness,
 }
 
 /// The fitted artifact.
