@@ -1832,17 +1832,7 @@ fn run_bench(args: BenchArgs) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn commas(n: usize) -> String {
-    let digits = n.to_string();
-    let mut out = String::with_capacity(digits.len() + digits.len() / 3);
-    for (i, c) in digits.chars().enumerate() {
-        if i > 0 && (digits.len() - i) % 3 == 0 {
-            out.push(',');
-        }
-        out.push(c);
-    }
-    out
-}
+pub use xcm_mmm::num::commas;
 
 fn run_clean(args: CleanArgs) -> Result<(), Box<dyn Error>> {
     let pipeline = xcm_mmm::text::run::Pipeline {

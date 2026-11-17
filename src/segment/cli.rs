@@ -194,6 +194,11 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 "fit       silhouette {:.3}  control {:.3}  resampling {:.3}  shuffled likelihood {:.3}",
                 m.silhouette, m.control.mean, m.stability.mean, m.likelihood_control.mean
             );
+            println!(
+                "shape     worst condition number {:.0} (bound {:.0e})",
+                crate::segment::mixture::conditioning(&artifact.components),
+                crate::segment::mixture::CONDITION_MAX
+            );
             for segment in &artifact.segments {
                 println!(
                     "  {:>2}  {:>4} entities  {:>5.1}%  {}",
@@ -227,6 +232,11 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 m.family.name()
             );
             println!("choice    {}", m.choice);
+            println!(
+                "shape     worst condition number {:.0} (bound {:.0e})",
+                crate::segment::mixture::conditioning(&artifact.components),
+                crate::segment::mixture::CONDITION_MAX
+            );
             println!("  k  silhouette  smallest  inertia  sizes");
             for point in &m.sweep {
                 let sizes: Vec<String> = point.sizes.iter().map(|n| n.to_string()).collect();
@@ -375,14 +385,4 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
 }
 
 /// Group thousands, so an entity count reads at a glance.
-fn commas(n: usize) -> String {
-    let digits = n.to_string();
-    let mut out = String::with_capacity(digits.len() + digits.len() / 3);
-    for (i, c) in digits.chars().enumerate() {
-        if i > 0 && (digits.len() - i) % 3 == 0 {
-            out.push(',');
-        }
-        out.push(c);
-    }
-    out
-}
+pub use crate::num::commas;

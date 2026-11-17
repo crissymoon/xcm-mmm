@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-16T00:12:41Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T01:53:25Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -25,28 +25,30 @@ Start dates run from 2022-10-25 to 2026-11-10. 493 of the ads arrived on the arc
 
 ## Choice
 
-full covariance at k = 4: 0.609 nats per entity on rows it did not see, spread 2.418 across folds, against -9.777 for the k-means partition this folder used to ship, a gain of 10.386. A fold model places its own held-out rows at 0.813 agreement with it, and it costs 179 parameters.
+full covariance at k = 4: 0.543 nats per entity on rows it did not see, spread 2.344 across folds, against -9.777 for the k-means partition this folder used to ship, a gain of 10.320. A fold model places its own held-out rows at 0.813 agreement with it, and it costs 179 parameters.
 
 A k-means fit is the maximum likelihood fit of a mixture whose groups are spheres of one shared width. That is a claim that the eight readings are equally spread inside a group and that none of them co-vary. This panel says otherwise: the mean absolute correlation between columns is 0.21, and `ads` and `burstiness` at +0.74 run together. A sphere cannot use that, so three families were fitted and compared: one width per group, one width per group per column, and a covariance per group. Held-out likelihood chooses between families, because a comparison of predictions can only be settled by rows the fit never saw. Placement agreement is the gate that says the groups a fold model predicts are the groups that ship. And the comparison is paired by fold, because every candidate is read on the same rows: a larger k or a richer family had to add 0.020 nats per entity more than its own standard error before it was preferred, so fold noise cannot buy parameters.
 
-BIC is reported because it is the reading a mixture is usually chosen on, and it is not the rule here, because it is read in sample: the lowest BIC on the grid is full at k = 5 with 224 parameters against 251 entities, and its held-out reading is -2.623 nats per entity against 0.609 for the fit that won. A criterion that lets a model hold nearly one parameter per entity is a reading to print, not a rule to follow.
+BIC is reported because it is the reading a mixture is usually chosen on, and it is not the rule here, because it is read in sample: the lowest BIC on the grid is full at k = 5 with 224 parameters against 251 entities, and its held-out reading is -2.623 nats per entity against 0.543 for the fit that won. A criterion that lets a model hold nearly one parameter per entity is a reading to print, not a rule to follow.
 
 | family | k | held out, nats per entity | spread over folds | placement agreement | BIC | parameters | smallest group | verdict |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
 | spherical | 3 | -9.884 | 0.825 | 0.975 | 5020 | 27 | 0.223 | set aside: k 3 reads -9.884 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
 | spherical | 4 | -9.786 | 0.776 | 0.823 | 4921 | 36 | 0.112 | set aside: k 4 reads -9.786 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
-| spherical | 5 | -9.587 | 0.994 | 0.753 | 4868 | 45 | 0.068 | set aside: -9.587 nats per entity against 0.609 for the fit that won, a gap of 10.195 |
+| spherical | 5 | -9.587 | 0.994 | 0.753 | 4868 | 45 | 0.068 | set aside: -9.587 nats per entity against 0.543 for the fit that won, a gap of 10.130 |
 | spherical | 6 | -9.566 | 0.990 | 0.807 | 4816 | 54 | 0.064 | set aside: k 6 reads -9.566 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
 | diagonal | 3 | -2.145 | 1.532 | 0.923 | 710 | 50 | 0.251 | set aside: k 3 reads -2.145 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
 | diagonal | 4 | -1.316 | 1.711 | 0.785 | 638 | 67 | 0.151 | set aside: k 4 reads -1.316 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
-| diagonal | 5 | -0.935 | 1.498 | 0.626 | 250 | 84 | 0.132 | set aside: -0.935 nats per entity against 0.609 for the fit that won, a gap of 1.543 |
+| diagonal | 5 | -0.935 | 1.498 | 0.626 | 250 | 84 | 0.132 | set aside: -0.935 nats per entity against 0.543 for the fit that won, a gap of 1.478 |
 | diagonal | 6 | -0.100 | 1.528 | 0.745 | 115 | 101 | 0.024 | set aside: k 6 puts a group at 2.4 percent, below the 5.0 percent floor |
-| full | 3 | -2.653 | 0.943 | 0.725 | 1701 | 134 | 0.199 | set aside: k 3 reads -2.653 nats against 0.609 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
-| full **chosen** | 4 | 0.609 | 2.418 | 0.813 | 920 | 179 | 0.072 | chosen: 0.609 nats per entity held out at 0.813 placement agreement |
-| full | 5 | -2.623 | 2.766 | 0.678 | -1028 | 224 | 0.072 | set aside: k 5 reads -2.622 nats against 0.609 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
+| full | 3 | -2.653 | 0.943 | 0.725 | 1701 | 134 | 0.199 | set aside: k 3 reads -2.653 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
+| full **chosen** | 4 | 0.543 | 2.344 | 0.813 | 920 | 179 | 0.072 | chosen: 0.543 nats per entity held out at 0.813 placement agreement |
+| full | 5 | -2.623 | 2.766 | 0.678 | -1000 | 224 | 0.072 | set aside: k 5 reads -2.622 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
 | full | 6 | -1.782 | 3.466 | 0.427 | -227 | 269 | 0.020 | set aside: k 6 puts a group at 2.0 percent, below the 5.0 percent floor |
 
 Silhouette is a Euclidean reading, so it structurally rewards the spherical shape k-means produces: the chosen partition scores 0.222 on it against 0.286 for the k-means partition the folder used to ship, and 0.168 for the same protocol on columns shuffled independently. It clears the control. That is why the family is settled on likelihood and placement, and silhouette is kept as a floor and a comparison rather than as the selector.
+
+Every component is bounded on shape as well as on width. The width floor refuses a component narrower than a thousandth of a standard deviation on any axis, and that floor reads the diagonal; a diagonal is not a shape, because two columns that move together to within rounding can both sit near unit variance while the covariance is nearly singular along the direction they share, and a density read through that direction is decided by one row. So the ratio between a component's longest axis and its shortest is capped at 1e12, and a component that exceeds it has its short axis lifted along the direction the data gave. That cap is not a statistical bound and the card will not pretend it is: at 251 rows over 8 columns the eigenvalue error is of order 0.46 against a longest axis of 2.57, so no ratio below about 6 could be separated from sampling error at all, and a cap picked near the resolution limit refuses structure rather than noise. Measured on this panel, a cap of ten thousand or a million both hand the choice to the diagonal family and cost the full covariance fit more than two nats per entity on held-out rows. The cap therefore sits where a covariance stops being one, at the edge of what a double-precision factorisation can invert, so that only a direction flat to twelve digits is refused. The worst shipped component sits at 6,089. That is far inside the cap, so no component needed lifting: the bound is a guard this panel never triggers, and the covariances below are the ones the maximisation step produced.
 
 ## Features
 
@@ -80,8 +82,8 @@ There are no labels, so nothing here is a truth. What is measured is how well th
 
 | question | reading | gate |
 |---|---:|---|
-| held-out likelihood, nats per entity | 0.609 | gate: clear of the shuffled control by 0.020 |
-| held-out spread over 5 folds | 2.418 | reported, not gated |
+| held-out likelihood, nats per entity | 0.543 | gate: clear of the shuffled control by 0.020 |
+| held-out spread over 5 folds | 2.344 | reported, not gated |
 | held-out placement agreement | 0.813 | at least 0.60 |
 | the same fit on shuffled columns, mean of 20 | -8.592 | reported, not gated |
 | the same fit on shuffled columns, best | -6.922 | reported, not gated |
@@ -97,9 +99,9 @@ A silhouette of 0.22 is ordinary for behavioural data whose columns share a scal
 
 ## Checks
 
-- read through a full covariance at k = 4, chosen on 0.609 nats per entity held out
-- 10.386 nats per entity better than the k-means partition the folder used to ship at -9.777
-- held-out likelihood 0.609 stands clear of the same fit on shuffled columns at -8.592
+- read through a full covariance at k = 4, chosen on 0.543 nats per entity held out
+- 10.320 nats per entity better than the k-means partition the folder used to ship at -9.777
+- held-out likelihood 0.543 stands clear of the same fit on shuffled columns at -8.592
 - a fold model places its own held-out rows at 0.813 agreement with the shipped partition
 - silhouette 0.222 beats the shuffled control at 0.168
 - resampling keeps the partition at 0.712 mean agreement

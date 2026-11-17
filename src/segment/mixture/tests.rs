@@ -163,3 +163,117 @@ fn a_family_round_trips_through_its_name() {
     }
     assert_eq!(Family::parse(" mixture "), None);
 }
+
+/// Two columns that move together to within rounding, both at unit variance.
+/// Every diagonal entry clears the width floor, which is the whole point: the
+/// floor reads widths and this matrix is sick in shape.
+fn collinear(gap: f64) -> Vec<Vec<f64>> {
+    let r = 1.0 - gap;
+    vec![vec![1.0, r], vec![r, 1.0]]
+}
+
+/// Two columns that agree to thirteen places: the short axis is four orders of
+/// magnitude past the cap, which is the case the bound exists for.
+fn degenerate() -> Vec<Vec<f64>> {
+    collinear(1e-13)
+}
+
+#[test]
+fn the_condition_number_reads_the_axis_ratio() {
+    let flat = degenerate();
+    assert!(condition_number(&flat) > CONDITION_MAX);
+    let round = vec![vec![0.5, 0.1], vec![0.1, 0.5]];
+    assert!((condition_number(&round) - 1.5).abs() < 1e-9);
+    // A matrix with a non-positive axis has no ratio to report.
+    let broken = vec![vec![0.0, 0.0], vec![0.0, -1.0]];
+    assert!(condition_number(&broken).is_infinite());
+}
+
+fn single(covariance: Vec<Vec<f64>>) -> Component {
+    Component {
+        weight: 1.0,
+        mean: vec![0.0; covariance.len()],
+        covariance,
+    }
+}
+
+#[test]
+fn a_flat_component_is_lifted_to_the_bound() {
+    let flat = degenerate();
+    assert!(condition_number(&flat) > CONDITION_MAX);
+    let (shipped, factors) = ship(&[single(flat)]).unwrap();
+    let bounded = shipped[0].covariance.clone();
+    let factor = &factors[0];
+    // Lifted to exactly the cap, not past it: the short axis ends at
+    // longest / CONDITION_MAX, which for this matrix is two trillionths.
+    let reached = condition_number(&bounded) / CONDITION_MAX;
+    // To a thousandth: at the precision limit the ratio is known to a few
+    // digits, because the short axis is at the size of the arithmetic error.
+    assert!((reached - 1.0).abs() < 1e-3, "{reached}");
+    // Symmetric, as a covariance has to be, and lifted along the axis that was
+    // too short: for this matrix that direction is (1, -1)/sqrt(2), so the
+    // difference of the diagonal entries is its variance.
+    assert_eq!(bounded[0][1], bounded[1][0]);
+    let thin: f64 = bounded[0][0] - bounded[0][1];
+    assert!((thin - 2e-12).abs() < 1e-13, "{thin}");
+    // Below the width floor, which is the point of a ratio rather than an
+    // absolute width: the axis is short relative to its own component.
+    assert!(thin < FLOOR);
+    // The long axis is kept where the data put it: it is the sum of the two
+    // entries, because the direction is (1, 1)/sqrt(2).
+    assert!((bounded[0][0] + bounded[0][1] - 2.0).abs() < 1e-4);
+    // The density is finite and falls off along the long axis, so the component
+    // has not become a spike that scores one row and nothing else.
+    let centre = factor.log_density(&[0.0, 0.0], &[0.0, 0.0]);
+    let out = factor.log_density(&[3.0, 3.0], &[0.0, 0.0]);
+    assert!(centre.is_finite() && out < centre, "{centre} {out}");
+}
+
+#[test]
+fn a_round_component_is_returned_untouched() {
+    let round = vec![vec![0.5, 0.1], vec![0.1, 0.5]];
+    let (shipped, _) = ship(&[single(round.clone())]).unwrap();
+    // Rebuilding from eigenvectors would change the last bit of every entry and
+    // an artifact that changes for no reason is a worse artifact.
+    assert_eq!(shipped[0].covariance, round);
+}
+
+#[test]
+fn every_fitted_component_respects_the_bound() {
+    // Two groups that each lie on a line with almost no thickness: the case a
+    // diagonal floor cannot see, because the variances along both axes are fine.
+    let mut rows = Vec::new();
+    for i in 0..40 {
+        let t = i as f64 / 40.0 * 4.0;
+        rows.push(vec![t, t + 1e-7 * (i as f64).sin(), 0.5 * t + 2.0]);
+    }
+    for i in 0..40 {
+        let t = i as f64 / 40.0 * 4.0;
+        rows.push(vec![
+            8.0 + t,
+            8.0 + t + 1e-7 * (i as f64).cos(),
+            0.5 * t + 2.0,
+        ]);
+    }
+    let fitted = Mixture::fit(&rows, 2, Family::Full, 1, 60, 1);
+    assert_eq!(fitted.k(), 2);
+    assert!(
+        fitted.conditioning() <= CONDITION_MAX,
+        "{}",
+        fitted.conditioning()
+    );
+    assert!(fitted.loglik.is_finite());
+}
+
+#[test]
+fn a_thin_component_inside_the_cap_is_still_shipped_as_it_is() {
+    // The ratio is what is bounded, not thinness itself. This component is
+    // thinner than the width floor on one diagonal entry would allow and it is
+    // still well inside the cap, which is where the shipped full covariance fit
+    // sits at 6,089.
+    let r = 0.999_8;
+    let thousand = vec![vec![1.0, r], vec![r, 1.0]];
+    assert!(condition_number(&thousand) > 1e3 && condition_number(&thousand) < CONDITION_MAX);
+    let (shipped, _) = ship(&[single(thousand.clone())]).unwrap();
+    assert_eq!(shipped[0].covariance, thousand);
+}

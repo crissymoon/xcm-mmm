@@ -318,17 +318,7 @@ fn number(value: f64) -> String {
     }
 }
 
-fn commas(value: usize) -> String {
-    let digits = value.to_string();
-    let mut out = String::new();
-    for (at, digit) in digits.chars().enumerate() {
-        if at > 0 && (digits.len() - at) % 3 == 0 {
-            out.push(',');
-        }
-        out.push(digit);
-    }
-    out
-}
+pub use crate::num::commas;
 
 #[cfg(test)]
 mod tests {

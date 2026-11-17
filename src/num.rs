@@ -14,9 +14,34 @@ pub fn round4(value: f64) -> f64 {
     (value * 10_000.0).round() / 10_000.0
 }
 
+/// Group a count in thousands, which is how every card writes a row count.
+///
+/// One definition, for the same reason as [`round4`]: five modules carried their
+/// own copy of this and a card that printed 1000000 beside a sentence that said
+/// "a million" was a disagreement waiting to happen.
+pub fn commas(value: usize) -> String {
+    let digits = value.to_string();
+    let mut out = String::with_capacity(digits.len() + digits.len() / 3);
+    for (at, digit) in digits.chars().enumerate() {
+        if at > 0 && (digits.len() - at) % 3 == 0 {
+            out.push(',');
+        }
+        out.push(digit);
+    }
+    out
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_count_is_grouped_in_thousands() {
+        assert_eq!(commas(0), "0");
+        assert_eq!(commas(999), "999");
+        assert_eq!(commas(1000), "1,000");
+        assert_eq!(commas(1_355_000), "1,355,000");
+    }
 
     #[test]
     fn rounds_half_away_from_zero_at_four_places() {

@@ -188,6 +188,94 @@ pub fn spearman(a: &[f64], b: &[f64]) -> f64 {
     pearson(&ranks(&a[..n]), &ranks(&b[..n]))
 }
 
+/// Eigen-decomposition of a small symmetric matrix by cyclic Jacobi rotations.
+///
+/// Returns the eigenvalues, with the matching eigenvectors as the columns of the
+/// second value, in the order the rotations leave them. The rotations are chosen
+/// so the off-diagonal mass falls on every sweep; thirty sweeps settle any
+/// matrix this crate asks about, and a matrix still rotating after that is
+/// reported as a refusal instead of as a reading.
+///
+/// The size is capped at 64. A sweep is cubic in the size and every caller here
+/// works in eight dimensions, so a larger matrix means the caller is confused
+/// about what it is decomposing.
+pub fn jacobi_eigen(matrix: &[Vec<f64>]) -> Option<(Vec<f64>, Vec<Vec<f64>>)> {
+    let n = matrix.len();
+    if n == 0 || n > 64 || matrix.iter().any(|row| row.len() != n) {
+        return None;
+    }
+    let mut a = matrix.to_vec();
+    // The symmetry check and the rotations read a square matrix on both axes,
+    // which is the arithmetic rather than a walk over one slice.
+    #[allow(clippy::needless_range_loop)]
+    for i in 0..n {
+        for j in 0..n {
+            if !a[i][j].is_finite() {
+                return None;
+            }
+            // A rotation only maps a symmetric matrix to a symmetric matrix, so
+            // anything else is refused rather than silently symmetrised.
+            if (a[i][j] - a[j][i]).abs() > 1e-9 * (1.0 + a[i][j].abs() + a[j][i].abs()) {
+                return None;
+            }
+            a[j][i] = a[i][j];
+        }
+    }
+    let mut vectors = vec![vec![0.0; n]; n];
+    for (d, row) in vectors.iter_mut().enumerate() {
+        row[d] = 1.0;
+    }
+    for _ in 0..30 {
+        let off: f64 = (0..n)
+            .flat_map(|i| ((i + 1)..n).map(move |j| (i, j)))
+            .map(|(i, j)| a[i][j] * a[i][j])
+            .sum();
+        if off <= 1e-24 {
+            let values = (0..n).map(|d| a[d][d]).collect();
+            return Some((values, vectors));
+        }
+        for p in 0..n {
+            for q in (p + 1)..n {
+                let pivot = a[p][q];
+                if pivot == 0.0 {
+                    continue;
+                }
+                // The stable root of t^2 + 2t*theta - 1 = 0, which avoids the
+                // cancellation the textbook form suffers when theta is large.
+                let theta = (a[q][q] - a[p][p]) / (2.0 * pivot);
+                let root = (theta * theta + 1.0).sqrt();
+                let t = if theta >= 0.0 {
+                    1.0 / (theta + root)
+                } else {
+                    -1.0 / (-theta + root)
+                };
+                let c = 1.0 / (t * t + 1.0).sqrt();
+                let s = t * c;
+                a[p][p] -= t * pivot;
+                a[q][q] += t * pivot;
+                a[p][q] = 0.0;
+                a[q][p] = 0.0;
+                #[allow(clippy::needless_range_loop)]
+                for r in 0..n {
+                    if r != p && r != q {
+                        let (rp, rq) = (a[r][p], a[r][q]);
+                        a[r][p] = c * rp - s * rq;
+                        a[p][r] = a[r][p];
+                        a[r][q] = s * rp + c * rq;
+                        a[q][r] = a[r][q];
+                    }
+                }
+                for row in vectors.iter_mut() {
+                    let (vp, vq) = (row[p], row[q]);
+                    row[p] = c * vp - s * vq;
+                    row[q] = s * vp + c * vq;
+                }
+            }
+        }
+    }
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -218,6 +306,54 @@ mod tests {
         let r = spearman(&tied, &[1.0, 2.0, 3.0, 4.0]);
         assert!(r > 0.7 && r < 1.0);
         assert_eq!(spearman(&[2.0; 5], &a), 0.0);
+    }
+
+    #[test]
+    fn eigen_of_a_known_symmetric_matrix() {
+        let a = vec![vec![2.0, 1.0], vec![1.0, 2.0]];
+        let (values, vectors) = jacobi_eigen(&a).unwrap();
+        let mut sorted = values.clone();
+        sorted.sort_by(|x, y| x.partial_cmp(y).unwrap());
+        assert!((sorted[0] - 1.0).abs() < 1e-12);
+        assert!((sorted[1] - 3.0).abs() < 1e-12);
+        // Rebuild from the decomposition: the pair has to reproduce the input.
+        for i in 0..2 {
+            for j in 0..2 {
+                let value: f64 = (0..2)
+                    .map(|m| vectors[i][m] * values[m] * vectors[j][m])
+                    .sum();
+                assert!((value - a[i][j]).abs() < 1e-12);
+            }
+        }
+        // Columns are orthonormal.
+        let dot = vectors[0][0] * vectors[0][1] + vectors[1][0] * vectors[1][1];
+        assert!(dot.abs() < 1e-12);
+    }
+
+    #[test]
+    fn eigen_recovers_a_near_singular_ratio() {
+        // A rotation of a diagonal matrix whose axes differ by six orders of
+        // magnitude: this is the reading the mixture bound turns on, so it has
+        // to survive the rotation and be found.
+        let (c, s) = (0.6f64, 0.8f64);
+        let a = vec![
+            vec![c * c * 1.0 + s * s * 1e-6, c * s * (1.0 - 1e-6)],
+            vec![c * s * (1.0 - 1e-6), s * s * 1.0 + c * c * 1e-6],
+        ];
+        let (values, _) = jacobi_eigen(&a).unwrap();
+        let longest = values.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+        let shortest = values.iter().copied().fold(f64::INFINITY, f64::min);
+        assert!((longest - 1.0).abs() < 1e-9);
+        assert!((longest / shortest - 1e6).abs() < 1e-2 * 1e6);
+    }
+
+    #[test]
+    fn eigen_refuses_what_it_cannot_trust() {
+        assert!(jacobi_eigen(&[]).is_none());
+        assert!(jacobi_eigen(&[vec![1.0, 2.0], vec![3.0, 1.0]]).is_none());
+        assert!(jacobi_eigen(&[vec![1.0, 0.0], vec![0.0]]).is_none());
+        let big = vec![vec![0.0; 65]; 65];
+        assert!(jacobi_eigen(&big).is_none());
     }
 
     #[test]

@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-16T00:12:41Z",
+  "built_at": "2026-11-17T01:53:25Z",
   "source": {
     "path": "features.jsonl",
     "entities": 251,
@@ -1094,13 +1094,13 @@
     "features": 8,
     "k": 4,
     "family": "full",
-    "heldout": 0.6088,
-    "heldout_sd": 2.4184,
+    "heldout": 0.543,
+    "heldout_sd": 2.3438,
     "agreement": 0.813,
     "folds": 5,
     "parameters": 179,
-    "gain": 10.3862,
-    "choice": "full covariance at k = 4: 0.609 nats per entity on rows it did not see, spread 2.418 across folds, against -9.777 for the k-means partition this folder used to ship, a gain of 10.386. A fold model places its own held-out rows at 0.813 agreement with it, and it costs 179 parameters",
+    "gain": 10.3204,
+    "choice": "full covariance at k = 4: 0.543 nats per entity on rows it did not see, spread 2.344 across folds, against -9.777 for the k-means partition this folder used to ship, a gain of 10.320. A fold model places its own held-out rows at 0.813 agreement with it, and it costs 179 parameters",
     "candidates": [
       {
         "family": "spherical",
@@ -1157,7 +1157,7 @@
         ],
         "min_share": 0.0677,
         "parameters": 45,
-        "verdict": "set aside: -9.587 nats per entity against 0.609 for the fit that won, a gap of 10.195"
+        "verdict": "set aside: -9.587 nats per entity against 0.543 for the fit that won, a gap of 10.130"
       },
       {
         "family": "spherical",
@@ -1235,7 +1235,7 @@
         ],
         "min_share": 0.1315,
         "parameters": 84,
-        "verdict": "set aside: -0.935 nats per entity against 0.609 for the fit that won, a gap of 1.543"
+        "verdict": "set aside: -0.935 nats per entity against 0.543 for the fit that won, a gap of 1.478"
       },
       {
         "family": "diagonal",
@@ -1274,13 +1274,13 @@
         ],
         "min_share": 0.1992,
         "parameters": 134,
-        "verdict": "set aside: k 3 reads -2.653 nats against 0.609 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error"
+        "verdict": "set aside: k 3 reads -2.653 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error"
       },
       {
         "family": "full",
         "k": 4,
-        "heldout": 0.6088,
-        "heldout_sd": 2.4184,
+        "heldout": 0.543,
+        "heldout_sd": 2.3438,
         "agreement": 0.813,
         "agreement_sd": 0.1276,
         "bic": 920.4158,
@@ -1293,7 +1293,7 @@
         ],
         "min_share": 0.0717,
         "parameters": 179,
-        "verdict": "chosen: 0.609 nats per entity held out at 0.813 placement agreement"
+        "verdict": "chosen: 0.543 nats per entity held out at 0.813 placement agreement"
       },
       {
         "family": "full",
@@ -1302,7 +1302,7 @@
         "heldout_sd": 2.7663,
         "agreement": 0.6779,
         "agreement_sd": 0.1158,
-        "bic": -1028.1503,
+        "bic": -1000.1246,
         "silhouette": 0.2434,
         "sizes": [
           44,
@@ -1313,7 +1313,7 @@
         ],
         "min_share": 0.0717,
         "parameters": 224,
-        "verdict": "set aside: k 5 reads -2.622 nats against 0.609 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error"
+        "verdict": "set aside: k 5 reads -2.622 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error"
       },
       {
         "family": "full",

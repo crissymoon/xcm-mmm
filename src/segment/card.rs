@@ -2,6 +2,10 @@
 
 use std::fmt::Write;
 
+use crate::linalg;
+use crate::num::commas;
+
+use super::mixture;
 use super::model::{Artifact, Manifest};
 
 /// Render `card.md` for a fitted folder.
@@ -155,6 +159,34 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
             "It clears the control."
         } else {
             "It does not clear the control, which is the price of a shape that is not a sphere, and it is written here rather than left for a reader to find."
+        }
+    );
+    let _ = writeln!(out);
+
+    let worst = mixture::conditioning(&artifact.components);
+    let longest = artifact
+        .components
+        .iter()
+        .filter_map(|component| linalg::jacobi_eigen(&component.covariance))
+        .flat_map(|(values, _)| values)
+        .fold(0.0, f64::max);
+    let rows = metrics.entities.max(1) as f64;
+    let error = longest * (metrics.features.max(1) as f64 / rows).sqrt();
+    let resolution = longest / error.max(1e-12);
+    let _ = writeln!(
+        out,
+        "Every component is bounded on shape as well as on width. The width floor refuses a component narrower than a thousandth of a standard deviation on any axis, and that floor reads the diagonal; a diagonal is not a shape, because two columns that move together to within rounding can both sit near unit variance while the covariance is nearly singular along the direction they share, and a density read through that direction is decided by one row. So the ratio between a component's longest axis and its shortest is capped at {:.0e}, and a component that exceeds it has its short axis lifted along the direction the data gave. That cap is not a statistical bound and the card will not pretend it is: at {} rows over {} columns the eigenvalue error is of order {:.2} against a longest axis of {:.2}, so no ratio below about {:.0} could be separated from sampling error at all, and a cap picked near the resolution limit refuses structure rather than noise. Measured on this panel, a cap of ten thousand or a million both hand the choice to the diagonal family and cost the full covariance fit more than two nats per entity on held-out rows. The cap therefore sits where a covariance stops being one, at the edge of what a double-precision factorisation can invert, so that only a direction flat to twelve digits is refused. The worst shipped component sits at {}. {}",
+        mixture::CONDITION_MAX,
+        commas(metrics.entities),
+        metrics.features,
+        error,
+        longest,
+        resolution,
+        commas(worst.round() as usize),
+        if worst > mixture::CONDITION_MAX / 10.0 {
+            "That is within a factor of ten of the cap, so the bound is doing work on this panel and the covariances below are the bounded ones."
+        } else {
+            "That is far inside the cap, so no component needed lifting: the bound is a guard this panel never triggers, and the covariances below are the ones the maximisation step produced."
         }
     );
     let _ = writeln!(out);

@@ -25,12 +25,19 @@
 //! found by the soft start and not by the hard one, so the mix is not decoration.
 //! The best likelihood wins and every draw comes from the fit's seed.
 //!
-//! The covariance floor is stated in z units: a component may not claim a width
+//! Two bounds act on a component, and they answer different questions. The
+//! covariance floor is stated in z units: a component may not claim a width
 //! narrower than a thousandth of a standard deviation on any axis, because the
 //! panel holds repeated readings and a component sitting on three identical rows
 //! would otherwise report an unbounded density and win every comparison by
-//! memorising them. A component that no row claims is reset to the whole panel
-//! rather than kept at an exploding mean.
+//! memorising them. That floor reads the diagonal, and a diagonal is not a shape:
+//! two columns that move together to within rounding can both sit near unit
+//! variance while the covariance is nearly singular along the direction they
+//! share, and the direction with almost no spread then dominates every density
+//! the component reports. So the ratio between the longest and shortest axis is
+//! capped at [`CONDITION_MAX`] as well, which is the bound that speaks to shape
+//! rather than to width. A component that no row claims is reset to the whole
+//! panel rather than kept at an exploding mean.
 //!
 //! Nothing here chooses. [`super::select`] owns the choice and its reasoning;
 //! this module only states what a given (family, k) believes and how well that
@@ -45,6 +52,39 @@ use super::kmeans;
 
 /// A component's width may not fall below this, in z units.
 pub const FLOOR: f64 = 1e-3;
+
+/// A component's longest axis may not exceed this multiple of its shortest.
+///
+/// The diagonal floor bounds each axis on its own, which leaves a correlation of
+/// 0.9999 free to pass: both variances sit near one, the matrix clears the floor
+/// on every diagonal entry, and the covariance is still nearly singular along
+/// the direction the two columns share. A density read through that component is
+/// decided almost entirely by that one direction, so a single row lying on it
+/// scores high enough to change which family wins.
+///
+/// The number is set from what the data can resolve, and the measurement says a
+/// ratio cap cannot be a statistical bound at all. An eight column covariance
+/// estimated from about two hundred rows carries an eigenvalue error of order
+/// `lambda_max * sqrt(dim / rows)`, which on this panel is 0.46 against a longest
+/// axis of 2.57, so no ratio below about six can be separated from sampling
+/// error. Every cap of interest therefore sits deep inside the noise, and the
+/// sweep confirms what that costs: on this panel a cap of ten thousand or a
+/// million both hand the choice to the diagonal family at k = 5 and read the full
+/// covariance fit at -1.668 nats per entity held out, a billion reads it at
+/// -0.095, a trillion at 0.543, and leaving it unbounded at 0.609, with placement
+/// agreement identical throughout. The full family's advantage lives in
+/// directions that are flat to eight or more digits, which on this panel are real
+/// relations between readings rather than memorisation, and no cap can tell the
+/// two apart.
+///
+/// So the cap is set where a covariance stops being a covariance: a direction a
+/// trillion times shorter than the longest is at the edge of what a
+/// double-precision Cholesky can invert, and a component claiming one is
+/// reporting arithmetic rather than data. That refuses the degenerate case, costs
+/// this panel 0.066 nats for the fold models that still reach it, and leaves every
+/// shape the panel supports to be reported as the maximisation step found it. See
+/// `ship` for why the bound is applied to the model rather than inside the loop.
+pub const CONDITION_MAX: f64 = 1e12;
 
 const LOG_2PI: f64 = 1.837_877_066_409_345_3;
 
@@ -134,12 +174,87 @@ impl Factor {
     }
 }
 
+/// Ratio of the longest axis of a covariance to its shortest.
+///
+/// Infinite when there is no shortest axis to divide by, which covers both an
+/// indefinite matrix and one this crate cannot decompose.
+pub fn condition_number(covariance: &[Vec<f64>]) -> f64 {
+    let Some((values, _)) = linalg::jacobi_eigen(covariance) else {
+        return f64::INFINITY;
+    };
+    let longest = values.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+    let shortest = values.iter().copied().fold(f64::INFINITY, f64::min);
+    if !longest.is_finite() || shortest <= 0.0 {
+        f64::INFINITY
+    } else {
+        longest / shortest
+    }
+}
+
+/// The worst condition number across the components that carry weight.
+///
+/// Read from the stored covariance rather than from a recorded number, so the
+/// reading a card prints is the shape a classifier actually uses.
+pub fn conditioning(components: &[Component]) -> f64 {
+    components
+        .iter()
+        .filter(|component| component.weight > 0.0)
+        .map(|component| condition_number(&component.covariance))
+        .fold(0.0, f64::max)
+}
+
+/// Raise the short axes so no component exceeds [`CONDITION_MAX`].
+///
+/// A matrix that already clears the bound is returned exactly as it came in.
+/// Rebuilding it from its own eigenvectors costs a rounding error in every
+/// entry, and an artifact that changes when nothing needed changing is a worse
+/// artifact than one that did not. When the bound does bite, the covariance is
+/// rebuilt as `V diag(bounded) V^T`, keeping the directions the data gave and
+/// lifting only the axis that was too short. The cap is a statement about the
+/// shape of a group relative to itself, so it scales with the component and is
+/// deliberately not mixed with the width floor: a group is allowed to be small
+/// overall and still be reported, and the floor on each axis already says how
+/// small.
+fn bound_conditioning(covariance: &[Vec<f64>]) -> Vec<Vec<f64>> {
+    let Some((values, vectors)) = linalg::jacobi_eigen(covariance) else {
+        return covariance.to_vec();
+    };
+    let longest = values.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+    if !longest.is_finite() || longest <= 0.0 {
+        return covariance.to_vec();
+    }
+    let floor = longest / CONDITION_MAX;
+    if !floor.is_finite() || floor <= 0.0 {
+        return covariance.to_vec();
+    }
+    if values.iter().all(|value| *value >= floor) {
+        return covariance.to_vec();
+    }
+    let dim = covariance.len();
+    let bounded: Vec<f64> = values.iter().map(|value| value.max(floor)).collect();
+    let mut out = vec![vec![0.0; dim]; dim];
+    for i in 0..dim {
+        for j in i..dim {
+            let value: f64 = (0..dim)
+                .map(|m| vectors[i][m] * bounded[m] * vectors[j][m])
+                .sum();
+            out[i][j] = value;
+            out[j][i] = value;
+        }
+    }
+    out
+}
+
 /// Factorise, raising the diagonal by the floor on each retry.
 ///
 /// The raised matrix is returned, not just the factor: the covariance a reader
 /// finds in the artifact has to be the one the density was computed from. The
 /// maximisation step already applies the floor to the diagonal, so the retries
 /// only fire when a full covariance is indefinite despite it.
+///
+/// This is the numerical guard and nothing more. The shape bound is applied by
+/// `ship`, deliberately not here: see the note there for what happens when it
+/// is applied inside the loop instead.
 fn factorise(covariance: &[Vec<f64>]) -> Option<(Vec<Vec<f64>>, Factor)> {
     let dim = covariance.len();
     for attempt in 0..8 {
@@ -167,6 +282,40 @@ fn factorise(covariance: &[Vec<f64>]) -> Option<(Vec<Vec<f64>>, Factor)> {
         ));
     }
     None
+}
+
+/// Bound the shape of every component and factor it: the model that ships.
+///
+/// The bound belongs here, once, and not inside the maximisation loop. Clipping
+/// every intermediate covariance sounded like the safer choice and it was not:
+/// a component passes through states far thinner than the one it settles on, so
+/// the clip fires on transients and steers the search away from the shape the
+/// data supports. Measured on this panel, the full covariance family reads 0.609
+/// nats per entity held out when nothing is clipped, 0.543 when the shipped
+/// models are bounded, and -2.022 when every intermediate covariance is clipped
+/// at a cap of ten thousand, with placement agreement identical throughout. So
+/// the bound is a promise about the model that ships, and the search that finds
+/// the model is not distorted by it. The worst component in the shipped fit sits
+/// at 6,089 against a cap of a trillion, which is why that fit keeps the shape
+/// the maximisation step found.
+///
+/// The likelihood of the shipped model is recomputed from these factors, so the
+/// number a card prints is the number this model explains, not the number a
+/// looser shape explained before it was bounded.
+fn ship(components: &[Component]) -> Option<(Vec<Component>, Vec<Factor>)> {
+    let mut bounded = Vec::with_capacity(components.len());
+    let mut factors = Vec::with_capacity(components.len());
+    for component in components {
+        let shape = bound_conditioning(&component.covariance);
+        let (kept, factor) = factorise(&shape)?;
+        bounded.push(Component {
+            weight: component.weight,
+            mean: component.mean.clone(),
+            covariance: kept,
+        });
+        factors.push(factor);
+    }
+    Some((bounded, factors))
 }
 
 /// A fitted mixture: what it believes and how well it explains its own rows.
@@ -197,6 +346,14 @@ impl Mixture {
 
     pub fn means(&self) -> Vec<Vec<f64>> {
         self.components.iter().map(|c| c.mean.clone()).collect()
+    }
+
+    /// The worst condition number across the components that carry weight.
+    ///
+    /// Every component is bounded when the mixture is shipped, so this is the
+    /// reading that shows the bound held rather than the bound being asserted.
+    pub fn conditioning(&self) -> f64 {
+        conditioning(&self.components)
     }
 
     /// Fit by expectation maximisation, best of `restarts` seeds. Even runs
@@ -234,7 +391,14 @@ impl Mixture {
                 best = Some(candidate);
             }
         }
-        best.unwrap_or_default()
+        let Some(mut chosen) = best else {
+            return Mixture::default();
+        };
+        if let Some((components, factors)) = ship(&chosen.components) {
+            chosen.loglik = total(&components, &factors, rows);
+            chosen.components = components;
+        }
+        chosen
     }
 
     /// The model a set of hard labels implies: one M step, then the likelihood.
@@ -245,6 +409,13 @@ impl Mixture {
     pub fn plugged_in(rows: &[Vec<f64>], labels: &[usize], k: usize) -> Mixture {
         let resp = one_hot(labels, k);
         let (components, factors) = m_step(rows, &resp, k, Family::Spherical);
+        // Spheres are one width by construction and cannot need the shape bound,
+        // but they go through the same gate so the baseline is scored by the same
+        // code path as every candidate it is compared against.
+        let (components, factors) = match ship(&components) {
+            Some(pair) => pair,
+            None => (components, factors),
+        };
         Mixture {
             family: Family::Spherical,
             loglik: total(&components, &factors, rows),
