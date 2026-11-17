@@ -39,6 +39,7 @@ use serde::{Deserialize, Serialize};
 pub mod ad;
 pub mod card;
 pub mod cli;
+pub mod concomitant;
 pub mod feature;
 pub mod gate;
 pub mod kmeans;
@@ -51,6 +52,7 @@ pub mod stability;
 pub mod train;
 
 pub use ad::{AdRow, Day, Entity};
+pub use concomitant::{Audit as ConcomitantAudit, Covariate};
 pub use feature::{FeatureSpec, Matrix, Scaling, Transform};
 pub use gate::{Gate, GateAudit, GateSpec};
 pub use kmeans::{Fit, Sweep};

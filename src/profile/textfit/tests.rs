@@ -82,6 +82,8 @@ fn artifact() -> Artifact {
             flat: Vec::new(),
             gates: Vec::new(),
             sharpness: crate::segment::Sharpness::default(),
+            concomitant: crate::segment::ConcomitantAudit::default(),
+            concomitant_all: crate::segment::ConcomitantAudit::default(),
         },
     }
 }

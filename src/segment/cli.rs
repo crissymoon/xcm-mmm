@@ -234,6 +234,28 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 commas(m.sharpness.cushioned_moved),
                 m.sharpness.held_out_kept * 100.0
             );
+            for audit in [&m.concomitant, &m.concomitant_all] {
+                if audit.covariates.is_empty() || audit.folds == 0 {
+                    continue;
+                }
+                let names: Vec<&str> = audit
+                    .covariates
+                    .iter()
+                    .map(|covariate| covariate.name.as_str())
+                    .collect();
+                println!(
+                    "weight    {}  gain {:+.3} nats (se {:.3})  means move {:.3} sd  {}",
+                    names.join(" + "),
+                    audit.delta,
+                    audit.delta_se,
+                    audit.shift_max,
+                    if audit.honest() {
+                        "accepted"
+                    } else {
+                        "stays out"
+                    }
+                );
+            }
             for gate in &artifact.gates {
                 let audit = artifact
                     .metrics

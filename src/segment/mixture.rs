@@ -401,6 +401,77 @@ impl Mixture {
         chosen
     }
 
+    /// One maximisation step from soft responsibilities, without the shape
+    /// bound.
+    ///
+    /// The responsibilities need not be one-hot and need not come from this
+    /// model: [`super::concomitant`] runs expectation maximisation whose mixing
+    /// weights are a function of descriptive columns, so the component step has
+    /// to be reachable from outside the loop. The bounds are deliberately not
+    /// applied here, for the reason `ship` records: clipping an intermediate
+    /// covariance steers the search, and [`Mixture::bounded`] is what a loop
+    /// calls once it has converged.
+    ///
+    /// The weights stored on the components are the column means of `resp`,
+    /// which is what a plain mixture's maximisation step produces; a caller that
+    /// replaces them with a gating model keeps its own copy.
+    pub fn step(rows: &[Vec<f64>], resp: &[Vec<f64>], k: usize, family: Family) -> Mixture {
+        assert_eq!(rows.len(), resp.len(), "responsibilities misaligned");
+        let (components, factors) = m_step(rows, resp, k, family);
+        Mixture {
+            family,
+            loglik: total(&components, &factors, rows),
+            components,
+            iterations: 0,
+        }
+    }
+
+    /// The model with the width floor and the shape bound applied.
+    ///
+    /// The likelihood is recomputed from the bounded covariances on `rows`, so a
+    /// caller that ships this model quotes what it explains rather than what a
+    /// looser shape explained.
+    pub fn bounded(mut self, rows: &[Vec<f64>]) -> Mixture {
+        if let Some((components, factors)) = ship(&self.components) {
+            self.loglik = total(&components, &factors, rows);
+            self.components = components;
+        }
+        self
+    }
+
+    /// One maximisation step from soft responsibilities, then the bounds.
+    ///
+    /// This is the scoring path for a model fitted outside the loop, and it
+    /// matches what [`Mixture::plugged_in`] does for hard labels.
+    pub fn weighted(rows: &[Vec<f64>], resp: &[Vec<f64>], k: usize, family: Family) -> Mixture {
+        let loose = Mixture::step(rows, resp, k, family);
+        let (components, factors) = match ship(&loose.components) {
+            Some(pair) => pair,
+            None => return loose,
+        };
+        Mixture {
+            loglik: total(&components, &factors, rows),
+            components,
+            ..loose
+        }
+    }
+
+    /// Weight-free log density of one row under each component, in order.
+    ///
+    /// [`Mixture::posterior`] folds the stored weights in. A gating model keeps
+    /// its own weights and needs the densities without them, which is what this
+    /// returns; it is also what makes the two models comparable row by row.
+    pub fn log_components(&self, row: &[f64]) -> Vec<f64> {
+        let Some(factors) = self.factored() else {
+            return vec![f64::NEG_INFINITY; self.k()];
+        };
+        self.components
+            .iter()
+            .zip(&factors)
+            .map(|(component, factor)| factor.log_density(row, &component.mean))
+            .collect()
+    }
+
     /// The model a set of hard labels implies: one M step, then the likelihood.
     ///
     /// This is how the k-means incumbent is scored on the same scale as the

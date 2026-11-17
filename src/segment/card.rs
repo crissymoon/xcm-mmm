@@ -620,6 +620,71 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
         }
     }
 
+    let gating = &metrics.concomitant;
+    let _ = writeln!(out, "## Recency in the mixing weights");
+    let _ = writeln!(out);
+    if gating.covariates.is_empty() || gating.folds == 0 {
+        let _ = writeln!(out, "Not measured for this artifact.");
+        let _ = writeln!(out);
+    } else {
+        let _ = writeln!(
+            out,
+            "A mixture has two places a column can enter. The densities say what a group is like, and recency is kept out of them because the panel is a snapshot weighted towards recent ads: the distance from a last start measures the archive's coverage as much as the advertiser's activity. The mixing weights make a weaker claim, that a descriptive column changes which group a row comes from, and this is the audit of whether the panel supports it. The model writes `logit(pi_k(x))` as a multinomial logistic function of the descriptive columns and leaves every density on behaviour (Dayton and Macready, JASA 83, 1988)."
+        );
+        let _ = writeln!(out);
+        let _ = writeln!(
+            out,
+            "| model | covariates | constant weights | gated weights | gain | standard error | worst mean move |"
+        );
+        let _ = writeln!(out, "|---|---|---:|---:|---:|---:|---:|");
+        for (label, audit) in [
+            ("recency alone", &metrics.concomitant),
+            ("all three", &metrics.concomitant_all),
+        ] {
+            if audit.covariates.is_empty() || audit.folds == 0 {
+                continue;
+            }
+            let names: Vec<String> = audit
+                .covariates
+                .iter()
+                .map(|covariate| format!("{} ({:.1}%)", covariate.name, covariate.eta2 * 100.0))
+                .collect();
+            let _ = writeln!(
+                out,
+                "| {} | {} | {:.3} | {:.3} | {:+.3} | {:.3} | {:.3} sd |",
+                label,
+                names.join(", "),
+                audit.constant,
+                audit.gated,
+                audit.delta,
+                audit.delta_se,
+                audit.shift_max
+            );
+        }
+        let _ = writeln!(out);
+        let _ = writeln!(
+            out,
+            "The parenthesis after each covariate is the share of that column's own variance the four groups already explain. It is the reading to look at first: a column the partition already separates cannot add much to the weights."
+        );
+        let _ = writeln!(
+            out,
+            "The per entity spread is the only estimate of the noise this panel offers, so the gate must add twice its own standard error before the gain is called one, and no component mean may move more than a tenth of a standard deviation, because a moved mean means the groups describe something else. Both readings are held out on the same folds the family choice used, and both fits start from the same model, so the difference is the gate's doing."
+        );
+        let _ = writeln!(out);
+        let _ = writeln!(out, "{}", gating.verdict);
+        let _ = writeln!(out);
+        if metrics.concomitant_all.folds > 0 {
+            let _ = writeln!(out, "{}", metrics.concomitant_all.verdict);
+            let _ = writeln!(out);
+        }
+        let _ = writeln!(
+            out,
+            "The wider set is reported beside the pre-registered one rather than instead of it. Its span column is mechanically tied to ad volume, which every density already reads, and the fold to fold spread of its difference is {:.3} nats, which no reading at this row count can see through. That is why the acceptance is stated before the fit: a wider set offered as a second chance would find a number above zero sooner or later, and the number would mean nothing.",
+            metrics.concomitant_all.delta_sd
+        );
+        let _ = writeln!(out);
+    }
+
     let _ = writeln!(out, "## Checks");
     let _ = writeln!(out);
     for line in &manifest.checks {
@@ -672,7 +737,14 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     );
     let _ = writeln!(
         out,
-        "- Recency is deliberately not a feature. The panel is a snapshot weighted towards recent ads, so the distance from a last start to the snapshot day would measure the archive's coverage as much as the advertiser's activity."
+        "- Recency is deliberately not a feature. The panel is a snapshot weighted towards recent ads, so the distance from a last start to the snapshot day would measure the archive's coverage as much as the advertiser's activity. It is not in the mixing weights either, and that is measured rather than assumed: the four groups explain {:.1} percent of its own spread, and gating on it moves the held-out reading by {:+.3} nats per entity against a standard error of {:.3}.",
+        metrics
+            .concomitant
+            .covariates
+            .first()
+            .map_or(0.0, |c| c.eta2 * 100.0),
+        metrics.concomitant.delta,
+        metrics.concomitant.delta_se
     );
     let _ = writeln!(
         out,

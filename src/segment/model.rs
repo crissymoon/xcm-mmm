@@ -118,6 +118,15 @@ pub struct Metrics {
     /// clip rather than the separation.
     #[serde(default)]
     pub sharpness: super::sharp::Sharpness,
+    /// Whether putting descriptive columns in the mixing weights buys anything,
+    /// and whether it leaves the groups meaning what they meant. The
+    /// pre-registered reading gates on recency alone.
+    #[serde(default)]
+    pub concomitant: super::concomitant::Audit,
+    /// The same audit on recency, span and test share together. A wider set is a
+    /// supplementary reading, not a second chance at a gain.
+    #[serde(default)]
+    pub concomitant_all: super::concomitant::Audit,
 }
 
 /// The fitted artifact.

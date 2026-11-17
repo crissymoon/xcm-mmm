@@ -75,6 +75,37 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
     let sharpness =
         super::sharp::measure(rows, &mixture, &labels, &column_names, &people, &folds, cfg)
             .rounded();
+    // Descriptive columns are measured in the mixing weights and nowhere else:
+    // recency is a fact about the archive's coverage as much as about the
+    // advertiser, so the audit decides whether the panel supports letting it set
+    // which group a row comes from, and reports both halves of the acceptance.
+    // Recency alone is the pre-registered model, because that is the column the
+    // item names; the wider set is reported beside it, not instead of it.
+    //
+    // A panel whose descriptive columns do not vary is not a panel this audit
+    // can read, and that is recorded as an unmeasured verdict rather than
+    // failing a segmentation the rest of the gates passed.
+    let audit = |wanted: &[&str]| -> super::concomitant::Audit {
+        match super::concomitant::Block::build(&entities, wanted) {
+            Ok(block) => super::concomitant::measure(
+                rows,
+                &block.z,
+                &labels,
+                &mixture,
+                &folds,
+                cfg,
+                &block,
+                &column_names,
+            )
+            .rounded(),
+            Err(err) => super::concomitant::Audit {
+                verdict: format!("the mixing weights were not measured: {err}"),
+                ..super::concomitant::Audit::default()
+            },
+        }
+    };
+    let gating = audit(&["recency"]);
+    let gating_all = audit(&["recency", "span", "test_share"]);
     let boot = stability::mixture_bootstrap(
         rows,
         &labels,
@@ -253,6 +284,8 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         flat: matrix.flat.clone(),
         gates: audited.clone(),
         sharpness: sharpness.clone(),
+        concomitant: gating.clone(),
+        concomitant_all: gating_all.clone(),
     };
     Ok(Artifact {
         name: cfg.name.clone(),

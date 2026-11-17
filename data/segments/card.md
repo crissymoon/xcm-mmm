@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T05:45:54Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T20:55:14Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -180,6 +180,24 @@ The distance is Mahalanobis under the two groups' pooled shape and the share is 
 
 An entity listed here sits nearest a boundary. The held-out column is where a model that never saw it placed it and the cushioned column is where it lands once no component may use a flattened axis. When the two agree with the group this card gives, the placement is the entity's; when they disagree, the row is a region rather than a membership, and the card says which rather than rounding the disagreement away.
 
+## Recency in the mixing weights
+
+A mixture has two places a column can enter. The densities say what a group is like, and recency is kept out of them because the panel is a snapshot weighted towards recent ads: the distance from a last start measures the archive's coverage as much as the advertiser's activity. The mixing weights make a weaker claim, that a descriptive column changes which group a row comes from, and this is the audit of whether the panel supports it. The model writes `logit(pi_k(x))` as a multinomial logistic function of the descriptive columns and leaves every density on behaviour (Dayton and Macready, JASA 83, 1988).
+
+| model | covariates | constant weights | gated weights | gain | standard error | worst mean move |
+|---|---|---:|---:|---:|---:|---:|
+| recency alone | recency (2.2%) | 0.543 | 0.544 | +0.001 | 0.005 | 0.001 sd |
+| all three | recency (2.2%), span (75.0%), test_share (0.6%) | 0.543 | 0.678 | +0.135 | 0.208 | 0.003 sd |
+
+The parenthesis after each covariate is the share of that column's own variance the four groups already explain. It is the reading to look at first: a column the partition already separates cannot add much to the weights.
+The per entity spread is the only estimate of the noise this panel offers, so the gate must add twice its own standard error before the gain is called one, and no component mean may move more than a tenth of a standard deviation, because a moved mean means the groups describe something else. Both readings are held out on the same folds the family choice used, and both fits start from the same model, so the difference is the gate's doing.
+
+Gating on recency adds 0.001 nats per entity on held-out rows against a standard error of 0.005, which is not a gain, so it stays out of the fit and the densities keep their constant weights.
+
+Gating on recency, campaign span, test share adds 0.135 nats per entity on held-out rows against a standard error of 0.209, which is not a gain, so it stays out of the fit and the densities keep their constant weights.
+
+The wider set is reported beside the pre-registered one rather than instead of it. Its span column is mechanically tied to ad volume, which every density already reads, and the fold to fold spread of its difference is 0.466 nats, which no reading at this row count can see through. That is why the acceptance is stated before the fit: a wider set offered as a second chance would find a number above zero sooner or later, and the number would mean nothing.
+
 ## Checks
 
 - read through a full covariance at k = 4, chosen on 0.543 nats per entity held out
@@ -216,7 +234,7 @@ An entity listed here sits nearest a boundary. The held-out column is where a mo
 - Spend and impressions are bands. Their midpoint is used, which is a coarse reading of value and is not a measurement of money spent.
 - Reuse is read from the archive's copy fingerprint. Two ads that differ by a word count as two, so reuse understates what a reader would call the same creative.
 - Copy concentration is bounded by the number of ads: an advertiser with one ad scores one by construction. That group is a real behaviour, the advertiser who bought once, but its concentration reading carries no information beyond its volume.
-- Recency is deliberately not a feature. The panel is a snapshot weighted towards recent ads, so the distance from a last start to the snapshot day would measure the archive's coverage as much as the advertiser's activity.
+- Recency is deliberately not a feature. The panel is a snapshot weighted towards recent ads, so the distance from a last start to the snapshot day would measure the archive's coverage as much as the advertiser's activity. It is not in the mixing weights either, and that is measured rather than assumed: the four groups explain 2.2 percent of its own spread, and gating on it moves the held-out reading by +0.001 nats per entity against a standard error of 0.005.
 - The accuracy reported is predictive: how well the fitted belief explains rows it was not fitted on, in nats per entity. It is not a measure of whether a group is the right group, because no label says which advertiser belongs where. A richer family can predict better and still be the less stable reading of the panel, which is why the resampling agreement is reported beside it.
 - A group below the Jaccard floor is a region of this panel, not a membership. The fit still places every entity in it, because a segment has to answer for every advertiser, but nothing here says the same advertiser would land there on a new draw.
 - The family choice is made on one panel. A diagonal covariance winning here says the columns of this archive are not equally spread inside an advertiser group; it is not a claim about advertising in general, and a different register or city could choose differently.
