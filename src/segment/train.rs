@@ -215,6 +215,15 @@ fn manifest_of(artifact: &Artifact, out: &str) -> io::Result<Manifest> {
             metrics.min_share * 100.0
         ),
     ];
+    for audit in &metrics.gates {
+        checks.push(format!(
+            "the {} gate gives the observed value {:+.3} nats over the Gaussian conditional law, and calls the edge right on {:.1} percent of held-out rows against {:.1} percent for the panel rate",
+            audit.name,
+            audit.gain(),
+            audit.accuracy * 100.0,
+            audit.rate * 100.0
+        ));
+    }
     if metrics.flat.is_empty() {
         checks.push("every feature varies across the panel".to_string());
     } else {

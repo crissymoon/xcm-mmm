@@ -18,6 +18,8 @@ fn artifact() -> Artifact {
             unit: "ads".into(),
             z,
             mean: 10.0,
+            atom: None,
+            inside: None,
         }],
     };
     Artifact {
@@ -31,10 +33,12 @@ fn artifact() -> Artifact {
             mean: Vec::new(),
             sd: Vec::new(),
             clip: 3.0,
+            clip_exempt: Vec::new(),
         },
         k: 2,
         family: crate::segment::Family::Spherical,
         components: Vec::new(),
+        gates: Vec::new(),
         centroids: Vec::new(),
         segments: vec![segment(0, "left", 1.0), segment(1, "right", -1.0)],
         assignments: BTreeMap::new(),
@@ -75,6 +79,7 @@ fn artifact() -> Artifact {
                 max: 0.0,
             },
             flat: Vec::new(),
+            gates: Vec::new(),
         },
     }
 }

@@ -40,6 +40,7 @@ pub mod ad;
 pub mod card;
 pub mod cli;
 pub mod feature;
+pub mod gate;
 pub mod kmeans;
 pub mod mixture;
 pub mod model;
@@ -50,6 +51,7 @@ pub mod train;
 
 pub use ad::{AdRow, Day, Entity};
 pub use feature::{FeatureSpec, Matrix, Scaling, Transform};
+pub use gate::{Gate, GateAudit, GateSpec};
 pub use kmeans::{Fit, Sweep};
 pub use mixture::{Component, Family, Mixture};
 pub use model::{Artifact, Manifest, Metrics, ProfileRow, Segment};
@@ -110,6 +112,9 @@ pub struct SegmentConfig {
     /// Starts per expectation maximisation fit; half are soft, half k-means.
     #[serde(default = "default_restarts")]
     pub em_restarts: usize,
+    /// Share of a declared edge a reading needs before it is read as a gate.
+    #[serde(default = "default_gate_share")]
+    pub gate_share: f64,
     /// A family held fixed for this run, or `None` to let the panel choose.
     #[serde(default)]
     pub family: Option<Family>,
@@ -135,10 +140,15 @@ impl Default for SegmentConfig {
             folds: 5,
             min_gain: 0.02,
             em_restarts: 4,
+            gate_share: 0.20,
             family: None,
             seed: 20261114,
         }
     }
+}
+
+fn default_gate_share() -> f64 {
+    0.20
 }
 
 #[cfg(test)]

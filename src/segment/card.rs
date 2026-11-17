@@ -6,7 +6,7 @@ use crate::linalg;
 use crate::num::commas;
 
 use super::mixture;
-use super::model::{Artifact, Manifest};
+use super::model::{Artifact, Manifest, Metrics};
 
 /// Render `card.md` for a fitted folder.
 pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
@@ -80,6 +80,10 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
         );
     }
     let _ = writeln!(out);
+
+    if !artifact.gates.is_empty() {
+        render_gates(&mut out, artifact, metrics);
+    }
 
     let _ = writeln!(out, "## Choice");
     let _ = writeln!(out);
@@ -386,8 +390,136 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
         out,
         "- A group is a description of behaviour, not a target. Nothing here says that moving an advertiser between groups would change an outcome."
     );
+    let _ = writeln!(
+        out,
+        "- The gate describes the two shares inside a partition fitted without it. A partition fitted with the gate in the loop would draw different boundaries, and settling which is better needs a measure both models share; the held-out lattice score above is that measure for the shares alone, not for the partition."
+    );
     let _ = writeln!(out);
     out
+}
+
+/// What a share does on its edge, and how well that predicted out of sample.
+///
+/// Two tables: the pile as it stands, group by group, and the same share scored
+/// as a probability on the lattice it lives on against the Gaussian conditional
+/// law it replaces. The second is the reason the first is here: a description
+/// nobody has measured is a decoration.
+fn render_gates(out: &mut String, artifact: &Artifact, metrics: &Metrics) {
+    let _ = writeln!(out, "## The two shares");
+    let _ = writeln!(out);
+    let piles: Vec<String> = artifact
+        .gates
+        .iter()
+        .map(|gate| {
+            format!(
+                "`{}` at {:.2} holds {:.1} percent of the panel",
+                gate.name,
+                gate.boundary,
+                gate.share * 100.0
+            )
+        })
+        .collect();
+    let _ = writeln!(
+        out,
+        "Two readings are shares that pile on an edge: {}. A Gaussian can only imitate a pile with a group of almost no width, and then it reports a density where the data are a probability. Each is read here as a gate: the chance a member of a group sits on the edge, and the members inside it, whose mean moves with the other readings. `inside` is that mean in plain units, and the last column is the share of each group on the edge, in segment order. A group with nobody inside the edge repeats the edge value there rather than reporting a mean over no rows.",
+        piles.join(" and ")
+    );
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "| reading | edge | panel on the edge | inside | groups on the edge |"
+    );
+    let _ = writeln!(out, "|---|---:|---:|---:|---|");
+    for gate in &artifact.gates {
+        let inside: Vec<String> = artifact
+            .segments
+            .iter()
+            .filter_map(|segment| {
+                segment
+                    .profile
+                    .iter()
+                    .find(|row| row.name == gate.name)
+                    .map(|row| format!("{:.3}", row.inside.unwrap_or(0.0)))
+            })
+            .collect();
+        let edge: Vec<String> = artifact
+            .segments
+            .iter()
+            .filter_map(|segment| {
+                segment
+                    .profile
+                    .iter()
+                    .find(|row| row.name == gate.name)
+                    .map(|row| format!("{:.1}%", row.atom.unwrap_or(0.0) * 100.0))
+            })
+            .collect();
+        let _ = writeln!(
+            out,
+            "| {} | {:.2} | {:.1}% | {} | {} |",
+            gate.name,
+            gate.boundary,
+            gate.share * 100.0,
+            inside.join(", "),
+            edge.join(", ")
+        );
+    }
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "Both readings are scored as the probability of the observed value on the lattice a share actually lives on: the possible values are multiples of one over the advertiser's ad count, so a cell is integrated rather than approximated by density times spacing. Multiplying a density by that spacing is how a continuous model appears to win a lattice it cannot represent, and it reports mass above one."
+    );
+    let _ = writeln!(out);
+    let _ = writeln!(out, "| reading | gate | Gaussian | Brier gate | Brier Gaussian | edge called right | panel rate |");
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|");
+    for audit in &metrics.gates {
+        let _ = writeln!(
+            out,
+            "| {} | {:+.3} | {:+.3} | {:.4} | {:.4} | {:.1}% | {:.1}% |",
+            audit.name,
+            audit.log_gate,
+            audit.log_gauss,
+            audit.brier_gate,
+            audit.brier_gauss,
+            audit.accuracy * 100.0,
+            audit.rate * 100.0
+        );
+    }
+    let _ = writeln!(out);
+    let gain: f64 = metrics.gates.iter().map(|audit| audit.gain()).sum();
+    let _ = writeln!(
+        out,
+        "Held out on {} folds, the gates give the observed values {:.3} nats more probability per entity than the Gaussian conditional inside the same groups, and calls the edge right on {:.1} percent of rows against {:.1} percent for the panel rate. The gate is refit on the training rows of each fold; the partition is the shipped one, so the level is optimistic and the paired difference is the reading. The gate does not move a group's boundary: a likelihood with an atom and one without are densities against different measures, so the partition is still chosen on the Gaussian likelihood and the gate is fitted to it afterwards.",
+        metrics.folds,
+        gain,
+        metrics
+            .gates
+            .iter()
+            .map(|audit| audit.accuracy)
+            .sum::<f64>()
+            / metrics.gates.len().max(1) as f64
+            * 100.0,
+        metrics
+            .gates
+            .iter()
+            .map(|audit| audit.rate)
+            .sum::<f64>()
+            / metrics.gates.len().max(1) as f64
+            * 100.0
+    );
+    let _ = writeln!(out);
+    let fired: Vec<String> = artifact
+        .features
+        .iter()
+        .filter(|spec| spec.boundary.is_none())
+        .map(|spec| spec.name.clone())
+        .collect();
+    let _ = writeln!(
+        out,
+        "The clip at {:.0} standard deviations still applies to {}. It never fired on either share, so the pile was never a clipping problem: it is the Gaussian's need to spend a group on it. What the clip exemption guards is a share whose edge sits beyond the bound, which would fold the edge into the interior and leave the gate without a boundary value.",
+        artifact.scaling.clip,
+        fired.join(", ")
+    );
+    let _ = writeln!(out);
 }
 
 #[cfg(test)]

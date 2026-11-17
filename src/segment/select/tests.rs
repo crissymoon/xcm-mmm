@@ -41,8 +41,10 @@ fn panel() -> (Matrix, Vec<Vec<f64>>) {
             mean: vec![0.0; 3],
             sd: vec![1.0; 3],
             clip: 3.0,
+            clip_exempt: Vec::new(),
         },
         flat: Vec::new(),
+        gates: Vec::new(),
     };
     (matrix, z)
 }

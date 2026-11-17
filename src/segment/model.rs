@@ -46,6 +46,12 @@ pub struct ProfileRow {
     pub unit: String,
     pub z: f64,
     pub mean: f64,
+    /// For a gated share: the share of the group sitting on the edge.
+    #[serde(default)]
+    pub atom: Option<f64>,
+    /// For a gated share: the mean of the group's members inside the edge.
+    #[serde(default)]
+    pub inside: Option<f64>,
 }
 
 /// One group of advertisers who behaved alike.
@@ -104,6 +110,10 @@ pub struct Metrics {
     pub stability: Stability,
     pub control: Control,
     pub flat: Vec<String>,
+    /// How each gated share predicted its edge out of sample, against the
+    /// Gaussian conditional law it replaces.
+    #[serde(default)]
+    pub gates: Vec<super::gate::GateAudit>,
 }
 
 /// The fitted artifact.
@@ -124,6 +134,9 @@ pub struct Artifact {
     pub components: Vec<Component>,
     /// The component means, in z, so a reader has one row per group.
     pub centroids: Vec<Vec<f64>>,
+    /// The fitted gates: what a share does on its edge inside each group.
+    #[serde(default)]
+    pub gates: Vec<super::gate::Gate>,
     pub segments: Vec<Segment>,
     pub assignments: BTreeMap<String, usize>,
     pub metrics: Metrics,
@@ -195,7 +208,10 @@ impl Artifact {
     /// The posterior decides, not Euclidean distance, because a group that is
     /// tight on one column and loose on another is not a sphere. A model with no
     /// components left falls back to the nearest centroid so an older artifact
-    /// still places entities rather than refusing them.
+    /// still places entities rather than refusing them. The posterior is the
+    /// Gaussian the partition was fitted with, not the gate: placing an entity
+    /// has to use the same law that drew the boundaries it is placed against,
+    /// and the gate describes those groups rather than competing for them.
     pub fn classify(&self, obs: &BTreeMap<String, f64>) -> io::Result<(usize, f64)> {
         let row = self.z(obs)?;
         if self.components.is_empty() {
@@ -246,6 +262,8 @@ pub fn segments_of(
                     unit: spec.unit.clone(),
                     z: fit.centroids[cluster][column],
                     mean,
+                    atom: None,
+                    inside: None,
                 }
             })
             .collect();
@@ -323,6 +341,8 @@ mod tests {
                 unit: "x".into(),
                 z: *z,
                 mean: 0.0,
+                atom: None,
+                inside: None,
             })
             .collect()
     }

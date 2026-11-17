@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T01:53:25Z",
+  "built_at": "2026-11-17T02:23:15Z",
   "files": [
     {
       "name": "features.jsonl",
@@ -12,8 +12,8 @@
     {
       "name": "model.json",
       "rows": 4,
-      "bytes": 36399,
-      "fnv64": "dbf8837b31b6cce8"
+      "bytes": 41816,
+      "fnv64": "609e20eb13f8d5f1"
     }
   ],
   "config": {
@@ -33,6 +33,7 @@
     "folds": 5,
     "min_gain": 0.02,
     "em_restarts": 4,
+    "gate_share": 0.2,
     "family": null,
     "seed": 20261114
   },
@@ -67,6 +68,8 @@
     "silhouette 0.222 beats the shuffled control at 0.168",
     "resampling keeps the partition at 0.712 mean agreement",
     "every group holds at least 7.2 percent of the entities",
+    "the repeat gate gives the observed value +0.109 nats over the Gaussian conditional law, and calls the edge right on 84.1 percent of held-out rows against 60.1 percent for the panel rate",
+    "the concentrate gate gives the observed value +0.139 nats over the Gaussian conditional law, and calls the edge right on 81.2 percent of held-out rows against 64.1 percent for the panel rate",
     "every feature varies across the panel"
   ]
 }

@@ -16,6 +16,7 @@ use std::io;
 use std::path::Path;
 
 use super::feature::{self, Matrix};
+use super::gate;
 use super::kmeans::{self, Fit};
 use super::model::{self, Artifact, Metrics, Source};
 use super::stability::{self, Control};
@@ -33,7 +34,7 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         )));
     }
     let specs = feature::specs();
-    let matrix = Matrix::build(&entities, &specs, cfg.clip)?;
+    let matrix = Matrix::build(&entities, &specs, cfg.clip, cfg.gate_share)?;
     let rows = &matrix.z;
     let choice = select::choose(rows, &matrix, cfg)?;
 
@@ -104,7 +105,45 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         labels: labels.clone(),
         inertia,
     };
-    let segments = model::segments_of(&partition, &specs, &matrix);
+    let mut segments = model::segments_of(&partition, &specs, &matrix);
+    // The gate is fitted on the chosen partition rather than inside it: see the
+    // module note on why a likelihood with an atom and one without are not
+    // comparable, and what `audit` reads instead.
+    let columns: Vec<usize> = (0..specs.len())
+        .filter(|c| !matrix.gates.iter().any(|gate| gate.column == *c))
+        .collect();
+    let origin: Vec<f64> = columns
+        .iter()
+        .map(|c| rows.iter().map(|row| row[*c]).sum::<f64>() / rows.len() as f64)
+        .collect();
+    let resp: Vec<Vec<f64>> = rows.iter().map(|row| mixture.posterior(row)).collect();
+    let gates = gate::bars(rows, &resp, &matrix.gates, &columns, &origin);
+    let shares = gate::segment_shares(
+        rows,
+        &labels,
+        choice.k,
+        &matrix.gates,
+        &specs,
+        &matrix.scaling,
+    );
+    for (id, segment) in segments.iter_mut().enumerate() {
+        let Some(list) = shares.get(id) else { continue };
+        for (name, edge, inside) in list {
+            if let Some(row) = segment.profile.iter_mut().find(|row| &row.name == name) {
+                row.atom = Some(model::round4(*edge));
+                row.inside = Some(model::round4(*inside));
+            }
+        }
+    }
+    let ads: Vec<f64> = entities.iter().map(|e| e.ads as f64).collect();
+    let audited = gate::audit(
+        rows,
+        &ads,
+        &mixture.components,
+        &matrix.gates,
+        &matrix.scaling,
+        cfg,
+    );
     let mut assignments = std::collections::BTreeMap::new();
     for (i, entity) in entities.iter().enumerate() {
         assignments.insert(entity.id.clone(), labels[i]);
@@ -194,6 +233,7 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
             max: model::round4(euclidean.max),
         },
         flat: matrix.flat.clone(),
+        gates: audited.clone(),
     };
     Ok(Artifact {
         name: cfg.name.clone(),
@@ -206,6 +246,7 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         k: choice.k,
         family: choice.family,
         components: mixture.components.clone(),
+        gates,
         centroids: mixture.means(),
         segments,
         assignments,

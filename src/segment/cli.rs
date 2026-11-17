@@ -76,6 +76,9 @@ pub struct SegmentFitArgs {
     /// Starts per expectation maximisation fit, half soft and half k-means.
     #[arg(long, default_value_t = 4)]
     pub em_restarts: usize,
+    /// Share of a declared edge a reading needs before it is read as a gate.
+    #[arg(long, default_value_t = 0.20)]
+    pub gate_share: f64,
     /// Seed for every draw in the fit and its audits.
     #[arg(long, default_value_t = 20261114)]
     pub seed: u64,
@@ -172,6 +175,7 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 folds: a.folds.max(2),
                 min_gain: a.min_gain.max(0.0),
                 em_restarts: a.em_restarts.max(2),
+                gate_share: a.gate_share,
                 seed: a.seed,
                 ..Default::default()
             };
@@ -199,6 +203,28 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 crate::segment::mixture::conditioning(&artifact.components),
                 crate::segment::mixture::CONDITION_MAX
             );
+            for gate in &artifact.gates {
+                let audit = artifact
+                    .metrics
+                    .gates
+                    .iter()
+                    .find(|audit| audit.name == gate.name);
+                println!(
+                    "gate      {} edge {:.2}  panel {:.1}%  held-out {}  Brier {}  edge right {}",
+                    gate.name,
+                    gate.boundary,
+                    gate.share * 100.0,
+                    audit
+                        .map(|a| format!("{:+.3} vs {:+.3}", a.log_gate, a.log_gauss))
+                        .unwrap_or_else(|| "unmeasured".into()),
+                    audit
+                        .map(|a| format!("{:.3} vs {:.3}", a.brier_gate, a.brier_gauss))
+                        .unwrap_or_else(|| "unmeasured".into()),
+                    audit
+                        .map(|a| format!("{:.1}% vs {:.1}%", a.accuracy * 100.0, a.rate * 100.0))
+                        .unwrap_or_else(|| "unmeasured".into())
+                );
+            }
             for segment in &artifact.segments {
                 println!(
                     "  {:>2}  {:>4} entities  {:>5.1}%  {}",
@@ -237,6 +263,24 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 crate::segment::mixture::conditioning(&artifact.components),
                 crate::segment::mixture::CONDITION_MAX
             );
+            for gate in &artifact.gates {
+                let audit = m.gates.iter().find(|audit| audit.name == gate.name);
+                println!(
+                    "gate      {} at {:.2}: {:.1}% of the panel on the edge, held-out {}",
+                    gate.name,
+                    gate.boundary,
+                    gate.share * 100.0,
+                    audit
+                        .map(|a| format!(
+                            "{:+.3} vs {:+.3} for the Gaussian, edge right {:.1}% against {:.1}%",
+                            a.log_gate,
+                            a.log_gauss,
+                            a.accuracy * 100.0,
+                            a.rate * 100.0
+                        ))
+                        .unwrap_or_else(|| "unmeasured".into())
+                );
+            }
             println!("  k  silhouette  smallest  inertia  sizes");
             for point in &m.sweep {
                 let sizes: Vec<String> = point.sizes.iter().map(|n| n.to_string()).collect();

@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T01:53:25Z",
+  "built_at": "2026-11-17T02:23:15Z",
   "source": {
     "path": "features.jsonl",
     "entities": 251,
@@ -28,6 +28,7 @@
     "folds": 5,
     "min_gain": 0.02,
     "em_restarts": 4,
+    "gate_share": 0.2,
     "family": null,
     "seed": 20261114
   },
@@ -38,6 +39,7 @@
       "family": "volume",
       "unit": "ads",
       "transform": "log1p",
+      "boundary": null,
       "description": "Ads the advertiser started inside the panel."
     },
     {
@@ -46,6 +48,7 @@
       "family": "cadence",
       "unit": "days",
       "transform": "log1p",
+      "boundary": null,
       "description": "Median gap between the days it started an ad."
     },
     {
@@ -54,6 +57,7 @@
       "family": "cadence",
       "unit": "coefficient of variation",
       "transform": "identity",
+      "boundary": null,
       "description": "Population standard deviation of the gaps over their mean, capped at 3."
     },
     {
@@ -62,6 +66,7 @@
       "family": "value",
       "unit": "usd per ad",
       "transform": "log1p",
+      "boundary": null,
       "description": "Mean midpoint of the spend band the archive published per ad."
     },
     {
@@ -70,6 +75,7 @@
       "family": "creative",
       "unit": "words",
       "transform": "log1p",
+      "boundary": null,
       "description": "Median words per ad."
     },
     {
@@ -78,6 +84,7 @@
       "family": "targeting",
       "unit": "terms per ad",
       "transform": "identity",
+      "boundary": null,
       "description": "Mean number of terms the archive lists against an ad."
     },
     {
@@ -86,6 +93,7 @@
       "family": "creative",
       "unit": "share",
       "transform": "identity",
+      "boundary": 0.0,
       "description": "Share of its ads whose copy fingerprint appears more than once for it."
     },
     {
@@ -94,6 +102,7 @@
       "family": "creative",
       "unit": "share",
       "transform": "identity",
+      "boundary": 1.0,
       "description": "Largest share of its ads that carry one fingerprint."
     }
   ],
@@ -118,7 +127,11 @@
       0.44617513052874846,
       0.2812195901744735
     ],
-    "clip": 3.0
+    "clip": 3.0,
+    "clip_exempt": [
+      6,
+      7
+    ]
   },
   "k": 4,
   "family": "full",
@@ -546,6 +559,158 @@
       0.684399734391828
     ]
   ],
+  "gates": [
+    {
+      "name": "repeat",
+      "column": 6,
+      "boundary": 0.0,
+      "atom": -0.7780041147297918,
+      "share": 0.601593625498008,
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "origin": [
+        -0.012723802553983986,
+        -0.0143632066507263,
+        -0.02519217050833168,
+        -0.0021421066108002437,
+        1.8043888649722103e-15,
+        -0.05374401173181392
+      ],
+      "mass": [
+        0.9999,
+        0.27627297786383426,
+        0.0001,
+        0.9999
+      ],
+      "centre": [
+        -0.7780041147297918,
+        0.7778877329830417,
+        1.1762346556542151,
+        -0.7780041147297918
+      ],
+      "slope": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.13698902437389418,
+          -0.12460858045140957,
+          0.0684780152370568,
+          -0.0542076520245646,
+          0.011306886316741958,
+          0.06502608037918015
+        ],
+        [
+          0.01218159162206827,
+          0.04293632581803834,
+          -0.5059775428081219,
+          -0.05914325144855484,
+          -0.0011578927113682868,
+          -0.00993456051268509
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "variance": [
+        1.0,
+        0.2563467459523923,
+        0.045908774422493824,
+        1.0
+      ]
+    },
+    {
+      "name": "concentrate",
+      "column": 7,
+      "boundary": 1.0,
+      "atom": 0.6843997343918279,
+      "share": 0.6414342629482072,
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "origin": [
+        -0.012723802553983986,
+        -0.0143632066507263,
+        -0.02519217050833168,
+        -0.0021421066108002437,
+        1.8043888649722103e-15,
+        -0.05374401173181392
+      ],
+      "mass": [
+        0.0001,
+        0.1229141321088665,
+        0.7189007372995261,
+        0.9999
+      ],
+      "centre": [
+        -1.1546083061000867,
+        -1.0601271108365105,
+        -0.2368428495771324,
+        0.6843997343918279
+      ],
+      "slope": [
+        [
+          -1.4940003507102362,
+          -0.02003969607152893,
+          0.4966745969440588,
+          -0.006111279460099391,
+          0.013299845340849353,
+          0.33663847827653615
+        ],
+        [
+          -0.3766270212300315,
+          -0.17375743056935403,
+          0.31022333355228926,
+          0.06804553174397145,
+          0.17914092594528047,
+          -0.11407307706357415
+        ],
+        [
+          -0.6252810252514126,
+          -0.12220380780203942,
+          0.10188202020850277,
+          -0.07674830737652992,
+          0.10230483897866452,
+          0.39357043840519934
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "variance": [
+        0.001,
+        0.4602757716992325,
+        0.1159129564441299,
+        1.0
+      ]
+    }
+  ],
   "segments": [
     {
       "id": 0,
@@ -559,7 +724,9 @@
           "family": "creative",
           "unit": "share",
           "z": -1.2911225070005632,
-          "mean": 0.4444444444444444
+          "mean": 0.4444444444444444,
+          "atom": 0.0,
+          "inside": 0.4444
         },
         {
           "name": "repeat",
@@ -567,7 +734,9 @@
           "family": "creative",
           "unit": "share",
           "z": -0.7780041147297916,
-          "mean": 0.0
+          "mean": 0.0,
+          "atom": 1.0,
+          "inside": 0.0
         },
         {
           "name": "cadence",
@@ -575,7 +744,9 @@
           "family": "cadence",
           "unit": "days",
           "z": -0.48476293701490614,
-          "mean": 0.12246204830937298
+          "mean": 0.12246204830937298,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "burstiness",
@@ -583,7 +754,9 @@
           "family": "cadence",
           "unit": "coefficient of variation",
           "z": -0.45535934868363476,
-          "mean": 0.0
+          "mean": 0.0,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "terms",
@@ -591,7 +764,9 @@
           "family": "targeting",
           "unit": "terms per ad",
           "z": -0.3453047742549804,
-          "mean": 1.0
+          "mean": 1.0,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "copy_words",
@@ -599,7 +774,9 @@
           "family": "creative",
           "unit": "words",
           "z": 0.2569414990646232,
-          "mean": 85.03920648142369
+          "mean": 85.03920648142369,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "ads",
@@ -607,7 +784,9 @@
           "family": "volume",
           "unit": "ads",
           "z": -0.12110809606025068,
-          "mean": 2.3311503786330294
+          "mean": 2.3311503786330294,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "spend_mid",
@@ -615,7 +794,9 @@
           "family": "value",
           "unit": "usd per ad",
           "z": -0.0873145542574139,
-          "mean": 155.29234595539964
+          "mean": 155.29234595539964,
+          "atom": null,
+          "inside": null
         }
       ]
     },
@@ -631,7 +812,9 @@
           "family": "cadence",
           "unit": "coefficient of variation",
           "z": 1.2018459445119054,
-          "mean": 0.7535467451626434
+          "mean": 0.7535467451626434,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "cadence",
@@ -639,7 +822,9 @@
           "family": "cadence",
           "unit": "days",
           "z": 1.1847316863730857,
-          "mean": 9.925388145048425
+          "mean": 9.925388145048425,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "ads",
@@ -647,7 +832,9 @@
           "family": "volume",
           "unit": "ads",
           "z": 1.0743520927268053,
-          "mean": 8.364966832408475
+          "mean": 8.364966832408475,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "concentrate",
@@ -655,7 +842,9 @@
           "family": "creative",
           "unit": "share",
           "z": -1.0735881128068185,
-          "mean": 0.5052076804538571
+          "mean": 0.5052076804538571,
+          "atom": 0.1231,
+          "inside": 0.4358
         },
         {
           "name": "repeat",
@@ -663,7 +852,9 @@
           "family": "creative",
           "unit": "share",
           "z": 0.47263697756988843,
-          "mean": 0.5576812748991299
+          "mean": 0.5576812748991299,
+          "atom": 0.2769,
+          "inside": 0.7713
         },
         {
           "name": "terms",
@@ -671,7 +862,9 @@
           "family": "targeting",
           "unit": "terms per ad",
           "z": 0.06456923870784888,
-          "mean": 1.3054837607951222
+          "mean": 1.3054837607951222,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "spend_mid",
@@ -679,7 +872,9 @@
           "family": "value",
           "unit": "usd per ad",
           "z": 0.05008516100519084,
-          "mean": 187.49899757058427
+          "mean": 187.49899757058427,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "copy_words",
@@ -687,7 +882,9 @@
           "family": "creative",
           "unit": "words",
           "z": 0.024022876243503712,
-          "mean": 69.07261541769144
+          "mean": 69.07261541769144,
+          "atom": null,
+          "inside": null
         }
       ]
     },
@@ -703,7 +900,9 @@
           "family": "creative",
           "unit": "share",
           "z": 1.3753073043150141,
-          "mean": 0.9599880203653788
+          "mean": 0.9599880203653788,
+          "atom": 0.0,
+          "inside": 0.96
         },
         {
           "name": "burstiness",
@@ -711,7 +910,9 @@
           "family": "cadence",
           "unit": "coefficient of variation",
           "z": -0.4553593486836348,
-          "mean": 0.0
+          "mean": 0.0,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "spend_mid",
@@ -719,7 +920,9 @@
           "family": "value",
           "unit": "usd per ad",
           "z": 0.3024334708039388,
-          "mean": 265.44253396405895
+          "mean": 265.44253396405895,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "concentrate",
@@ -727,7 +930,9 @@
           "family": "creative",
           "unit": "share",
           "z": 0.2740321029774302,
-          "mean": 0.8840071877807726
+          "mean": 0.8840071877807726,
+          "atom": 0.717,
+          "inside": 0.5902
         },
         {
           "name": "ads",
@@ -735,7 +940,9 @@
           "family": "volume",
           "unit": "ads",
           "z": 0.25889278156200307,
-          "mean": 3.5636020001992548
+          "mean": 3.5636020001992548,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "cadence",
@@ -743,7 +950,9 @@
           "family": "cadence",
           "unit": "days",
           "z": -0.11846677863796469,
-          "mean": 0.8353272361937049
+          "mean": 0.8353272361937049,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "copy_words",
@@ -751,7 +960,9 @@
           "family": "creative",
           "unit": "words",
           "z": -0.10938131712843274,
-          "mean": 61.442532834268285
+          "mean": 61.442532834268285,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "terms",
@@ -759,7 +970,9 @@
           "family": "targeting",
           "unit": "terms per ad",
           "z": -0.10039437964121961,
-          "mean": 1.182131285904871
+          "mean": 1.182131285904871,
+          "atom": null,
+          "inside": null
         }
       ]
     },
@@ -775,7 +988,9 @@
           "family": "creative",
           "unit": "share",
           "z": -0.7780041147297918,
-          "mean": 0.0
+          "mean": 0.0,
+          "atom": 1.0,
+          "inside": 0.0
         },
         {
           "name": "ads",
@@ -783,7 +998,9 @@
           "family": "volume",
           "unit": "ads",
           "z": -0.7364585188564273,
-          "mean": 1.0000000000000016
+          "mean": 1.0000000000000016,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "concentrate",
@@ -791,7 +1008,9 @@
           "family": "creative",
           "unit": "share",
           "z": 0.684399734391828,
-          "mean": 1.0
+          "mean": 1.0,
+          "atom": 1.0,
+          "inside": 1.0
         },
         {
           "name": "cadence",
@@ -799,7 +1018,9 @@
           "family": "cadence",
           "unit": "days",
           "z": -0.5722408099771562,
-          "mean": 0.0
+          "mean": 0.0,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "burstiness",
@@ -807,7 +1028,9 @@
           "family": "cadence",
           "unit": "coefficient of variation",
           "z": -0.4553593486836349,
-          "mean": 0.0
+          "mean": 0.0,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "spend_mid",
@@ -815,7 +1038,9 @@
           "family": "value",
           "unit": "usd per ad",
           "z": -0.15836432259109795,
-          "mean": 141.51742095984486
+          "mean": 141.51742095984486,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "terms",
@@ -823,7 +1048,9 @@
           "family": "targeting",
           "unit": "terms per ad",
           "z": -0.05370091661773302,
-          "mean": 1.3043478260869565
+          "mean": 1.3043478260869565,
+          "atom": null,
+          "inside": null
         },
         {
           "name": "copy_words",
@@ -831,7 +1058,9 @@
           "family": "creative",
           "unit": "words",
           "z": -0.003562087895851386,
-          "mean": 67.44282407432212
+          "mean": 67.44282407432212,
+          "atom": null,
+          "inside": null
         }
       ]
     }
@@ -1439,6 +1668,28 @@
       "mean": 0.1678,
       "max": 0.1854
     },
-    "flat": []
+    "flat": [],
+    "gates": [
+      {
+        "name": "repeat",
+        "log_gate": -0.891,
+        "log_gauss": -0.9995,
+        "brier_gate": 0.0978,
+        "brier_gauss": 0.1164,
+        "accuracy": 0.8407,
+        "rate": 0.6013,
+        "folds": 5
+      },
+      {
+        "name": "concentrate",
+        "log_gate": -0.9157,
+        "log_gauss": -1.0547,
+        "brier_gate": 0.107,
+        "brier_gauss": 0.129,
+        "accuracy": 0.8125,
+        "rate": 0.6414,
+        "folds": 5
+      }
+    ]
   }
 }

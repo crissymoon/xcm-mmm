@@ -10,6 +10,11 @@
 //! whole of the scaling, and the z is clipped at three standard deviations
 //! because a single advertiser with an almost constant reading would otherwise
 //! become a segment of its own and pull a centroid with it.
+//!
+//! A reading declared as a share may also declare an edge, and a share with a
+//! large pile on that edge is held out of the clip and described by a gate: see
+//! [`super::gate`] for why a pile is a probability and not a density, and for the
+//! measurement that decides which shares get one.
 
 use std::io;
 
@@ -39,6 +44,12 @@ pub struct FeatureSpec {
     /// The unit of the untransformed reading.
     pub unit: String,
     pub transform: Transform,
+    /// Where a share piles up, in plain units, when it is a share at all.
+    ///
+    /// This is a declaration about the reading, not a decision: the fit reads the
+    /// panel and gates a declared edge only when enough rows sit on it.
+    #[serde(default)]
+    pub boundary: Option<f64>,
     pub description: String,
 }
 
@@ -86,6 +97,18 @@ pub fn specs() -> Vec<FeatureSpec> {
         family: family.into(),
         unit: unit.into(),
         transform,
+        boundary: None,
+        description: description.into(),
+    };
+    // A share always takes its edge with it, so the two that pile up are named
+    // once rather than tested against a literal at the point of use.
+    let share = |name: &str, label: &str, boundary: f64, description: &str| FeatureSpec {
+        name: name.into(),
+        label: label.into(),
+        family: "creative".into(),
+        unit: "share".into(),
+        transform: Transform::Identity,
+        boundary: Some(boundary),
         description: description.into(),
     };
     vec![
@@ -137,20 +160,16 @@ pub fn specs() -> Vec<FeatureSpec> {
             Transform::Identity,
             "Mean number of terms the archive lists against an ad.",
         ),
-        row(
+        share(
             "repeat",
             "creative reuse",
-            "creative",
-            "share",
-            Transform::Identity,
+            0.0,
             "Share of its ads whose copy fingerprint appears more than once for it.",
         ),
-        row(
+        share(
             "concentrate",
             "copy concentration",
-            "creative",
-            "share",
-            Transform::Identity,
+            1.0,
             "Largest share of its ads that carry one fingerprint.",
         ),
     ]
@@ -165,6 +184,13 @@ pub struct Scaling {
     pub mean: Vec<f64>,
     pub sd: Vec<f64>,
     pub clip: f64,
+    /// Columns whose pile is described by a gate, so the clip is not applied.
+    ///
+    /// A share with a boundary at 1 and a small spread can put its edge beyond
+    /// the clip, and clipping it would fold the edge into the interior and make
+    /// the gate's boundary value meaningless.
+    #[serde(default)]
+    pub clip_exempt: Vec<usize>,
 }
 
 impl Scaling {
@@ -172,7 +198,11 @@ impl Scaling {
         let sd = self.sd.get(column).copied().unwrap_or(1.0);
         let mu = self.mean.get(column).copied().unwrap_or(0.0);
         let z = if sd > 1e-9 { (value - mu) / sd } else { 0.0 };
-        z.clamp(-self.clip, self.clip)
+        if self.clip_exempt.contains(&column) {
+            z
+        } else {
+            z.clamp(-self.clip, self.clip)
+        }
     }
 }
 
@@ -184,12 +214,19 @@ pub struct Matrix {
     pub scaling: Scaling,
     /// Columns that do not vary, which carry no signal and are reported.
     pub flat: Vec<String>,
+    /// Shares whose pile is large enough to be read as a gate.
+    pub gates: Vec<super::gate::GateSpec>,
 }
 
 impl Matrix {
     /// Build from entities. A missing observation is a fault, not a zero: the
     /// extractor wrote the file and has to have written every column.
-    pub fn build(entities: &[Entity], specs: &[FeatureSpec], clip: f64) -> io::Result<Self> {
+    pub fn build(
+        entities: &[Entity],
+        specs: &[FeatureSpec],
+        clip: f64,
+        gate_share: f64,
+    ) -> io::Result<Self> {
         if entities.is_empty() {
             return Err(bad("no entities to fit"));
         }
@@ -222,10 +259,12 @@ impl Matrix {
             mu[column] = mean(&values);
             sigma[column] = spread(&values);
         }
+        let gates = super::gate::detect(specs, &raw, &mu, &sigma, gate_share);
         let scaling = Scaling {
             mean: mu,
             sd: sigma,
             clip: clip.max(0.5),
+            clip_exempt: gates.iter().map(|gate| gate.column).collect(),
         };
         let z = raw
             .iter()
@@ -248,6 +287,7 @@ impl Matrix {
             z,
             scaling,
             flat,
+            gates,
         })
     }
 
@@ -309,7 +349,7 @@ mod tests {
         let entities: Vec<Entity> = (0..6)
             .map(|i| entity(&format!("e{i}"), i as f64 + 1.0, (i * i) as f64))
             .collect();
-        let matrix = Matrix::build(&entities, &specs(), 3.0).unwrap();
+        let matrix = Matrix::build(&entities, &specs(), 3.0, 0.5).unwrap();
         for row in &matrix.z {
             assert!(row.iter().all(|z| z.abs() <= 3.0));
         }
@@ -321,7 +361,7 @@ mod tests {
         let entities: Vec<Entity> = (0..5)
             .map(|i| entity(&format!("e{i}"), i as f64, 4.0))
             .collect();
-        let matrix = Matrix::build(&entities, &specs(), 3.0).unwrap();
+        let matrix = Matrix::build(&entities, &specs(), 3.0, 0.5).unwrap();
         assert!(matrix.flat.contains(&"cadence".to_string()));
         assert!(matrix.z.iter().all(|row| row[1] == 0.0));
     }
@@ -330,6 +370,6 @@ mod tests {
     fn a_missing_reading_is_a_fault() {
         let mut one = entity("e1", 1.0, 2.0);
         one.obs.remove("terms");
-        assert!(Matrix::build(&[one], &specs(), 3.0).is_err());
+        assert!(Matrix::build(&[one], &specs(), 3.0, 0.5).is_err());
     }
 }

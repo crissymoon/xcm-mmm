@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T01:53:25Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T02:23:15Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -22,6 +22,26 @@ Start dates run from 2022-10-25 to 2026-11-10. 493 of the ads arrived on the arc
 | 1 | start gap spread high, time between starts high | 65 | 0.259 | burstiness +1.20 (0.75 coefficient of variation), cadence +1.18 (9.93 days), ads +1.07 (8.36 ads) |
 | 2 | creative reuse high, start gap spread low | 53 | 0.211 | repeat +1.38 (0.96 share), burstiness -0.46 (0.00 coefficient of variation), spend_mid +0.30 (265.44 usd per ad) |
 | 3 | creative reuse low, ad volume low | 115 | 0.458 | repeat -0.78 (0.00 share), ads -0.74 (1.00 ads), concentrate +0.68 (1.00 share) |
+
+## The two shares
+
+Two readings are shares that pile on an edge: `repeat` at 0.00 holds 60.2 percent of the panel and `concentrate` at 1.00 holds 64.1 percent of the panel. A Gaussian can only imitate a pile with a group of almost no width, and then it reports a density where the data are a probability. Each is read here as a gate: the chance a member of a group sits on the edge, and the members inside it, whose mean moves with the other readings. `inside` is that mean in plain units, and the last column is the share of each group on the edge, in segment order. A group with nobody inside the edge repeats the edge value there rather than reporting a mean over no rows.
+
+| reading | edge | panel on the edge | inside | groups on the edge |
+|---|---:|---:|---:|---|
+| repeat | 0.00 | 60.2% | 0.000, 0.771, 0.960, 0.000 | 100.0%, 27.7%, 0.0%, 100.0% |
+| concentrate | 1.00 | 64.1% | 0.444, 0.436, 0.590, 1.000 | 0.0%, 12.3%, 71.7%, 100.0% |
+
+Both readings are scored as the probability of the observed value on the lattice a share actually lives on: the possible values are multiples of one over the advertiser's ad count, so a cell is integrated rather than approximated by density times spacing. Multiplying a density by that spacing is how a continuous model appears to win a lattice it cannot represent, and it reports mass above one.
+
+| reading | gate | Gaussian | Brier gate | Brier Gaussian | edge called right | panel rate |
+|---|---:|---:|---:|---:|---:|---:|
+| repeat | -0.891 | -1.000 | 0.0978 | 0.1164 | 84.1% | 60.1% |
+| concentrate | -0.916 | -1.055 | 0.1070 | 0.1290 | 81.2% | 64.1% |
+
+Held out on 5 folds, the gates give the observed values 0.248 nats more probability per entity than the Gaussian conditional inside the same groups, and calls the edge right on 82.7 percent of rows against 62.1 percent for the panel rate. The gate is refit on the training rows of each fold; the partition is the shipped one, so the level is optimistic and the paired difference is the reading. The gate does not move a group's boundary: a likelihood with an atom and one without are densities against different measures, so the partition is still chosen on the Gaussian likelihood and the gate is fitted to it afterwards.
+
+The clip at 3 standard deviations still applies to ads, cadence, burstiness, spend_mid, copy_words, terms. It never fired on either share, so the pile was never a clipping problem: it is the Gaussian's need to spend a group on it. What the clip exemption guards is a share whose edge sits beyond the bound, which would fold the edge into the interior and leave the gate without a boundary value.
 
 ## Choice
 
@@ -106,6 +126,8 @@ A silhouette of 0.22 is ordinary for behavioural data whose columns share a scal
 - silhouette 0.222 beats the shuffled control at 0.168
 - resampling keeps the partition at 0.712 mean agreement
 - every group holds at least 7.2 percent of the entities
+- the repeat gate gives the observed value +0.109 nats over the Gaussian conditional law, and calls the edge right on 84.1 percent of held-out rows against 60.1 percent for the panel rate
+- the concentrate gate gives the observed value +0.139 nats over the Gaussian conditional law, and calls the edge right on 81.2 percent of held-out rows against 64.1 percent for the panel rate
 - every feature varies across the panel
 
 ## Reproduce
@@ -132,4 +154,5 @@ A silhouette of 0.22 is ordinary for behavioural data whose columns share a scal
 - The accuracy reported is predictive: how well the fitted belief explains rows it was not fitted on, in nats per entity. It is not a measure of whether a group is the right group, because no label says which advertiser belongs where. A richer family can predict better and still be the less stable reading of the panel, which is why the resampling agreement is reported beside it.
 - The family choice is made on one panel. A diagonal covariance winning here says the columns of this archive are not equally spread inside an advertiser group; it is not a claim about advertising in general, and a different register or city could choose differently.
 - A group is a description of behaviour, not a target. Nothing here says that moving an advertiser between groups would change an outcome.
+- The gate describes the two shares inside a partition fitted without it. A partition fitted with the gate in the loop would draw different boundaries, and settling which is better needs a measure both models share; the held-out lattice score above is that measure for the shares alone, not for the partition.
 
