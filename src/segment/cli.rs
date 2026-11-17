@@ -198,6 +198,27 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 "fit       silhouette {:.3}  control {:.3}  resampling {:.3}  shuffled likelihood {:.3}",
                 m.silhouette, m.control.mean, m.stability.mean, m.likelihood_control.mean
             );
+            let flagged: Vec<String> = m
+                .stability
+                .cluster
+                .iter()
+                .filter(|row| row.flagged)
+                .map(|row| format!("{} at {:.3}", row.cluster, row.mean))
+                .collect();
+            println!(
+                "groups    {} of {} hold their members under resampling{}",
+                m.stability.cluster.len().saturating_sub(flagged.len()),
+                m.stability.cluster.len(),
+                if flagged.is_empty() {
+                    String::new()
+                } else {
+                    format!(
+                        "; below the {:.1} Jaccard floor: {}",
+                        crate::segment::stability::CLUSTER_FLOOR,
+                        flagged.join(", ")
+                    )
+                }
+            );
             println!(
                 "shape     worst condition number {:.0} (bound {:.0e})",
                 crate::segment::mixture::conditioning(&artifact.components),
@@ -302,18 +323,35 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 "likelihood {:.3} held out (spread {:.3})  shuffled {:.3}  k-means baseline {:.3}",
                 m.heldout, m.heldout_sd, m.likelihood_control.mean, m.baseline.heldout
             );
-            println!("family    k   held out    spread       BIC  params  smallest  verdict");
+            println!(
+                "family    k   held out    spread       BIC       ICL  params  smallest  verdict"
+            );
             for candidate in &m.candidates {
                 println!(
-                    "  {:<8} {:>2}  {:>9.3}  {:>9.3}  {:>8.0}  {:>6}  {:>8.3}  {}",
+                    "  {:<8} {:>2}  {:>9.3}  {:>9.3}  {:>8.0}  {:>8.0}  {:>6}  {:>8.3}  {}",
                     candidate.family.name(),
                     candidate.k,
                     candidate.heldout,
                     candidate.heldout_sd,
                     candidate.bic,
+                    candidate.icl,
                     candidate.parameters,
                     candidate.min_share,
                     candidate.verdict
+                );
+            }
+            for row in &m.stability.cluster {
+                println!(
+                    "group {}  holds {:>4}  Jaccard {:.3} (worst {:.3}){}",
+                    row.cluster,
+                    row.size,
+                    row.mean,
+                    row.min,
+                    if row.flagged {
+                        "  below the 0.6 floor"
+                    } else {
+                        ""
+                    }
                 );
             }
             println!("segment                      entities  share  strongest readings");

@@ -126,11 +126,47 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
         }
     }
     let _ = writeln!(out);
+    let icl_best = metrics.candidates.iter().min_by(|a, b| {
+        a.icl
+            .partial_cmp(&b.icl)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let winner = metrics
+        .candidates
+        .iter()
+        .find(|candidate| candidate.family == metrics.family && candidate.k == metrics.k);
+    match (icl_best, winner) {
+        (Some(row), Some(fit)) if row.heldout < metrics.heldout => {
+            let penalty = fit.icl - fit.bic;
+            let winning = (-penalty / (2.0 * metrics.entities.max(1) as f64)).exp();
+            let _ = writeln!(
+                out,
+                "ICL is printed beside BIC because BIC charges a model for the parameters it spends and nothing for the rows it cannot place: two overlapping components can raise the likelihood while every row sits near their boundary. ICL adds that ambiguity as `BIC - 2 * sum log p`, where `p` is the posterior the winning component gives a row, so it can only be BIC or worse. On this grid it does not change the answer. The lowest ICL is {} at k = {}, reading {:.0} against {:.0} on the same fit's BIC, and it is still the near-saturated candidate whose held-out reading is {:.3} against {:.3} for the fit that won. The charge is small here because a free covariance buys sharp posteriors: the chosen fit gives each of its own rows a mean winning posterior of {:.4}, so the penalty adds {:.1} across {} entities, which is {:.3} per entity. A criterion that is BIC plus a term that nearly vanishes is, on this panel, BIC.",
+                row.family.name(),
+                row.k,
+                row.icl,
+                row.bic,
+                row.heldout,
+                metrics.heldout,
+                winning,
+                penalty,
+                metrics.entities,
+                penalty / metrics.entities.max(1) as f64
+            );
+        }
+        _ => {
+            let _ = writeln!(
+                out,
+                "ICL is printed beside BIC because BIC charges a model for the parameters it spends and nothing for the rows it cannot place. ICL adds the ambiguity as `BIC - 2 * sum log p`, and here the lowest ICL is also the fit that won, so the two readings agree and the choice does not depend on which a reader prefers."
+            );
+        }
+    }
+    let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "| family | k | held out, nats per entity | spread over folds | placement agreement | BIC | parameters | smallest group | verdict |"
+        "| family | k | held out, nats per entity | spread over folds | placement agreement | BIC | ICL | parameters | smallest group | verdict |"
     );
-    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|---:|---|");
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|---:|---:|---|");
     for candidate in &metrics.candidates {
         let chosen = if candidate.family == metrics.family && candidate.k == metrics.k {
             " **chosen**"
@@ -139,7 +175,7 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
         };
         let _ = writeln!(
             out,
-            "| {}{} | {} | {:.3} | {:.3} | {:.3} | {:.0} | {} | {:.3} | {} |",
+            "| {}{} | {} | {:.3} | {:.3} | {:.3} | {:.0} | {:.0} | {} | {:.3} | {} |",
             candidate.family.name(),
             chosen,
             candidate.k,
@@ -147,6 +183,7 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
             candidate.heldout_sd,
             candidate.agreement,
             candidate.bic,
+            candidate.icl,
             candidate.parameters,
             candidate.min_share,
             candidate.verdict
@@ -317,6 +354,70 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
         metrics.stability.bootstraps, metrics.stability.min
     );
     let _ = writeln!(out);
+    let _ = writeln!(out, "### Which groups survive resampling");
+    let _ = writeln!(out);
+    let flagged = metrics
+        .stability
+        .cluster
+        .iter()
+        .filter(|row| row.flagged)
+        .count();
+    if !metrics.stability.cluster.is_empty() {
+        let _ = writeln!(
+            out,
+            "| group | holds | share | Jaccard, mean of {} | worst | reading |",
+            metrics.stability.bootstraps
+        );
+        let _ = writeln!(out, "|---|---:|---:|---:|---:|---|");
+        for row in &metrics.stability.cluster {
+            let label = artifact
+                .segment(row.cluster)
+                .map(|segment| segment.label.clone())
+                .unwrap_or_else(|| format!("group {}", row.cluster));
+            let share = if metrics.entities == 0 {
+                0.0
+            } else {
+                row.size as f64 / metrics.entities as f64
+            };
+            let _ = writeln!(
+                out,
+                "| {} | {} | {:.1} percent | {:.3} | {:.3} | {} |",
+                label,
+                row.size,
+                share * 100.0,
+                row.mean,
+                row.min,
+                if row.flagged {
+                    "below the 0.6 floor".to_string()
+                } else {
+                    "reproducible".to_string()
+                }
+            );
+        }
+        let _ = writeln!(out);
+        let total = metrics.stability.cluster.len();
+        let stable = total - flagged;
+        let across = metrics
+            .stability
+            .cluster
+            .iter()
+            .map(|row| row.mean)
+            .sum::<f64>()
+            / total.max(1) as f64;
+        let _ = writeln!(
+            out,
+            "The adjusted Rand index above is one number for the whole partition, and it weighs every pair of entities: a large group that comes back exactly pays for a small group that does not. The per-group reading is the Jaccard index, the share of rows a group and its best match in a refit have in common over the rows either holds, so a group that splits in the refit scores low even though both halves together cover it. {} of the {} groups clear the 0.6 floor taken from Hennig (2007) and the mean across the partition is {:.3}. {} A group that does not return under resampling is a region of this panel rather than a membership that would reappear on a new draw, and the card says which is which rather than reporting the average alone.",
+            stable,
+            total,
+            across,
+            if flagged == 0 {
+                "Every group here is a membership rather than a region.".to_string()
+            } else {
+                "A group below it is a region of this panel rather than a membership: an entity placed in one is described by the group it sits nearest, and nothing here claims that entity would land in the same group on a new draw.".to_string()
+            }
+        );
+        let _ = writeln!(out);
+    }
     let _ = writeln!(
         out,
         "A silhouette of {:.2} is ordinary for behavioural data whose columns share a scale factor, and a partition read through a covariance scores lower on it by construction: a stretched group is not a sphere, and the reading measures distance from a centre, not the shape a group actually has. The separated groups are {:.2} against {:.2} for columns with their pairing destroyed, so the structure is real; the shape is the part silhouette cannot see.",
@@ -381,6 +482,10 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     let _ = writeln!(
         out,
         "- The accuracy reported is predictive: how well the fitted belief explains rows it was not fitted on, in nats per entity. It is not a measure of whether a group is the right group, because no label says which advertiser belongs where. A richer family can predict better and still be the less stable reading of the panel, which is why the resampling agreement is reported beside it."
+    );
+    let _ = writeln!(
+        out,
+        "- A group below the Jaccard floor is a region of this panel, not a membership. The fit still places every entity in it, because a segment has to answer for every advertiser, but nothing here says the same advertiser would land there on a new draw."
     );
     let _ = writeln!(
         out,

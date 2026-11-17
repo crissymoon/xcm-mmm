@@ -277,3 +277,35 @@ fn a_thin_component_inside_the_cap_is_still_shipped_as_it_is() {
     let (shipped, _) = ship(&[single(thousand.clone())]).unwrap();
     assert_eq!(shipped[0].covariance, thousand);
 }
+
+#[test]
+fn icl_is_bic_plus_the_ambiguity_of_the_placement() {
+    // Two components on the same centre: every row gets a posterior of one half,
+    // so the ambiguity charge is exactly two nats per row and per component.
+    let twin = Component {
+        weight: 0.5,
+        mean: vec![0.0, 0.0],
+        covariance: vec![vec![1.0, 0.0], vec![0.0, 1.0]],
+    };
+    let model = Mixture {
+        family: Family::Full,
+        components: vec![twin.clone(), twin],
+        loglik: 0.0,
+        iterations: 1,
+    };
+    let rows = vec![vec![0.0, 0.0]; 10];
+    let charge = 2.0 * 10.0 * 2f64.ln();
+    let got = model.icl(&rows, 2) - model.bic(10, 2);
+    assert!((got - charge).abs() < 1e-9, "{got} against {charge}");
+}
+
+#[test]
+fn a_clean_partition_pays_almost_nothing_for_ambiguity() {
+    let rows = blobs();
+    let fit = Mixture::fit(&rows, 3, Family::Full, 2, 80, 1);
+    let bic = fit.bic(rows.len(), 2);
+    let icl = fit.icl(&rows, 2);
+    assert!(icl >= bic - 1e-9, "ICL {icl} fell below BIC {bic}");
+    // Three separated blobs are placed sharply, so ICL is BIC to within a nat.
+    assert!(icl - bic < 1.0, "ambiguity charge {:.3}", icl - bic);
+}

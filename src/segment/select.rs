@@ -64,6 +64,10 @@ pub struct Candidate {
     #[serde(default)]
     pub agreement_sd: f64,
     pub bic: f64,
+    /// BIC plus the entropy of the placement, in the same units. Read in sample,
+    /// like BIC, so it is printed rather than selected on.
+    #[serde(default)]
+    pub icl: f64,
     pub silhouette: f64,
     pub sizes: Vec<usize>,
     pub min_share: f64,
@@ -435,6 +439,7 @@ pub fn choose(rows: &[Vec<f64>], matrix: &Matrix, cfg: &SegmentConfig) -> io::Re
                 agreement: if agree.is_finite() { agree } else { 0.0 },
                 agreement_sd: if agree_sd.is_finite() { agree_sd } else { 0.0 },
                 bic: mixture.bic(n, dim),
+                icl: mixture.icl(rows, dim),
                 silhouette: kmeans::silhouette(rows, &labels, k),
                 sizes,
                 min_share: sizes_at(&labels, k, n),

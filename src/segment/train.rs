@@ -21,8 +21,9 @@ use std::path::Path;
 
 use super::ad::{self, Entity};
 use super::card;
-use super::model::{Artifact, FileStamp, Manifest, SegmentStamp};
+use super::model::{Artifact, FileStamp, Manifest, Metrics, SegmentStamp};
 use super::pipeline;
+use super::stability;
 use super::{SegmentConfig, CARD, FEATURES, MANIFEST, MODEL};
 use crate::text::hash::{fnv1a, hex64};
 
@@ -210,6 +211,7 @@ fn manifest_of(artifact: &Artifact, out: &str) -> io::Result<Manifest> {
             "resampling keeps the partition at {:.3} mean agreement",
             metrics.stability.mean
         ),
+        group_check(metrics),
         format!(
             "every group holds at least {:.1} percent of the entities",
             metrics.min_share * 100.0
@@ -270,6 +272,36 @@ fn place(path: &str, out: &str) -> io::Result<()> {
 fn write_json<T: serde::Serialize>(path: &str, value: &T) -> io::Result<()> {
     let text = serde_json::to_string_pretty(value).map_err(io::Error::other)?;
     fs::write(path, format!("{text}\n"))
+}
+
+/// One manifest line for the per-group reading.
+///
+/// A partition-level agreement can pass while a small group of it does not come
+/// back, so the checks name the groups that hold and the groups that do not.
+fn group_check(metrics: &Metrics) -> String {
+    let floor = stability::CLUSTER_FLOOR;
+    let total = metrics.stability.cluster.len();
+    if total == 0 {
+        return "the partition was not read group by group".to_string();
+    }
+    let flagged: Vec<String> = metrics
+        .stability
+        .cluster
+        .iter()
+        .filter(|row| row.flagged)
+        .map(|row| format!("group {} at {:.3}", row.cluster, row.mean))
+        .collect();
+    let held = total - flagged.len();
+    if flagged.is_empty() {
+        format!(
+            "every one of the {total} groups clears the {floor:.1} Jaccard floor under resampling"
+        )
+    } else {
+        format!(
+            "{held} of {total} groups clear the {floor:.1} Jaccard floor under resampling; {} below it, each read as a region rather than a membership",
+            flagged.join(", ")
+        )
+    }
 }
 
 fn bad(message: &str) -> io::Error {

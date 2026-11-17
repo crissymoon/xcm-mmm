@@ -192,6 +192,7 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
                 agreement: model::round4(candidate.agreement),
                 agreement_sd: model::round4(candidate.agreement_sd),
                 bic: model::round4(candidate.bic),
+                icl: model::round4(candidate.icl),
                 silhouette: model::round4(candidate.silhouette),
                 min_share: model::round4(candidate.min_share),
                 ..candidate.clone()
@@ -226,6 +227,15 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
             mean: model::round4(boot.mean),
             p10: model::round4(boot.p10),
             min: model::round4(boot.min),
+            cluster: boot
+                .cluster
+                .iter()
+                .map(|row| stability::ClusterStability {
+                    mean: model::round4(row.mean),
+                    min: model::round4(row.min),
+                    ..row.clone()
+                })
+                .collect(),
         },
         control: Control {
             runs: euclidean.runs,

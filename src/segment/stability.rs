@@ -16,6 +16,27 @@ use crate::rng::Rng;
 
 use super::kmeans::{self, Fit};
 
+/// Whether one group of the shipped partition keeps its members.
+///
+/// A partition can look stable on an adjusted Rand index while one group of it
+/// is not a group at all: ARI weighs every pair of rows, so a large group that
+/// reproduces exactly pays for a small group that does not. The per-group
+/// reading is the Jaccard index - the share of the rows a group and its best
+/// match in a refit have in common, over the rows either of them holds. Hennig
+/// (2007) suggests a mean below about 0.6 as the point where a cluster is not
+/// reproducible, which is the floor used here.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct ClusterStability {
+    /// The component index in the shipped partition.
+    pub cluster: usize,
+    /// Rows the group holds in the shipped partition.
+    pub size: usize,
+    pub mean: f64,
+    pub min: f64,
+    /// True when the mean sits below [`CLUSTER_FLOOR`].
+    pub flagged: bool,
+}
+
 /// How well the partition survives resampling.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Stability {
@@ -23,7 +44,13 @@ pub struct Stability {
     pub mean: f64,
     pub p10: f64,
     pub min: f64,
+    /// One entry per group, in the shipped partition's index order.
+    #[serde(default)]
+    pub cluster: Vec<ClusterStability>,
 }
+
+/// The mean Jaccard below which a group is called unreproducible.
+pub const CLUSTER_FLOOR: f64 = 0.6;
 
 /// What the same protocol finds when the feature pairing is destroyed.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -65,6 +92,43 @@ pub fn ari(a: &[usize], b: &[usize]) -> f64 {
     }
 }
 
+/// The best Jaccard match for every group of `base` among the groups of `other`.
+///
+/// `base` is the shipped partition and `other` a refit placed against the same
+/// rows. Each group of `base` is scored against the group of `other` it overlaps
+/// most, which is the reading that says whether that group came back: a group
+/// that splits in the refit scores low even though both halves together cover
+/// it, and no relabelling of components can inflate the number.
+pub fn jaccard(base: &[usize], other: &[usize], k: usize) -> Vec<f64> {
+    if base.len() != other.len() || base.is_empty() || k == 0 {
+        return vec![0.0; k];
+    }
+    let mut both = vec![vec![0usize; k]; k];
+    let mut left = vec![0usize; k];
+    let mut right = vec![0usize; k];
+    for (a, b) in base.iter().zip(other) {
+        if *a < k && *b < k {
+            both[*a][*b] += 1;
+            left[*a] += 1;
+            right[*b] += 1;
+        }
+    }
+    (0..k)
+        .map(|a| {
+            (0..k)
+                .map(|b| {
+                    let union = left[a] + right[b] - both[a][b];
+                    if union == 0 {
+                        0.0
+                    } else {
+                        both[a][b] as f64 / union as f64
+                    }
+                })
+                .fold(0.0f64, f64::max)
+        })
+        .collect()
+}
+
 /// Resample entities with replacement, refit through `refit`, and score the
 /// agreement of the labels each resample gives the whole panel.
 ///
@@ -80,24 +144,51 @@ pub fn resample(
 ) -> Stability {
     let n = panel.len();
     let runs = runs.max(1);
+    let k = base.iter().copied().max().map_or(0, |top| top + 1);
+    let mut sizes = vec![0usize; k];
+    for &label in base {
+        if label < k {
+            sizes[label] += 1;
+        }
+    }
     let mut scores = Vec::with_capacity(runs);
+    let mut per_cluster: Vec<Vec<f64>> = vec![Vec::with_capacity(runs); k];
     for run in 0..runs {
         let mut rng = Rng::stream(seed ^ 0x5bf0_3641, run as u64 + 1);
         let draw: Vec<usize> = (0..n).map(|_| rng.below(n)).collect();
         let sample: Vec<Vec<f64>> = draw.iter().map(|&i| panel[i].clone()).collect();
         let labels = refit(&sample, run as u64);
         scores.push(ari(base, &labels));
+        for (cluster, value) in jaccard(base, &labels, k).into_iter().enumerate() {
+            per_cluster[cluster].push(value);
+        }
     }
     scores.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
     let mean = scores.iter().sum::<f64>() / scores.len() as f64;
     let rank = ((scores.len() as f64 * 0.1).ceil() as usize)
         .saturating_sub(1)
         .min(scores.len() - 1);
+    let cluster = per_cluster
+        .iter()
+        .enumerate()
+        .filter(|(_, values)| !values.is_empty())
+        .map(|(cluster, values)| {
+            let mean = values.iter().sum::<f64>() / values.len() as f64;
+            ClusterStability {
+                cluster,
+                size: sizes[cluster],
+                mean,
+                min: values.iter().copied().fold(f64::INFINITY, f64::min),
+                flagged: mean < CLUSTER_FLOOR,
+            }
+        })
+        .collect();
     Stability {
         bootstraps: runs,
         mean,
         p10: scores[rank],
         min: scores[0],
+        cluster,
     }
 }
 
@@ -239,6 +330,33 @@ mod tests {
         assert!(stable.mean > 0.8, "mean {:.3}", stable.mean);
         let shuffled = control(&rows, 3, 6, 4, 100, 11);
         assert!(kmeans::silhouette(&rows, &fit.labels, 3) > shuffled.mean + 0.2);
+    }
+
+    #[test]
+    fn jaccard_is_one_for_the_same_group_and_falls_when_it_splits() {
+        let base = vec![0, 0, 0, 0, 1, 1, 1, 1];
+        assert_eq!(jaccard(&base, &base, 2), vec![1.0, 1.0]);
+        // Relabelled, but the same two sets: the reading is matching-free.
+        let relabelled = vec![1, 1, 1, 1, 0, 0, 0, 0];
+        assert_eq!(jaccard(&base, &relabelled, 2), vec![1.0, 1.0]);
+        // One group splits in two: its best match covers half of it, so the
+        // intersection is four of eight rows and the union the whole group.
+        let split = vec![0, 0, 1, 1, 2, 2, 2, 2];
+        let got = jaccard(&base, &split, 3);
+        assert!((got[0] - 0.5).abs() < 1e-12, "{got:?}");
+        assert!((got[1] - 1.0).abs() < 1e-12, "{got:?}");
+    }
+
+    #[test]
+    fn resampling_reports_one_row_per_group_with_its_size() {
+        let rows = blobs();
+        let fit = kmeans::fit(&rows, 3, 6, 100, 11);
+        let stable = bootstrap(&rows, 3, &fit, 4, 4, 100, 11);
+        assert_eq!(stable.cluster.len(), 3);
+        let sizes: usize = stable.cluster.iter().map(|row| row.size).sum();
+        assert_eq!(sizes, rows.len());
+        assert!(stable.cluster.iter().all(|row| row.mean <= 1.0));
+        assert!(stable.cluster.iter().any(|row| row.mean > 0.6));
     }
 
     #[test]

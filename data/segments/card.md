@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T02:23:15Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T04:49:53Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -51,20 +51,22 @@ A k-means fit is the maximum likelihood fit of a mixture whose groups are sphere
 
 BIC is reported because it is the reading a mixture is usually chosen on, and it is not the rule here, because it is read in sample: the lowest BIC on the grid is full at k = 5 with 224 parameters against 251 entities, and its held-out reading is -2.623 nats per entity against 0.543 for the fit that won. A criterion that lets a model hold nearly one parameter per entity is a reading to print, not a rule to follow.
 
-| family | k | held out, nats per entity | spread over folds | placement agreement | BIC | parameters | smallest group | verdict |
-|---|---:|---:|---:|---:|---:|---:|---:|---|
-| spherical | 3 | -9.884 | 0.825 | 0.975 | 5020 | 27 | 0.223 | set aside: k 3 reads -9.884 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
-| spherical | 4 | -9.786 | 0.776 | 0.823 | 4921 | 36 | 0.112 | set aside: k 4 reads -9.786 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
-| spherical | 5 | -9.587 | 0.994 | 0.753 | 4868 | 45 | 0.068 | set aside: -9.587 nats per entity against 0.543 for the fit that won, a gap of 10.130 |
-| spherical | 6 | -9.566 | 0.990 | 0.807 | 4816 | 54 | 0.064 | set aside: k 6 reads -9.566 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
-| diagonal | 3 | -2.145 | 1.532 | 0.923 | 710 | 50 | 0.251 | set aside: k 3 reads -2.145 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
-| diagonal | 4 | -1.316 | 1.711 | 0.785 | 638 | 67 | 0.151 | set aside: k 4 reads -1.316 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
-| diagonal | 5 | -0.935 | 1.498 | 0.626 | 250 | 84 | 0.132 | set aside: -0.935 nats per entity against 0.543 for the fit that won, a gap of 1.478 |
-| diagonal | 6 | -0.100 | 1.528 | 0.745 | 115 | 101 | 0.024 | set aside: k 6 puts a group at 2.4 percent, below the 5.0 percent floor |
-| full | 3 | -2.653 | 0.943 | 0.725 | 1701 | 134 | 0.199 | set aside: k 3 reads -2.653 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
-| full **chosen** | 4 | 0.543 | 2.344 | 0.813 | 920 | 179 | 0.072 | chosen: 0.543 nats per entity held out at 0.813 placement agreement |
-| full | 5 | -2.623 | 2.766 | 0.678 | -1000 | 224 | 0.072 | set aside: k 5 reads -2.622 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
-| full | 6 | -1.782 | 3.466 | 0.427 | -227 | 269 | 0.020 | set aside: k 6 puts a group at 2.0 percent, below the 5.0 percent floor |
+ICL is printed beside BIC because BIC charges a model for the parameters it spends and nothing for the rows it cannot place: two overlapping components can raise the likelihood while every row sits near their boundary. ICL adds that ambiguity as `BIC - 2 * sum log p`, where `p` is the posterior the winning component gives a row, so it can only be BIC or worse. On this grid it does not change the answer. The lowest ICL is full at k = 5, reading -996 against -1000 on the same fit's BIC, and it is still the near-saturated candidate whose held-out reading is -2.623 against 0.543 for the fit that won. The charge is small here because a free covariance buys sharp posteriors: the chosen fit gives each of its own rows a mean winning posterior of 0.9994, so the penalty adds 0.3 across 251 entities, which is 0.001 per entity. A criterion that is BIC plus a term that nearly vanishes is, on this panel, BIC.
+
+| family | k | held out, nats per entity | spread over folds | placement agreement | BIC | ICL | parameters | smallest group | verdict |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| spherical | 3 | -9.884 | 0.825 | 0.975 | 5020 | 5035 | 27 | 0.223 | set aside: k 3 reads -9.884 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| spherical | 4 | -9.786 | 0.776 | 0.823 | 4921 | 4934 | 36 | 0.112 | set aside: k 4 reads -9.786 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| spherical | 5 | -9.587 | 0.994 | 0.753 | 4868 | 4888 | 45 | 0.068 | set aside: -9.587 nats per entity against 0.543 for the fit that won, a gap of 10.130 |
+| spherical | 6 | -9.566 | 0.990 | 0.807 | 4816 | 4862 | 54 | 0.064 | set aside: k 6 reads -9.566 nats against -9.587 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| diagonal | 3 | -2.145 | 1.532 | 0.923 | 710 | 711 | 50 | 0.251 | set aside: k 3 reads -2.145 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| diagonal | 4 | -1.316 | 1.711 | 0.785 | 638 | 639 | 67 | 0.151 | set aside: k 4 reads -1.316 nats against -0.935 at k 5, and the paired gain does not clear the 0.020 margin and its own standard error |
+| diagonal | 5 | -0.935 | 1.498 | 0.626 | 250 | 255 | 84 | 0.132 | set aside: -0.935 nats per entity against 0.543 for the fit that won, a gap of 1.478 |
+| diagonal | 6 | -0.100 | 1.528 | 0.745 | 115 | 115 | 101 | 0.024 | set aside: k 6 puts a group at 2.4 percent, below the 5.0 percent floor |
+| full | 3 | -2.653 | 0.943 | 0.725 | 1701 | 1701 | 134 | 0.199 | set aside: k 3 reads -2.653 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
+| full **chosen** | 4 | 0.543 | 2.344 | 0.813 | 920 | 921 | 179 | 0.072 | chosen: 0.543 nats per entity held out at 0.813 placement agreement |
+| full | 5 | -2.623 | 2.766 | 0.678 | -1000 | -996 | 224 | 0.072 | set aside: k 5 reads -2.622 nats against 0.543 at k 4, and the paired gain does not clear the 0.020 margin and its own standard error |
+| full | 6 | -1.782 | 3.466 | 0.427 | -227 | -226 | 269 | 0.020 | set aside: k 6 puts a group at 2.0 percent, below the 5.0 percent floor |
 
 Silhouette is a Euclidean reading, so it structurally rewards the spherical shape k-means produces: the chosen partition scores 0.222 on it against 0.286 for the k-means partition the folder used to ship, and 0.168 for the same protocol on columns shuffled independently. It clears the control. That is why the family is settled on likelihood and placement, and silhouette is kept as a floor and a comparison rather than as the selector.
 
@@ -115,6 +117,17 @@ There are no labels, so nothing here is a truth. What is measured is how well th
 | resampling, tenth percentile | 0.451 | reported, not gated |
 | resampling, worst of 50 | 0.382 | reported, not gated |
 
+### Which groups survive resampling
+
+| group | holds | share | Jaccard, mean of 50 | worst | reading |
+|---|---:|---:|---:|---:|---|
+| copy concentration low, creative reuse low | 18 | 7.2 percent | 0.266 | 0.079 | below the 0.6 floor |
+| start gap spread high, time between starts high | 65 | 25.9 percent | 0.589 | 0.352 | below the 0.6 floor |
+| creative reuse high, start gap spread low | 53 | 21.1 percent | 0.626 | 0.203 | reproducible |
+| creative reuse low, ad volume low | 115 | 45.8 percent | 0.893 | 0.653 | reproducible |
+
+The adjusted Rand index above is one number for the whole partition, and it weighs every pair of entities: a large group that comes back exactly pays for a small group that does not. The per-group reading is the Jaccard index, the share of rows a group and its best match in a refit have in common over the rows either holds, so a group that splits in the refit scores low even though both halves together cover it. 2 of the 4 groups clear the 0.6 floor taken from Hennig (2007) and the mean across the partition is 0.593. A group below it is a region of this panel rather than a membership: an entity placed in one is described by the group it sits nearest, and nothing here claims that entity would land in the same group on a new draw. A group that does not return under resampling is a region of this panel rather than a membership that would reappear on a new draw, and the card says which is which rather than reporting the average alone.
+
 A silhouette of 0.22 is ordinary for behavioural data whose columns share a scale factor, and a partition read through a covariance scores lower on it by construction: a stretched group is not a sphere, and the reading measures distance from a centre, not the shape a group actually has. The separated groups are 0.22 against 0.17 for columns with their pairing destroyed, so the structure is real; the shape is the part silhouette cannot see.
 
 ## Checks
@@ -125,6 +138,7 @@ A silhouette of 0.22 is ordinary for behavioural data whose columns share a scal
 - a fold model places its own held-out rows at 0.813 agreement with the shipped partition
 - silhouette 0.222 beats the shuffled control at 0.168
 - resampling keeps the partition at 0.712 mean agreement
+- 2 of 4 groups clear the 0.6 Jaccard floor under resampling; group 0 at 0.266, group 1 at 0.589 below it, each read as a region rather than a membership
 - every group holds at least 7.2 percent of the entities
 - the repeat gate gives the observed value +0.109 nats over the Gaussian conditional law, and calls the edge right on 84.1 percent of held-out rows against 60.1 percent for the panel rate
 - the concentrate gate gives the observed value +0.139 nats over the Gaussian conditional law, and calls the edge right on 81.2 percent of held-out rows against 64.1 percent for the panel rate
@@ -152,6 +166,7 @@ A silhouette of 0.22 is ordinary for behavioural data whose columns share a scal
 - Copy concentration is bounded by the number of ads: an advertiser with one ad scores one by construction. That group is a real behaviour, the advertiser who bought once, but its concentration reading carries no information beyond its volume.
 - Recency is deliberately not a feature. The panel is a snapshot weighted towards recent ads, so the distance from a last start to the snapshot day would measure the archive's coverage as much as the advertiser's activity.
 - The accuracy reported is predictive: how well the fitted belief explains rows it was not fitted on, in nats per entity. It is not a measure of whether a group is the right group, because no label says which advertiser belongs where. A richer family can predict better and still be the less stable reading of the panel, which is why the resampling agreement is reported beside it.
+- A group below the Jaccard floor is a region of this panel, not a membership. The fit still places every entity in it, because a segment has to answer for every advertiser, but nothing here says the same advertiser would land there on a new draw.
 - The family choice is made on one panel. A diagonal covariance winning here says the columns of this archive are not equally spread inside an advertiser group; it is not a claim about advertising in general, and a different register or city could choose differently.
 - A group is a description of behaviour, not a target. Nothing here says that moving an advertiser between groups would change an outcome.
 - The gate describes the two shares inside a partition fitted without it. A partition fitted with the gate in the loop would draw different boundaries, and settling which is better needs a measure both models share; the held-out lattice score above is that measure for the shares alone, not for the partition.

@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T02:23:15Z",
+  "built_at": "2026-11-17T04:49:53Z",
   "source": {
     "path": "features.jsonl",
     "entities": 251,
@@ -1339,6 +1339,7 @@
         "agreement": 0.9747,
         "agreement_sd": 0.0311,
         "bic": 5019.9444,
+        "icl": 5034.7745,
         "silhouette": 0.2743,
         "sizes": [
           138,
@@ -1357,6 +1358,7 @@
         "agreement": 0.8232,
         "agreement_sd": 0.167,
         "bic": 4921.3219,
+        "icl": 4933.7063,
         "silhouette": 0.2909,
         "sizes": [
           30,
@@ -1376,6 +1378,7 @@
         "agreement": 0.7535,
         "agreement_sd": 0.1398,
         "bic": 4867.9014,
+        "icl": 4888.3149,
         "silhouette": 0.279,
         "sizes": [
           30,
@@ -1396,6 +1399,7 @@
         "agreement": 0.8075,
         "agreement_sd": 0.1105,
         "bic": 4816.2201,
+        "icl": 4861.6372,
         "silhouette": 0.2384,
         "sizes": [
           16,
@@ -1417,6 +1421,7 @@
         "agreement": 0.9227,
         "agreement_sd": 0.0952,
         "bic": 710.3275,
+        "icl": 710.6428,
         "silhouette": 0.2091,
         "sizes": [
           115,
@@ -1435,6 +1440,7 @@
         "agreement": 0.7848,
         "agreement_sd": 0.0479,
         "bic": 637.5275,
+        "icl": 638.7248,
         "silhouette": 0.247,
         "sizes": [
           47,
@@ -1454,6 +1460,7 @@
         "agreement": 0.626,
         "agreement_sd": 0.0683,
         "bic": 250.4478,
+        "icl": 255.3042,
         "silhouette": 0.1693,
         "sizes": [
           33,
@@ -1474,6 +1481,7 @@
         "agreement": 0.7448,
         "agreement_sd": 0.1352,
         "bic": 115.2132,
+        "icl": 115.3767,
         "silhouette": 0.2103,
         "sizes": [
           115,
@@ -1495,6 +1503,7 @@
         "agreement": 0.7253,
         "agreement_sd": 0.1297,
         "bic": 1700.8858,
+        "icl": 1701.2681,
         "silhouette": 0.1871,
         "sizes": [
           71,
@@ -1513,6 +1522,7 @@
         "agreement": 0.813,
         "agreement_sd": 0.1276,
         "bic": 920.4158,
+        "icl": 920.7371,
         "silhouette": 0.2219,
         "sizes": [
           18,
@@ -1532,6 +1542,7 @@
         "agreement": 0.6779,
         "agreement_sd": 0.1158,
         "bic": -1000.1246,
+        "icl": -995.9389,
         "silhouette": 0.2434,
         "sizes": [
           44,
@@ -1552,6 +1563,7 @@
         "agreement": 0.4274,
         "agreement_sd": 0.12,
         "bic": -226.5656,
+        "icl": -225.8538,
         "silhouette": 0.1696,
         "sizes": [
           68,
@@ -1661,7 +1673,37 @@
       "bootstraps": 50,
       "mean": 0.7122,
       "p10": 0.4509,
-      "min": 0.3819
+      "min": 0.3819,
+      "cluster": [
+        {
+          "cluster": 0,
+          "size": 18,
+          "mean": 0.2661,
+          "min": 0.0787,
+          "flagged": true
+        },
+        {
+          "cluster": 1,
+          "size": 65,
+          "mean": 0.5887,
+          "min": 0.3516,
+          "flagged": true
+        },
+        {
+          "cluster": 2,
+          "size": 53,
+          "mean": 0.6257,
+          "min": 0.2025,
+          "flagged": false
+        },
+        {
+          "cluster": 3,
+          "size": 115,
+          "mean": 0.8933,
+          "min": 0.6531,
+          "flagged": false
+        }
+      ]
     },
     "control": {
       "runs": 20,

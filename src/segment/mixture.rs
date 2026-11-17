@@ -504,6 +504,33 @@ impl Mixture {
         -2.0 * self.loglik + parameters as f64 * (rows.max(2) as f64).ln()
     }
 
+    /// Integrated completed likelihood, lower is better.
+    ///
+    /// BIC charges a model for the parameters it spends and nothing for the rows
+    /// it cannot classify. Two overlapping components can therefore raise the
+    /// likelihood while every row sits near their boundary, and BIC prefers the
+    /// pair. ICL adds the entropy of the placement: `BIC - 2 * sum_i log p_i`,
+    /// where `p_i` is the posterior the winning component gives row `i`. Because
+    /// `p_i <= 1`, that term is never negative, so ICL is BIC plus a charge for
+    /// ambiguity and agrees with BIC exactly when the partition is clean.
+    ///
+    /// It is read in sample, like BIC, so it is a reading printed beside the
+    /// held-out number rather than the rule the choice follows.
+    pub fn icl(&self, rows: &[Vec<f64>], dim: usize) -> f64 {
+        let cost: f64 = rows
+            .iter()
+            .map(|row| {
+                let top = self
+                    .posterior(row)
+                    .into_iter()
+                    .fold(0.0f64, f64::max)
+                    .max(1e-300);
+                top.ln()
+            })
+            .sum();
+        self.bic(rows.len(), dim) - 2.0 * cost
+    }
+
     /// Mahalanobis distance from a row to one component's centre, in standard
     /// deviations, so `segment assign` still prints a readable gap.
     pub fn distance(&self, row: &[f64], component: usize) -> f64 {

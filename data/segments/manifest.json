@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T02:23:15Z",
+  "built_at": "2026-11-17T04:49:53Z",
   "files": [
     {
       "name": "features.jsonl",
@@ -12,8 +12,8 @@
     {
       "name": "model.json",
       "rows": 4,
-      "bytes": 41816,
-      "fnv64": "609e20eb13f8d5f1"
+      "bytes": 42729,
+      "fnv64": "7033c3538ba0fade"
     }
   ],
   "config": {
@@ -67,6 +67,7 @@
     "a fold model places its own held-out rows at 0.813 agreement with the shipped partition",
     "silhouette 0.222 beats the shuffled control at 0.168",
     "resampling keeps the partition at 0.712 mean agreement",
+    "2 of 4 groups clear the 0.6 Jaccard floor under resampling; group 0 at 0.266, group 1 at 0.589 below it, each read as a region rather than a membership",
     "every group holds at least 7.2 percent of the entities",
     "the repeat gate gives the observed value +0.109 nats over the Gaussian conditional law, and calls the edge right on 84.1 percent of held-out rows against 60.1 percent for the panel rate",
     "the concentrate gate gives the observed value +0.139 nats over the Gaussian conditional law, and calls the edge right on 81.2 percent of held-out rows against 64.1 percent for the panel rate",

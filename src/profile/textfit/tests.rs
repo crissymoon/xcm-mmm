@@ -72,6 +72,7 @@ fn artifact() -> Artifact {
                 mean: 0.0,
                 p10: 0.0,
                 min: 0.0,
+                cluster: Vec::new(),
             },
             control: crate::segment::stability::Control {
                 runs: 0,
