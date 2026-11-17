@@ -114,6 +114,10 @@ pub struct Metrics {
     /// Gaussian conditional law it replaces.
     #[serde(default)]
     pub gates: Vec<super::gate::GateAudit>,
+    /// Whether modelling the edge inside the likelihood predicts it better than
+    /// fitting the gate to the partition, read on the same held-out rows.
+    #[serde(default)]
+    pub pattern: Vec<super::pattern::Verdict>,
     /// How sharply rows sit in their groups, and whether that sharpness is the
     /// clip rather than the separation.
     #[serde(default)]

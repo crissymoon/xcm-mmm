@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T20:55:14Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-17T22:30:12Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -42,6 +42,31 @@ Both readings are scored as the probability of the observed value on the lattice
 Held out on 5 folds, the gates give the observed values 0.248 nats more probability per entity than the Gaussian conditional inside the same groups, and calls the edge right on 82.7 percent of rows against 62.1 percent for the panel rate. The gate is refit on the training rows of each fold; the partition is the shipped one, so the level is optimistic and the paired difference is the reading. The gate does not move a group's boundary: a likelihood with an atom and one without are densities against different measures, so the partition is still chosen on the Gaussian likelihood and the gate is fitted to it afterwards.
 
 The clip at 3 standard deviations still applies to ads, cadence, burstiness, spend_mid, copy_words, terms. It never fired on either share, so the pile was never a clipping problem: it is the Gaussian's need to spend a group on it. What the clip exemption guards is a share whose edge sits beyond the bound, which would fold the edge into the interior and leave the gate without a boundary value.
+
+## The gate inside the loop
+
+The gate above is fitted to a partition chosen without it. The alternative is to state the pattern as data and fit the two together: a reading that sits on its edge is absent rather than equal to the edge value, the row is scored on the readings it shows, the absent coordinate is marginalised out of the joint covariance, and the probability of the edge is its own parameter per group per gate. That is a pattern mixture in the sense of Ghahramani and Jordan (1993), and the maximisation step fills an absent reading with its conditional mean given the readings the row shows, adding the conditional covariance to the second moment. It keeps the eight column dependence, because a covariance entry is estimated from every row that shows both of its readings.
+
+Its likelihood is a density against a mixed measure, Lebesgue on the readings and counting on the edges, so it is a proper likelihood for these data and the maximisation is monotone. It is not comparable with a Gaussian likelihood, which is a density against a different measure, so it is not used to choose a family. What is comparable is the held out probability of one event, the observed value of a gated reading given the readings the gates do not hold, and both models are scored on that event, on the same rows, with both sides refit on the training rows of each fold, including the mixture the gate is fitted to. The paired difference is the reading.
+
+| reading | folds | two-part gate | pattern mixture | gain | standard error |
+|---|---:|---:|---:|---:|---:|
+| repeat | 5 | -0.988 | -1.087 | -0.099 | 0.060 |
+| concentrate | 5 | -0.915 | -1.057 | -0.142 | 0.013 |
+
+| reading | edge rows | two-part | pattern | inside rows | two-part | pattern |
+|---|---:|---:|---:|---:|---:|---:|
+| repeat | 151 | -0.338 | -0.347 | 100 | -1.947 | -2.179 |
+| concentrate | 161 | -0.301 | -0.316 | 90 | -2.016 | -2.386 |
+
+- `repeat`: not separated: -0.099 nats per entity is -1.6 standard errors, so nothing was gained; the partition-fitted gate stands because it is the simpler statement.
+- `concentrate`: refused: the loop model is 0.142 nats per entity worse, -10.5 standard errors, so the gate fitted to the partition stands and the edge stays where it is.
+
+The second table says where a difference sits, and on this panel it sits almost entirely inside the edge. On `concentrate` the pattern mixture is 0.015 nats per row behind on the readings that are on their edge and 0.370 behind on those inside it, so 93 percent of the total shortfall comes from rows the pile does not touch. That is the two-part model's inside regression doing its job: it fits a slope and a variance per group on the rows that are inside, while the pattern mixture derives the same conditional from a joint covariance estimated partly across rows whose share was imputed, and the derived conditional is flatter than the data. The atom itself, the part the pattern mixture was built to fix, is predicted about as well by the gate fitted to the partition.
+
+The comparison also says what would move if the artifact were rebuilt on this model's own partition: 58.1 percent of held out rows keep the group they have and 105 move. The atom enters the partition, because a group is allowed an edge probability near one, so rows end up separated partly by which edges they sit on. That is a different segmentation rather than an improved one, and the choice at the top of this card still stands on held out Gaussian likelihood, which is the one comparison of partitions the two measures allow.
+
+Two things had to be shown before this reading could be trusted. The maximisation step is checked on data drawn from the model, where the pattern mixture must not lose to the gate fitted to the partition, and a test does that: if it lost there the comparison would be measuring a defect rather than a model difference. And the first version of the maximisation step added both orders of the conditional covariance to one cell of the second moment, doubling the off diagonal, which made the average indefinite and ended every fit after a single step without reporting it. That version read several tenths of a nat per entity worse than the one above. Both are pinned by tests in the module.
 
 ## Choice
 
@@ -239,7 +264,7 @@ The wider set is reported beside the pre-registered one rather than instead of i
 - A group below the Jaccard floor is a region of this panel, not a membership. The fit still places every entity in it, because a segment has to answer for every advertiser, but nothing here says the same advertiser would land there on a new draw.
 - The family choice is made on one panel. A diagonal covariance winning here says the columns of this archive are not equally spread inside an advertiser group; it is not a claim about advertising in general, and a different register or city could choose differently.
 - A group is a description of behaviour, not a target. Nothing here says that moving an advertiser between groups would change an outcome.
-- The gate describes the two shares inside a partition fitted without it. A partition fitted with the gate in the loop would draw different boundaries, and settling which is better needs a measure both models share; the held-out lattice score above is that measure for the shares alone, not for the partition.
+- The gate describes the two shares inside a partition fitted without it. The pattern mixture in the section above fits the atom inside the likelihood instead, and on this panel it does not predict the shares better: it loses on the inside branch and draws a partition this card does not ship. What neither model can settle is which partition is better, because a likelihood with an atom and one without are densities against different measures, and the one comparable reading, the held-out probability of a share, does not measure a partition.
 - A winning posterior here is not a probability that the group is right. 3 of the 4 components carry axes at the width floor, which is what the clip leaves behind, and a density with a zero axis is enormous on the sheet and negligible off it. The cushioned reading and the held-out confusion above are the two corrections, and both are lower than the nominal number: read the table before quoting 0.999.
 - The confidence a row carries and the stability of its group are separate readings. Group 3 holds 100 percent of its 115 entities when a model is fitted without them, while the smaller groups keep between 64 and 78 percent of theirs at a mean posterior of 0.997 or better. A stable large group and a small unstable one can both be sharp on this panel.
 - The held-out vote places each row with a model fitted on four fifths of the panel, matched to the shipped groups by the ordering that minimises the distance between centres. A row that moves there is not mislabelled by this card: the two models answer the same question with different evidence, and the disagreement is the reading.

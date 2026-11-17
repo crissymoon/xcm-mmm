@@ -284,6 +284,15 @@ fn factorise(covariance: &[Vec<f64>]) -> Option<(Vec<Vec<f64>>, Factor)> {
     None
 }
 
+/// The components with the width floor and the shape bound applied.
+///
+/// This is the shipping rule without the likelihood recomputation, for a caller
+/// that has its own way of scoring the model it built. [`Mixture::bounded`] is
+/// the same rule with the score.
+pub fn bounded_components(components: &[Component]) -> Option<Vec<Component>> {
+    ship(components).map(|(bounded, _)| bounded)
+}
+
 /// Bound the shape of every component and factor it: the model that ships.
 ///
 /// The bound belongs here, once, and not inside the maximisation loop. Clipping
@@ -691,7 +700,7 @@ fn one_hot(labels: &[usize], k: usize) -> Vec<Vec<f64>> {
 ///
 /// This is the start that can leave the split k-means already made, which is the
 /// whole reason it is here. The generator is the fit's own, so it reproduces.
-fn soft_start(n: usize, k: usize, seed: u64) -> Vec<Vec<f64>> {
+pub(super) fn soft_start(n: usize, k: usize, seed: u64) -> Vec<Vec<f64>> {
     let mut rng = Rng::stream(seed, 0x51ed_270b);
     let mut resp = Vec::with_capacity(n);
     for _ in 0..n {

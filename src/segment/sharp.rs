@@ -366,7 +366,7 @@ fn permute(
 /// model numbers its groups by the order the seeds found them, so comparing a
 /// placement without this step would score a correct answer as a disagreement
 /// whenever the numbering happened to differ.
-fn align(shipped: &[mixture::Component], fold: &[mixture::Component]) -> Vec<usize> {
+pub(super) fn align(shipped: &[mixture::Component], fold: &[mixture::Component]) -> Vec<usize> {
     if fold.len() == shipped.len() && fold.len() <= 7 {
         let mut order: Vec<usize> = (0..fold.len()).collect();
         let mut best = (f64::INFINITY, order.clone());

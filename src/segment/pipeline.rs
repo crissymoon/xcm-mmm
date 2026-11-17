@@ -19,6 +19,7 @@ use super::feature::{self, Matrix};
 use super::gate;
 use super::kmeans::{self, Fit};
 use super::model::{self, Artifact, Metrics, Source};
+use super::pattern;
 use super::stability::{self, Control};
 use super::{select, SegmentConfig, FEATURES};
 use crate::text::hash::{fnv1a, hex64};
@@ -183,6 +184,20 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         &matrix.scaling,
         cfg,
     );
+    // Whether the atom is better modelled inside the likelihood than beside it.
+    // Both sides are refit on the training rows of each fold and scored on the
+    // same held-out rows; the verdict is the paired difference, and the shipped
+    // partition is not moved by it. See `pattern`.
+    let modelled = pattern::compare(
+        rows,
+        &ads,
+        &mixture.components,
+        choice.family,
+        &labels,
+        &matrix.gates,
+        &matrix.scaling,
+        cfg,
+    );
     let mut assignments = std::collections::BTreeMap::new();
     for (i, entity) in entities.iter().enumerate() {
         assignments.insert(entity.id.clone(), labels[i]);
@@ -283,6 +298,7 @@ pub fn fit(features_path: &str, cfg: &SegmentConfig) -> io::Result<Artifact> {
         },
         flat: matrix.flat.clone(),
         gates: audited.clone(),
+        pattern: modelled.clone(),
         sharpness: sharpness.clone(),
         concomitant: gating.clone(),
         concomitant_all: gating_all.clone(),

@@ -409,6 +409,69 @@ impl GateAudit {
     }
 }
 
+/// What each of the two models puts on one row's observed value, and on the edge.
+///
+/// `gate` and `gauss` are probabilities of the same event, the observed value of
+/// the gated reading given the readings the gates do not hold, which is what
+/// makes them comparable. `edge_gate` and `edge_gauss` are the probability of
+/// the edge state itself, which is what a Brier score and a hit rate are read
+/// from.
+pub(super) struct Cell {
+    pub gate: f64,
+    pub gauss: f64,
+    pub edge_gate: f64,
+    pub edge_gauss: f64,
+}
+
+/// Score one row under a fitted gate and the Gaussian conditional it replaces.
+#[allow(clippy::too_many_arguments)]
+pub(super) fn scored(
+    row: &[f64],
+    spacing: f64,
+    spec: &GateSpec,
+    fit: &Gate,
+    components: &[Component],
+    resp: &[f64],
+    columns: &[usize],
+    scaling: &super::feature::Scaling,
+) -> Cell {
+    let on = spec.holds(row);
+    let mut out = Cell {
+        gate: 0.0,
+        gauss: 0.0,
+        edge_gate: 0.0,
+        edge_gauss: 0.0,
+    };
+    for (g_id, component) in components.iter().enumerate() {
+        let post = resp.get(g_id).copied().unwrap_or(0.0);
+        let Some((mean, sd)) = conditional(component, columns, spec.column, row) else {
+            continue;
+        };
+        let cell = cell_probability(row[spec.column], mean, sd, spec, scaling, spacing);
+        let mass = fit.mass(g_id);
+        let inside_sd = fit
+            .variance
+            .get(g_id)
+            .copied()
+            .unwrap_or(1.0)
+            .max(FLOOR)
+            .sqrt();
+        let inside_cell = cell_probability(
+            row[spec.column],
+            fit.inside_mean(g_id, row),
+            inside_sd,
+            spec,
+            scaling,
+            spacing,
+        );
+        out.gate += post * if on { mass } else { (1.0 - mass) * inside_cell };
+        out.gauss += post * cell;
+        out.edge_gate += post * mass;
+        out.edge_gauss += post * cell_probability(spec.atom, mean, sd, spec, scaling, spacing);
+    }
+    out
+}
+
 /// Score every gate on held-out folds against the Gaussian it replaces.
 pub fn audit(
     rows: &[Vec<f64>],
@@ -468,44 +531,15 @@ pub fn audit(
                 let row = &rows[i];
                 let spacing = lattice(ads.get(i).copied().unwrap_or(1.0), spec, scaling);
                 let on = spec.holds(row);
-                let mut p_gate = 0.0;
-                let mut p_gauss = 0.0;
-                let mut a_gate = 0.0;
-                let mut a_gauss = 0.0;
-                for (g_id, component) in components.iter().enumerate() {
-                    let post = resp[i].get(g_id).copied().unwrap_or(0.0);
-                    let Some((mean, sd)) = conditional(component, &columns, spec.column, row)
-                    else {
-                        continue;
-                    };
-                    let cell = cell_probability(row[spec.column], mean, sd, spec, scaling, spacing);
-                    let mass = gate.mass(g_id);
-                    let inside_sd = gate
-                        .variance
-                        .get(g_id)
-                        .copied()
-                        .unwrap_or(1.0)
-                        .max(FLOOR)
-                        .sqrt();
-                    let inside_cell = cell_probability(
-                        row[spec.column],
-                        gate.inside_mean(g_id, row),
-                        inside_sd,
-                        spec,
-                        scaling,
-                        spacing,
-                    );
-                    p_gate += post * if on { mass } else { (1.0 - mass) * inside_cell };
-                    p_gauss += post * cell;
-                    a_gate += post * mass;
-                    a_gauss += post * cell_probability(spec.atom, mean, sd, spec, scaling, spacing);
-                }
+                let scored = scored(
+                    row, spacing, spec, gate, components, &resp[i], &columns, scaling,
+                );
                 let truth = if on { 1.0 } else { 0.0 };
-                g.push(p_gate.max(1e-12).ln());
-                c.push(p_gauss.max(1e-12).ln());
-                bg.push((a_gate - truth) * (a_gate - truth));
-                bc.push((a_gauss - truth) * (a_gauss - truth));
-                if (a_gate > 0.5) == on {
+                g.push(scored.gate.max(1e-12).ln());
+                c.push(scored.gauss.max(1e-12).ln());
+                bg.push((scored.edge_gate - truth) * (scored.edge_gate - truth));
+                bc.push((scored.edge_gauss - truth) * (scored.edge_gauss - truth));
+                if (scored.edge_gate > 0.5) == on {
                     hit += 1.0;
                 }
             }
@@ -534,7 +568,7 @@ pub fn audit(
 /// The cell is integrated rather than approximated by density times spacing: at
 /// this panel's spacing the approximation reports mass above one, and a model
 /// cannot be credited with a probability it cannot represent.
-fn cell_probability(
+pub(super) fn cell_probability(
     value: f64,
     mean: f64,
     sd: f64,
@@ -559,7 +593,7 @@ fn cell_probability(
 }
 
 /// The spacing of the lattice a share can take, in z units.
-fn lattice(ads: f64, spec: &GateSpec, scaling: &super::feature::Scaling) -> f64 {
+pub(super) fn lattice(ads: f64, spec: &GateSpec, scaling: &super::feature::Scaling) -> f64 {
     let width = scaling
         .sd
         .get(spec.column)
@@ -570,7 +604,7 @@ fn lattice(ads: f64, spec: &GateSpec, scaling: &super::feature::Scaling) -> f64 
 }
 
 /// Component posterior given the readings the gates do not hold.
-fn responsibilities(
+pub(super) fn responsibilities(
     rows: &[Vec<f64>],
     components: &[Component],
     columns: &[usize],
@@ -589,7 +623,7 @@ fn responsibilities(
         .collect()
 }
 
-fn soften(logs: Vec<f64>) -> Vec<f64> {
+pub(super) fn soften(logs: Vec<f64>) -> Vec<f64> {
     let top = logs.iter().copied().fold(f64::NEG_INFINITY, f64::max);
     if !top.is_finite() {
         return vec![1.0 / logs.len().max(1) as f64; logs.len()];
@@ -598,34 +632,67 @@ fn soften(logs: Vec<f64>) -> Vec<f64> {
     logs.iter().map(|v| (v - top).exp() / mass).collect()
 }
 
-/// The Gaussian density over a subset of the readings, with the weight left out.
-fn marginal(component: &Component, columns: &[usize], row: &[f64]) -> Option<f64> {
-    let dim = columns.len();
-    let mut cov = vec![vec![0.0; dim]; dim];
-    for (a, &ca) in columns.iter().enumerate() {
-        for (b, &cb) in columns.iter().enumerate() {
-            cov[a][b] = *component.covariance.get(ca)?.get(cb)?;
-            if a == b {
-                cov[a][b] += FLOOR;
+/// One component's density over a subset of its readings, factorised once.
+///
+/// [`super::pattern`] reads the same marginal for every row that shows the same
+/// readings, so the factorisation is worth keeping: a fold model factorises one
+/// matrix per component per distinct pattern rather than one per row.
+pub(super) struct Marginal {
+    columns: Vec<usize>,
+    chol: Vec<Vec<f64>>,
+    logdet: f64,
+    mean: Vec<f64>,
+}
+
+impl Marginal {
+    pub(super) fn build(component: &Component, columns: &[usize]) -> Option<Self> {
+        let dim = columns.len();
+        let mut chol = vec![vec![0.0; dim]; dim];
+        for (a, &ca) in columns.iter().enumerate() {
+            for (b, &cb) in columns.iter().enumerate() {
+                chol[a][b] = *component.covariance.get(ca)?.get(cb)?;
+                if a == b {
+                    chol[a][b] += FLOOR;
+                }
             }
         }
-    }
-    let mut chol = cov;
-    linalg::cholesky(&mut chol)?;
-    let residual: Vec<f64> = columns
-        .iter()
-        .map(|&c| {
-            row.get(c).copied().unwrap_or(0.0) - component.mean.get(c).copied().unwrap_or(0.0)
+        linalg::cholesky(&mut chol)?;
+        let logdet = 2.0 * (0..dim).map(|d| chol[d][d].ln()).sum::<f64>();
+        if !logdet.is_finite() {
+            return None;
+        }
+        Some(Self {
+            columns: columns.to_vec(),
+            chol,
+            logdet,
+            mean: columns
+                .iter()
+                .map(|&c| component.mean.get(c).copied().unwrap_or(0.0))
+                .collect(),
         })
-        .collect();
-    let solved = linalg::cholesky_solve(&chol, &residual);
-    let maha: f64 = solved.iter().zip(&residual).map(|(a, b)| a * b).sum();
-    let logdet: f64 = 2.0 * (0..dim).map(|d| chol[d][d].ln()).sum::<f64>();
-    Some(-0.5 * (maha + logdet + dim as f64 * LOG_2PI))
+    }
+
+    /// Log density of the readings in this marginal, with the weight left out.
+    pub(super) fn log_density(&self, row: &[f64]) -> f64 {
+        let residual: Vec<f64> = self
+            .columns
+            .iter()
+            .zip(&self.mean)
+            .map(|(&c, mean)| row.get(c).copied().unwrap_or(0.0) - mean)
+            .collect();
+        let solved = linalg::cholesky_solve(&self.chol, &residual);
+        let maha: f64 = solved.iter().zip(&residual).map(|(a, b)| a * b).sum();
+        -0.5 * (maha + self.logdet + self.columns.len() as f64 * LOG_2PI)
+    }
+}
+
+/// The Gaussian density over a subset of the readings, with the weight left out.
+fn marginal(component: &Component, columns: &[usize], row: &[f64]) -> Option<f64> {
+    Marginal::build(component, columns).map(|marginal| marginal.log_density(row))
 }
 
 /// The conditional mean and spread of one reading given the others, in one group.
-fn conditional(
+pub(super) fn conditional(
     component: &Component,
     columns: &[usize],
     target: usize,

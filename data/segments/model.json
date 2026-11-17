@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T20:55:14Z",
+  "built_at": "2026-11-17T22:30:12Z",
   "source": {
     "path": "features.jsonl",
     "entities": 251,
@@ -1731,6 +1731,44 @@
         "accuracy": 0.8125,
         "rate": 0.6414,
         "folds": 5
+      }
+    ],
+    "pattern": [
+      {
+        "name": "repeat",
+        "two_stage": -0.9881,
+        "pattern": -1.0869,
+        "gain": -0.0988,
+        "se": 0.0603,
+        "z": -1.6376,
+        "folds": 5,
+        "two_stage_edge": -0.3381,
+        "pattern_edge": -0.3467,
+        "two_stage_inside": -1.9474,
+        "pattern_inside": -2.1793,
+        "edge_rows": 151,
+        "inside_rows": 100,
+        "agreement": 0.5813,
+        "moved": 105,
+        "verdict": "not separated: -0.099 nats per entity is -1.6 standard errors, so nothing was gained; the partition-fitted gate stands because it is the simpler statement"
+      },
+      {
+        "name": "concentrate",
+        "two_stage": -0.9149,
+        "pattern": -1.0571,
+        "gain": -0.1422,
+        "se": 0.0135,
+        "z": -10.5261,
+        "folds": 5,
+        "two_stage_edge": -0.3012,
+        "pattern_edge": -0.316,
+        "two_stage_inside": -2.016,
+        "pattern_inside": -2.3858,
+        "edge_rows": 161,
+        "inside_rows": 90,
+        "agreement": 0.5813,
+        "moved": 105,
+        "verdict": "refused: the loop model is 0.142 nats per entity worse, -10.5 standard errors, so the gate fitted to the partition stands and the edge stays where it is"
       }
     ],
     "sharpness": {

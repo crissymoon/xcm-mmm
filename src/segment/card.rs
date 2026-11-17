@@ -111,6 +111,9 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     if !artifact.gates.is_empty() {
         render_gates(&mut out, artifact, metrics);
     }
+    if !metrics.pattern.is_empty() {
+        render_pattern(&mut out, metrics);
+    }
 
     let _ = writeln!(out, "## Choice");
     let _ = writeln!(out);
@@ -764,7 +767,7 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     );
     let _ = writeln!(
         out,
-        "- The gate describes the two shares inside a partition fitted without it. A partition fitted with the gate in the loop would draw different boundaries, and settling which is better needs a measure both models share; the held-out lattice score above is that measure for the shares alone, not for the partition."
+        "- The gate describes the two shares inside a partition fitted without it. The pattern mixture in the section above fits the atom inside the likelihood instead, and on this panel it does not predict the shares better: it loses on the inside branch and draws a partition this card does not ship. What neither model can settle is which partition is better, because a likelihood with an atom and one without are densities against different measures, and the one comparable reading, the held-out probability of a share, does not measure a partition."
     );
     let _ = writeln!(
         out,
@@ -928,6 +931,104 @@ fn render_gates(out: &mut String, artifact: &Artifact, metrics: &Metrics) {
         "The clip at {:.0} standard deviations still applies to {}. It never fired on either share, so the pile was never a clipping problem: it is the Gaussian's need to spend a group on it. What the clip exemption guards is a share whose edge sits beyond the bound, which would fold the edge into the interior and leave the gate without a boundary value.",
         artifact.scaling.clip,
         fired.join(", ")
+    );
+    let _ = writeln!(out);
+}
+
+/// The atom modelled inside the likelihood, and what it bought.
+fn render_pattern(out: &mut String, metrics: &Metrics) {
+    let _ = writeln!(out, "## The gate inside the loop");
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "The gate above is fitted to a partition chosen without it. The alternative is to state the pattern as data and fit the two together: a reading that sits on its edge is absent rather than equal to the edge value, the row is scored on the readings it shows, the absent coordinate is marginalised out of the joint covariance, and the probability of the edge is its own parameter per group per gate. That is a pattern mixture in the sense of Ghahramani and Jordan (1993), and the maximisation step fills an absent reading with its conditional mean given the readings the row shows, adding the conditional covariance to the second moment. It keeps the eight column dependence, because a covariance entry is estimated from every row that shows both of its readings."
+    );
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "Its likelihood is a density against a mixed measure, Lebesgue on the readings and counting on the edges, so it is a proper likelihood for these data and the maximisation is monotone. It is not comparable with a Gaussian likelihood, which is a density against a different measure, so it is not used to choose a family. What is comparable is the held out probability of one event, the observed value of a gated reading given the readings the gates do not hold, and both models are scored on that event, on the same rows, with both sides refit on the training rows of each fold, including the mixture the gate is fitted to. The paired difference is the reading."
+    );
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "| reading | folds | two-part gate | pattern mixture | gain | standard error |"
+    );
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|");
+    for verdict in &metrics.pattern {
+        let _ = writeln!(
+            out,
+            "| {} | {} | {:+.3} | {:+.3} | {:+.3} | {:.3} |",
+            verdict.name,
+            verdict.folds,
+            verdict.two_stage,
+            verdict.pattern,
+            verdict.gain,
+            verdict.se
+        );
+    }
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "| reading | edge rows | two-part | pattern | inside rows | two-part | pattern |"
+    );
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|");
+    for verdict in &metrics.pattern {
+        let _ = writeln!(
+            out,
+            "| {} | {} | {:+.3} | {:+.3} | {} | {:+.3} | {:+.3} |",
+            verdict.name,
+            verdict.edge_rows,
+            verdict.two_stage_edge,
+            verdict.pattern_edge,
+            verdict.inside_rows,
+            verdict.two_stage_inside,
+            verdict.pattern_inside
+        );
+    }
+    let _ = writeln!(out);
+    for verdict in &metrics.pattern {
+        let _ = writeln!(out, "- `{}`: {}.", verdict.name, verdict.verdict);
+    }
+    let _ = writeln!(out);
+    let worst = metrics.pattern.iter().min_by(|a, b| {
+        a.gain
+            .partial_cmp(&b.gain)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    if let Some(verdict) = worst {
+        let inside_gap = verdict.pattern_inside - verdict.two_stage_inside;
+        let edge_gap = verdict.pattern_edge - verdict.two_stage_edge;
+        let inside_weight = (inside_gap * verdict.inside_rows as f64).abs();
+        let edge_weight = (edge_gap * verdict.edge_rows as f64).abs();
+        let total = (inside_weight + edge_weight).max(1e-12);
+        let _ = writeln!(
+            out,
+            "The second table says where a difference sits, and on this panel it sits almost entirely inside the edge. On `{}` the pattern mixture is {:.3} nats per row behind on the readings that are on their edge and {:.3} behind on those inside it, so {:.0} percent of the total shortfall comes from rows the pile does not touch. That is the two-part model's inside regression doing its job: it fits a slope and a variance per group on the rows that are inside, while the pattern mixture derives the same conditional from a joint covariance estimated partly across rows whose share was imputed, and the derived conditional is flatter than the data. The atom itself, the part the pattern mixture was built to fix, is predicted about as well by the gate fitted to the partition.",
+            verdict.name,
+            -edge_gap,
+            -inside_gap,
+            100.0 * inside_weight / total
+        );
+        let _ = writeln!(out);
+    }
+    let agreement = metrics
+        .pattern
+        .first()
+        .map(|verdict| verdict.agreement * 100.0)
+        .unwrap_or(0.0);
+    let moved = metrics
+        .pattern
+        .first()
+        .map(|verdict| verdict.moved)
+        .unwrap_or(0);
+    let _ = writeln!(
+        out,
+        "The comparison also says what would move if the artifact were rebuilt on this model's own partition: {:.1} percent of held out rows keep the group they have and {} move. The atom enters the partition, because a group is allowed an edge probability near one, so rows end up separated partly by which edges they sit on. That is a different segmentation rather than an improved one, and the choice at the top of this card still stands on held out Gaussian likelihood, which is the one comparison of partitions the two measures allow."
+    , agreement, moved);
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "Two things had to be shown before this reading could be trusted. The maximisation step is checked on data drawn from the model, where the pattern mixture must not lose to the gate fitted to the partition, and a test does that: if it lost there the comparison would be measuring a defect rather than a model difference. And the first version of the maximisation step added both orders of the conditional covariance to one cell of the second moment, doubling the off diagonal, which made the average indefinite and ended every fit after a single step without reporting it. That version read several tenths of a nat per entity worse than the one above. Both are pinned by tests in the module."
     );
     let _ = writeln!(out);
 }

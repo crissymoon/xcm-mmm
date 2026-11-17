@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-17T20:55:14Z",
+  "built_at": "2026-11-17T22:30:12Z",
   "files": [
     {
       "name": "features.jsonl",
@@ -12,8 +12,8 @@
     {
       "name": "model.json",
       "rows": 4,
-      "bytes": 49112,
-      "fnv64": "e98cf13832d4be7e"
+      "bytes": 50358,
+      "fnv64": "50657dea5a3dde70"
     }
   ],
   "config": {

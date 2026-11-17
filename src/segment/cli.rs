@@ -257,6 +257,7 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                         .unwrap_or_else(|| "unmeasured".into())
                 );
             }
+            print_pattern(&artifact.metrics);
             for segment in &artifact.segments {
                 println!(
                     "  {:>2}  {:>4} entities  {:>5.1}%  {}",
@@ -349,6 +350,7 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                         .unwrap_or_else(|| "unmeasured".into())
                 );
             }
+            print_pattern(m);
             println!("  k  silhouette  smallest  inertia  sizes");
             for point in &m.sweep {
                 let sizes: Vec<String> = point.sizes.iter().map(|n| n.to_string()).collect();
@@ -515,6 +517,23 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
 
 /// Group thousands, so an entity count reads at a glance.
 pub use crate::num::commas;
+
+/// The atom modelled inside the likelihood, printed the same way by `fit` and
+/// `info`. The full sentence is on the card; this is the number and the first
+/// word of the verdict.
+fn print_pattern(metrics: &crate::segment::Metrics) {
+    for verdict in &metrics.pattern {
+        println!(
+            "pattern   {}  two-part {:+.3}  loop {:+.3}  gain {:+.3} ({:+.1} se)  {}",
+            verdict.name,
+            verdict.two_stage,
+            verdict.pattern,
+            verdict.gain,
+            verdict.z,
+            verdict.verdict.split(':').next().unwrap_or("not measured")
+        );
+    }
+}
 
 /// The mixing weight audit, printed the same way by `fit` and `info`.
 ///
