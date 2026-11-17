@@ -234,28 +234,7 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 commas(m.sharpness.cushioned_moved),
                 m.sharpness.held_out_kept * 100.0
             );
-            for audit in [&m.concomitant, &m.concomitant_all] {
-                if audit.covariates.is_empty() || audit.folds == 0 {
-                    continue;
-                }
-                let names: Vec<&str> = audit
-                    .covariates
-                    .iter()
-                    .map(|covariate| covariate.name.as_str())
-                    .collect();
-                println!(
-                    "weight    {}  gain {:+.3} nats (se {:.3})  means move {:.3} sd  {}",
-                    names.join(" + "),
-                    audit.delta,
-                    audit.delta_se,
-                    audit.shift_max,
-                    if audit.honest() {
-                        "accepted"
-                    } else {
-                        "stays out"
-                    }
-                );
-            }
+            print_weights(m);
             for gate in &artifact.gates {
                 let audit = artifact
                     .metrics
@@ -351,6 +330,7 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                     );
                 }
             }
+            print_weights(m);
             for gate in &artifact.gates {
                 let audit = m.gates.iter().find(|audit| audit.name == gate.name);
                 println!(
@@ -535,3 +515,32 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
 
 /// Group thousands, so an entity count reads at a glance.
 pub use crate::num::commas;
+
+/// The mixing weight audit, printed the same way by `fit` and `info`.
+///
+/// One function rather than two print statements, because a number that appears
+/// in two places is a number that can disagree with itself.
+fn print_weights(metrics: &crate::segment::Metrics) {
+    for audit in [&metrics.concomitant, &metrics.concomitant_all] {
+        if audit.covariates.is_empty() || audit.folds == 0 {
+            continue;
+        }
+        let names: Vec<&str> = audit
+            .covariates
+            .iter()
+            .map(|covariate| covariate.name.as_str())
+            .collect();
+        println!(
+            "weight    {}  gain {:+.3} nats (se {:.3})  means move {:.3} sd  {}",
+            names.join(" + "),
+            audit.delta,
+            audit.delta_se,
+            audit.shift_max,
+            if audit.honest() {
+                "accepted"
+            } else {
+                "stays out"
+            }
+        );
+    }
+}
