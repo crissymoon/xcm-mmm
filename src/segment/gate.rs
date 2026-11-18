@@ -270,6 +270,21 @@ pub fn bars(
     out
 }
 
+/// One weighted least squares fit of a gated column, with the standard error of
+/// every coefficient.
+///
+/// The standard errors are what a group's slope is judged by. A slope fitted on
+/// thirty five rows carries a wider one than a slope fitted on ninety, and a model
+/// that wants to pool the two has to know which is which. The covariance of the
+/// estimate is `sigma^2 (X'WX + ridge I)^-1`, so the diagonal of that inverse,
+/// solved for one unit vector per coefficient, is the variance of each beta.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub(super) struct Inside {
+    pub beta: Vec<f64>,
+    pub variance: f64,
+    pub se: Vec<f64>,
+}
+
 /// Weighted least squares of one column on the others, plus its residual variance.
 ///
 /// Shared with [`super::pattern`], which nests the same regression inside the
@@ -282,6 +297,24 @@ pub(super) fn weighted(
     origin: &[f64],
     inside: &[usize],
 ) -> (Vec<f64>, f64) {
+    match fit_inside(rows, weights, column, columns, origin, inside) {
+        Some(fit) => (fit.beta, fit.variance),
+        None => (vec![0.0; columns.len() + 1], 1.0),
+    }
+}
+
+/// The same fit as [`weighted`], with the standard errors a pooling decision needs.
+///
+/// Returns `None` when the system cannot be solved at all, which keeps the
+/// caller's fallback identical to the one [`weighted`] has always used.
+pub(super) fn fit_inside(
+    rows: &[Vec<f64>],
+    weights: &[f64],
+    column: usize,
+    columns: &[usize],
+    origin: &[f64],
+    inside: &[usize],
+) -> Option<Inside> {
     let p = columns.len() + 1;
     let mut gram = vec![vec![0.0; p]; p];
     let mut rhs = vec![0.0; p];
@@ -311,10 +344,19 @@ pub(super) fn weighted(
             below[0][b] = row[a];
         }
     }
+    if wsum <= 0.0 {
+        return None;
+    }
     let ridge = 1e-6 * wsum.max(1.0);
-    let Some(beta) = linalg::solve_spd(gram, rhs, ridge) else {
-        return (vec![0.0; p], 1.0);
-    };
+    for (a, row) in gram.iter_mut().enumerate() {
+        row[a] += ridge;
+    }
+    let mut factor = gram;
+    linalg::cholesky(&mut factor)?;
+    let beta = linalg::cholesky_solve(&factor, &rhs);
+    if !beta.iter().all(|value| value.is_finite()) {
+        return None;
+    }
     let mut err = 0.0;
     for &i in inside {
         let w = weights[i];
@@ -325,8 +367,15 @@ pub(super) fn weighted(
         let gap = rows[i][column] - predicted;
         err += w * gap * gap;
     }
-    let var = if wsum > 0.0 { err / wsum } else { 1.0 };
-    (beta, var.clamp(FLOOR, 1e6))
+    let variance = (err / wsum).clamp(FLOOR, 1e6);
+    let mut se = vec![0.0; p];
+    for (d, slot) in se.iter_mut().enumerate() {
+        let mut unit = vec![0.0; p];
+        unit[d] = 1.0;
+        let inverse = linalg::cholesky_solve(&factor, &unit);
+        *slot = (variance * inverse[d]).max(0.0).sqrt();
+    }
+    Some(Inside { beta, variance, se })
 }
 
 /// What each group's gated readings look like, in plain units.

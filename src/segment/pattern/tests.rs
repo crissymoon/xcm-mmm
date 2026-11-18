@@ -144,7 +144,7 @@ fn a_panel_with_no_edge_reduces_to_the_standard_step() {
     let labels: Vec<usize> = (0..rows.len()).map(|i| i % 2).collect();
     let resp = one_hot(&labels, 2);
     let plain = Mixture::step(&rows, &resp, 2, Family::Full);
-    let (components, _, _, _) = fit::m_step(&rows, &resp, 2, &[]);
+    let (components, _, _, _) = fit::m_step(&rows, &resp, 2, &[], Pool::None);
     assert_eq!(components.len(), plain.components.len());
     for (ours, theirs) in components.iter().zip(&plain.components) {
         assert!((ours.weight - theirs.weight).abs() < 1e-9);
@@ -414,4 +414,112 @@ fn the_verdict_gate_holds_its_line() {
     let single = verdict(&spec, &ledger(&[-1.2], &[-0.6]));
     assert!(!single.cleared());
     assert!(single.verdict.starts_with("not measured"));
+}
+
+/// With one group there is nothing to pool toward: the pooled slope is the
+/// group's slope, so every setting has to return the same model. This is the
+/// known case the pooling arithmetic must reproduce, and the first version that
+/// added a normalising constant instead of a log probability failed a check of
+/// exactly this shape.
+#[test]
+fn one_group_pools_to_itself() {
+    let (rows, _, _) = drawn(180, 61);
+    let specs = vec![spec(0, -0.455, 0.4)];
+    let none = Pattern::fit_with(&rows, &specs, 1, 2, 200, 61, Pool::None);
+    let partial = Pattern::fit_with(&rows, &specs, 1, 2, 200, 61, Pool::Partial);
+    let full = Pattern::fit_with(&rows, &specs, 1, 2, 200, 61, Pool::Full);
+    assert!((none.loglik - partial.loglik).abs() < 1e-6);
+    assert!((none.loglik - full.loglik).abs() < 1e-6);
+    for (a, b) in none.components[0]
+        .mean
+        .iter()
+        .zip(&partial.components[0].mean)
+    {
+        assert!((a - b).abs() < 1e-9);
+    }
+}
+
+/// Full pooling states one slope for the panel, so every group's slope has to come
+/// out equal. No pooling keeps them apart. Partial lies between the two, which is
+/// what makes it an estimator rather than a switch.
+#[test]
+fn full_pooling_makes_the_groups_slope_one() {
+    let mut rng = Rng::new(77);
+    let mut rows = Vec::new();
+    for i in 0..240 {
+        // The two groups have opposite inside slopes on the first reading.
+        let group = i % 2;
+        let first = if group == 0 { -1.2 } else { 1.2 } + rng.normal(0.0, 0.6);
+        let second = rng.normal(0.0, 0.8);
+        let third = rng.normal(0.0, 0.8);
+        let on = rng.chance(0.3);
+        let share = if on {
+            -0.455
+        } else if group == 0 {
+            -0.8 * first + rng.normal(0.0, 0.5)
+        } else {
+            0.8 * first + rng.normal(0.0, 0.5)
+        };
+        rows.push(vec![share, first, second, third]);
+    }
+    let specs = vec![spec(0, -0.455, 0.3)];
+    let fitted = |pool: Pool| Pattern::fit_with(&rows, &specs, 2, 2, 200, 5, pool);
+    let none = fitted(Pool::None);
+    let partial = fitted(Pool::Partial);
+    let full = fitted(Pool::Full);
+    let spread = |model: &Pattern| {
+        let fit = &model.regressions[0];
+        let largest = fit.slope.iter().cloned().fold(f64::MIN, f64::max);
+        let smallest = fit.slope.iter().cloned().fold(f64::MAX, f64::min);
+        largest - smallest
+    };
+    assert!(
+        spread(&full) < 1e-6,
+        "full pooling left a slope spread of {:.6}",
+        spread(&full)
+    );
+    assert!(
+        spread(&none) > 0.1,
+        "no pooling found no slope difference on a panel built to have one"
+    );
+    assert!(spread(&partial) <= spread(&none) + 1e-9);
+    assert!(
+        full.regressions[0]
+            .share
+            .iter()
+            .all(|s| (*s - 1.0).abs() < 1e-9),
+        "full pooling reports shares {:?} with slopes {:?}",
+        full.regressions[0].share,
+        full.regressions[0].slope
+    );
+}
+
+/// A group with too few rows inside the edge has no slope of its own. Under
+/// pooling it takes the panel's slope, which is the case the guard exists for,
+/// and under no pooling it stays the constant it always was.
+#[test]
+fn a_group_with_no_slope_takes_the_pooled_one() {
+    let (rows, _, _) = drawn(200, 91);
+    let specs = vec![spec(0, -0.455, 0.4)];
+    let mut resp = vec![vec![0.0; 3]; rows.len()];
+    for (i, row) in resp.iter_mut().enumerate() {
+        // The third group holds four rows that show the share, fewer than the
+        // six coefficients the regression needs.
+        let j = if i < 98 {
+            0
+        } else if i < 196 {
+            1
+        } else {
+            2
+        };
+        row[j] = 1.0;
+    }
+    let (_, _, none, _) = fit::m_step(&rows, &resp, 3, &specs, Pool::None);
+    let (_, _, partial, _) = fit::m_step(&rows, &resp, 3, &specs, Pool::Partial);
+    assert!(none[0].slope[2] < 1e-9);
+    assert!(
+        partial[0].slope[2] > 1e-3,
+        "the pooled slope did not reach the group that had none of its own"
+    );
+    assert!(partial[0].share[2] > 0.999);
 }

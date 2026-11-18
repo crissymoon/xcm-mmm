@@ -82,6 +82,10 @@ pub struct SegmentFitArgs {
     /// Seed for every draw in the fit and its audits.
     #[arg(long, default_value_t = 20261114)]
     pub seed: u64,
+    /// How the pattern mixture pools a group's inside slope: none, partial or
+    /// full. Left out, the panel's measurement decides.
+    #[arg(long, default_value = "partial")]
+    pub inside_pooling: String,
     /// Name the card gives the set.
     #[arg(long, default_value = "marketlab-behaviour-segments")]
     pub name: String,
@@ -166,6 +170,13 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                     format!("unknown family {text:?}; use spherical, diagonal or full")
                 })?),
             };
+            let inside_pooling = crate::segment::pattern::Pool::parse(&a.inside_pooling)
+                .ok_or_else(|| {
+                    format!(
+                        "unknown pooling {:?}; use none, partial or full",
+                        a.inside_pooling
+                    )
+                })?;
             let cfg = SegmentConfig {
                 name: a.name,
                 k_min,
@@ -176,6 +187,7 @@ pub fn run(args: SegmentArgs) -> Result<(), Box<dyn Error>> {
                 min_gain: a.min_gain.max(0.0),
                 em_restarts: a.em_restarts.max(2),
                 gate_share: a.gate_share,
+                inside_pooling,
                 seed: a.seed,
                 ..Default::default()
             };
@@ -541,6 +553,18 @@ fn print_pattern(metrics: &crate::segment::Metrics) {
             verdict.loop_sd,
             verdict.gate_sharp,
             verdict.loop_sharp
+        );
+        println!(
+            "          pooling {}  none {:+.3}  partial {:+.3}  full {:+.3}  full against partial {:+.3} (se {:.3})  slope from pooled {:.2}  spread {:.3}  refit apart {:.0}%",
+            verdict.pooling,
+            verdict.pattern_none,
+            verdict.pattern,
+            verdict.pattern_full,
+            verdict.pool_gain,
+            verdict.pool_se,
+            verdict.share,
+            verdict.tau,
+            100.0 * (1.0 - verdict.pool_same)
         );
     }
 }

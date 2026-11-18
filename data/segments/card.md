@@ -1,6 +1,6 @@
 # marketlab-behaviour-segments
 
-Behavioural segments of advertisers, fitted in Rust. Built 2026-11-18T04:06:28Z from the entities listed below, and checked by rebuilding them.
+Behavioural segments of advertisers, fitted in Rust. Built 2026-11-18T04:30:10Z from the entities listed below, and checked by rebuilding them.
 
 A segment describes what an advertiser did in the panel, not what it is: ads started, the gaps between those starts, the spread of those gaps, the published spend band, copy length, terms bought against, creative reuse and copy concentration. Nothing descriptive enters a feature, and page names are carried for reading the result, never for fitting it.
 
@@ -51,29 +51,42 @@ Its likelihood is a density against a mixed measure, Lebesgue on the readings an
 
 | reading | folds | two-part gate | loop, four groups | loop, one group | gain | standard error |
 |---|---:|---:|---:|---:|---:|---:|
-| repeat | 5 | -0.988 | -1.165 | -1.340 | -0.177 | 0.063 |
-| concentrate | 5 | -0.915 | -1.165 | -1.243 | -0.251 | 0.043 |
+| repeat | 5 | -0.988 | -1.118 | -1.340 | -0.130 | 0.048 |
+| concentrate | 5 | -0.915 | -1.087 | -1.243 | -0.173 | 0.055 |
 
-| reading | edge rows | two-part | pattern | inside rows | two-part | pattern |
+| reading | edge rows | two-part | loop | inside rows | two-part | loop |
 |---|---:|---:|---:|---:|---:|---:|
-| repeat | 151 | -0.338 | -0.325 | 100 | -1.947 | -2.420 |
-| concentrate | 161 | -0.301 | -0.346 | 90 | -2.016 | -2.613 |
+| repeat | 151 | -0.338 | -0.346 | 100 | -1.947 | -2.256 |
+| concentrate | 161 | -0.301 | -0.332 | 90 | -2.016 | -2.462 |
 
-- `repeat`: refused: the loop model is 0.177 nats per entity worse, -2.8 standard errors, so the gate fitted to the partition stands and the edge stays where it is.
-- `concentrate`: refused: the loop model is 0.251 nats per entity worse, -5.8 standard errors, so the gate fitted to the partition stands and the edge stays where it is.
+- `repeat`: refused: the loop model is 0.129 nats per entity worse, -2.7 standard errors, so the gate fitted to the partition stands and the edge stays where it is.
+- `concentrate`: refused: the loop model is 0.173 nats per entity worse, -3.2 standard errors, so the gate fitted to the partition stands and the edge stays where it is.
 
-The second table says where a difference sits, and on this panel it sits almost entirely inside the edge. On `concentrate` the loop model is 0.045 nats per row behind on the readings that are on their edge and 0.597 behind on those inside it, so 88 percent of the total shortfall comes from rows the pile does not touch. The atom itself, the part the loop model was built to fix, is predicted about as well by the gate fitted to the partition.
+The second table says where a difference sits, and on this panel it sits almost entirely inside the edge. On `concentrate` the loop model is 0.030 nats per row behind on the readings that are on their edge and 0.446 behind on those inside it, so 89 percent of the total shortfall comes from rows the pile does not touch. The atom itself, the part the loop model was built to fix, is predicted about as well by the gate fitted to the partition.
 
-| reading | rows per group: gate | loop | residual: gate | loop | free block posterior: gate | loop |
+| reading | rows showing it per group: gate | loop | residual standard deviation: gate | loop | mean winning posterior in the six reading block: gate | loop |
 |---|---:|---:|---:|---:|---:|---:|
-| repeat | 50.6 | 37.8 | 0.285 | 0.187 | 0.922 | 0.978 |
-| concentrate | 44.6 | 35.2 | 0.460 | 0.422 | 0.922 | 0.978 |
+| repeat | 50.6 | 43.0 | 0.285 | 0.297 | 0.922 | 0.981 |
+| concentrate | 44.6 | 35.6 | 0.460 | 0.463 | 0.922 | 0.981 |
 
-That third table is the one that explains the order rather than restating it. The loop model fits its inside residual on fewer rows per group and gets a tighter residual in sample: 0.187 nats against 0.285 for the gate on one reading, 0.422 against 0.460 on the other. It is also sharper in the block the score conditions on, a mean winning posterior of 0.978 against 0.922, so it is not a model that hedges. It still predicts worse out of sample, which is the signature of a variance problem rather than a bias one: 37.8 rows per group and a slope vector of six coefficients per group is enough to fit the training inside spread and not enough to predict it. The one-group column separates the two candidate explanations. A single pooled conditional, with no grouping at all, reads -1.340 on the first reading and -1.243 on the second, so the grouping does buy something the pooling cannot; what it does not buy is the partition's own advantage. The groups the gate is fitted to are formed from the six readings, so they separate exactly the block the score conditions on, while the loop's groups are formed partly from the share and land on a different segmentation.
+That third table is the one that explains the order rather than restating it. The loop model runs on fewer rows per group than the gate does, 43.0 against 50.6 on the first reading and 35.6 against 44.6 on the second, and in the previous round that showed up as a tighter in-sample residual with a worse held-out prediction. After the pooling described below it is no longer tighter: 0.297 against 0.285 on the first reading and 0.463 against 0.460 on the second, so the loop is now the model with the wider residual and still the worse prediction, which is a different and more honest failure. It is also sharper in the block the score conditions on, a mean winning posterior of 0.981 against 0.922, so it is not a model that hedges. The one-group column separates the remaining explanations. A single pooled conditional, with no grouping at all, reads -1.340 on the first reading and -1.243 on the second, so the grouping does buy something the pooling cannot; what it does not buy is the partition's own advantage. The groups the gate is fitted to are formed from the six readings, so they separate exactly the block the score conditions on, while the loop's groups are formed partly from the share and land on a different segmentation.
 
-The reading moved against the version that imputed instead of regressing: that one read 0.099 and 0.142 behind, this one 0.177 and 0.251. Estimating the conditional the way the gate does makes the loop model more internally consistent and makes its prediction of the share worse, and the third table says why rather than leaving the regression to be blamed for it. The next move that the numbers support is partial pooling: shrink each group's slope toward the pooled slope by its own standard error, which is the textbook answer to the inversion above, and it is on the roadmap with these two residuals as its motivation rather than shipped on a hunch.
+The reading moved against the version that imputed instead of regressing: that one read 0.099 and 0.142 behind, this one 0.130 and 0.173. Estimating the conditional the way the gate does makes the loop model more internally consistent and makes its prediction of the share worse, and the third table says why rather than leaving the regression to be blamed for it.
 
-The comparison also says what would move if the artifact were rebuilt on this model's own partition: 46.2 percent of held out rows keep the group they have and 135 move. The atom enters the partition, because a group is allowed an edge probability near one, so rows end up separated partly by which edges they sit on. That is a different segmentation rather than an improved one, and the choice at the top of this card still stands on held out Gaussian likelihood, which is the one comparison of partitions the two measures allow.
+### How much the slope is pooled
+
+The third table names a variance problem: a slope vector of six coefficients per group on about thirty five rows fits its own training rows and does not predict. The answer is partial pooling, and it is estimated rather than assumed. Each group's slope is a precision weighted average of its own estimate and the slope fitted to the whole panel. The weight comes from the group's standard error against the between group spread of that coefficient, measured net of the sampling noise the spread is contaminated by. A coefficient whose groups differ by more than their errors keeps its own value; one whose spread the errors already explain is pooled. Because two separately refitted settings land on different partitions, the three settings below are re-estimated on one partition, from a single maximisation step on the shipped model's own responsibilities, so the table is the estimator and not the grouping; the share of held rows that move when a setting is refitted from scratch is printed beside it for the same reason.
+
+| reading | no pooling | partial | full | pooled, one group | full against partial | folds | refit apart |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| repeat | -1.134 | -1.118 | -1.083 | -1.340 | +0.003 | 5 | 20% |
+| concentrate | -1.144 | -1.087 | -1.027 | -1.243 | +0.061 | 5 | 20% |
+
+The shipped setting is partial pooling, and the panel said how much of it to use: the mean weight a group takes from the pooled slope is 0.92 on one share and 0.78 on the other, against a between group slope spread net of sampling error of 0.025 and 0.144. A weight of one means the group's slope is not distinguishable from the pooled one; a weight of zero means it keeps its own estimate. Full pooling reads +0.003 nats more than shipping that weight on the first share (se 0.003) and +0.061 on the second (se 0.035). Neither clears two standard errors, so the adaptive weight ships: it is the estimator that decides, and choosing the extreme because it won by a fraction on the same folds is the selection this repository has a gate against.
+
+Pooling closes part of the gap and not all of it. Against no pooling it buys 0.016 nats on the first share and 0.056 on the second, and the loop model still reads 0.130 and 0.173 behind the gate fitted to the partition. What it did fix is the inversion the third table named: the loop's inside residual is now 0.297 against the gate's 0.285 on the first share and 0.463 against 0.460 on the second, so it is no longer the tighter in sample residual of a model that predicts worse. The remaining shortfall is the partition. The groups the gate is fitted to are formed from the six readings the score conditions on; the loop's groups are formed partly from the share itself.
+
+The comparison also says what would move if the artifact were rebuilt on this model's own partition: 62.2 percent of held out rows keep the group they have and 95 move. The atom enters the partition, because a group is allowed an edge probability near one, so rows end up separated partly by which edges they sit on. That is a different segmentation rather than an improved one, and the choice at the top of this card still stands on held out Gaussian likelihood, which is the one comparison of partitions the two measures allow.
 
 Three things had to be shown before this reading could be trusted. The maximisation step is checked on data drawn from the model, where the pattern mixture must not lose to the gate fitted to the partition, and the completion is checked against the regression it is built from: conditioning a stored component on the six readings must return the slope and residual the maximisation step fitted, which is what makes the numbers here a statement about the model rather than about the arithmetic. And two defects were found by writing the numbers down. The first version of the maximisation step added both orders of the conditional covariance to one cell of the second moment, doubling the off diagonal, which made the average indefinite and ended every fit after a single step; it read several tenths of a nat worse without saying why. The one-group reference was then clamped with a floor meant for a probability, which turned every log score into -27.631 and would have printed a pooled model twenty-seven nats behind for an arithmetic reason. Both are pinned by tests in the module.
 

@@ -1,7 +1,7 @@
 {
   "name": "marketlab-behaviour-segments",
   "version": 2,
-  "built_at": "2026-11-18T04:06:28Z",
+  "built_at": "2026-11-18T04:30:10Z",
   "files": [
     {
       "name": "features.jsonl",
@@ -12,8 +12,8 @@
     {
       "name": "model.json",
       "rows": 4,
-      "bytes": 50744,
-      "fnv64": "1989d08eea5a6fa9"
+      "bytes": 51229,
+      "fnv64": "49db3723f367b91a"
     }
   ],
   "config": {
@@ -35,6 +35,7 @@
     "em_restarts": 4,
     "gate_share": 0.2,
     "family": null,
+    "inside_pooling": "partial",
     "seed": 20261114
   },
   "k": 4,

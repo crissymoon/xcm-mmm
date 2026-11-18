@@ -37,6 +37,23 @@
 //! [`super::Pattern::score`] needed no change and why their readings now describe
 //! the two-part law.
 //!
+//! # Why a group's slope is not taken at face value
+//!
+//! The regression above is fitted per group, and a group on this panel shows its
+//! share inside the edge on about thirty five rows with six coefficients to
+//! estimate. The measured consequence is a model whose in-sample residual is
+//! tighter than the partition gate's and whose held-out prediction of the same
+//! value is worse: a variance problem, not a bias one. [`super::Pool`] is the
+//! textbook answer and it is estimated rather than assumed. Every coefficient
+//! carries a standard error, the between-group spread of that coefficient is
+//! measured net of the sampling variance it is contaminated by, and the group's
+//! slope is then a precision weighted average of its own estimate and the slope
+//! pooled over the whole panel. A coefficient whose groups genuinely differ keeps
+//! its own value; one whose spread the standard errors already explain is pooled.
+//! The weight each group took from the pooled slope is reported in
+//! [`super::GateFit::share`], so the card can say how much pooling happened
+//! instead of asserting that it was needed.
+//!
 //! Because this is a partial-likelihood estimator rather than the joint normal's
 //! maximiser, the observed-data likelihood is not guaranteed to rise at every
 //! step. The loop keeps the best iteration rather than the last, and the reason is
@@ -45,7 +62,7 @@
 
 use super::super::gate::{self, GateSpec};
 use super::super::mixture::{self, Component, Family, Mixture, FLOOR};
-use super::{start_atom, Coupling, GateFit, Pattern, View};
+use super::{start_atom, Coupling, GateFit, Pattern, Pool, View};
 
 /// Expectation maximisation from one starting assignment, then the shipping bound
 /// on shape.
@@ -56,6 +73,7 @@ pub(super) fn em(
     specs: &[GateSpec],
     iterations: usize,
     start: &[Vec<f64>],
+    pool: Pool,
 ) -> Pattern {
     let gates: Vec<usize> = specs.iter().map(|spec| spec.column).collect();
     let filled = super::filled(rows, views);
@@ -65,17 +83,24 @@ pub(super) fn em(
     }
     let atom = start_atom(rows, specs, start, k);
     let (mut resp, mut loglik) = super::e_step(&components, &atom, &gates, views, rows);
-    let mut best = (
-        loglik,
-        components,
-        atom,
-        regressions(specs, k),
-        couplings(specs, k),
+    // The starting assignment is an initialisation, not a candidate: it carries
+    // components built from a k-means partition and no regression readings at all,
+    // so a run whose first maximisation step happens to score lower would ship
+    // zeroed slopes beside a real partition. Every candidate is a maximisation
+    // step of this estimator, and its audit describes the components it ships with.
+    type Candidate = (
+        f64,
+        Vec<Component>,
+        Vec<Vec<f64>>,
+        Vec<GateFit>,
+        Vec<Coupling>,
     );
+    let mut best: Option<Candidate> = None;
 
-    let mut used = 1;
-    for step in 1..iterations.max(1) {
-        let (next, next_atom, next_regressions, next_couplings) = m_step(rows, &resp, k, specs);
+    let mut used = 0;
+    for step in 0..iterations.max(1) {
+        let (next, next_atom, next_regressions, next_couplings) =
+            m_step(rows, &resp, k, specs, pool);
         if next.is_empty() {
             break;
         }
@@ -84,21 +109,21 @@ pub(super) fn em(
         resp = next_resp;
         loglik = total;
         used = step + 1;
-        if total > best.0 + 1e-9 {
-            best = (
-                total,
-                next,
-                next_atom,
-                next_regressions.clone(),
-                next_couplings.clone(),
-            );
+        let better = match &best {
+            None => true,
+            Some(current) => total > current.0 + 1e-9,
+        };
+        if better {
+            best = Some((total, next, next_atom, next_regressions, next_couplings));
         }
         if settled {
             break;
         }
     }
 
-    let (loglik, components, atom, regressions, coupling) = best;
+    let Some((loglik, components, atom, regressions, coupling)) = best else {
+        return Pattern::default();
+    };
     let mut pattern = Pattern {
         k,
         components,
@@ -110,6 +135,7 @@ pub(super) fn em(
         loglik,
         iterations: used,
         conditions: 0.0,
+        pooling: pool,
     };
     if let Some(bounded) = mixture::bounded_components(&pattern.components) {
         pattern.components = bounded;
@@ -140,6 +166,23 @@ fn couplings(specs: &[GateSpec], k: usize) -> Vec<Coupling> {
     out
 }
 
+/// One group's own estimate, before any pooling.
+struct Slot {
+    /// The free block's mean.
+    mean: Vec<f64>,
+    /// The free block's weighted covariance.
+    block: Vec<Vec<f64>>,
+    /// Per gate, the inside regression's coefficients at the panel's origin.
+    betas: Vec<Vec<f64>>,
+    /// Per gate, the residual variance of that regression.
+    variances: Vec<f64>,
+    /// Per gate, the standard error of every coefficient. Empty when the group had
+    /// too few inside rows to separate a slope from noise.
+    se: Vec<Vec<f64>>,
+    /// Whether the group was abandoned and reset to the panel.
+    reset: bool,
+}
+
 /// One maximisation step on the factorised likelihood.
 ///
 /// Returns the components, the atom probabilities, the per-gate regressions and
@@ -150,6 +193,7 @@ pub(super) fn m_step(
     resp: &[Vec<f64>],
     k: usize,
     specs: &[GateSpec],
+    pool: Pool,
 ) -> (Vec<Component>, Vec<Vec<f64>>, Vec<GateFit>, Vec<Coupling>) {
     let n = rows.len();
     let dim = rows[0].len();
@@ -183,88 +227,45 @@ pub(super) fn m_step(
     }
     let origin: Vec<f64> = free.iter().map(|&c| centre[c]).collect();
 
-    let mut components = Vec::with_capacity(k);
-    let mut atom = vec![vec![0.0; k]; gates.len()];
-    let mut fits = regressions(specs, k);
-    let mut couplings_out = couplings(specs, k);
-
-    for j in 0..k {
-        if counts[j] < 1e-6 * n as f64 {
-            components.push(reset(&centre, &spread, &gates));
-            for (g, fit) in fits.iter_mut().enumerate() {
-                fit.rows[j] = 0;
-                fit.sd[j] = spread[gates[g]].max(FLOOR).sqrt();
-                fit.inside[j] = centre[gates[g]];
+    // The pooled target: one slope per gate, fitted on every row that shows a
+    // value at equal weight. This is the value a group's own slope is shrunk
+    // toward, and the model a fully pooled group takes.
+    let flat = vec![1.0; n];
+    let targets: Vec<Option<gate::Inside>> = specs
+        .iter()
+        .map(|spec| {
+            let inside: Vec<usize> = (0..n).filter(|&i| !spec.holds(&rows[i])).collect();
+            if inside.len() < width + 3 {
+                return None;
             }
+            gate::fit_inside(rows, &flat, spec.column, &free, &origin, &inside)
+        })
+        .collect();
+
+    // Pass one: each group's own estimate, with no pooling yet.
+    let mut slots: Vec<Slot> = Vec::with_capacity(k);
+    for (j, &count) in counts.iter().enumerate().take(k) {
+        if count < 1e-6 * n as f64 {
+            slots.push(reset_slot(&centre, &spread, &free, &gates));
             continue;
         }
-        let count = counts[j];
-
-        // The free block, from every row.
-        let mut mean = vec![0.0; width];
-        for (i, row) in rows.iter().enumerate() {
-            let weight = resp[i][j];
-            if weight == 0.0 {
-                continue;
-            }
-            for (a, &column) in free.iter().enumerate() {
-                mean[a] += weight * row[column];
-            }
-        }
-        for value in mean.iter_mut() {
-            *value /= count;
-        }
-        let mut block = vec![vec![0.0; width]; width];
-        for (i, row) in rows.iter().enumerate() {
-            let weight = resp[i][j];
-            if weight == 0.0 {
-                continue;
-            }
-            let gaps: Vec<f64> = free
-                .iter()
-                .enumerate()
-                .map(|(a, &c)| row[c] - mean[a])
-                .collect();
-            for (a, slot) in block.iter_mut().enumerate() {
-                for (b, cell) in slot.iter_mut().enumerate().skip(a) {
-                    *cell += weight * gaps[a] * gaps[b];
-                }
-            }
-        }
-        for (a, slot) in block.iter_mut().enumerate() {
-            for cell in slot.iter_mut().skip(a) {
-                *cell /= count;
-            }
-            slot[a] = slot[a].max(FLOOR);
-        }
-        // Mirror the upper triangle into the lower one. The mirror reads the row's
-        // own upper half before writing the lower one, so the two cannot alias:
-        // this was first written the other way round, which copied raw sums into
-        // the lower triangle and left it effectively absent.
-        for a in 0..width {
-            let (above, below) = block.split_at_mut(a);
-            let values: Vec<f64> = above.iter().map(|row| row[a]).collect();
-            for (cell, value) in below[0].iter_mut().take(a).zip(values) {
-                *cell = value;
-            }
-        }
-
-        // Each gate's inside regression, on the rows that show it.
+        let (mean, block) = free_block(rows, resp, j, count, &free);
         let weights: Vec<f64> = resp
             .iter()
             .map(|r| r.get(j).copied().unwrap_or(0.0))
             .collect();
         let mut betas = vec![Vec::new(); gates.len()];
         let mut variances = vec![1.0; gates.len()];
+        let mut se = vec![Vec::new(); gates.len()];
         for (g, spec) in specs.iter().enumerate() {
             let inside: Vec<usize> = (0..n)
                 .filter(|&i| !spec.holds(&rows[i]) && weights[i] > 1e-8)
                 .collect();
-            fits[g].rows[j] = inside.len();
             if inside.len() < width + 3 {
                 // Too few rows to separate a slope from noise. The mean of the
                 // inside is reported and the slope stays at zero, which is the
-                // same guard the two-part gate uses.
+                // same guard the two-part gate uses. The empty standard error is
+                // what tells the pooling step this group has no slope of its own.
                 let (sum, wsum) = inside.iter().fold((0.0, 0.0), |(s, w), &i| {
                     (s + weights[i] * rows[i][spec.column], w + weights[i])
                 });
@@ -286,17 +287,154 @@ pub(super) fn m_step(
                 };
                 betas[g] = beta;
             } else {
-                let (beta, variance) =
-                    gate::weighted(rows, &weights, spec.column, &free, &origin, &inside);
-                betas[g] = beta;
-                variances[g] = variance.max(FLOOR);
+                let fitted = gate::fit_inside(rows, &weights, spec.column, &free, &origin, &inside);
+                match fitted {
+                    Some(fit) => {
+                        betas[g] = fit.beta;
+                        variances[g] = fit.variance.max(FLOOR);
+                        se[g] = fit.se;
+                    }
+                    None => {
+                        let mut beta = vec![0.0; width + 1];
+                        beta[0] = centre[spec.column];
+                        betas[g] = beta;
+                        variances[g] = spread[spec.column].max(FLOOR);
+                    }
+                }
+            }
+        }
+        slots.push(Slot {
+            mean,
+            block,
+            betas,
+            variances,
+            se,
+            reset: false,
+        });
+    }
+
+    // The between-group spread of each coefficient, net of the sampling variance
+    // that spread is measured through. A coefficient whose groups differ by less
+    // than their own standard errors leaves zero here, and zero means the pooled
+    // slope is the whole answer for it. This is a method of moments estimate on
+    // four groups, so it is noisy and the card says so.
+    let mut tau = vec![vec![0.0; width]; specs.len()];
+    if matches!(pool, Pool::Partial) {
+        for (g, _) in specs.iter().enumerate() {
+            for (d, cell) in tau[g].iter_mut().enumerate().take(width) {
+                let mut values = Vec::new();
+                let mut noise = 0.0;
+                for slot in slots.iter().filter(|slot| !slot.reset) {
+                    if slot.se[g].len() < width + 1 {
+                        continue;
+                    }
+                    values.push(slot.betas[g][d + 1]);
+                    noise += slot.se[g][d + 1] * slot.se[g][d + 1];
+                }
+                if values.len() < 2 {
+                    continue;
+                }
+                let m = values.len() as f64;
+                let average = values.iter().sum::<f64>() / m;
+                let between = values
+                    .iter()
+                    .map(|value| (value - average) * (value - average))
+                    .sum::<f64>()
+                    / (m - 1.0);
+                *cell = (between - noise / m).max(0.0).sqrt();
+            }
+        }
+    }
+
+    let mut components = Vec::with_capacity(k);
+    let mut atom = vec![vec![0.0; k]; gates.len()];
+    let mut fits = regressions(specs, k);
+    let mut couplings_out = couplings(specs, k);
+    for (g, fit) in fits.iter_mut().enumerate() {
+        fit.tau = tau[g].iter().sum::<f64>() / width.max(1) as f64;
+    }
+
+    for (j, slot) in slots.iter().enumerate() {
+        if slot.reset || counts[j] < 1e-6 * n as f64 {
+            components.push(reset(&centre, &spread));
+            for (g, fit) in fits.iter_mut().enumerate() {
+                fit.rows[j] = 0;
+                fit.sd[j] = spread[gates[g]].max(FLOOR).sqrt();
+                fit.inside[j] = centre[gates[g]];
+            }
+            continue;
+        }
+        let weights: Vec<f64> = resp
+            .iter()
+            .map(|r| r.get(j).copied().unwrap_or(0.0))
+            .collect();
+
+        // Pass two: pool each slope toward the panel's, then measure the residual
+        // the pooled slope actually leaves.
+        let mut betas = slot.betas.clone();
+        let mut variances = slot.variances.clone();
+        for (g, spec) in specs.iter().enumerate() {
+            fits[g].rows[j] = inside_rows(rows, &weights, spec);
+            let Some(target) = targets[g].as_ref() else {
+                continue;
+            };
+            let own_has_slope = slot.se[g].len() == width + 1;
+            let mut share = 0.0;
+            match pool {
+                Pool::None => {}
+                Pool::Full => {
+                    betas[g] = target.beta.clone();
+                    share = 1.0;
+                }
+                Pool::Partial => {
+                    let mut pooled = target.beta.clone();
+                    let mut weight = 0.0;
+                    let coefficients = width.max(1) as f64;
+                    for d in 0..width {
+                        let variance = tau[g][d] * tau[g][d];
+                        let own = if own_has_slope {
+                            slot.se[g][d + 1] * slot.se[g][d + 1]
+                        } else {
+                            f64::INFINITY
+                        };
+                        // Fully pooled when the group has no slope to trust;
+                        // otherwise the empirical Bayes weight on the pooled value.
+                        let lambda = if own.is_finite() {
+                            own / (variance + own)
+                        } else {
+                            1.0
+                        };
+                        pooled[d + 1] =
+                            lambda * target.beta[d + 1] + (1.0 - lambda) * slot.betas[g][d + 1];
+                        weight += lambda;
+                    }
+                    pooled[0] = slot.betas[g][0];
+                    betas[g] = pooled;
+                    share = weight / coefficients;
+                }
+            }
+            // Hold the group's level where its own estimate put it: pooling the
+            // slope is not a claim that the groups sit at the same inside mean.
+            let before = value_at(&slot.betas[g], &slot.mean, &origin);
+            let after = value_at(&betas[g], &slot.mean, &origin);
+            betas[g][0] += before - after;
+            // A slope that moved leaves a different residual, and keeping the old
+            // variance would make the covariance claim a precision the pooled
+            // slope does not have. A slope that did not move keeps its own.
+            if betas[g] != slot.betas[g] {
+                let (variance, wsum) = residual(rows, &weights, spec, &free, &origin, &betas[g]);
+                if wsum > 0.0 {
+                    variances[g] = variance.max(FLOOR);
+                }
             }
             fits[g].sd[j] = variances[g].sqrt();
             fits[g].inside[j] = betas[g][0];
             fits[g].slope[j] = betas[g].iter().skip(1).map(|b| b * b).sum::<f64>().sqrt();
+            fits[g].share[j] = share;
         }
 
-        // The residual correlation between gates, from the rows that show both.
+        // The residual correlation between gates, from the rows that show both,
+        // measured on the slopes this step actually keeps.
         for (a, first) in specs.iter().enumerate() {
             for (b, second) in specs.iter().enumerate().skip(a + 1) {
                 let slot = couplings_out
@@ -334,19 +472,19 @@ pub(super) fn m_step(
         let mut completed_mean = vec![0.0; dim];
         let mut covariance = vec![vec![0.0; dim]; dim];
         for (a, &ca) in free.iter().enumerate() {
-            completed_mean[ca] = mean[a];
+            completed_mean[ca] = slot.mean[a];
             for (b, &cb) in free.iter().enumerate() {
-                covariance[ca][cb] = block[a][b];
+                covariance[ca][cb] = slot.block[a][b];
             }
         }
         for (g, &column) in gates.iter().enumerate() {
             let beta = &betas[g];
             let shift: f64 = (0..width)
-                .map(|d| beta[d + 1] * (mean[d] - origin[d]))
+                .map(|d| beta[d + 1] * (slot.mean[d] - origin[d]))
                 .sum();
             completed_mean[column] = beta[0] + shift;
             for (a, &ca) in free.iter().enumerate() {
-                let value: f64 = (0..width).map(|d| block[a][d] * beta[d + 1]).sum();
+                let value: f64 = (0..width).map(|d| slot.block[a][d] * beta[d + 1]).sum();
                 covariance[ca][column] = value;
                 covariance[column][ca] = value;
             }
@@ -357,7 +495,7 @@ pub(super) fn m_step(
                 let shared: f64 = (0..width)
                     .map(|a| {
                         (0..width)
-                            .map(|d| bg[a + 1] * block[a][d] * bh[d + 1])
+                            .map(|d| bg[a + 1] * slot.block[a][d] * bh[d + 1])
                             .sum::<f64>()
                     })
                     .sum();
@@ -410,6 +548,110 @@ pub(super) fn m_step(
     (components, atom, fits, couplings_out)
 }
 
+/// The free block's weighted mean and covariance for one group.
+fn free_block(
+    rows: &[Vec<f64>],
+    resp: &[Vec<f64>],
+    j: usize,
+    count: f64,
+    free: &[usize],
+) -> (Vec<f64>, Vec<Vec<f64>>) {
+    let width = free.len();
+    let mut mean = vec![0.0; width];
+    for (i, row) in rows.iter().enumerate() {
+        let weight = resp[i][j];
+        if weight == 0.0 {
+            continue;
+        }
+        for (a, &column) in free.iter().enumerate() {
+            mean[a] += weight * row[column];
+        }
+    }
+    for value in mean.iter_mut() {
+        *value /= count;
+    }
+    let mut block = vec![vec![0.0; width]; width];
+    for (i, row) in rows.iter().enumerate() {
+        let weight = resp[i][j];
+        if weight == 0.0 {
+            continue;
+        }
+        let gaps: Vec<f64> = free
+            .iter()
+            .enumerate()
+            .map(|(a, &c)| row[c] - mean[a])
+            .collect();
+        for (a, slot) in block.iter_mut().enumerate() {
+            for (b, cell) in slot.iter_mut().enumerate().skip(a) {
+                *cell += weight * gaps[a] * gaps[b];
+            }
+        }
+    }
+    for (a, slot) in block.iter_mut().enumerate() {
+        for cell in slot.iter_mut().skip(a) {
+            *cell /= count;
+        }
+        slot[a] = slot[a].max(FLOOR);
+    }
+    // Mirror the upper triangle into the lower one. The mirror reads the row's
+    // own upper half before writing the lower one, so the two cannot alias:
+    // this was first written the other way round, which copied raw sums into
+    // the lower triangle and left it effectively absent.
+    for a in 0..width {
+        let (above, below) = block.split_at_mut(a);
+        let values: Vec<f64> = above.iter().map(|row| row[a]).collect();
+        for (cell, value) in below[0].iter_mut().take(a).zip(values) {
+            *cell = value;
+        }
+    }
+    (mean, block)
+}
+
+/// Rows of one group that show a reading inside its edge.
+fn inside_rows(rows: &[Vec<f64>], weights: &[f64], spec: &GateSpec) -> usize {
+    rows.iter()
+        .enumerate()
+        .filter(|(i, row)| weights[*i] > 1e-8 && !spec.holds(row))
+        .count()
+}
+
+/// The value a regression assigns at a given point of the free block.
+fn value_at(beta: &[f64], point: &[f64], origin: &[f64]) -> f64 {
+    let mut value = beta.first().copied().unwrap_or(0.0);
+    for (d, x) in point.iter().enumerate() {
+        value +=
+            beta.get(d + 1).copied().unwrap_or(0.0) * (x - origin.get(d).copied().unwrap_or(0.0));
+    }
+    value
+}
+
+/// The residual variance a slope leaves on the rows that show the reading.
+fn residual(
+    rows: &[Vec<f64>],
+    weights: &[f64],
+    spec: &GateSpec,
+    free: &[usize],
+    origin: &[f64],
+    beta: &[f64],
+) -> (f64, f64) {
+    let mut err = 0.0;
+    let mut wsum = 0.0;
+    for (i, row) in rows.iter().enumerate() {
+        let weight = weights[i];
+        if weight <= 1e-8 || spec.holds(row) {
+            continue;
+        }
+        let gap = row[spec.column] - predicted(beta, free, origin, row);
+        err += weight * gap * gap;
+        wsum += weight;
+    }
+    if wsum <= 0.0 {
+        (1.0, 0.0)
+    } else {
+        (err / wsum, wsum)
+    }
+}
+
 fn predicted(beta: &[f64], free: &[usize], origin: &[f64], row: &[f64]) -> f64 {
     let mut value = beta.first().copied().unwrap_or(0.0);
     for (d, &column) in free.iter().enumerate() {
@@ -419,13 +661,36 @@ fn predicted(beta: &[f64], free: &[usize], origin: &[f64], row: &[f64]) -> f64 {
     value
 }
 
-fn reset(centre: &[f64], spread: &[f64], gates: &[usize]) -> Component {
+fn reset_slot(centre: &[f64], spread: &[f64], free: &[usize], gates: &[usize]) -> Slot {
+    Slot {
+        mean: free.iter().map(|&c| centre[c]).collect(),
+        block: {
+            let mut block = vec![vec![0.0; free.len()]; free.len()];
+            for (a, &column) in free.iter().enumerate() {
+                block[a][a] = spread[column].max(FLOOR);
+            }
+            block
+        },
+        betas: gates
+            .iter()
+            .map(|&column| {
+                let mut beta = vec![0.0; free.len() + 1];
+                beta[0] = centre[column];
+                beta
+            })
+            .collect(),
+        variances: gates.iter().map(|&c| spread[c].max(FLOOR)).collect(),
+        se: vec![Vec::new(); gates.len()],
+        reset: true,
+    }
+}
+
+fn reset(centre: &[f64], spread: &[f64]) -> Component {
     let dim = centre.len();
     let mut covariance = vec![vec![0.0; dim]; dim];
     for d in 0..dim {
         covariance[d][d] = spread[d].max(FLOOR);
     }
-    let _ = gates;
     Component {
         weight: 0.0,
         mean: centre.to_vec(),

@@ -124,6 +124,9 @@ pub struct SegmentConfig {
     /// A family held fixed for this run, or `None` to let the panel choose.
     #[serde(default)]
     pub family: Option<Family>,
+    /// How the pattern mixture pools a group's inside slope toward the panel's.
+    #[serde(default)]
+    pub inside_pooling: pattern::Pool,
     pub seed: u64,
 }
 
@@ -148,6 +151,7 @@ impl Default for SegmentConfig {
             em_restarts: 4,
             gate_share: 0.20,
             family: None,
+            inside_pooling: pattern::Pool::default(),
             seed: 20261114,
         }
     }

@@ -96,6 +96,53 @@ const EPS: f64 = 1e-6;
 /// How close to the edge a reading has to be to count as on it.
 const TOUCH: f64 = 1e-9;
 
+/// How a group's inside slope is combined with the slope pooled over the panel.
+///
+/// A group on this panel shows its share inside the edge on about thirty five
+/// rows with six coefficients to estimate, and the measured consequence is a slope
+/// that fits its own training rows better than the partition gate's and predicts
+/// held-out rows worse. Pooling is the textbook answer; which amount of it to use
+/// is a question the data answer, so all three settings are scored on the same
+/// held-out rows and the shipped one is named in the card.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum Pool {
+    /// Every group keeps its own slope, which is what the previous round shipped.
+    None,
+    /// Each coefficient is shrunk toward the pooled value by its own standard
+    /// error, so a slope measured on few rows moves and a slope measured well
+    /// stays. The between-group spread is measured net of that sampling noise
+    /// rather than assumed.
+    #[default]
+    Partial,
+    /// Every group takes the pooled slope, holding its own inside mean.
+    Full,
+}
+
+impl Pool {
+    pub fn name(self) -> &'static str {
+        match self {
+            Pool::None => "none",
+            Pool::Partial => "partial",
+            Pool::Full => "full",
+        }
+    }
+
+    pub fn parse(text: &str) -> Option<Self> {
+        match text.trim().to_ascii_lowercase().as_str() {
+            "none" => Some(Pool::None),
+            "partial" => Some(Pool::Partial),
+            "full" => Some(Pool::Full),
+            _ => None,
+        }
+    }
+
+    /// Every setting, in the order a comparison table reads.
+    pub fn all() -> [Pool; 3] {
+        [Pool::None, Pool::Partial, Pool::Full]
+    }
+}
+
 /// The readings a row shows, and the gated readings it holds on their edge.
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct View {
@@ -149,6 +196,10 @@ pub struct Pattern {
     pub iterations: usize,
     /// Worst condition number across the groups, after the shipping bound.
     pub conditions: f64,
+    /// How the inside slopes were pooled. Recorded because two models with the
+    /// same likelihood and different pooling are different claims.
+    #[serde(default)]
+    pub pooling: Pool,
 }
 
 /// What one gate's inside regression decided, per group.
@@ -169,6 +220,17 @@ pub struct GateFit {
     pub slope: Vec<f64>,
     /// The intercept, which is the inside mean at the panel's centre.
     pub inside: Vec<f64>,
+    /// Per group, the share of each coefficient taken from the pooled slope: zero
+    /// keeps its own estimate, one is fully pooled. This is the number that says
+    /// how much pooling the data asked for, per group, rather than leaving a
+    /// reader to assume the estimator moved everything.
+    #[serde(default)]
+    pub share: Vec<f64>,
+    /// The between-group spread of the slope coefficients, net of the sampling
+    /// variance they are measured through, averaged over coefficients. Zero means
+    /// the groups differ by less than their own standard errors.
+    #[serde(default)]
+    pub tau: f64,
 }
 
 impl GateFit {
@@ -179,6 +241,8 @@ impl GateFit {
             sd: vec![0.0; k],
             slope: vec![0.0; k],
             inside: vec![0.0; k],
+            share: vec![0.0; k],
+            tau: 0.0,
         }
     }
 }
@@ -228,6 +292,20 @@ impl Pattern {
         iterations: usize,
         seed: u64,
     ) -> Self {
+        Self::fit_with(rows, specs, k, restarts, iterations, seed, Pool::default())
+    }
+
+    /// The same fit at a stated pooling of the inside slopes.
+    #[allow(clippy::too_many_arguments)]
+    pub fn fit_with(
+        rows: &[Vec<f64>],
+        specs: &[GateSpec],
+        k: usize,
+        restarts: usize,
+        iterations: usize,
+        seed: u64,
+        pool: Pool,
+    ) -> Self {
         if rows.is_empty() || k == 0 || k > rows.len() || specs.is_empty() {
             return Self::default();
         }
@@ -242,7 +320,7 @@ impl Pattern {
             } else {
                 mixture::soft_start(rows.len(), k, seed.wrapping_add(run as u64))
             };
-            let candidate = fit::em(rows, &views, k, specs, iterations, &start);
+            let candidate = fit::em(rows, &views, k, specs, iterations, &start, pool);
             if candidate.components.is_empty() {
                 continue;
             }
@@ -255,6 +333,43 @@ impl Pattern {
             }
         }
         best.unwrap_or_default()
+    }
+
+    /// The same partition with its inside slopes re-estimated at a stated pooling.
+    ///
+    /// A separate fit at each pooling setting lands on a different partition: two
+    /// independently fitted settings put a markedly different share of the held
+    /// rows in the same group, which is measured and printed, so the difference
+    /// between those fits is not the estimator. Holding the partition fixed makes
+    /// the comparison what it says it is. One maximisation step on this model's own responsibilities changes the
+    /// gate block and nothing else, because the free block and the edge
+    /// probabilities are functions of those responsibilities.
+    pub fn at_pool(&self, rows: &[Vec<f64>], specs: &[GateSpec], pool: Pool) -> Option<Pattern> {
+        if self.components.is_empty() || rows.is_empty() {
+            return None;
+        }
+        let dim = rows[0].len();
+        let views: Vec<View> = rows.iter().map(|row| View::of(row, specs, dim)).collect();
+        let (resp, _) = e_step(&self.components, &self.atom, &self.gates, &views, rows);
+        let (components, atom, regressions, coupling) =
+            fit::m_step(rows, &resp, self.k, specs, pool);
+        if components.is_empty() {
+            return None;
+        }
+        let (_, loglik) = e_step(&components, &atom, &self.gates, &views, rows);
+        Some(Pattern {
+            k: self.k,
+            components,
+            gates: self.gates.clone(),
+            edges: self.edges.clone(),
+            atom,
+            regressions,
+            coupling,
+            loglik,
+            iterations: self.iterations,
+            conditions: mixture::conditioning(&self.components),
+            pooling: pool,
+        })
     }
 
     /// The group each row belongs to, reading its edge states as data.
@@ -414,6 +529,31 @@ pub struct Verdict {
     /// per group. Zero when the reference did not fit.
     #[serde(default)]
     pub pooled: f64,
+    /// The same loop model with no pooling and with full pooling, so the choice
+    /// between the three is on the record instead of being a preference.
+    #[serde(default)]
+    pub pattern_none: f64,
+    #[serde(default)]
+    pub pattern_full: f64,
+    /// The setting `pattern` was scored at.
+    #[serde(default)]
+    pub pooling: String,
+    /// Mean share of a slope coefficient the shipped model took from the pooled
+    /// slope, and its measured between-group spread.
+    #[serde(default)]
+    pub share: f64,
+    #[serde(default)]
+    pub tau: f64,
+    /// Share of held rows the no-pooling and full-pooling models place in the
+    /// same group.
+    #[serde(default)]
+    pub pool_same: f64,
+    /// The paired difference between full and partial pooling on the shared
+    /// partition, and its standard error across folds.
+    #[serde(default)]
+    pub pool_gain: f64,
+    #[serde(default)]
+    pub pool_se: f64,
     /// Rows on the edge and inside it, over all folds.
     #[serde(default)]
     pub edge_rows: usize,
@@ -506,17 +646,38 @@ pub fn compare(
         }
         let resp_train = gate::responsibilities(&train_rows, &fold_mixture.components, &columns);
         let resp_held = gate::responsibilities(&held_rows, &fold_mixture.components, &columns);
-        let fitted = Pattern::fit(
+        // The shipped model, refit on this fold's training rows at the configured
+        // pooling.
+        let fitted = Pattern::fit_with(
             &train_rows,
             specs,
             components.len(),
             cfg.em_restarts.clamp(1, 2),
             cfg.iterations,
             cfg.seed.wrapping_add(number as u64),
+            cfg.inside_pooling,
         );
         if fitted.components.is_empty() {
             continue;
         }
+        // Every setting is then re-estimated on this model's own responsibilities,
+        // so the three scores differ in the estimator and not in the partition.
+        let models: Vec<(Pool, Pattern)> = Pool::all()
+            .iter()
+            .filter_map(|&pool| fitted.at_pool(&train_rows, specs, pool).map(|m| (pool, m)))
+            .collect();
+        // And one fit that is free to move the partition, so the card can say how
+        // much a separately refitted setting moves it rather than asserting the
+        // confound away.
+        let separate = Pattern::fit_with(
+            &train_rows,
+            specs,
+            components.len(),
+            cfg.em_restarts.clamp(1, 2),
+            cfg.iterations,
+            cfg.seed.wrapping_add(number as u64),
+            Pool::Full,
+        );
         // One group, so the conditional is pooled over the whole panel. It is the
         // reference that says whether the groups buy anything on the conditional
         // question at all, which is the difference between a model that needs a
@@ -547,6 +708,29 @@ pub fn compare(
             }
         }
         let agreement = kept as f64 / held.len() as f64;
+        // The three pooling settings are refit separately, so a difference between
+        // them can be the estimator or the partition expectation maximisation
+        // landed on. This reading separates the two: how often the no-pooling and
+        // the full-pooling models put a held row in the same aligned group.
+        let place = |model: &Pattern| -> Vec<usize> {
+            let mapping = super::sharp::align(components, &model.components);
+            held.iter()
+                .map(|&i| {
+                    mapping
+                        .get(model.assign(&rows[i]))
+                        .copied()
+                        .unwrap_or(usize::MAX)
+                })
+                .collect()
+        };
+        let same = if separate.components.is_empty() {
+            0.0
+        } else {
+            let left = place(&fitted);
+            let right = place(&separate);
+            let agree = left.iter().zip(&right).filter(|(a, b)| a == b).count() as f64;
+            agree / held.len() as f64
+        };
         // How sharply each model separates its groups on the readings the score
         // conditions on. A mixture of four conditionals is flatter than one
         // conditional whenever its groups are indistinguishable in that block, so
@@ -557,6 +741,7 @@ pub fn compare(
         let gate_sharp = winning(&resp_held);
         for ledger in ledger.iter_mut() {
             ledger.agreement.push(agreement);
+            ledger.pool_same.push(same);
             ledger.moved += moved;
             ledger.gate_sharp.push(gate_sharp);
             ledger.loop_sharp.push(loop_sharp);
@@ -608,6 +793,7 @@ pub fn compare(
             }
             let mut two = 0.0;
             let mut pattern = 0.0;
+            let mut by_pool = [0.0; 3];
             let mut pooled_score = 0.0;
             let mut two_edge = 0.0;
             let mut pattern_edge = 0.0;
@@ -631,6 +817,11 @@ pub fn compare(
                 let pattern_score = fitted.score(&rows[i], spec, &columns, scaling, spacing);
                 two += two_score;
                 pattern += pattern_score;
+                for (p, (_, model)) in models.iter().enumerate() {
+                    if !model.components.is_empty() {
+                        by_pool[p] += model.score(&rows[i], spec, &columns, scaling, spacing);
+                    }
+                }
                 if !pooled.components.is_empty() {
                     // `score` already returns a log probability with its own
                     // floor. Clamping it with `.max(1e-12)` would clamp a
@@ -651,6 +842,9 @@ pub fn compare(
             let count = held.len() as f64;
             ledger[index].two.push(two / count);
             ledger[index].pattern.push(pattern / count);
+            for (p, total) in by_pool.iter().enumerate() {
+                ledger[index].by_pool[p].push(total / count);
+            }
             if !pooled.components.is_empty() {
                 ledger[index].pooled.push(pooled_score / count);
             }
@@ -666,6 +860,11 @@ pub fn compare(
                 .push(share(pattern_inside, inside as f64));
             ledger[index].edge_rows += on_edge;
             ledger[index].inside_rows += inside;
+            ledger[index].pool = cfg.inside_pooling;
+            if let Some(fit) = fitted.regressions.get(index) {
+                ledger[index].shares.push(mean(&fit.share));
+                ledger[index].taus.push(fit.tau);
+            }
         }
     }
     specs
@@ -692,6 +891,18 @@ struct Ledger {
     loop_sd: Vec<f64>,
     gate_sharp: Vec<f64>,
     loop_sharp: Vec<f64>,
+    /// Per fold and per pooling setting, in the order [`Pool::all`] lists them.
+    by_pool: [Vec<f64>; 3],
+    /// Share of held rows the no-pooling and full-pooling models place in the
+    /// same group, which says whether their difference is the estimator or the
+    /// partition.
+    pool_same: Vec<f64>,
+    /// The setting that ships.
+    pool: Pool,
+    /// Per fold, the mean share of a coefficient the shipped model took from the
+    /// pooled slope, and its measured between-group spread.
+    shares: Vec<f64>,
+    taus: Vec<f64>,
     edge_rows: usize,
     inside_rows: usize,
     moved: usize,
@@ -733,6 +944,14 @@ fn verdict(spec: &GateSpec, ledger: &Ledger) -> Verdict {
             two_stage_inside: 0.0,
             pattern_inside: 0.0,
             pooled: 0.0,
+            pattern_none: 0.0,
+            pattern_full: 0.0,
+            pooling: ledger.pool.name().to_string(),
+            share: 0.0,
+            tau: 0.0,
+            pool_same: 0.0,
+            pool_gain: 0.0,
+            pool_se: 0.0,
             edge_rows: 0,
             inside_rows: 0,
             gate_rows: 0.0,
@@ -752,6 +971,20 @@ fn verdict(spec: &GateSpec, ledger: &Ledger) -> Verdict {
     let gain = mean(&paired);
     let se = spread(&paired);
     let z = gain / se.max(1e-12);
+    // Paired by fold like every other comparison here, and read through zip so a
+    // ledger built without the per-setting columns reports nothing instead of
+    // indexing past the end.
+    let pooled_extra: Vec<f64> = ledger.by_pool[2]
+        .iter()
+        .zip(&ledger.by_pool[1])
+        .map(|(full, partial)| full - partial)
+        .collect();
+    let pool_gain = mean(&pooled_extra);
+    let pool_se = if pooled_extra.len() < 2 {
+        0.0
+    } else {
+        spread(&pooled_extra)
+    };
     let verdict = if folds < 3 {
         format!("not measured: {folds} fold is too few to separate a gain from fold noise")
     } else if gain > 2.0 * se {
@@ -785,6 +1018,14 @@ fn verdict(spec: &GateSpec, ledger: &Ledger) -> Verdict {
         } else {
             round4(mean(&ledger.pooled))
         },
+        pattern_none: round4(mean(&ledger.by_pool[0])),
+        pattern_full: round4(mean(&ledger.by_pool[2])),
+        pooling: ledger.pool.name().to_string(),
+        share: round4(mean(&ledger.shares)),
+        tau: round4(mean(&ledger.taus)),
+        pool_same: round4(mean(&ledger.pool_same)),
+        pool_gain: round4(pool_gain),
+        pool_se: round4(pool_se),
         edge_rows: ledger.edge_rows,
         inside_rows: ledger.inside_rows,
         agreement: round4(mean(&ledger.agreement)),

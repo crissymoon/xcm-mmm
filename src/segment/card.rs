@@ -1033,25 +1033,84 @@ fn render_pattern(out: &mut String, metrics: &Metrics) {
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "That third table is the one that explains the order rather than restating it. The loop model fits its inside residual on fewer rows per group and gets a tighter residual in sample: a standard deviation of {:.3} against {:.3} for the gate on one reading, {:.3} against {:.3} on the other. It is also sharper in the block the score conditions on, a mean winning posterior of {:.3} against {:.3}, so it is not a model that hedges. It still predicts worse out of sample, which is the signature of a variance problem rather than a bias one: {:.1} rows per group and a slope vector of six coefficients per group is enough to fit the training inside spread and not enough to predict it. The one-group column separates the two candidate explanations. A single pooled conditional, with no grouping at all, reads {:.3} on the first reading and {:.3} on the second, so the grouping does buy something the pooling cannot; what it does not buy is the partition's own advantage. The groups the gate is fitted to are formed from the six readings, so they separate exactly the block the score conditions on, while the loop's groups are formed partly from the share and land on a different segmentation.",
+        "That third table is the one that explains the order rather than restating it. The loop model runs on fewer rows per group than the gate does, {:.1} against {:.1} on the first reading and {:.1} against {:.1} on the second, and in the previous round that showed up as a tighter in-sample residual with a worse held-out prediction. After the pooling described below it is no longer tighter: {:.3} against {:.3} on the first reading and {:.3} against {:.3} on the second, so the loop is now the model with the wider residual and still the worse prediction, which is a different and more honest failure. It is also sharper in the block the score conditions on, a mean winning posterior of {:.3} against {:.3}, so it is not a model that hedges. The one-group column separates the remaining explanations. A single pooled conditional, with no grouping at all, reads {:.3} on the first reading and {:.3} on the second, so the grouping does buy something the pooling cannot; what it does not buy is the partition's own advantage. The groups the gate is fitted to are formed from the six readings, so they separate exactly the block the score conditions on, while the loop's groups are formed partly from the share and land on a different segmentation.",
+        metrics.pattern.first().map(|v| v.loop_rows).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.gate_rows).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.loop_rows).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.gate_rows).unwrap_or(0.0),
         metrics.pattern.first().map(|v| v.loop_sd).unwrap_or(0.0),
         metrics.pattern.first().map(|v| v.gate_sd).unwrap_or(0.0),
         metrics.pattern.get(1).map(|v| v.loop_sd).unwrap_or(0.0),
         metrics.pattern.get(1).map(|v| v.gate_sd).unwrap_or(0.0),
         metrics.pattern.first().map(|v| v.loop_sharp).unwrap_or(0.0),
         metrics.pattern.first().map(|v| v.gate_sharp).unwrap_or(0.0),
-        metrics.pattern.first().map(|v| v.loop_rows).unwrap_or(0.0),
         metrics.pattern.first().map(|v| v.pooled).unwrap_or(0.0),
         metrics.pattern.get(1).map(|v| v.pooled).unwrap_or(0.0)
     );
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "The reading moved against the version that imputed instead of regressing: that one read {:.3} and {:.3} behind, this one {:.3} and {:.3}. Estimating the conditional the way the gate does makes the loop model more internally consistent and makes its prediction of the share worse, and the third table says why rather than leaving the regression to be blamed for it. The next move that the numbers support is partial pooling: shrink each group's slope toward the pooled slope by its own standard error, which is the textbook answer to the inversion above, and it is on the roadmap with these two residuals as its motivation rather than shipped on a hunch.",
+        "The reading moved against the version that imputed instead of regressing: that one read {:.3} and {:.3} behind, this one {:.3} and {:.3}. Estimating the conditional the way the gate does makes the loop model more internally consistent and makes its prediction of the share worse, and the third table says why rather than leaving the regression to be blamed for it.",
         0.099,
         0.142,
         metrics.pattern.first().map(|v| -v.gain).unwrap_or(0.0),
         metrics.pattern.get(1).map(|v| -v.gain).unwrap_or(0.0)
+    );
+    let _ = writeln!(out);
+    let _ = writeln!(out, "### How much the slope is pooled");
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "The third table names a variance problem: a slope vector of six coefficients per group on about thirty five rows fits its own training rows and does not predict. The answer is partial pooling, and it is estimated rather than assumed. Each group's slope is a precision weighted average of its own estimate and the slope fitted to the whole panel. The weight comes from the group's standard error against the between group spread of that coefficient, measured net of the sampling noise the spread is contaminated by. A coefficient whose groups differ by more than their errors keeps its own value; one whose spread the errors already explain is pooled. Because two separately refitted settings land on different partitions, the three settings below are re-estimated on one partition, from a single maximisation step on the shipped model's own responsibilities, so the table is the estimator and not the grouping; the share of held rows that move when a setting is refitted from scratch is printed beside it for the same reason."
+    );
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "| reading | no pooling | partial | full | pooled, one group | full against partial | folds | refit apart |"
+    );
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|---:|");
+    for verdict in &metrics.pattern {
+        let _ = writeln!(
+            out,
+            "| {} | {:+.3} | {:+.3} | {:+.3} | {:+.3} | {:+.3} | {} | {:.0}% |",
+            verdict.name,
+            verdict.pattern_none,
+            verdict.pattern,
+            verdict.pattern_full,
+            verdict.pooled,
+            verdict.pool_gain,
+            verdict.folds,
+            100.0 * (1.0 - verdict.pool_same)
+        );
+    }
+    let _ = writeln!(out);
+    if let Some(first) = metrics.pattern.first() {
+        let _ = writeln!(
+            out,
+            "The shipped setting is {} pooling, and the panel said how much of it to use: the mean weight a group takes from the pooled slope is {:.2} on one share and {:.2} on the other, against a between group slope spread net of sampling error of {:.3} and {:.3}. A weight of one means the group's slope is not distinguishable from the pooled one; a weight of zero means it keeps its own estimate. Full pooling reads {:+.3} nats more than shipping that weight on the first share (se {:.3}) and {:+.3} on the second (se {:.3}). Neither clears two standard errors, so the adaptive weight ships: it is the estimator that decides, and choosing the extreme because it won by a fraction on the same folds is the selection this repository has a gate against.",
+            first.pooling,
+            first.share,
+            metrics.pattern.get(1).map(|v| v.share).unwrap_or(0.0),
+            first.tau,
+            metrics.pattern.get(1).map(|v| v.tau).unwrap_or(0.0),
+            first.pool_gain,
+            first.pool_se,
+            metrics.pattern.get(1).map(|v| v.pool_gain).unwrap_or(0.0),
+            metrics.pattern.get(1).map(|v| v.pool_se).unwrap_or(0.0)
+        );
+        let _ = writeln!(out);
+    }
+    let _ = writeln!(
+        out,
+        "Pooling closes part of the gap and not all of it. Against no pooling it buys {:.3} nats on the first share and {:.3} on the second, and the loop model still reads {:.3} and {:.3} behind the gate fitted to the partition. What it did fix is the inversion the third table named: the loop's inside residual is now {:.3} against the gate's {:.3} on the first share and {:.3} against {:.3} on the second, so it is no longer the tighter in sample residual of a model that predicts worse. The remaining shortfall is the partition. The groups the gate is fitted to are formed from the six readings the score conditions on; the loop's groups are formed partly from the share itself.",
+        metrics.pattern.first().map(|v| v.pattern - v.pattern_none).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.pattern - v.pattern_none).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| -v.gain).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| -v.gain).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.loop_sd).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.gate_sd).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.loop_sd).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.gate_sd).unwrap_or(0.0)
     );
     let _ = writeln!(out);
     let agreement = metrics
