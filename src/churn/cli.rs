@@ -107,12 +107,28 @@ pub struct ChurnMonitorArgs {
     /// Target column that [`Dataset`] keeps out of the feature matrix.
     #[arg(long, default_value = "churn")]
     pub target: String,
-    /// PSI above which a feature is called drifted.
-    #[arg(long, default_value_t = 0.2)]
-    pub threshold: f64,
+    /// A fixed index threshold in PSI units. Absent means the gate calibrates
+    /// its own against a null at the row counts it is reading.
+    #[arg(long)]
+    pub threshold: Option<f64>,
     /// Reference quantile bins.
     #[arg(long, default_value_t = 10)]
     pub bins: usize,
+    /// Level for the per-feature tests and the joint reading.
+    #[arg(long, default_value_t = 0.05)]
+    pub alpha: f64,
+    /// Null draws for the index, per feature.
+    #[arg(long, default_value_t = 499)]
+    pub psi_draws: usize,
+    /// Null draws for the Cramer-von Mises law.
+    #[arg(long, default_value_t = 4000)]
+    pub cvm_draws: usize,
+    /// Rows per side kept for the joint reading. Below two turns it off.
+    #[arg(long, default_value_t = 200)]
+    pub mmd_rows: usize,
+    /// Permutations for the joint reading.
+    #[arg(long, default_value_t = 99)]
+    pub mmd_permutations: usize,
     #[arg(long)]
     pub json: bool,
 }
@@ -316,40 +332,87 @@ fn uplift(args: ChurnUpliftArgs) -> Result<(), Box<dyn Error>> {
 fn monitor(args: ChurnMonitorArgs) -> Result<(), Box<dyn Error>> {
     let reference = Dataset::load(&args.reference, &args.target)?;
     let current = Dataset::load(&args.current, &args.target)?;
-    let report = monitor::compare(&reference, &current, args.threshold, args.bins)?;
+    let config = monitor::GateConfig {
+        alpha: args.alpha,
+        bins: args.bins,
+        psi_draws: args.psi_draws,
+        cvm_draws: args.cvm_draws,
+        mmd_rows: args.mmd_rows,
+        mmd_permutations: args.mmd_permutations,
+        threshold: args.threshold,
+        ..monitor::GateConfig::default()
+    };
+    let report = monitor::assess(&reference, &current, &config)?;
     if args.json {
         println!("{}", serde_json::to_string_pretty(&report)?);
         return Ok(());
     }
     println!(
-        "reference {} rows  current {} rows  threshold {:.2}  drifted {}",
+        "reference {} rows  current {} rows  level {:.2}  bins {}",
         commas(report.reference_rows),
         commas(report.current_rows),
-        report.threshold,
-        report.drifted
+        report.alpha,
+        report.bins
     );
-    println!("feature                       psi      ks  mean shift  alarm");
+    let smallest = report
+        .features
+        .iter()
+        .map(|feature| feature.psi_threshold)
+        .fold(f64::INFINITY, f64::min);
+    let largest = report
+        .features
+        .iter()
+        .map(|feature| feature.psi_threshold)
+        .fold(0.0f64, f64::max);
+    if smallest.is_finite() {
+        println!(
+            "psi       calibrated threshold {:.4} to {:.4} at these row counts",
+            smallest, largest
+        );
+    }
+    match report.manual_threshold {
+        Some(threshold) => {
+            println!("psi       fixed threshold {threshold:.3} supplied, calibration overridden")
+        }
+        None => println!(
+            "psi       the folklore 0.1 band is not used: it is a different test at every size"
+        ),
+    }
+    println!(
+        "cvm       critical {:.3} at level {:.2}, {} draws",
+        report.cvm_critical, report.alpha, config.cvm_draws
+    );
+    println!("feature                    psi    psi p       ks      cvm   cvm p   combined  alarm");
     let mut features = report.features.clone();
-    features.sort_by(|a, b| b.psi.total_cmp(&a.psi));
+    features.sort_by(|a, b| a.p.total_cmp(&b.p));
     for feature in &features {
         println!(
-            "{:<26} {:>8.4} {:>7.3}  {:>+10.4}  {}",
+            "{:<24} {:>8.4} {:>8.3} {:>8.3} {:>8.3} {:>7.3} {:>10.3}  {}",
             feature.name,
             feature.psi,
+            feature.psi_p,
             feature.ks,
-            feature.mean_shift,
-            if feature.drifted { "yes" } else { "no" }
+            feature.cvm,
+            feature.cvm_p,
+            feature.p,
+            if feature.alarm { "yes" } else { "no" }
+        );
+    }
+    if let Some(mmd) = &report.mmd {
+        println!(
+            "joint     mmd {:.4} p {:.3}  {} rows against {}  bandwidth {:.3}  {} permutations",
+            mmd.statistic,
+            mmd.p,
+            commas(mmd.reference_rows),
+            commas(mmd.current_rows),
+            mmd.bandwidth,
+            mmd.permutations
         );
     }
     if !report.missing.is_empty() {
         println!("missing   {}", report.missing.join(", "));
     }
-    let alarms = report.alarms();
-    if alarms.is_empty() {
-        println!("verdict   stable at this threshold");
-    } else {
-        println!("verdict   drift in {}", alarms.join(", "));
-    }
+    println!("verdict   {}", report.verdict);
     Ok(())
 }
 
@@ -463,6 +526,53 @@ fn info(dir: &str) -> Result<(), Box<dyn Error>> {
             .map(|c| format!("{} {:+.2}", c.name, c.weight))
             .collect();
         println!("weights   {}", top.join(", "));
+        let cohorts = &score.cohorts;
+        if !cohorts.rows.is_empty() {
+            println!(
+                "\ncohorts   {} month horizon  {} of {} rows mature",
+                cohorts.horizon,
+                commas(cohorts.mature_rows),
+                commas(score.rows)
+            );
+            println!(
+                "band               rows  churned   rate  tenure     auc     ece  coverage  paired"
+            );
+            for row in &cohorts.rows {
+                let paired = match &row.against_tenure {
+                    Some(pair) => {
+                        format!("{:+.3} [{:+.3}, {:+.3}]", pair.delta, pair.low, pair.high)
+                    }
+                    None => row
+                        .refused
+                        .clone()
+                        .map(|reason| format!("refused: {reason}"))
+                        .unwrap_or_else(|| "refused".to_string()),
+                };
+                println!(
+                    "{:<16} {:>5}  {:>7}  {:>5.3}  {:>6.1}  {:>5}  {:>6}  {:>8}  {}",
+                    row.label,
+                    commas(row.rows),
+                    commas(row.churned),
+                    row.rate,
+                    row.mean_tenure,
+                    row.auc
+                        .map(|value| format!("{value:.3}"))
+                        .unwrap_or_else(|| "-".to_string()),
+                    row.ece
+                        .map(|value| format!("{value:.3}"))
+                        .unwrap_or_else(|| "-".to_string()),
+                    row.coverage
+                        .map(|value| format!("{value:.3}"))
+                        .unwrap_or_else(|| "-".to_string()),
+                    paired
+                );
+            }
+            println!(
+                "mature    AUC {:.3} over {} rows",
+                cohorts.mature_auc,
+                commas(cohorts.mature_rows)
+            );
+        }
     }
     Ok(())
 }

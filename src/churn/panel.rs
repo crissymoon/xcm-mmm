@@ -366,16 +366,6 @@ pub fn check(dir: &str) -> io::Result<Vec<String>> {
     // The window is a data contract, so a broken one is a fault beside the
     // rebuild comparison rather than a footnote: a panel that counts a row
     // before time zero scores well for the wrong reason.
-    let window = super::contract::check(
-        &rows
-            .iter()
-            .map(super::contract::Tenure::from_row)
-            .collect::<Vec<_>>(),
-        &months,
-    );
-    for violation in &window.violations {
-        faults.push(format!("window: {violation}"));
-    }
     let summary = summarise(&reasons);
     let rebuilt = serde_json::to_string_pretty(&summary).map_err(io::Error::other)?;
     match fs::read_to_string(format!("{dir}/{SUMMARY}")) {

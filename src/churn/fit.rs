@@ -206,6 +206,8 @@ pub struct Score {
     /// The tree against the logistic, paired on the same rows. Absent when the
     /// two score vectors do not line up.
     pub tree_gain: Option<PairedAuc>,
+    /// Every reading split by how long its outcome has been watched.
+    pub cohorts: super::cohort::CohortTable,
 }
 
 /// One coefficient, on the standardised scale the fit uses.
@@ -312,6 +314,15 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
         AuditConfig::default().level,
     );
     let tree_gain = delong_pair(&tree_scores, &scores, &labels, 0.95);
+    // The cohort table reads the same held-out scores, so a per-band reading
+    // cannot disagree with the headline for any reason except the split itself.
+    let cohorts = super::cohort::table(
+        samples,
+        &scores,
+        &narrow_scores,
+        class_report.pooled.threshold,
+        super::cohort::HORIZON_MONTHS,
+    );
     ChurnModel {
         name: "xcm-mmm-churn-baseline".to_string(),
         version: 3,
@@ -371,6 +382,7 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
             label_audit,
             power,
             tree_gain,
+            cohorts,
         },
         metrics,
         window: None,

@@ -1,6 +1,6 @@
 # Churn baseline
 
-xcm-mmm-churn-baseline v3, built 2026-11-18T02:20:10Z. A logistic over the telecom panel, fitted so a marketing
+xcm-mmm-churn-baseline v3, built 2026-11-18T02:51:17Z. A logistic over the telecom panel, fitted so a marketing
 model has a retention baseline to beat rather than a number to quote.
 
 ## Panel
@@ -154,6 +154,26 @@ The tree comparison is read paired: both models score the same 7,043 rows, so th
 
 The noise estimate is confident learning (Northcutt, Jiang and Chuang, 2021) run on the out-of-fold probabilities the folds already produced, with a per-class threshold at the mean predicted probability of that class. It separates random from systematic labelling error only in the sense of measuring the total: a bank where one annotator misread the construct scores like one where labels were flipped by a coin, and only the first is a design problem. It is also only as good as the model behind it, which is why it is quoted beside the AUC rather than instead of it. Where a large share of the bank clears neither threshold, the scaling is what carries the estimate: the rows the model contradicts are counted, and the rest is the assumption that the rows it could not place are wrong at the same rate. On this panel that assumption is the difference between the 12.1 percent above and the 7.8 percent the contradiction count alone implies.
 
+## Cohorts
+
+Cohorts are bands of tenure at the snapshot, which with a fixed snapshot is the same thing as a registration vintage. A band is mature for the 12 month horizon when every row in it has been watched that long, so its label has had time to occur.
+
+| band | rows | churned | recorded rate | mean tenure | auc | ece | coverage | against tenure only |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| 0-6 months | 1,470 | 784 | 0.533 | 2.5 | - | - | - | refused |
+| 7-12 months | 716 | 253 | 0.353 | 9.4 | - | - | - | refused |
+| 13-24 months | 1,024 | 294 | 0.287 | 18.4 | 0.839 | 0.092 | 0.928 | +0.090 [+0.064, +0.117] |
+| 25-36 months | 832 | 180 | 0.216 | 30.3 | 0.864 | 0.114 | 0.936 | +0.128 [+0.094, +0.162] |
+| 37-48 months | 762 | 145 | 0.190 | 42.6 | 0.829 | 0.074 | 0.896 | +0.109 [+0.068, +0.149] |
+| 49-60 months | 832 | 120 | 0.144 | 54.5 | 0.844 | 0.053 | 0.893 | +0.125 [+0.082, +0.168] |
+| 61+ months | 1,407 | 93 | 0.066 | 68.1 | 0.852 | 0.045 | 0.938 | +0.097 [+0.056, +0.138] |
+
+4,974 of 7,043 rows have been watched for the whole 12 month horizon and carry the readings; 2 bands are younger than that and are printed with their reason instead. A snapshot cannot date a churn, so no band here is a 12 month rate, and two bands are never compared because each is measured against its own base rate.
+
+The bands below the horizon, 0-6 months (1470), 7-12 months (716), carry a rate and nothing else: a customer in their first months who has not churned is censored, not a negative, so a discrimination reading on those rows would be measuring how much time they have had rather than how they behave. The recorded rate falls across the bands, and that fall is mostly the length of the observation: the oldest band has had five years to remove its leavers and the youngest has had months.
+
+Pooled over the mature bands there are 4,974 rows carrying 870 churners and an AUC of 0.859 against 0.867 over the whole panel, so the young rows were not carrying the score. Each band is measured against its own base rate and its own rows, so no two bands are compared with each other here; the paired column is the shipped model against the tenure-only reference on the same rows, which is the comparison that is valid within a band.
+
 ## Coefficients
 
 On the standardised scale the fit uses. A sign is a direction, not a
@@ -218,8 +238,19 @@ measured; the reason text is where a driver is named.
   used: the inner loop chooses and the outer loop scores. The plain command
   remains a single holdout and the report says which one ran.
 - Drift and rollback are commands, not a daemon. `churn monitor` compares a
-  reference panel with a current one by PSI and KS; `churn rollback` moves the
-  artifact pointer back one version. A scheduler still has to call them.
+  reference panel with a current one, scoring each feature against a null simulated at
+  the row counts the reading was taken at, combining the index with a Cramer-von Mises
+  distance under Benjamini-Hochberg, and reporting a kernel two-sample reading on the
+  whole standardised vector; `churn rollback` moves the artifact pointer back one
+  version. A scheduler still has to call them.
+- The folklore PSI bands are not used. A fixed 0.1 or 0.25 threshold is a
+  different test at every sample size, so the gate calibrates its own. What the gate
+  cannot do is tell drift from a legitimate change in the population; it says the two
+  panels differ, not why, and it needs labels on the current panel before anything can
+  be said about whether the difference mattered.
+- No cohort here is a horizon rate. The snapshot records that a customer
+  churned, not when, so maturity says which bands could carry a dated rate, not what it
+  is. Young bands are refused rather than corrected.
 - Calibration, conformal coverage and the tree comparison are measured on
   the same held-out rows as the AUC. None of them transports to a new operator.
 - The label audit bounds what this bank's own labels can carry; it does not

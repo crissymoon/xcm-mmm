@@ -346,6 +346,75 @@ are wrong at the same rate. On this panel that assumption is the difference betw
             audit.suspected as f64 / audit.rows as f64 * 100.0
         ));
     }
+    out.push_str("## Cohorts\n\n");
+    let cohorts = &model.score.cohorts;
+    if cohorts.rows.is_empty() {
+        out.push_str(
+            "This artifact predates the cohort table. Rebuild with `churn fit` to populate it.\n\n",
+        );
+    } else {
+        out.push_str(&format!(
+            "Cohorts are bands of tenure at the snapshot, which with a fixed snapshot is the same \
+thing as a registration vintage. A band is mature for the {} month horizon when every row in it \
+has been watched that long, so its label has had time to occur.\n\n",
+            cohorts.horizon
+        ));
+        out.push_str("| band | rows | churned | recorded rate | mean tenure | auc | ece | coverage | against tenure only |\n");
+        out.push_str("|---|---:|---:|---:|---:|---:|---:|---:|---|\n");
+        for row in &cohorts.rows {
+            let paired = match &row.against_tenure {
+                Some(pair) => format!("{:+.3} [{:+.3}, {:+.3}]", pair.delta, pair.low, pair.high),
+                None => "refused".to_string(),
+            };
+            out.push_str(&format!(
+                "| {} | {} | {} | {:.3} | {:.1} | {} | {} | {} | {} |\n",
+                row.label,
+                commas(row.rows),
+                commas(row.churned),
+                row.rate,
+                row.mean_tenure,
+                row.auc
+                    .map(|value| format!("{value:.3}"))
+                    .unwrap_or_else(|| "-".to_string()),
+                row.ece
+                    .map(|value| format!("{value:.3}"))
+                    .unwrap_or_else(|| "-".to_string()),
+                row.coverage
+                    .map(|value| format!("{value:.3}"))
+                    .unwrap_or_else(|| "-".to_string()),
+                paired
+            ));
+        }
+        out.push_str(&format!("\n{}\n\n", cohorts.note));
+        let young: Vec<&super::cohort::CohortRow> =
+            cohorts.rows.iter().filter(|row| !row.mature).collect();
+        if !young.is_empty() {
+            let names: Vec<String> = young
+                .iter()
+                .map(|row| format!("{} ({})", row.label, row.rows))
+                .collect();
+            out.push_str(&format!(
+                "The bands below the horizon, {}, carry a rate and nothing else: a customer in \
+their first months who has not churned is censored, not a negative, so a discrimination \
+reading on those rows would be measuring how much time they have had rather than how they \
+behave. The recorded rate falls across the bands, and that fall is mostly the length of the \
+observation: the oldest band has had five years to remove its leavers and the youngest has \
+had months.\n\n",
+                names.join(", ")
+            ));
+        }
+        out.push_str(&format!(
+            "Pooled over the mature bands there are {} rows carrying {} churners and an AUC of \
+{:.3} against {:.3} over the whole panel, so the young rows were not carrying the score. \
+Each band is measured against its own base rate and its own rows, so no two bands are \
+compared with each other here; the paired column is the shipped model against the \
+tenure-only reference on the same rows, which is the comparison that is valid within a band.\n\n",
+            commas(cohorts.mature_rows),
+            commas(cohorts.mature_churned),
+            cohorts.mature_auc,
+            model.score.auc
+        ));
+    }
     out.push_str("## Coefficients\n\n");
     out.push_str(
         "On the standardised scale the fit uses. A sign is a direction, not a\ncause.\n\n",
@@ -371,7 +440,9 @@ are wrong at the same rate. On this panel that assumption is the difference betw
     out.push_str("- `Joined` customers are censored rather than counted as non-churners.\n");
     out.push_str("- The coefficients are directions, not effects. The shipped panel has no\n  treatment column, so it cannot answer an intervention question. A panel that\n  carries one is read by `churn uplift`, which reports a cross-fitted T-learner\n  and an inverse probability weighted average effect with bootstrap intervals,\n  a Qini ranking, a decile table and a placebo p-value. That estimator still\n  adjusts for observed covariates only; unmeasured confounding is not repaired.\n");
     out.push_str("- Selection on the forecasting path is nested when `forecast --nested` is\n  used: the inner loop chooses and the outer loop scores. The plain command\n  remains a single holdout and the report says which one ran.\n");
-    out.push_str("- Drift and rollback are commands, not a daemon. `churn monitor` compares a\n  reference panel with a current one by PSI and KS; `churn rollback` moves the\n  artifact pointer back one version. A scheduler still has to call them.\n");
+    out.push_str("- Drift and rollback are commands, not a daemon. `churn monitor` compares a\n  reference panel with a current one, scoring each feature against a null simulated at\n  the row counts the reading was taken at, combining the index with a Cramer-von Mises\n  distance under Benjamini-Hochberg, and reporting a kernel two-sample reading on the\n  whole standardised vector; `churn rollback` moves the artifact pointer back one\n  version. A scheduler still has to call them.\n");
+    out.push_str("- The folklore PSI bands are not used. A fixed 0.1 or 0.25 threshold is a\n  different test at every sample size, so the gate calibrates its own. What the gate\n  cannot do is tell drift from a legitimate change in the population; it says the two\n  panels differ, not why, and it needs labels on the current panel before anything can\n  be said about whether the difference mattered.\n");
+    out.push_str("- No cohort here is a horizon rate. The snapshot records that a customer\n  churned, not when, so maturity says which bands could carry a dated rate, not what it\n  is. Young bands are refused rather than corrected.\n");
     out.push_str("- Calibration, conformal coverage and the tree comparison are measured on\n  the same held-out rows as the AUC. None of them transports to a new operator.\n");
     out.push_str("- The label audit bounds what this bank's own labels can carry; it does not\n  audit the construct. A ceiling of one would mean the labels are consistent with\n  the model, not that they are right about churn.\n");
     out.push_str("- The resolution reading is a property of the panel's size and class\n  balance. A gain the card does not claim is not proof of absence, only a\n  difference this bank cannot see.\n");
