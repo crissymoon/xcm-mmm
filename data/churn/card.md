@@ -1,6 +1,6 @@
 # Churn baseline
 
-xcm-mmm-churn-baseline v3, built 2026-11-18T02:51:17Z. A logistic over the telecom panel, fitted so a marketing
+xcm-mmm-churn-baseline v3, built 2026-11-18T03:12:02Z. A logistic over the telecom panel, fitted so a marketing
 model has a retention baseline to beat rather than a number to quote.
 
 ## Panel
@@ -120,17 +120,36 @@ of resolution rather than established.
 
 1,869 churned rows across 14 coefficients, 133.5 events per feature. Adequate for a logistic on this feature set.
 
-| training fraction | rows | held-out AUC |
-|---|---:|---:|
-| 25% | 1,409 | 0.867 |
-| 50% | 2,817 | 0.867 |
-| 75% | 4,226 | 0.867 |
-| 100% | 5,634 | 0.868 |
+| training fraction | rows | held-out AUC | se | accuracy |
+|---|---:|---:|---:|---:|
+| 10% | 528 | 0.866 | 0.003 | 0.793 |
+| 20% | 1,057 | 0.864 | 0.002 | 0.781 |
+| 35% | 1,849 | 0.867 | 0.003 | 0.787 |
+| 50% | 2,641 | 0.867 | 0.002 | 0.778 |
+| 75% | 3,962 | 0.868 | 0.002 | 0.790 |
+| 100% | 5,282 | 0.867 | 0.002 | 0.790 |
 
-Last-doubling gain 0.12 AUC points. A positive number means the bank was
+Last-doubling gain -0.12 AUC points. A positive number means the bank was
 still buying accuracy at the largest fraction; a flat one means the ceiling is
-the features or the operator, not the row count. Neither reading transports to
-a new operator.
+the features or the operator, not the row count. The curve is drawn on a split
+of its own, salted by customer id, so its 100 percent point is an independent
+measurement of the same procedure rather than the headline scored twice, and it
+is expected to differ from the headline for sampling reasons. The accuracy
+column is what the label audit's ceiling can be compared with; the area cannot
+be, because the two are on different scales.
+
+At 100 percent the curve reads accuracy 0.790 with a standard error of
+0.005, the wider of its fold spread and the binomial error on the rows it was
+measured on, against an estimated label ceiling of 0.879, a gap of 0.089. The curve is below the ceiling but flat, so the remaining gap is the features or the operator, not the row count.
+Two standard errors is the bar for any verdict here; a smaller difference is
+unresolved rather than absent.
+
+No inverse-power law rises through the accuracy column, so the reported
+limit is the last measured point itself: 0.790 [0.780, 0.800]. The curve is flat or falling, so there is no rising power law to fit; the last measured point is reported in its place.
+
+The interval treats the six points as independent and the form as known, and
+both are assumptions, which is why the ceiling comparison above carries the
+verdict and this fit is printed beside it rather than instead of it.
 
 ## Labels and resolution
 

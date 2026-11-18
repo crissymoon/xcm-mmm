@@ -1,7 +1,7 @@
 {
   "name": "xcm-mmm-churn-baseline",
   "version": 3,
-  "built_at": "2026-11-18T02:51:17Z",
+  "built_at": "2026-11-18T03:12:02Z",
   "features": [
     "tenure",
     "monthly",
@@ -281,24 +281,52 @@
     "events_per_feature": 133.5,
     "learning": [
       {
-        "fraction": 0.25,
-        "rows": 1409,
-        "auc": 0.867
+        "fraction": 0.1,
+        "rows": 528,
+        "auc": 0.8657,
+        "se": 0.0031,
+        "accuracy": 0.793,
+        "accuracy_se": 0.013
+      },
+      {
+        "fraction": 0.2,
+        "rows": 1057,
+        "auc": 0.8639,
+        "se": 0.0018,
+        "accuracy": 0.7815,
+        "accuracy_se": 0.0049
+      },
+      {
+        "fraction": 0.35,
+        "rows": 1849,
+        "auc": 0.8666,
+        "se": 0.0027,
+        "accuracy": 0.7867,
+        "accuracy_se": 0.0079
       },
       {
         "fraction": 0.5,
-        "rows": 2817,
-        "auc": 0.8672
+        "rows": 2641,
+        "auc": 0.8674,
+        "se": 0.002,
+        "accuracy": 0.7778,
+        "accuracy_se": 0.0091
       },
       {
         "fraction": 0.75,
-        "rows": 4226,
-        "auc": 0.8674
+        "rows": 3962,
+        "auc": 0.8679,
+        "se": 0.0023,
+        "accuracy": 0.7904,
+        "accuracy_se": 0.0049
       },
       {
         "fraction": 1.0,
-        "rows": 5634,
-        "auc": 0.8679
+        "rows": 5282,
+        "auc": 0.8674,
+        "se": 0.0022,
+        "accuracy": 0.7899,
+        "accuracy_se": 0.0049
       }
     ],
     "label_audit": {

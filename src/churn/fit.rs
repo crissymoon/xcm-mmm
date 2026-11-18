@@ -290,7 +290,7 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
         .collect();
     let tenure_auc = auc(&narrow_scores, &labels);
     let positives = labels.iter().filter(|label| **label).count();
-    let learning = learning_curve(samples, folds);
+    let learning = learning_curve(samples);
     let interval = bootstrap_auc(&scores, &labels, 400, 0.95, 0x5EED);
     let delong = delong_auc(&scores, &labels, 0.95);
     let accelerated = crate::uncertainty::bca(&scores, &labels, 400, 0.95, 0x5EED, 20, auc);
@@ -400,25 +400,41 @@ fn coverage_config() -> crate::uncertainty::CoverageConfig {
     crate::uncertainty::CoverageConfig::default()
 }
 
-/// Held-out AUC at four training fractions, same folds and same model.
+/// The salt that gives the learning curve a split of its own.
+///
+/// A curve drawn on the folds that chose the model is not a second
+/// measurement: its largest point is the headline itself, scored on the rows
+/// the model was selected against. Salting the id partitions the panel again,
+/// so the curve and the headline can disagree for sampling reasons instead of
+/// agreeing by construction.
+const CURVE_SALT: &str = "#curve";
+const CURVE_FOLDS: usize = 4;
+
+fn curve_fold(id: &str) -> usize {
+    fold(&format!("{id}{CURVE_SALT}"), CURVE_FOLDS)
+}
+
+/// Held-out AUC and accuracy at six training fractions, on a split of their own.
 ///
 /// A curve still rising at the largest fraction says the bank is limited by
-/// rows. A flat curve says the ceiling is the features or the operator. The
-/// subsets are drawn deterministically from the training side of each fold, so
-/// the diagnostic rebuilds with the artifact.
-fn learning_curve(samples: &[Sample], folds: usize) -> Vec<LearningPoint> {
-    let fractions = [0.25, 0.5, 0.75, 1.0];
-    let mut out = Vec::with_capacity(fractions.len());
-    for (index, fraction) in fractions.iter().enumerate() {
-        let mut total = 0.0;
-        let mut used = 0usize;
+/// rows. A flat curve below the label audit's ceiling says the ceiling is the
+/// features or the operator. The subsets are drawn deterministically from the
+/// curve's training side, so the diagnostic rebuilds with the artifact. The
+/// accuracy column is the one the ceiling can be compared with; comparing the
+/// area with an accuracy would be a scale error.
+fn learning_curve(samples: &[Sample]) -> Vec<LearningPoint> {
+    let mut out = Vec::with_capacity(support::FRACTIONS.len());
+    for (index, fraction) in support::FRACTIONS.iter().enumerate() {
+        let mut aucs = Vec::new();
+        let mut accuracies = Vec::new();
         let mut rows = 0usize;
-        for fold_at in 0..folds {
+        let mut tested = 0usize;
+        for fold_at in 0..CURVE_FOLDS {
             let train: Vec<usize> = (0..samples.len())
-                .filter(|at| fold(&samples[*at].id, folds) != fold_at)
+                .filter(|at| curve_fold(&samples[*at].id) != fold_at)
                 .collect();
             let test: Vec<usize> = (0..samples.len())
-                .filter(|at| fold(&samples[*at].id, folds) == fold_at)
+                .filter(|at| curve_fold(&samples[*at].id) == fold_at)
                 .collect();
             if train.is_empty() || test.is_empty() {
                 continue;
@@ -446,25 +462,58 @@ fn learning_curve(samples: &[Sample], folds: usize) -> Vec<LearningPoint> {
             if test_labels.iter().all(|label| *label) || test_labels.iter().all(|label| !*label) {
                 continue;
             }
+            let train_scores: Vec<f64> = rows_fit.iter().map(|row| model.predict(row)).collect();
+            let cut = best_cut(&train_scores, &labels);
             let test_scores: Vec<f64> = test
                 .iter()
                 .map(|at| model.predict(&samples[*at].values))
                 .collect();
-            total += auc(&test_scores, &test_labels);
-            used += 1;
+            aucs.push(auc(&test_scores, &test_labels));
+            let right = test_scores
+                .iter()
+                .zip(&test_labels)
+                .filter(|(score, label)| (**score >= cut) == **label)
+                .count();
+            accuracies.push(right as f64 / test_scores.len().max(1) as f64);
             rows += chosen.len();
+            tested += test_scores.len();
         }
+        let (mean_auc, se_auc) = mean_and_se(&aucs);
+        let (mean_accuracy, se_accuracy) = mean_and_se(&accuracies);
+        // The fold spread says how sensitive the accuracy is to the split. The
+        // binomial error says how precisely it is measured on the rows it was
+        // measured on. A ceiling comparison has to clear the wider of the two.
+        let binomial = (mean_accuracy * (1.0 - mean_accuracy) / tested.max(1) as f64).sqrt();
         out.push(LearningPoint {
             fraction: *fraction,
-            rows: rows.checked_div(used).unwrap_or(0),
-            auc: if used == 0 {
-                0.5
-            } else {
-                round4(total / used as f64)
-            },
+            rows: rows.checked_div(aucs.len()).unwrap_or(0),
+            auc: round4(mean_auc),
+            se: round4(se_auc),
+            accuracy: round4(mean_accuracy),
+            accuracy_se: round4(se_accuracy.max(binomial)),
         });
     }
     out
+}
+
+/// Mean and standard error across folds.
+///
+/// One fold reads `(value, 0)` rather than falling back to zero width, because
+/// a single fold is not evidence of precision.
+fn mean_and_se(values: &[f64]) -> (f64, f64) {
+    if values.is_empty() {
+        return (0.5, 0.0);
+    }
+    let mean = values.iter().sum::<f64>() / values.len() as f64;
+    if values.len() < 2 {
+        return (mean, 0.0);
+    }
+    let variance = values
+        .iter()
+        .map(|value| (value - mean) * (value - mean))
+        .sum::<f64>()
+        / (values.len() - 1) as f64;
+    (mean, (variance / values.len() as f64).sqrt())
 }
 
 /// A gradient boosted tree baseline on the same folds and features.

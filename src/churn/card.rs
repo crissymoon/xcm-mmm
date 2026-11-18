@@ -241,19 +241,51 @@ month.\n\n",
         score.events_per_feature,
         crate::support::support_level(score.events_per_feature)
     ));
-    out.push_str("| training fraction | rows | held-out AUC |\n|---|---:|---:|\n");
+    out.push_str(
+        "| training fraction | rows | held-out AUC | se | accuracy |\n|---|---:|---:|---:|---:|\n",
+    );
     for point in &score.learning {
         out.push_str(&format!(
-            "| {:.0}% | {} | {:.3} |\n",
+            "| {:.0}% | {} | {:.3} | {:.3} | {:.3} |\n",
             point.fraction * 100.0,
             commas(point.rows),
-            point.auc
+            point.auc,
+            point.se,
+            point.accuracy
         ));
     }
     out.push_str(&format!(
-        "\nLast-doubling gain {:.2} AUC points. A positive number means the bank was\nstill buying accuracy at the largest fraction; a flat one means the ceiling is\nthe features or the operator, not the row count. Neither reading transports to\na new operator.\n\n",
+        "\nLast-doubling gain {:.2} AUC points. A positive number means the bank was\nstill buying accuracy at the largest fraction; a flat one means the ceiling is\nthe features or the operator, not the row count. The curve is drawn on a split\nof its own, salted by customer id, so its 100 percent point is an independent\nmeasurement of the same procedure rather than the headline scored twice, and it\nis expected to differ from the headline for sampling reasons. The accuracy\ncolumn is what the label audit's ceiling can be compared with; the area cannot\nbe, because the two are on different scales.\n\n",
         crate::support::doubling_gain(&score.learning)
     ));
+    if let Some(reading) =
+        crate::support::against_ceiling(&score.learning, score.label_audit.ceiling)
+    {
+        out.push_str(&format!(
+            "At 100 percent the curve reads accuracy {:.3} with a standard error of\n{:.3}, the wider of its fold spread and the binomial error on the rows it was\nmeasured on, against an estimated label ceiling of {:.3}, a gap of {:.3}. {}\nTwo standard errors is the bar for any verdict here; a smaller difference is\nunresolved rather than absent.\n\n",
+            reading.curve, reading.se, reading.ceiling, reading.gap, reading.verdict
+        ));
+    } else {
+        out.push_str(
+            "The label audit supplies no ceiling on this artifact, so the curve is not\ncompared with one. A curve is still readable as a slope without it; a ceiling\ncomparison against a refused number would not be.\n\n",
+        );
+    }
+    if let Some(limit) = crate::support::asymptote(&score.learning) {
+        if limit.rate > 0.0 {
+            out.push_str(&format!(
+                "Fitting an inverse-power law to the accuracy column gives a limit of {:.3}\n[{:.3}, {:.3}] at exponent {:.2}, against a last measured point of {:.3}:\n{}.\n\n",
+                limit.asymptote, limit.low, limit.high, limit.rate, limit.last, limit.note
+            ));
+        } else {
+            out.push_str(&format!(
+                "No inverse-power law rises through the accuracy column, so the reported\nlimit is the last measured point itself: {:.3} [{:.3}, {:.3}]. {}\n\n",
+                limit.asymptote, limit.low, limit.high, limit.note
+            ));
+        }
+        out.push_str(
+            "The interval treats the six points as independent and the form as known, and\nboth are assumptions, which is why the ceiling comparison above carries the\nverdict and this fit is printed beside it rather than instead of it.\n\n",
+        );
+    }
     out.push_str("## Labels and resolution\n\n");
     if score.label_audit.rows == 0 {
         out.push_str(

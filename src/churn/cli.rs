@@ -5,8 +5,10 @@
 //! the panel is derived from a customer table while the model is a choice made
 //! on top of it: a reader can take the panel without accepting the regression.
 
+use std::collections::BTreeMap;
 use std::error::Error;
 use std::fs;
+use std::path::Path;
 
 use clap::{Args, Subcommand};
 
@@ -14,7 +16,8 @@ use super::fit;
 use super::panel::{self, Report, Summary};
 use crate::causal::{self, CausalConfig};
 use crate::data::Dataset;
-use crate::monitor::{self, Registry};
+use crate::digest::sha256;
+use crate::monitor::{self, Audit, Registry};
 
 #[derive(Args)]
 pub struct ChurnArgs {
@@ -38,6 +41,8 @@ pub enum ChurnCommand {
     Monitor(ChurnMonitorArgs),
     /// Publish the current artifact as the next registry version.
     Publish(ChurnPublishArgs),
+    /// Print the published versions, their audit trails and the log.
+    Versions(ChurnVersionsArgs),
     /// Restore the previous registry version and move the pointer back.
     Rollback(ChurnRollbackArgs),
 }
@@ -142,6 +147,12 @@ pub struct ChurnPublishArgs {
 }
 
 #[derive(Args)]
+pub struct ChurnVersionsArgs {
+    #[arg(long, default_value = "data/churn/registry")]
+    pub registry: String,
+}
+
+#[derive(Args)]
 pub struct ChurnRollbackArgs {
     #[arg(long, default_value = "data/churn/registry")]
     pub registry: String,
@@ -178,6 +189,18 @@ pub fn run(args: ChurnArgs) -> Result<(), Box<dyn Error>> {
             );
             let folds: Vec<String> = score.per_fold.iter().map(|v| format!("{v:.3}")).collect();
             println!("folds     {}", folds.join(" "));
+            if let Some(reading) =
+                crate::support::against_ceiling(&score.learning, score.label_audit.ceiling)
+            {
+                println!(
+                    "curve     {} sizes  accuracy {:.3} at 100 percent  ceiling {:.3}  gap {:+.3}",
+                    score.learning.len(),
+                    reading.curve,
+                    reading.ceiling,
+                    reading.gap
+                );
+                println!("reading   {}", reading.verdict);
+            }
             println!("wrote     {}/model.json, card.md", a.dir);
             Ok(())
         }
@@ -197,14 +220,46 @@ pub fn run(args: ChurnArgs) -> Result<(), Box<dyn Error>> {
         ChurnCommand::Uplift(a) => uplift(a),
         ChurnCommand::Monitor(a) => monitor(a),
         ChurnCommand::Publish(a) => {
+            let model = fit::read(&a.model)?;
+            let audit = audit_for(&a.model, &model)?;
             let registry = Registry::open(&a.registry)?;
-            let version = registry.publish(&a.model)?;
+            let version = registry.publish_with(&a.model, audit.clone())?;
             println!(
                 "published v{:04} {} from {}",
                 version.id, version.file, a.model
             );
+            println!("digest    sha256 {}", version.digest);
+            println!("bytes     {}", commas(version.bytes as usize));
+            println!(
+                "parent    {}",
+                version
+                    .parent
+                    .map(|id| format!("v{id:04}"))
+                    .unwrap_or_else(|| "none, this is the first version".to_string())
+            );
+            println!(
+                "data      {} rows  sha256 {}",
+                commas(audit.data_rows),
+                if audit.data_digest.is_empty() {
+                    "not recorded".to_string()
+                } else {
+                    audit.data_digest.clone()
+                }
+            );
+            println!(
+                "range     {}",
+                if audit.range.is_empty() {
+                    "not recorded".to_string()
+                } else {
+                    audit.range.clone()
+                }
+            );
+            for (name, value) in &audit.facts {
+                println!("{name:<22}{value}");
+            }
             Ok(())
         }
+        ChurnCommand::Versions(a) => versions(&a.registry),
         ChurnCommand::Rollback(a) => {
             let registry = Registry::open(&a.registry)?;
             let version = registry.rollback(&a.target)?;
@@ -212,9 +267,143 @@ pub fn run(args: ChurnArgs) -> Result<(), Box<dyn Error>> {
                 "rolled back to v{:04} {} -> {}",
                 version.id, version.file, a.target
             );
+            println!(
+                "digest    sha256 {} (checked before restoring)",
+                version.digest
+            );
             Ok(())
         }
     }
+}
+
+/// The trail a published version carries: what the artifact was built from, on
+/// what range, and the readings the card claims.
+///
+/// Everything here is read off the artifact and the panel beside it, so a
+/// version cannot claim a reading its own fit did not produce. The seed is
+/// absent because the fit draws nothing: folds are an id hash and the logistic
+/// is deterministic from its inputs, which is a claim the rebuild check tests.
+fn audit_for(model_path: &str, model: &fit::ChurnModel) -> Result<Audit, Box<dyn Error>> {
+    let panel = Path::new(model_path)
+        .parent()
+        .map(|dir| dir.join("panel.csv"))
+        .filter(|path| path.is_file());
+    let data_digest = match &panel {
+        Some(path) => sha256(&fs::read(path)?),
+        None => String::new(),
+    };
+    let score = &model.score;
+    let mut facts = BTreeMap::new();
+    facts.insert(
+        "held-out AUC".to_string(),
+        format!(
+            "{:.3} [{:.3}, {:.3}]",
+            score.auc, score.auc_low, score.auc_high
+        ),
+    );
+    facts.insert(
+        "balanced accuracy".to_string(),
+        format!("{:.3}", score.balanced),
+    );
+    facts.insert("ECE".to_string(), format!("{:.3}", score.ece));
+    facts.insert(
+        "conformal coverage".to_string(),
+        format!(
+            "{:.3} at {:.0} percent nominal",
+            score.conformal_coverage,
+            (1.0 - score.conformal_alpha) * 100.0
+        ),
+    );
+    facts.insert("positives".to_string(), commas(score.positives));
+    facts.insert("folds".to_string(), score.folds.to_string());
+    facts.insert(
+        "mature rows".to_string(),
+        format!(
+            "{} of {}",
+            commas(score.cohorts.mature_rows),
+            commas(score.rows)
+        ),
+    );
+    facts.insert("built".to_string(), model.built_at.clone());
+    facts.insert(
+        "seed".to_string(),
+        "none: the folds are an id hash and the fit draws nothing".to_string(),
+    );
+    let range = match &model.window {
+        Some(window) if window.ok() => format!(
+            "month {} to {} from time zero at {}",
+            window.first_month, window.last_month, window.declared
+        ),
+        Some(window) => format!(
+            "month {} to {}, which breaks the window contract",
+            window.first_month, window.last_month
+        ),
+        None => String::new(),
+    };
+    Ok(Audit {
+        data_digest,
+        data_rows: score.rows,
+        range,
+        seed: None,
+        facts,
+    })
+}
+
+fn versions(root: &str) -> Result<(), Box<dyn Error>> {
+    let registry = Registry::open(root)?;
+    let versions = registry.list()?;
+    if versions.is_empty() {
+        println!("empty     nothing is published in {root}");
+        return Ok(());
+    }
+    let current = registry.current()?.map(|version| version.id);
+    println!("id    digest        rows    parent  state");
+    for version in &versions {
+        let state = match registry.verify(version.id)? {
+            Some(true) => "verified",
+            Some(false) => "DIGEST MISMATCH",
+            None => "no digest recorded",
+        };
+        println!(
+            "v{:04} {:<14}{:<8}{:<8}{}{}",
+            version.id,
+            short(&version.digest),
+            commas(version.audit.data_rows),
+            version
+                .parent
+                .map(|id| format!("v{id:04}"))
+                .unwrap_or_else(|| "-".to_string()),
+            if current == Some(version.id) {
+                format!("current, {state}")
+            } else {
+                state.to_string()
+            },
+            if version.published.is_empty() {
+                String::new()
+            } else {
+                format!(", published {}", version.published)
+            }
+        );
+        if !version.audit.range.is_empty() {
+            println!("      {:<32}{}", "range", version.audit.range);
+        }
+        for (name, value) in &version.audit.facts {
+            println!("      {:<32}{}", name, value);
+        }
+    }
+    let history = registry.history()?;
+    if !history.is_empty() {
+        println!("log");
+        for event in &history {
+            println!("      {:<22}{:<10}{}", event.at, event.action, event.note);
+        }
+    }
+    Ok(())
+}
+
+/// The head of a digest or timestamp, for a table that has to stay readable.
+fn short(text: &str) -> String {
+    text.chars().take(12).collect()
 }
 
 fn uplift(args: ChurnUpliftArgs) -> Result<(), Box<dyn Error>> {

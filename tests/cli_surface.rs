@@ -586,3 +586,15 @@ fn a_copy_set_is_read_from_a_file_of_ad_texts() {
     assert!(text.contains("learned   3 ads into segment"), "{text}");
     assert!(text.contains("grouped folds"), "{text}");
 }
+
+#[test]
+fn churn_versions_reports_an_empty_registry_rather_than_failing() {
+    let dir = temp_dir().join("empty-registry");
+    let out = Command::new(binary())
+        .args(["churn", "versions", "--registry", dir.to_str().unwrap()])
+        .output()
+        .unwrap();
+    assert!(out.status.success(), "{:?}", out);
+    let text = String::from_utf8_lossy(&out.stdout);
+    assert!(text.contains("nothing is published"), "{text}");
+}
