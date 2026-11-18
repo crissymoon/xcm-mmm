@@ -78,6 +78,42 @@ fn a_statute_is_read_and_rewritten() {
 }
 
 #[test]
+fn a_construction_is_rewritten_not_just_its_words() {
+    // The clause rule has to win over `shall not`, or the modal ends up in front
+    // of a noun: "must not be entitled to" was the old output. `whatsoever` and
+    // `incidental to` have no glossary row, so this is the only test that can
+    // show the clause table doing the work a word table cannot.
+    let dir = data();
+    let out = run(&[
+        "legal",
+        "translate",
+        "--dir",
+        dir.to_str().unwrap(),
+        "The Contractor shall not be entitled to payment or reimbursement for any \
+         services performed, nor for any incidental or administrative expenses \
+         whatsoever incurred in or incidental to performance hereunder.",
+    ]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let text = stdout(&out);
+    let first = text.lines().next().unwrap();
+    assert!(
+        first.starts_with("The Contractor shall not be paid for any services performed"),
+        "{first}"
+    );
+    assert!(!first.contains("entitled"), "{first}");
+    assert!(!first.contains("whatsoever"), "{first}");
+    assert!(
+        first.contains("in or related to performance under this document"),
+        "{first}"
+    );
+    assert!(text.contains("not-entitled-to-payment"), "{text}");
+}
+
+#[test]
 fn a_citation_and_a_quotation_are_left_alone() {
     let dir = data();
     let out = run(&[

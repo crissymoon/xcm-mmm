@@ -31,10 +31,18 @@
       }
     }
   },
-  "built_at": "2026-11-18T10:06:06-08:00",
+  "built_at": "2026-11-18T10:19:43-08:00",
+  "clause_rules": [
+    "any-whatsoever",
+    "date-upon-which",
+    "for-purposes-of-this",
+    "in-or-incidental-to",
+    "not-entitled-to-payment",
+    "within-days-of-receipt"
+  ],
   "counts": {
     "advisory": 2,
-    "applying": 98,
+    "applying": 104,
     "avoidable": 100,
     "bank": 2324,
     "bank_legal": 1402,
@@ -45,7 +53,8 @@
     "pairs": 71,
     "pairs_editorial": 28,
     "pairs_published": 43,
-    "rules": 100,
+    "rules": 106,
+    "rules_clause": 6,
     "rules_published": 17,
     "sources": 115,
     "substitutions": 119,
@@ -71,10 +80,10 @@
       "rows": 71
     },
     {
-      "bytes": 19733,
-      "fnv64": "5eb8ab8d4daa118b",
+      "bytes": 21728,
+      "fnv64": "d8fccbe458ca8512",
       "name": "rewrites.jsonl",
-      "rows": 100
+      "rows": 106
     },
     {
       "bytes": 1088,

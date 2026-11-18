@@ -15,6 +15,18 @@
 //! The pass is single. A replacement is never rewritten again, so the output of
 //! a run is a function of the input and the file, not of how many rounds it was
 //! given, and every change carries the offsets of the text it came from.
+//!
+//! A replacement may name the groups of its own pattern: `$1`, `$2`, or
+//! `${name}`, with `$$` for a literal dollar. That is what separates a
+//! substitution from a rewrite. "shall not be entitled to payment" cannot be
+//! repaired word by word, because the words are in the wrong order; a rule that
+//! captures the modal and the noun can put them back as "shall not be paid for".
+//! Group references are checked when the table loads, so a `$3` that names a
+//! group the pattern does not have is refused instead of quietly deleting a
+//! phrase at run time.
+//!
+//! A bare reference is one digit, because `$500` in a legal text is money. A
+//! group numbered ten or higher is written `${10}`.
 
 use std::collections::BTreeSet;
 use std::fs;
@@ -119,6 +131,7 @@ impl Rules {
                 .case_insensitive(true)
                 .build()
                 .map_err(|e| format!("{}: {e}", rule.id))?;
+            check_references(&rule, &regex)?;
             patterns.push(regex);
         }
         Ok(Self { rules, patterns })
@@ -192,7 +205,9 @@ impl Rules {
         let mut edits = Vec::new();
         for candidate in accepted {
             let rule = &self.rules[candidate.rule];
-            let to = render(rule, &candidate.matched);
+            let slice = &text[candidate.span.start..candidate.span.end];
+            let caps = self.patterns[candidate.rule].captures(slice);
+            let to = render(rule, &candidate.matched, caps.as_ref());
             let change = Change {
                 rule: rule.id.clone(),
                 span: candidate.span,
@@ -223,18 +238,126 @@ impl Rules {
 }
 
 /// Take the case of the matched text into the replacement.
-fn render(rule: &Rule, matched: &str) -> String {
+fn render(rule: &Rule, matched: &str, caps: Option<&regex::Captures>) -> String {
     let upper = matched
         .chars()
         .find(|c| c.is_alphabetic())
         .map(|c| c.is_uppercase())
         .unwrap_or(false);
+    let body = expand(&rule.replace, caps);
     match rule.case {
-        Case::Lower => rule.replace.to_lowercase(),
-        Case::Title => capitalise(&rule.replace),
-        Case::Preserve if upper => capitalise(&rule.replace),
-        Case::Preserve => rule.replace.clone(),
+        Case::Lower => body.to_lowercase(),
+        Case::Title => capitalise(&body),
+        Case::Preserve if upper => capitalise(&body),
+        Case::Preserve => body,
     }
+}
+
+/// Every group name or number a replacement refers to.
+///
+/// `$$` is a literal dollar and is skipped. A lone `$` followed by anything else
+/// is left as written, because it is more likely a currency than a mistake.
+fn references(replace: &str) -> Vec<String> {
+    let bytes = replace.as_bytes();
+    let mut found = Vec::new();
+    let mut index = 0;
+    while index < bytes.len() {
+        if bytes[index] != b'$' || index + 1 >= bytes.len() {
+            index += 1;
+            continue;
+        }
+        match bytes[index + 1] {
+            b'$' => index += 2,
+            b'{' => match replace[index + 2..].find('}') {
+                Some(close) => {
+                    found.push(replace[index + 2..index + 2 + close].to_string());
+                    index += close + 3;
+                }
+                None => index += 1,
+            },
+            b'0'..=b'9' => {
+                // One digit is a group; a longer run of digits is money, and a
+                // group of two or more digits is written ${10}.
+                if index + 2 < bytes.len() && bytes[index + 2].is_ascii_digit() {
+                    index += 1;
+                    continue;
+                }
+                found.push(((bytes[index + 1] - b'0') as usize).to_string());
+                index += 2;
+            }
+            _ => index += 1,
+        }
+    }
+    found
+}
+
+/// Refuse a rule whose replacement names a group its pattern does not have.
+fn check_references(rule: &Rule, regex: &Regex) -> Result<(), String> {
+    let groups = regex.captures_len();
+    let names: Vec<&str> = regex.capture_names().flatten().collect();
+    for name in references(&rule.replace) {
+        let known = if name.chars().all(|c| c.is_ascii_digit()) {
+            name.parse::<usize>().map(|n| n < groups).unwrap_or(false)
+        } else {
+            names.iter().any(|known| *known == name.as_str())
+        };
+        if !known {
+            return Err(format!(
+                "{}: the replacement names group ${name}, which the pattern does not have",
+                rule.id
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// Write the replacement, filling `$1`, `${name}` and `$$` from the match.
+fn expand(replace: &str, caps: Option<&regex::Captures>) -> String {
+    let Some(caps) = caps else {
+        return replace.replace("$$", "$");
+    };
+    let bytes = replace.as_bytes();
+    let mut out = String::with_capacity(replace.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        if bytes[index] == b'$' && index + 1 < bytes.len() {
+            match bytes[index + 1] {
+                b'$' => {
+                    out.push('$');
+                    index += 2;
+                    continue;
+                }
+                b'{' => {
+                    if let Some(close) = replace[index + 2..].find('}') {
+                        let name = &replace[index + 2..index + 2 + close];
+                        if let Some(group) = caps.name(name) {
+                            out.push_str(group.as_str());
+                        }
+                        index += close + 3;
+                        continue;
+                    }
+                }
+                b'0'..=b'9' => {
+                    if index + 2 < bytes.len() && bytes[index + 2].is_ascii_digit() {
+                        out.push('$');
+                        index += 1;
+                        continue;
+                    }
+                    let number = (bytes[index + 1] - b'0') as usize;
+                    if let Some(group) = caps.get(number) {
+                        out.push_str(group.as_str());
+                    }
+                    index += 2;
+                    continue;
+                }
+                _ => {}
+            }
+        }
+        let ch = replace[index..].chars().next().unwrap_or('$');
+        out.push(ch);
+        index += ch.len_utf8();
+    }
+    out
 }
 
 fn capitalise(text: &str) -> String {
@@ -377,5 +500,62 @@ mod tests {
         let applied = rules.apply(text, &[]);
         let change = &applied.changes[0];
         assert_eq!(change.span.slice(text), "herein");
+    }
+
+    #[test]
+    fn a_replacement_can_reorder_what_it_captures() {
+        // The words cannot be repaired one at a time: "shall not be entitled to
+        // payment" keeps its meaning only if the modal comes back in front of a
+        // verb, which is a rewrite rather than a substitution.
+        let mut clause = rule(
+            "not-be-entitled-to-payment",
+            r"\b(shall|will|must)\s+not\s+be\s+entitled\s+to\s+(payment|reimbursement)(?:\s+(?:or|and)\s+(?:payment|reimbursement))?\s+for\b",
+            r"$1 not be paid for",
+            7,
+        );
+        clause.kind = "clause".into();
+        let rules = Rules::new(vec![
+            rule("shall-not", r"\bshall not\b", "must not", 2),
+            clause,
+        ])
+        .unwrap();
+        let applied = rules.apply(
+            "The Contractor shall not be entitled to payment or reimbursement for any task.",
+            &[],
+        );
+        assert_eq!(
+            applied.text, "The Contractor shall not be paid for any task.",
+            "the clause rule must outrank the two-word substitution"
+        );
+        assert_eq!(applied.changes.len(), 1);
+    }
+
+    #[test]
+    fn a_named_group_and_a_literal_dollar_both_expand() {
+        let rules = Rules::new(vec![rule(
+            "within-receipt",
+            r"\bwithin\s+(?P<days>\w+(?:\s*\(\d+\))?)\s+days\s+of\s+receipt\s+of\b",
+            "within ${days} days of receiving",
+            6,
+        )])
+        .unwrap();
+        assert_eq!(
+            rules
+                .apply("within ten (10) days of receipt of the notice", &[])
+                .text,
+            "within ten (10) days of receiving the notice"
+        );
+    }
+
+    #[test]
+    fn a_group_the_pattern_does_not_have_is_refused() {
+        let error = Rules::new(vec![rule("gone", r"\bherein\b", "$3", 0)]).unwrap_err();
+        assert!(error.contains("$3"), "{error}");
+    }
+
+    #[test]
+    fn a_dollar_that_is_not_a_group_is_left_alone() {
+        let rules = Rules::new(vec![rule("fee", r"\bfee\b", "a $500 charge", 0)]).unwrap();
+        assert_eq!(rules.apply("fee", &[]).text, "a $500 charge");
     }
 }

@@ -290,6 +290,11 @@ impl Legal {
     /// The rules that have no glossary row behind them, and the avoidable terms
     /// that no applying rule reaches. Both are reported by `check` rather than
     /// assumed away.
+    ///
+    /// A `phrase` rule and a `clause` rule are exempt from the orphan check on
+    /// purpose: a phrase rule is a spelling of a glossary row, and a clause rule
+    /// rewrites a construction the glossary cannot hold, so neither is expected
+    /// to carry an id the glossary knows.
     pub fn coverage(&self) -> (Vec<String>, Vec<String>) {
         let ids: std::collections::BTreeSet<&str> =
             self.lexicon.terms().iter().map(|t| t.id.as_str()).collect();
@@ -297,7 +302,7 @@ impl Legal {
             .rules
             .rules()
             .iter()
-            .filter(|r| !ids.contains(r.id.as_str()) && r.kind != "phrase")
+            .filter(|r| !ids.contains(r.id.as_str()) && r.kind != "phrase" && r.kind != "clause")
             .map(|r| r.id.clone())
             .collect();
         let applied: std::collections::BTreeSet<&str> =

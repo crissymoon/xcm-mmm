@@ -330,13 +330,20 @@ fn audit(legal: &Legal, bank: &str) -> Result<Vec<String>, Box<dyn Error>> {
         return Err(format!("{bank}: {} unreadable rows", read.bad.len()).into());
     }
     let mut out = Vec::new();
+    let clause: std::collections::BTreeSet<&str> = legal
+        .rules
+        .rules()
+        .iter()
+        .filter(|rule| rule.kind == "clause")
+        .map(|rule| rule.id.as_str())
+        .collect();
     for (label, name) in [(1u8, "legal"), (0u8, "plain")] {
         let rows: Vec<_> = read.rows.iter().filter(|row| row.label == label).collect();
         if rows.is_empty() {
             continue;
         }
         let (mut words, mut hits, mut after_words, mut after_hits, mut changed) = (0, 0, 0, 0, 0);
-        let (mut advice, mut cited) = (0, 0);
+        let (mut advice, mut cited, mut rewrites) = (0, 0, 0);
         for row in &rows {
             let reading = legal.translate(&row.text, false);
             words += reading.words_in;
@@ -345,6 +352,11 @@ fn audit(legal: &Legal, bank: &str) -> Result<Vec<String>, Box<dyn Error>> {
             after_hits += reading.after.avoidable;
             advice += reading.after.advisory;
             cited += reading.after.in_citation;
+            rewrites += reading
+                .changes
+                .iter()
+                .filter(|change| clause.contains(change.rule.as_str()))
+                .count();
             if !reading.changes.is_empty() {
                 changed += 1;
             }
@@ -353,7 +365,8 @@ fn audit(legal: &Legal, bank: &str) -> Result<Vec<String>, Box<dyn Error>> {
         let after = rate(after_hits, after_words);
         out.push(format!(
             "{name}: {} rows, {before:.2} avoidable per 100 words before, {after:.2} after \
-             ({advice} advisory, {cited} in citations left in place), {changed} changed ({:.1}%)",
+             ({advice} advisory, {cited} in citations left in place), {changed} changed ({:.1}%), \
+             {rewrites} clause rewrites",
             rows.len(),
             changed as f64 * 100.0 / rows.len() as f64
         ));
