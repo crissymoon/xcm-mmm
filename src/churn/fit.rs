@@ -20,6 +20,7 @@ use std::io;
 use serde::{Deserialize, Serialize};
 
 use super::csvx;
+use crate::audit::{detectable_auc, AuditConfig, LabelAudit, Power};
 use crate::data::Dataset;
 use crate::dataset::built_at;
 use crate::detect::eval::{best_cut, evaluate, Metrics};
@@ -28,7 +29,9 @@ use crate::digest::fnv64_str;
 use crate::learn::{Learner, TreeConfig};
 use crate::rng::Rng;
 use crate::support::{self, LearningPoint};
-use crate::uncertainty::{bootstrap_auc, delong_auc, mondrian, MondrianConformal};
+use crate::uncertainty::{
+    bootstrap_auc, delong_auc, delong_pair, mondrian, MondrianConformal, PairedAuc,
+};
 
 pub const MODEL: &str = "model.json";
 pub const CARD: &str = "card.md";
@@ -195,6 +198,14 @@ pub struct Score {
     pub tree_auc_high: f64,
     pub events_per_feature: f64,
     pub learning: Vec<LearningPoint>,
+    /// How much of the bank's labelling is wrong, estimated from the same
+    /// out-of-fold probabilities the AUC came from.
+    pub label_audit: LabelAudit,
+    /// The smallest AUC gain this panel resolves, beside the project floor.
+    pub power: Power,
+    /// The tree against the logistic, paired on the same rows. Absent when the
+    /// two score vectors do not line up.
+    pub tree_gain: Option<PairedAuc>,
 }
 
 /// One coefficient, on the standardised scale the fit uses.
@@ -290,6 +301,17 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
     let stayed_class = class_reading(&class_report, false);
     let tree_scores = tree_baseline(samples, folds);
     let tree_interval = bootstrap_auc(&tree_scores, &labels, 200, 0.95, 0x7A11);
+    let ids: Vec<String> = samples.iter().map(|sample| sample.id.clone()).collect();
+    let label_audit = crate::audit::audit(&ids, &scores, &labels, &AuditConfig::default());
+    let power = detectable_auc(
+        auc(&scores, &labels),
+        positives,
+        samples.len() - positives,
+        AuditConfig::default().floor,
+        AuditConfig::default().power,
+        AuditConfig::default().level,
+    );
+    let tree_gain = delong_pair(&tree_scores, &scores, &labels, 0.95);
     ChurnModel {
         name: "xcm-mmm-churn-baseline".to_string(),
         version: 3,
@@ -346,6 +368,9 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
             tree_auc_high: round4(tree_interval.high),
             events_per_feature: round4(support::events_per_feature(positives, names.len())),
             learning,
+            label_audit,
+            power,
+            tree_gain,
         },
         metrics,
         window: None,

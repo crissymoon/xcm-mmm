@@ -446,34 +446,14 @@ pub fn delong_auc(scores: &[f64], labels: &[bool], level: f64) -> DelongAuc {
     if scores.len() != labels.len() || positives == 0 || negatives == 0 {
         return flat(0.5, 0.0, 0.5, 0.5);
     }
-    let mut positive_scores = Vec::with_capacity(positives);
-    let mut negative_scores = Vec::with_capacity(negatives);
-    for (score, label) in scores.iter().zip(labels) {
-        if *label {
-            positive_scores.push(*score);
-        } else {
-            negative_scores.push(*score);
-        }
-    }
-    positive_scores.sort_by(f64::total_cmp);
-    negative_scores.sort_by(f64::total_cmp);
-    let mut v10 = Vec::with_capacity(positives);
-    for score in &positive_scores {
-        let (below, equal) = place(&negative_scores, *score);
-        v10.push((below as f64 + 0.5 * equal as f64) / negatives as f64);
-    }
-    let mut v01 = Vec::with_capacity(negatives);
-    for score in &negative_scores {
-        let (below, equal) = place(&positive_scores, *score);
-        let above = positives - below - equal;
-        v01.push((above as f64 + 0.5 * equal as f64) / positives as f64);
-    }
-    let point = v10.iter().sum::<f64>() / positives as f64;
+    let Some(placing) = placements(scores, labels) else {
+        return flat(0.5, 0.0, 0.5, 0.5);
+    };
+    let point = placing.point;
     if scores.len() < 4 {
         return flat(point, 0.0, point, point);
     }
-    let variance = sample_var(&v10) / positives as f64 + sample_var(&v01) / negatives as f64;
-    let se = variance.max(0.0).sqrt();
+    let se = placing.se();
     let pairs = (positives * negatives) as f64;
     let corrected = ((point * pairs + 0.5) / (pairs + 1.0)).clamp(1e-6, 1.0 - 1e-6);
     let centre = (corrected / (1.0 - corrected)).ln();
@@ -487,6 +467,156 @@ pub fn delong_auc(scores: &[f64], labels: &[bool], level: f64) -> DelongAuc {
     )
 }
 
+/// The DeLong placements behind one score vector.
+///
+/// `v10` holds, for each positive, the share of negatives it outranks; `v01`
+/// holds the mirror for each negative. The variance of the AUC needs only these
+/// two vectors, and so does the covariance between two models scored on the same
+/// rows, which is why they are computed once and shared.
+struct Placements {
+    point: f64,
+    v10: Vec<f64>,
+    v01: Vec<f64>,
+    positives: usize,
+    negatives: usize,
+}
+
+impl Placements {
+    /// Standard error of this reading under the DeLong variance.
+    fn se(&self) -> f64 {
+        let variance = sample_var(&self.v10) / self.positives as f64
+            + sample_var(&self.v01) / self.negatives as f64;
+        variance.max(0.0).sqrt()
+    }
+}
+
+/// Placements for `scores` against `labels`, or `None` when a class is empty.
+fn placements(scores: &[f64], labels: &[bool]) -> Option<Placements> {
+    if scores.len() != labels.len() {
+        return None;
+    }
+    let positives = labels.iter().filter(|label| **label).count();
+    let negatives = labels.len().checked_sub(positives)?;
+    if positives == 0 || negatives == 0 {
+        return None;
+    }
+    let mut positive_scores = Vec::with_capacity(positives);
+    let mut negative_scores = Vec::with_capacity(negatives);
+    for (score, label) in scores.iter().zip(labels) {
+        if *label {
+            positive_scores.push(*score);
+        } else {
+            negative_scores.push(*score);
+        }
+    }
+    positive_scores.sort_by(f64::total_cmp);
+    negative_scores.sort_by(f64::total_cmp);
+    // The placements are kept in the caller's row order, not in sorted order.
+    // A variance does not care, but the covariance between two models does: the
+    // paired reading needs entry `i` of one vector to be the same row as entry
+    // `i` of the other, and two models sort their rows differently.
+    let mut v10 = vec![0.0; positives];
+    let mut v01 = vec![0.0; negatives];
+    let (mut at_positive, mut at_negative) = (0usize, 0usize);
+    for (score, label) in scores.iter().zip(labels) {
+        if *label {
+            let (below, equal) = place(&negative_scores, *score);
+            v10[at_positive] = (below as f64 + 0.5 * equal as f64) / negatives as f64;
+            at_positive += 1;
+        } else {
+            let (below, equal) = place(&positive_scores, *score);
+            let above = positives - below - equal;
+            v01[at_negative] = (above as f64 + 0.5 * equal as f64) / positives as f64;
+            at_negative += 1;
+        }
+    }
+    let point = v10.iter().sum::<f64>() / positives as f64;
+    Some(Placements {
+        point,
+        v10,
+        v01,
+        positives,
+        negatives,
+    })
+}
+
+/// Two AUCs, their difference and the paired DeLong interval on it.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct PairedAuc {
+    /// First reading, the one being credited.
+    pub first: f64,
+    /// Second reading, the reference.
+    pub second: f64,
+    /// `first - second`.
+    pub delta: f64,
+    /// Standard error of the difference, from the paired covariance.
+    pub se: f64,
+    /// Lower end of the interval on the difference.
+    pub low: f64,
+    /// Upper end of the interval on the difference.
+    pub high: f64,
+    /// Correlation between the two sets of placements, the reason the paired
+    /// error is smaller than the independent one.
+    pub correlation: f64,
+    /// Nominal level.
+    pub level: f64,
+    /// Positive rows used, as a reminder of what the interval rests on.
+    pub positives: usize,
+    /// Negative rows used.
+    pub negatives: usize,
+}
+
+/// The paired DeLong reading of `first - second` on the same rows.
+///
+/// Two models scored on the same rows are not independent, and comparing them as
+/// if they were overstates the interval by a factor of up to `sqrt(2)`. DeLong's
+/// covariance adds the cross terms of the placements:
+/// `cov = C10 / m + C01 / n`, using the same structural vectors the single
+/// reading uses. The interval is symmetric on the difference rather than on the
+/// logit scale, because a difference can be zero or negative and a logit of it
+/// has no meaning.
+///
+/// Returns `None` when the two vectors disagree in length or a class is empty,
+/// which is the caller's cue to print nothing rather than a degenerate interval.
+pub fn delong_pair(
+    first: &[f64],
+    second: &[f64],
+    labels: &[bool],
+    level: f64,
+) -> Option<PairedAuc> {
+    if first.len() != second.len() || first.len() != labels.len() {
+        return None;
+    }
+    let a = placements(first, labels)?;
+    let b = placements(second, labels)?;
+    let m = a.positives as f64;
+    let n = a.negatives as f64;
+    let se_a = a.se();
+    let se_b = b.se();
+    let covariance = sample_cov(&a.v10, &b.v10) / m + sample_cov(&a.v01, &b.v01) / n;
+    let variance = (se_a * se_a + se_b * se_b - 2.0 * covariance).max(0.0);
+    let se = variance.sqrt();
+    let delta = a.point - b.point;
+    let z = crate::stats::z_for_level(level.clamp(0.5, 0.999_999));
+    let correlation = if se_a > 0.0 && se_b > 0.0 {
+        covariance / (se_a * se_b)
+    } else {
+        0.0
+    };
+    Some(PairedAuc {
+        first: a.point,
+        second: b.point,
+        delta,
+        se,
+        low: delta - z * se,
+        high: delta + z * se,
+        correlation: correlation.clamp(-1.0, 1.0),
+        level,
+        positives: a.positives,
+        negatives: a.negatives,
+    })
+}
+
 /// How many sorted values sit below `score`, and how many equal it.
 fn place(sorted: &[f64], score: f64) -> (usize, usize) {
     let below = sorted.partition_point(|value| value.total_cmp(&score).is_lt());
@@ -496,12 +626,22 @@ fn place(sorted: &[f64], score: f64) -> (usize, usize) {
 
 /// Sample variance with `ddof` one, zero when there is nothing to estimate.
 fn sample_var(values: &[f64]) -> f64 {
-    if values.len() < 2 {
+    sample_cov(values, values)
+}
+
+/// Sample covariance with `ddof` one, zero when the lengths do not match.
+fn sample_cov(a: &[f64], b: &[f64]) -> f64 {
+    if a.len() < 2 || a.len() != b.len() {
         return 0.0;
     }
-    let n = values.len() as f64;
-    let mean = values.iter().sum::<f64>() / n;
-    let spread: f64 = values.iter().map(|value| (value - mean).powi(2)).sum();
+    let n = a.len() as f64;
+    let mean_a = a.iter().sum::<f64>() / n;
+    let mean_b = b.iter().sum::<f64>() / n;
+    let spread: f64 = a
+        .iter()
+        .zip(b)
+        .map(|(x, y)| (x - mean_a) * (y - mean_b))
+        .sum();
     spread / (n - 1.0)
 }
 
@@ -967,6 +1107,57 @@ mod tests {
         let short = delong_auc(&[0.4, 0.2], &[true, false], 0.95);
         assert_eq!(short.se, 0.0);
         assert_eq!(short.low, short.point);
+    }
+
+    #[test]
+    fn a_model_paired_with_itself_has_zero_difference_and_zero_error() {
+        let (scores, labels) = balanced(120, 23);
+        let pair = delong_pair(&scores, &scores, &labels, 0.95).expect("two classes");
+        assert_eq!(pair.delta, 0.0);
+        assert!(pair.se < 1e-12, "{}", pair.se);
+        assert!((pair.correlation - 1.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn the_paired_interval_is_narrower_than_two_independent_ones() {
+        // Two correlated but different readings on the same rows. The paired
+        // standard error must sit below the independent bound, which is the
+        // whole reason for measuring the covariance.
+        let mut rng = Rng::new(9);
+        let mut first = Vec::new();
+        let mut second = Vec::new();
+        let mut labels = Vec::new();
+        for at in 0..300 {
+            let positive = at % 3 == 0;
+            labels.push(positive);
+            let base = rng.next_f64();
+            let other = rng.next_f64();
+            // Overlapping arms: a separated pair has zero placement variance and
+            // nothing to compare.
+            let lift = if positive { 0.2 } else { 0.0 };
+            first.push(0.3 + lift + 0.6 * base);
+            second.push(0.3 + lift + 0.6 * other + 0.1 * base);
+        }
+        let a = delong_auc(&first, &labels, 0.95);
+        let b = delong_auc(&second, &labels, 0.95);
+        let pair = delong_pair(&first, &second, &labels, 0.95).expect("two classes");
+        assert!(pair.se > 0.0);
+        assert!(pair.se < (a.se * a.se + b.se * b.se).sqrt());
+        assert!(pair.correlation > 0.0 && pair.correlation < 1.0);
+        assert!(pair.low <= pair.delta && pair.high >= pair.delta);
+    }
+
+    #[test]
+    fn a_paired_comparison_refuses_disagreeing_lengths() {
+        let labels = [true, false, true, false];
+        assert!(delong_pair(&[0.4, 0.2, 0.9, 0.1], &[0.4, 0.2], &labels, 0.95).is_none());
+        assert!(delong_pair(
+            &[0.4, 0.2, 0.9, 0.1],
+            &[0.4, 0.2, 0.9, 0.1],
+            &[true; 4],
+            0.95
+        )
+        .is_none());
     }
 
     #[test]

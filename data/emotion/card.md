@@ -1,6 +1,6 @@
 # Emotion readings
 
-xcm-mmm-emotion v1, built 2026-11-14T23:00:51Z. Eight Plutchik axes over English words: a listed seed, a
+xcm-mmm-emotion v1, built 2026-11-18T02:16:02Z. Eight Plutchik axes over English words: a listed seed, a
 learned adjustment from a labelled bank of contact-centre transcripts, and a
 character-analogy fallback so a word no list carries still reads.
 
@@ -32,6 +32,18 @@ band, or whose total affect mass is under 0.90, is labelled neutral.
 | Frustrated | 0.667 |
 | Happy | 1.000 |
 | Neutral | 0.857 |
+
+## What the bank can resolve
+
+| reading | value |
+|---|---:|
+| smallest resolvable accuracy gain at 80% power | 0.316 |
+| rows that would resolve a three point gain | 2,224 |
+| resolves the three point floor | no |
+
+No label audit runs on this bank. Confident learning needs an out-of-fold probability per row, and the scanner returns a reading with a tier rather than a probability, so there is nothing to rank a label against. What the bank can resolve does not depend on the model: the smallest accuracy gain that clears a 95 percent test at 80 percent power is 0.316, against the pre-registered floor of 0.030, and confirming a gain at the floor would take about 2,224 rows rather than the 20 in hand.
+
+The reading is a property of twenty rows, not of the scanner. It says a small gain cannot be demonstrated on this bank; it does not say the scanner cannot make one.
 
 ## Seed by axis
 

@@ -1,13 +1,13 @@
 {
   "name": "marketlab-ad-detectors",
   "version": 1,
-  "built_at": "2026-11-14T19:53:00Z",
+  "built_at": "2026-11-18T02:20:14Z",
   "files": [
     {
       "name": "model.json",
       "rows": 7,
-      "bytes": 31876,
-      "fnv64": "2869e24c26772ddf"
+      "bytes": 34168,
+      "fnv64": "0c10ba01b5121148"
     }
   ],
   "config": {

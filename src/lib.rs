@@ -35,6 +35,7 @@
 //! feature and a learning curve so a small bank is visible as a slope rather
 //! than a caveat.
 
+pub mod audit;
 pub mod benchmarks;
 pub mod causal;
 pub mod churn;

@@ -80,7 +80,12 @@ pub struct Modifiers {
 }
 
 /// What the labelled bank said about the model it adjusted.
+///
+/// `serde(default)` so an artifact written before the resolution reading still
+/// loads: the newer fields come back as zero and the card says they are missing
+/// rather than the file failing to parse.
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
 pub struct BankMetrics {
     pub rows: usize,
     pub labels: usize,
@@ -88,6 +93,15 @@ pub struct BankMetrics {
     pub leave_one_out: f64,
     pub majority: f64,
     pub per_label: BTreeMap<String, f64>,
+    /// Smallest leave-one-out accuracy gain this bank resolves at 80 percent
+    /// power, in accuracy points.
+    pub detectable: f64,
+    /// Whether that clears the three point floor fixed before the fit.
+    pub resolves_floor: bool,
+    /// Rows that would resolve the floor at this accuracy.
+    pub rows_for_floor: usize,
+    /// Plain reading of the two numbers, including why no label audit runs here.
+    pub resolution_note: String,
 }
 
 /// The files the fit read, with the digest that proves it.

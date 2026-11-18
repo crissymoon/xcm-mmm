@@ -106,6 +106,40 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     }
     let _ = writeln!(out);
 
+    let _ = writeln!(out, "## What the bank's labels are worth");
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "| axis | rows | estimated label noise | ceiling on accuracy | smallest resolvable gain | resolves the floor |"
+    );
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|:---:|");
+    for (name, axis) in &artifact.axes {
+        if let Axis::Lexicon(lex) = axis {
+            let m = &lex.metrics;
+            let _ = writeln!(
+                out,
+                "| {name} | {} | {:.3} | {:.3} | {:.3} | {} |",
+                m.rows,
+                m.label_noise,
+                m.label_ceiling,
+                m.detectable,
+                if m.resolves_floor { "yes" } else { "no" }
+            );
+        }
+    }
+    let _ = writeln!(out);
+    for (name, axis) in &artifact.axes {
+        if let Axis::Lexicon(lex) = axis {
+            let _ = writeln!(out, "- **{name}**: {}", lex.metrics.label_note);
+        }
+    }
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "The noise estimate is confident learning (Northcutt, Jiang and Chuang, 2021) on the same out-of-fold probabilities the held-out numbers came from, with a per-class threshold at the mean predicted probability of that class and the class totals scaled back up to the labelled counts. It measures the total labelling error, not its cause: a bank where an annotator misread the construct reads like one where labels were flipped at random. The ceiling is the accuracy a model that reproduced the true labels would score here, so a held-out number at or above it is measuring the labels rather than the construct. The resolution reading is the smallest balanced-accuracy gain this bank can see at 80 percent power, compared with the three point floor fixed before the fit; a bank that does not resolve the floor cannot produce evidence of a small improvement, only a large one."
+    );
+    let _ = writeln!(out);
+
     let _ = writeln!(out, "## Reproduce");
     let _ = writeln!(out);
     let _ = writeln!(out, "```bash");
@@ -184,6 +218,28 @@ mod tests {
             files: Vec::new(),
             config: TrainConfig::default(),
             axes: BTreeMap::new(),
+        }
+    }
+
+    #[test]
+    fn the_card_prints_what_the_labels_are_worth() {
+        let path = "data/detectors/model.json";
+        if !std::path::Path::new(path).is_file() {
+            return;
+        }
+        let artifact = Artifact::load(path).expect("the shipped artifact");
+        let card = render(&artifact, &manifest());
+        assert!(card.contains("## What the bank's labels are worth"));
+        assert!(card.contains("estimated label noise"));
+        assert!(card.contains("resolves the floor"));
+        for (name, axis) in &artifact.axes {
+            if let Axis::Lexicon(lex) = axis {
+                assert!(
+                    lex.metrics.label_noise > 0.0,
+                    "axis {name} has no noise estimate"
+                );
+                assert!(card.contains(&lex.metrics.label_note));
+            }
         }
     }
 

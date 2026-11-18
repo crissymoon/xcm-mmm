@@ -256,6 +256,9 @@ fn cross_validate(samples: &[Sample], features: &Features, cfg: &TrainConfig) ->
 
     let mut gold = Vec::new();
     let mut predicted = Vec::new();
+    // Kept only for the label audit and the resolution reading: the audit needs
+    // a probability per row and a boolean cannot be audited.
+    let mut held_scores = Vec::new();
     let mut control_gold = Vec::new();
     let mut control = Vec::new();
     let mut cuts: Vec<f64> = Vec::new();
@@ -279,7 +282,9 @@ fn cross_validate(samples: &[Sample], features: &Features, cfg: &TrainConfig) ->
                     Some(&lexicon),
                 );
                 gold.push(samples[*index].label);
-                predicted.push(model.predict(&values) >= cut);
+                let score = model.predict(&values);
+                held_scores.push(score);
+                predicted.push(score >= cut);
             }
         }
         if let Some((model, lexicon, cut)) = fold_fit(samples, &train, &shuffled, features, cfg) {
@@ -297,6 +302,32 @@ fn cross_validate(samples: &[Sample], features: &Features, cfg: &TrainConfig) ->
 
     let mut metrics = eval::evaluate(&gold, &predicted);
     metrics.shuffled = Some(eval::evaluate(&control_gold, &control).balanced);
+    let audit = crate::audit::audit(
+        &[],
+        &held_scores,
+        &gold,
+        &crate::audit::AuditConfig::default(),
+    );
+    let cfg_default = crate::audit::AuditConfig::default();
+    let power = crate::audit::detectable_share(
+        metrics.balanced,
+        gold.len(),
+        cfg_default.floor,
+        cfg_default.power,
+        cfg_default.level,
+    );
+    metrics.label_noise = audit.noise;
+    metrics.label_ceiling = audit.ceiling;
+    metrics.detectable = power.detectable;
+    metrics.resolves_floor = power.resolvable;
+    metrics.rows_for_floor = power.rows_for_floor;
+    metrics.label_note = match audit.refused.clone() {
+        Some(why) => format!(
+            "The label audit refused to run: {why}. The resolution reading still holds: {}",
+            power.note
+        ),
+        None => format!("{} {}", audit.note, power.note),
+    };
 
     cuts.sort_by(f64::total_cmp);
     let cut = cuts.get(cuts.len() / 2).copied().unwrap_or(0.5);

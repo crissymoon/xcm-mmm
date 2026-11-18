@@ -1,7 +1,7 @@
 {
   "name": "xcm-mmm-churn-baseline",
   "version": 3,
-  "built_at": "2026-11-16T05:13:42Z",
+  "built_at": "2026-11-18T02:20:10Z",
   "features": [
     "tenure",
     "monthly",
@@ -300,7 +300,119 @@
         "rows": 5634,
         "auc": 0.8679
       }
-    ]
+    ],
+    "label_audit": {
+      "rows": 7043,
+      "positives": 1869,
+      "negatives": 5174,
+      "threshold_positive": 0.4391,
+      "threshold_negative": 0.7974,
+      "confident": [
+        [
+          3029,
+          405
+        ],
+        [
+          146,
+          994
+        ]
+      ],
+      "joint": [
+        [
+          4563.7874,
+          610.2126
+        ],
+        [
+          239.3632,
+          1629.6368
+        ]
+      ],
+      "noise_positive": 0.1281,
+      "noise_negative": 0.1179,
+      "noise": 0.1206,
+      "ceiling": 0.8794,
+      "suspected": 551,
+      "unconfident": 2469,
+      "estimated_errors": 850,
+      "suspects": [
+        {
+          "id": "3512-IZIKN",
+          "label": true,
+          "probability": 0.0532,
+          "margin": -0.8936
+        },
+        {
+          "id": "8631-NBHFZ",
+          "label": true,
+          "probability": 0.0646,
+          "margin": -0.8708
+        },
+        {
+          "id": "0617-AQNWT",
+          "label": true,
+          "probability": 0.0655,
+          "margin": -0.869
+        },
+        {
+          "id": "8580-QVLOC",
+          "label": true,
+          "probability": 0.0703,
+          "margin": -0.8593
+        },
+        {
+          "id": "7359-SSBJK",
+          "label": true,
+          "probability": 0.0733,
+          "margin": -0.8534
+        },
+        {
+          "id": "1043-YCUTE",
+          "label": true,
+          "probability": 0.0744,
+          "margin": -0.8512
+        },
+        {
+          "id": "0565-IYCGT",
+          "label": true,
+          "probability": 0.0751,
+          "margin": -0.8498
+        },
+        {
+          "id": "0687-ZVTHB",
+          "label": true,
+          "probability": 0.0819,
+          "margin": -0.8363
+        }
+      ],
+      "note": "551 of 7,043 rows are confidently labelled against the model and 2,469 cleared neither threshold, so 4,574 stay in the joint. Scaled back up to the labelled totals that is 850 errors, 12.1 percent of the bank, 12.8 percent of the positive labels and 11.8 percent of the negative ones. A model that reproduced the true labels would score 0.879 against these ones, so a claim above that is a claim about the labels rather than the construct. The estimate assumes the rows left out carry the same error rate as the ones kept; 35.1 percent of the bank is left out, so that assumption is doing real work and the reading is an extrapolation rather than a count.",
+      "refused": null
+    },
+    "power": {
+      "reading": 0.8671,
+      "kind": "auc",
+      "rows": 7043,
+      "events": 1869,
+      "se": 0.0056,
+      "detectable": 0.0222,
+      "floor": 0.03,
+      "power": 0.8,
+      "level": 0.95,
+      "resolvable": true,
+      "rows_for_floor": 3841,
+      "note": "At this shape a difference of 0.022 is the smallest that clears a 95 percent test at 80 percent power, and the pre-registered floor of 0.030 sits above it, so a gain claimed at the floor is visible on this bank."
+    },
+    "tree_gain": {
+      "first": 0.8981708352438385,
+      "second": 0.8670631215095119,
+      "delta": 0.031107713734326525,
+      "se": 0.002377507781135697,
+      "low": 0.026447884106580024,
+      "high": 0.03576754336207302,
+      "correlation": 0.8539535961508332,
+      "level": 0.95,
+      "positives": 1869,
+      "negatives": 5174
+    }
   },
   "metrics": {
     "rows": 7043,
@@ -315,7 +427,13 @@
     "recall": 0.3943,
     "precision": 0.7645,
     "majority": 0.7346,
-    "shuffled": null
+    "shuffled": null,
+    "label_noise": 0.0,
+    "label_ceiling": 0.0,
+    "detectable": 0.0,
+    "resolves_floor": false,
+    "rows_for_floor": 0,
+    "label_note": ""
   },
   "window": {
     "declared": "join",

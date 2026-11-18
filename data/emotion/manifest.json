@@ -1,7 +1,7 @@
 {
   "name": "xcm-mmm-emotion",
   "version": 1,
-  "built_at": "2026-11-14T23:00:51Z",
+  "built_at": "2026-11-18T02:16:02Z",
   "files": [
     {
       "name": "seed.json",
@@ -24,8 +24,8 @@
     {
       "name": "model.json",
       "rows": 1,
-      "bytes": 248061,
-      "fnv64": "0aaf70f3cb80c92b"
+      "bytes": 248660,
+      "fnv64": "2bc5e7cf274b3d4f"
     }
   ],
   "emotions": [
@@ -55,6 +55,10 @@
       "Frustrated": 0.6667,
       "Happy": 1.0,
       "Neutral": 0.8571
-    }
+    },
+    "detectable": 0.3163,
+    "resolves_floor": false,
+    "rows_for_floor": 2224,
+    "resolution_note": "No label audit runs on this bank. Confident learning needs an out-of-fold probability per row, and the scanner returns a reading with a tier rather than a probability, so there is nothing to rank a label against. What the bank can resolve does not depend on the model: the smallest accuracy gain that clears a 95 percent test at 80 percent power is 0.316, against the pre-registered floor of 0.030, and confirming a gain at the floor would take about 2,224 rows rather than the 20 in hand."
   }
 }

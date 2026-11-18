@@ -27,6 +27,7 @@ use super::model::{round4, BankMetrics, EmotionModel, Modifiers, Reading, Source
 use crate::dataset::built_at;
 use crate::detect::token;
 use crate::digest::fnv64;
+use crate::num::commas;
 
 pub const SEED: &str = "seed.json";
 pub const BANK: &str = "bank.jsonl";
@@ -501,13 +502,50 @@ fn metrics(seed_file: &SeedFile, rows: &[BankRow], model: &EmotionModel) -> Bank
         *counts.entry(label.as_str()).or_insert(0) += 1;
     }
     let n = rows.len().max(1) as f64;
+    let held_out_accuracy = leave_one_out as f64 / n;
+    let config = crate::audit::AuditConfig::default();
+    let power = crate::audit::detectable_share(
+        held_out_accuracy,
+        rows.len(),
+        config.floor,
+        config.power,
+        config.level,
+    );
+    let resolution_note = format!(
+        "No label audit runs on this bank. Confident learning needs an out-of-fold \
+probability per row, and the scanner returns a reading with a tier rather than a \
+probability, so there is nothing to rank a label against. What the bank can resolve \
+does not depend on the model: the smallest accuracy gain that clears a {} percent test \
+at {} percent power is {:.3}, against the pre-registered floor of {:.3}, and {}",
+        (config.level * 100.0).round(),
+        (config.power * 100.0).round(),
+        power.detectable,
+        config.floor,
+        if power.resolvable {
+            format!(
+                "a gain at the floor is visible at this size, which takes about {} rows.",
+                commas(rows.len())
+            )
+        } else {
+            format!(
+                "confirming a gain at the floor would take about {} rows rather than the {} \
+in hand.",
+                commas(power.rows_for_floor),
+                commas(rows.len())
+            )
+        }
+    );
     BankMetrics {
         rows: rows.len(),
         labels: labels.len(),
         fit_accuracy: round4(fit_hits as f64 / n),
-        leave_one_out: round4(leave_one_out as f64 / n),
+        leave_one_out: round4(held_out_accuracy),
         majority: round4(counts.values().copied().max().unwrap_or(0) as f64 / n),
         per_label,
+        detectable: power.detectable,
+        resolves_floor: power.resolvable,
+        rows_for_floor: power.rows_for_floor,
+        resolution_note,
     }
 }
 

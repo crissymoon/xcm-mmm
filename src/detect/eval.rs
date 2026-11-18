@@ -11,7 +11,12 @@ use serde::{Deserialize, Serialize};
 use super::lexicon::round4;
 
 /// A confusion matrix with the rates a reader needs and no others.
+///
+/// `serde(default)` so an artifact written before the label audit still reads:
+/// the audit fields come back empty and the card says so rather than the file
+/// failing to parse.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
+#[serde(default)]
 pub struct Metrics {
     pub rows: usize,
     pub positives: usize,
@@ -28,6 +33,18 @@ pub struct Metrics {
     pub majority: f64,
     /// Balanced accuracy of the same fit on shuffled labels. The control.
     pub shuffled: Option<f64>,
+    /// Estimated share of the bank's labels that are wrong.
+    pub label_noise: f64,
+    /// Best accuracy the bank's own labels can support.
+    pub label_ceiling: f64,
+    /// Smallest balanced-accuracy gain this bank resolves at 80 percent power.
+    pub detectable: f64,
+    /// Whether that gain clears the pre-registered floor.
+    pub resolves_floor: bool,
+    /// Rows that would resolve the floor at this class balance.
+    pub rows_for_floor: usize,
+    /// Plain reading of the audit, or the reason it refused.
+    pub label_note: String,
 }
 
 /// Score held out predictions against their labels.

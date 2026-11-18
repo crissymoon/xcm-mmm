@@ -254,6 +254,98 @@ month.\n\n",
         "\nLast-doubling gain {:.2} AUC points. A positive number means the bank was\nstill buying accuracy at the largest fraction; a flat one means the ceiling is\nthe features or the operator, not the row count. Neither reading transports to\na new operator.\n\n",
         crate::support::doubling_gain(&score.learning)
     ));
+    out.push_str("## Labels and resolution\n\n");
+    if score.label_audit.rows == 0 {
+        out.push_str(
+            "This artifact predates the label audit, so the noise estimate and the \
+resolution reading are not reported here. Rebuild with `churn fit` to populate them.\n\n",
+        );
+    } else if !score.label_audit.usable() {
+        let why = score
+            .label_audit
+            .refused
+            .clone()
+            .unwrap_or_else(|| "no reason recorded".to_string());
+        out.push_str(&format!(
+            "The label audit refused to run: {why}. A ranking can be measured without one; \
+a label audit cannot, because it needs a probability per row.\n\n"
+        ));
+    } else {
+        let audit = &score.label_audit;
+        out.push_str("| reading | value |\n|---|---:|\n");
+        out.push_str(&format!(
+            "| confidently contradicted rows | {} of {} |\n",
+            audit.suspected,
+            commas(audit.rows)
+        ));
+        out.push_str(&format!(
+            "| cleared neither threshold, out of the joint | {} |\n",
+            commas(audit.unconfident)
+        ));
+        out.push_str(&format!("| estimated label noise | {:.3} |\n", audit.noise));
+        out.push_str(&format!(
+            "| estimated noise, churn labels | {:.3} |\n",
+            audit.noise_positive
+        ));
+        out.push_str(&format!(
+            "| estimated noise, stayed labels | {:.3} |\n",
+            audit.noise_negative
+        ));
+        out.push_str(&format!(
+            "| ceiling against these labels | {:.3} |\n",
+            audit.ceiling
+        ));
+        out.push_str(&format!(
+            "| smallest resolvable AUC gain at {:.0}% power | {:.3} |\n",
+            score.power.power * 100.0,
+            score.power.detectable
+        ));
+        out.push_str(&format!(
+            "| pre-registered floor | {:.3} |\n",
+            score.power.floor
+        ));
+        if let Some(pair) = &score.tree_gain {
+            out.push_str(&format!(
+                "| paired AUC gain, trees against logistic | {:+.3} [{:+.3}, {:+.3}] |\n",
+                pair.delta, pair.low, pair.high
+            ));
+        }
+        out.push_str(&format!("\n{}\n\n", audit.note));
+        out.push_str(&format!("{}\n\n", score.power.note));
+        if let Some(pair) = &score.tree_gain {
+            out.push_str(&format!(
+                "The tree comparison is read paired: both models score the same {} rows, so \
+the difference has its own error from the DeLong covariance rather than from two \
+independent ones. The placements correlate at {:.2}, which is why the interval on a \
+gain of {:+.3} is narrower than either model's own interval. {}\n\n",
+                commas(pair.positives + pair.negatives),
+                pair.correlation,
+                pair.delta,
+                if pair.low > 0.0 {
+                    "The interval stays above zero, so on this panel the gain survives its own \
+sampling error."
+                } else {
+                    "The interval includes zero, so the gain is not separated from noise on \
+this panel, whatever the point estimate says."
+                }
+            ));
+        }
+        out.push_str(&format!(
+            "The noise estimate is confident learning (Northcutt, Jiang and Chuang, 2021) run \
+on the out-of-fold probabilities the folds already produced, with a per-class threshold \
+at the mean predicted probability of that class. It separates random from systematic \
+labelling error only in the sense of measuring the total: a bank where one annotator \
+misread the construct scores like one where labels were flipped by a coin, and only the \
+first is a design problem. It is also only as good as the model behind it, which is why \
+it is quoted beside the AUC rather than instead of it. Where a large share of the bank \
+clears neither threshold, the scaling is what carries the estimate: the rows the model \
+contradicts are counted, and the rest is the assumption that the rows it could not place \
+are wrong at the same rate. On this panel that assumption is the difference between the \
+{:.1} percent above and the {:.1} percent the contradiction count alone implies.\n\n",
+            audit.noise * 100.0,
+            audit.suspected as f64 / audit.rows as f64 * 100.0
+        ));
+    }
     out.push_str("## Coefficients\n\n");
     out.push_str(
         "On the standardised scale the fit uses. A sign is a direction, not a\ncause.\n\n",
@@ -281,6 +373,8 @@ month.\n\n",
     out.push_str("- Selection on the forecasting path is nested when `forecast --nested` is\n  used: the inner loop chooses and the outer loop scores. The plain command\n  remains a single holdout and the report says which one ran.\n");
     out.push_str("- Drift and rollback are commands, not a daemon. `churn monitor` compares a\n  reference panel with a current one by PSI and KS; `churn rollback` moves the\n  artifact pointer back one version. A scheduler still has to call them.\n");
     out.push_str("- Calibration, conformal coverage and the tree comparison are measured on\n  the same held-out rows as the AUC. None of them transports to a new operator.\n");
+    out.push_str("- The label audit bounds what this bank's own labels can carry; it does not\n  audit the construct. A ceiling of one would mean the labels are consistent with\n  the model, not that they are right about churn.\n");
+    out.push_str("- The resolution reading is a property of the panel's size and class\n  balance. A gain the card does not claim is not proof of absence, only a\n  difference this bank cannot see.\n");
     out.push_str("- Marginal coverage is not class conditional coverage. The pooled number\n  holds across the held-out rows as a whole; the per-class numbers are the\n  ones the card now quotes, and a class whose calibration rows cannot support\n  the requested alpha is refused rather than given a reading.\n");
     out
 }
@@ -321,5 +415,19 @@ mod tests {
         assert!(card.contains("Marginal coverage is not class conditional coverage"));
         assert!(card.contains("right censoring") || card.contains("Right censoring"));
         assert!(card.contains("Churn reason text"));
+        assert!(card.contains("## Labels and resolution"));
+        assert!(card.contains("estimated label noise"));
+        assert!(card.contains("smallest resolvable AUC gain"));
+        assert!(card.contains("paired AUC gain, trees against logistic"));
+        // The note beside the table and the table itself must agree: one shared
+        // definition of the rounding, not two.
+        assert_eq!(
+            model.score.label_audit.noise,
+            crate::num::round4(model.score.label_audit.noise)
+        );
+        assert!(card.contains(&format!(
+            "{:.1} percent of the bank",
+            model.score.label_audit.noise * 100.0
+        )));
     }
 }

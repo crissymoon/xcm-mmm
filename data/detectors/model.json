@@ -1,7 +1,7 @@
 {
   "name": "marketlab-ad-detectors",
   "version": 1,
-  "built_at": "2026-11-14T19:53:00Z",
+  "built_at": "2026-11-18T02:20:14Z",
   "source": {
     "bank": "bank.jsonl",
     "bank_rows": 2847,
@@ -515,7 +515,13 @@
         "recall": 0.6378,
         "precision": 0.6806,
         "majority": 0.7382,
-        "shuffled": 0.4962
+        "shuffled": 0.4962,
+        "label_noise": 0.1,
+        "label_ceiling": 0.9,
+        "detectable": 0.0354,
+        "resolves_floor": false,
+        "rows_for_floor": 3129,
+        "label_note": "145 of 2,246 rows are confidently labelled against the model and 768 cleared neither threshold, so 1,478 stay in the joint. Scaled back up to the labelled totals that is 225 errors, 10.0 percent of the bank, 28.7 percent of the positive labels and 3.4 percent of the negative ones. A model that reproduced the true labels would score 0.900 against these ones, so a claim above that is a claim about the labels rather than the construct. The estimate assumes the rows left out carry the same error rate as the ones kept; 34.2 percent of the bank is left out, so that assumption is doing real work and the reading is an extrapolation rather than a count. At this shape the smallest difference that clears a 95 percent test at 80 percent power is 0.035, which is wider than the pre-registered floor of 0.030, so a gain at the floor would not be distinguishable from noise here. Resolving it would take about 3,129 rows at this class balance, against the 2,246 in hand."
       }
     },
     "legal": {
@@ -707,7 +713,13 @@
         "recall": 0.797,
         "precision": 0.7107,
         "majority": 0.734,
-        "shuffled": 0.4871
+        "shuffled": 0.4871,
+        "label_noise": 0.0491,
+        "label_ceiling": 0.9509,
+        "detectable": 0.0306,
+        "resolves_floor": false,
+        "rows_for_floor": 2348,
+        "label_note": "60 of 2,259 rows are confidently labelled against the model and 773 cleared neither threshold, so 1,486 stay in the joint. Scaled back up to the labelled totals that is 111 errors, 4.9 percent of the bank, 14.5 percent of the positive labels and 1.4 percent of the negative ones. A model that reproduced the true labels would score 0.951 against these ones, so a claim above that is a claim about the labels rather than the construct. The estimate assumes the rows left out carry the same error rate as the ones kept; 34.2 percent of the bank is left out, so that assumption is doing real work and the reading is an extrapolation rather than a count. At this shape the smallest difference that clears a 95 percent test at 80 percent power is 0.031, which is wider than the pre-registered floor of 0.030, so a gain at the floor would not be distinguishable from noise here. Resolving it would take about 2,348 rows at this class balance, against the 2,259 in hand."
       }
     },
     "manipulation": {

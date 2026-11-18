@@ -6,6 +6,7 @@
 //! describe a fit that is not the one on disk.
 
 use super::model::{EmotionModel, Tier};
+use crate::num::commas;
 
 /// Render the card.
 pub fn render(model: &EmotionModel) -> String {
@@ -48,8 +49,32 @@ pub fn render(model: &EmotionModel) -> String {
     for (label, value) in &m.per_label {
         out.push_str(&format!("| {label} | {value:.3} |\n"));
     }
+    out.push_str("\n## What the bank can resolve\n\n");
+    if m.detectable == 0.0 && m.resolution_note.is_empty() {
+        out.push_str(
+            "This artifact predates the resolution reading. Rebuild with `emotion fit` to populate it.\n\n",
+        );
+    } else {
+        out.push_str("| reading | value |\n|---|---:|\n");
+        out.push_str(&format!(
+            "| smallest resolvable accuracy gain at 80% power | {:.3} |\n",
+            m.detectable
+        ));
+        out.push_str(&format!(
+            "| rows that would resolve a three point gain | {} |\n",
+            commas(m.rows_for_floor)
+        ));
+        out.push_str(&format!(
+            "| resolves the three point floor | {} |\n\n",
+            if m.resolves_floor { "yes" } else { "no" }
+        ));
+        out.push_str(&format!("{}\n\n", m.resolution_note));
+        out.push_str(
+            "The reading is a property of twenty rows, not of the scanner. It says a small gain cannot be demonstrated on this bank; it does not say the scanner cannot make one.\n\n",
+        );
+    }
     out.push_str(
-        "\n## Seed by axis\n\n| emotion | words | valence | arousal |\n|---|---:|---:|---:|\n",
+        "## Seed by axis\n\n| emotion | words | valence | arousal |\n|---|---:|---:|---:|\n",
     );
     for emotion in &model.emotions {
         let at = model.emotion_index(emotion).unwrap_or(0);
@@ -123,6 +148,9 @@ mod tests {
         assert!(card.contains("# Emotion readings"));
         assert!(card.contains("leave-one-out accuracy"));
         assert!(card.contains("analogy"));
+        assert!(card.contains("## What the bank can resolve"));
+        assert!(card.contains("smallest resolvable accuracy gain"));
+        assert!(card.contains("No label audit runs on this bank"));
         assert!(card.contains(&model.source.seed_fnv64));
         assert!(card.len() > 1200);
     }

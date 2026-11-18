@@ -1,6 +1,6 @@
 # Churn baseline
 
-xcm-mmm-churn-baseline v3, built 2026-11-16T05:13:42Z. A logistic over the telecom panel, fitted so a marketing
+xcm-mmm-churn-baseline v3, built 2026-11-18T02:20:10Z. A logistic over the telecom panel, fitted so a marketing
 model has a retention baseline to beat rather than a number to quote.
 
 ## Panel
@@ -132,6 +132,28 @@ still buying accuracy at the largest fraction; a flat one means the ceiling is
 the features or the operator, not the row count. Neither reading transports to
 a new operator.
 
+## Labels and resolution
+
+| reading | value |
+|---|---:|
+| confidently contradicted rows | 551 of 7,043 |
+| cleared neither threshold, out of the joint | 2,469 |
+| estimated label noise | 0.121 |
+| estimated noise, churn labels | 0.128 |
+| estimated noise, stayed labels | 0.118 |
+| ceiling against these labels | 0.879 |
+| smallest resolvable AUC gain at 80% power | 0.022 |
+| pre-registered floor | 0.030 |
+| paired AUC gain, trees against logistic | +0.031 [+0.026, +0.036] |
+
+551 of 7,043 rows are confidently labelled against the model and 2,469 cleared neither threshold, so 4,574 stay in the joint. Scaled back up to the labelled totals that is 850 errors, 12.1 percent of the bank, 12.8 percent of the positive labels and 11.8 percent of the negative ones. A model that reproduced the true labels would score 0.879 against these ones, so a claim above that is a claim about the labels rather than the construct. The estimate assumes the rows left out carry the same error rate as the ones kept; 35.1 percent of the bank is left out, so that assumption is doing real work and the reading is an extrapolation rather than a count.
+
+At this shape a difference of 0.022 is the smallest that clears a 95 percent test at 80 percent power, and the pre-registered floor of 0.030 sits above it, so a gain claimed at the floor is visible on this bank.
+
+The tree comparison is read paired: both models score the same 7,043 rows, so the difference has its own error from the DeLong covariance rather than from two independent ones. The placements correlate at 0.85, which is why the interval on a gain of +0.031 is narrower than either model's own interval. The interval stays above zero, so on this panel the gain survives its own sampling error.
+
+The noise estimate is confident learning (Northcutt, Jiang and Chuang, 2021) run on the out-of-fold probabilities the folds already produced, with a per-class threshold at the mean predicted probability of that class. It separates random from systematic labelling error only in the sense of measuring the total: a bank where one annotator misread the construct scores like one where labels were flipped by a coin, and only the first is a design problem. It is also only as good as the model behind it, which is why it is quoted beside the AUC rather than instead of it. Where a large share of the bank clears neither threshold, the scaling is what carries the estimate: the rows the model contradicts are counted, and the rest is the assumption that the rows it could not place are wrong at the same rate. On this panel that assumption is the difference between the 12.1 percent above and the 7.8 percent the contradiction count alone implies.
+
 ## Coefficients
 
 On the standardised scale the fit uses. A sign is a direction, not a
@@ -200,6 +222,12 @@ measured; the reason text is where a driver is named.
   artifact pointer back one version. A scheduler still has to call them.
 - Calibration, conformal coverage and the tree comparison are measured on
   the same held-out rows as the AUC. None of them transports to a new operator.
+- The label audit bounds what this bank's own labels can carry; it does not
+  audit the construct. A ceiling of one would mean the labels are consistent with
+  the model, not that they are right about churn.
+- The resolution reading is a property of the panel's size and class
+  balance. A gain the card does not claim is not proof of absence, only a
+  difference this bank cannot see.
 - Marginal coverage is not class conditional coverage. The pooled number
   holds across the held-out rows as a whole; the per-class numbers are the
   ones the card now quotes, and a class whose calibration rows cannot support

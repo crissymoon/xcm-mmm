@@ -435,6 +435,26 @@ fn info(dir: &str) -> Result<(), Box<dyn Error>> {
             score.conformal_set,
             score.tree_auc
         );
+        if score.label_audit.rows > 0 {
+            println!(
+                "labels    noise {:.3}  ceiling {:.3}  contradicted {}  unconfident {}",
+                score.label_audit.noise,
+                score.label_audit.ceiling,
+                commas(score.label_audit.suspected),
+                commas(score.label_audit.unconfident)
+            );
+            println!(
+                "gain      {:.3} is the smallest resolvable at {:.0}% power, floor {:.3}, {}",
+                score.power.detectable,
+                score.power.power * 100.0,
+                score.power.floor,
+                if score.power.resolvable {
+                    "resolved"
+                } else {
+                    "not resolved"
+                }
+            );
+        }
         let mut weights = model.coefficients.clone();
         weights.sort_by(|a, b| b.weight.abs().total_cmp(&a.weight.abs()));
         let top: Vec<String> = weights
