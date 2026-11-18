@@ -1,7 +1,7 @@
 {
   "name": "marketlab-copy-segments",
   "version": 1,
-  "built_at": "2026-11-16T00:12:45Z",
+  "built_at": "2026-11-18T04:06:35Z",
   "source": {
     "panel": "ads_clean_all.jsonl",
     "model": "/Users/crissydeutsch/Documents/xcm-mmm/data/segments/model.json",

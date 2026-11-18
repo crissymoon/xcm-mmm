@@ -524,13 +524,23 @@ pub use crate::num::commas;
 fn print_pattern(metrics: &crate::segment::Metrics) {
     for verdict in &metrics.pattern {
         println!(
-            "pattern   {}  two-part {:+.3}  loop {:+.3}  gain {:+.3} ({:+.1} se)  {}",
+            "pattern   {}  two-part {:+.3}  loop {:+.3}  pooled {:+.3}  gain {:+.3} ({:+.1} se)  {}",
             verdict.name,
             verdict.two_stage,
             verdict.pattern,
+            verdict.pooled,
             verdict.gain,
             verdict.z,
             verdict.verdict.split(':').next().unwrap_or("not measured")
+        );
+        println!(
+            "          rows per group {:.1} gate / {:.1} loop  residual {:.3} / {:.3}  free block posterior {:.3} / {:.3}",
+            verdict.gate_rows,
+            verdict.loop_rows,
+            verdict.gate_sd,
+            verdict.loop_sd,
+            verdict.gate_sharp,
+            verdict.loop_sharp
         );
     }
 }

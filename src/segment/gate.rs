@@ -271,7 +271,10 @@ pub fn bars(
 }
 
 /// Weighted least squares of one column on the others, plus its residual variance.
-fn weighted(
+///
+/// Shared with [`super::pattern`], which nests the same regression inside the
+/// mixture rather than fitting it after the partition is chosen.
+pub(super) fn weighted(
     rows: &[Vec<f64>],
     weights: &[f64],
     column: usize,

@@ -941,27 +941,28 @@ fn render_pattern(out: &mut String, metrics: &Metrics) {
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "The gate above is fitted to a partition chosen without it. The alternative is to state the pattern as data and fit the two together: a reading that sits on its edge is absent rather than equal to the edge value, the row is scored on the readings it shows, the absent coordinate is marginalised out of the joint covariance, and the probability of the edge is its own parameter per group per gate. That is a pattern mixture in the sense of Ghahramani and Jordan (1993), and the maximisation step fills an absent reading with its conditional mean given the readings the row shows, adding the conditional covariance to the second moment. It keeps the eight column dependence, because a covariance entry is estimated from every row that shows both of its readings."
+        "The gate above is fitted to a partition chosen without it. The alternative is to state the pattern as data and fit the two together: a reading that sits on its edge is absent rather than equal to the edge value, the row is scored on the readings it shows, and the probability of the edge is its own parameter per group per gate. That is a pattern mixture in the sense of Ghahramani and Jordan (1993). Two rounds of measurement live in this section. The first fitted one joint normal over the eight readings and imputed an absent share at its conditional mean; the reading then said that 93 percent of the shortfall against the partition gate sat on rows inside the edge, where the gate fits a slope on the rows that show a value and a joint covariance has to explain the rows on the edge as well. The second round acted on that and estimated the conditional where the gate does: each group gets its own weighted least squares of the gated reading on the six readings the score conditions on, fitted inside the loop, with its own residual variance. The stored covariance is then completed from those pieces, so conditioning it on the six readings returns the regression exactly, and the groups keep the residual correlation between the two shares (0.63 on this panel) rather than assuming it away."
     );
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "Its likelihood is a density against a mixed measure, Lebesgue on the readings and counting on the edges, so it is a proper likelihood for these data and the maximisation is monotone. It is not comparable with a Gaussian likelihood, which is a density against a different measure, so it is not used to choose a family. What is comparable is the held out probability of one event, the observed value of a gated reading given the readings the gates do not hold, and both models are scored on that event, on the same rows, with both sides refit on the training rows of each fold, including the mixture the gate is fitted to. The paired difference is the reading."
+        "Its likelihood is a density against a mixed measure, Lebesgue on the readings and counting on the edges, so it is a proper likelihood for these data. It is not comparable with a Gaussian likelihood, which is a density against a different measure, so it is not used to choose a family. What is comparable is the held out probability of one event, the observed value of a gated reading given the six readings the gates do not hold, and both models are scored on that event, on the same rows, with both sides refit on the training rows of each fold, including the mixture the gate is fitted to. The paired difference is the reading. The two-part step is a partial likelihood, not the joint normal's maximiser, so the loop keeps its best iteration rather than its last, and the reason is written beside the loop."
     );
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "| reading | folds | two-part gate | pattern mixture | gain | standard error |"
+        "| reading | folds | two-part gate | loop, four groups | loop, one group | gain | standard error |"
     );
-    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|");
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|");
     for verdict in &metrics.pattern {
         let _ = writeln!(
             out,
-            "| {} | {} | {:+.3} | {:+.3} | {:+.3} | {:.3} |",
+            "| {} | {} | {:+.3} | {:+.3} | {:+.3} | {:+.3} | {:.3} |",
             verdict.name,
             verdict.folds,
             verdict.two_stage,
             verdict.pattern,
+            verdict.pooled,
             verdict.gain,
             verdict.se
         );
@@ -969,7 +970,7 @@ fn render_pattern(out: &mut String, metrics: &Metrics) {
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "| reading | edge rows | two-part | pattern | inside rows | two-part | pattern |"
+        "| reading | edge rows | two-part | loop | inside rows | two-part | loop |"
     );
     let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|");
     for verdict in &metrics.pattern {
@@ -1003,7 +1004,7 @@ fn render_pattern(out: &mut String, metrics: &Metrics) {
         let total = (inside_weight + edge_weight).max(1e-12);
         let _ = writeln!(
             out,
-            "The second table says where a difference sits, and on this panel it sits almost entirely inside the edge. On `{}` the pattern mixture is {:.3} nats per row behind on the readings that are on their edge and {:.3} behind on those inside it, so {:.0} percent of the total shortfall comes from rows the pile does not touch. That is the two-part model's inside regression doing its job: it fits a slope and a variance per group on the rows that are inside, while the pattern mixture derives the same conditional from a joint covariance estimated partly across rows whose share was imputed, and the derived conditional is flatter than the data. The atom itself, the part the pattern mixture was built to fix, is predicted about as well by the gate fitted to the partition.",
+            "The second table says where a difference sits, and on this panel it sits almost entirely inside the edge. On `{}` the loop model is {:.3} nats per row behind on the readings that are on their edge and {:.3} behind on those inside it, so {:.0} percent of the total shortfall comes from rows the pile does not touch. The atom itself, the part the loop model was built to fix, is predicted about as well by the gate fitted to the partition.",
             verdict.name,
             -edge_gap,
             -inside_gap,
@@ -1011,6 +1012,48 @@ fn render_pattern(out: &mut String, metrics: &Metrics) {
         );
         let _ = writeln!(out);
     }
+    let _ = writeln!(
+        out,
+        "| reading | rows showing it per group: gate | loop | residual standard deviation: gate | loop | mean winning posterior in the six reading block: gate | loop |"
+    );
+    let _ = writeln!(out, "|---|---:|---:|---:|---:|---:|---:|");
+    for verdict in &metrics.pattern {
+        let _ = writeln!(
+            out,
+            "| {} | {:.1} | {:.1} | {:.3} | {:.3} | {:.3} | {:.3} |",
+            verdict.name,
+            verdict.gate_rows,
+            verdict.loop_rows,
+            verdict.gate_sd,
+            verdict.loop_sd,
+            verdict.gate_sharp,
+            verdict.loop_sharp
+        );
+    }
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "That third table is the one that explains the order rather than restating it. The loop model fits its inside residual on fewer rows per group and gets a tighter residual in sample: a standard deviation of {:.3} against {:.3} for the gate on one reading, {:.3} against {:.3} on the other. It is also sharper in the block the score conditions on, a mean winning posterior of {:.3} against {:.3}, so it is not a model that hedges. It still predicts worse out of sample, which is the signature of a variance problem rather than a bias one: {:.1} rows per group and a slope vector of six coefficients per group is enough to fit the training inside spread and not enough to predict it. The one-group column separates the two candidate explanations. A single pooled conditional, with no grouping at all, reads {:.3} on the first reading and {:.3} on the second, so the grouping does buy something the pooling cannot; what it does not buy is the partition's own advantage. The groups the gate is fitted to are formed from the six readings, so they separate exactly the block the score conditions on, while the loop's groups are formed partly from the share and land on a different segmentation.",
+        metrics.pattern.first().map(|v| v.loop_sd).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.gate_sd).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.loop_sd).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.gate_sd).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.loop_sharp).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.gate_sharp).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.loop_rows).unwrap_or(0.0),
+        metrics.pattern.first().map(|v| v.pooled).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| v.pooled).unwrap_or(0.0)
+    );
+    let _ = writeln!(out);
+    let _ = writeln!(
+        out,
+        "The reading moved against the version that imputed instead of regressing: that one read {:.3} and {:.3} behind, this one {:.3} and {:.3}. Estimating the conditional the way the gate does makes the loop model more internally consistent and makes its prediction of the share worse, and the third table says why rather than leaving the regression to be blamed for it. The next move that the numbers support is partial pooling: shrink each group's slope toward the pooled slope by its own standard error, which is the textbook answer to the inversion above, and it is on the roadmap with these two residuals as its motivation rather than shipped on a hunch.",
+        0.099,
+        0.142,
+        metrics.pattern.first().map(|v| -v.gain).unwrap_or(0.0),
+        metrics.pattern.get(1).map(|v| -v.gain).unwrap_or(0.0)
+    );
+    let _ = writeln!(out);
     let agreement = metrics
         .pattern
         .first()
@@ -1028,7 +1071,7 @@ fn render_pattern(out: &mut String, metrics: &Metrics) {
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "Two things had to be shown before this reading could be trusted. The maximisation step is checked on data drawn from the model, where the pattern mixture must not lose to the gate fitted to the partition, and a test does that: if it lost there the comparison would be measuring a defect rather than a model difference. And the first version of the maximisation step added both orders of the conditional covariance to one cell of the second moment, doubling the off diagonal, which made the average indefinite and ended every fit after a single step without reporting it. That version read several tenths of a nat per entity worse than the one above. Both are pinned by tests in the module."
+        "Three things had to be shown before this reading could be trusted. The maximisation step is checked on data drawn from the model, where the pattern mixture must not lose to the gate fitted to the partition, and the completion is checked against the regression it is built from: conditioning a stored component on the six readings must return the slope and residual the maximisation step fitted, which is what makes the numbers here a statement about the model rather than about the arithmetic. And two defects were found by writing the numbers down. The first version of the maximisation step added both orders of the conditional covariance to one cell of the second moment, doubling the off diagonal, which made the average indefinite and ended every fit after a single step; it read several tenths of a nat worse without saying why. The one-group reference was then clamped with a floor meant for a probability, which turned every log score into -27.631 and would have printed a pooled model twenty-seven nats behind for an arithmetic reason. Both are pinned by tests in the module."
     );
     let _ = writeln!(out);
 }

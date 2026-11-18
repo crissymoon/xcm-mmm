@@ -141,11 +141,10 @@ fn scaling(dim: usize) -> Scaling {
 #[test]
 fn a_panel_with_no_edge_reduces_to_the_standard_step() {
     let rows = gated(60, 0.0, 11);
-    let views: Vec<View> = rows.iter().map(|row| View::of(row, &[], 4)).collect();
     let labels: Vec<usize> = (0..rows.len()).map(|i| i % 2).collect();
     let resp = one_hot(&labels, 2);
     let plain = Mixture::step(&rows, &resp, 2, Family::Full);
-    let (components, _) = m_step(&rows, &views, &resp, 2, &[], &plain.components);
+    let (components, _, _, _) = fit::m_step(&rows, &resp, 2, &[]);
     assert_eq!(components.len(), plain.components.len());
     for (ours, theirs) in components.iter().zip(&plain.components) {
         assert!((ours.weight - theirs.weight).abs() < 1e-9);
@@ -289,24 +288,110 @@ fn the_score_follows_the_atom() {
     assert!(high > low, "{high} against {low}");
 }
 
-/// The conditional mean and covariance follow the textbook formulas.
+/// The completed covariance encodes the inside regression: conditioning a
+/// component on the readings the gates do not hold returns the slope the
+/// maximisation step fitted, and the residual it reported.
+///
+/// This is the test that makes the reading in the card a statement about the
+/// model rather than about the arithmetic: if the completion and the printed
+/// regression ever disagree, one of them is lying about what was fitted.
 #[test]
-fn the_imputation_is_the_conditional_law() {
-    let component = Component {
-        weight: 1.0,
-        mean: vec![1.0, 2.0],
-        covariance: vec![vec![4.0, 1.5], vec![1.5, 1.0]],
+fn the_completion_reproduces_the_inside_regression() {
+    let (rows, _, _) = drawn(240, 71);
+    let specs = vec![spec(0, -0.455, 0.4)];
+    let fitted = Pattern::fit(&rows, &specs, 2, 4, 200, 71);
+    let columns = vec![1, 2, 3];
+    let fit = fitted.regressions.first().expect("a regression");
+    // The planted inside law is 0.6 * first + 0.3 * second, with a residual of
+    // 0.4 and no loading on the third reading.
+    for (j, component) in fitted.components.iter().enumerate() {
+        let base = vec![0.0, 0.0, 0.0, fitted.atom[0][j].min(0.0)];
+        let moved = vec![1.0, 1.0, 1.0, 0.0];
+        let (low, sd_low) = gate::conditional(component, &columns, 0, &base).unwrap();
+        let (high, _) = gate::conditional(component, &columns, 0, &moved).unwrap();
+        let slope = high - low;
+        // The stored component goes through the shipping shape bound after the
+        // fit, so the implied spread can differ from the fitted residual in the
+        // fourth decimal; the two are the same quantity otherwise.
+        assert!(
+            (sd_low - fit.sd[j]).abs() < 2e-3,
+            "group {j}: conditional spread {sd_low} against the fitted {}",
+            fit.sd[j]
+        );
+        assert!(
+            (slope - 0.9).abs() < 0.75,
+            "group {j}: implied slope {slope} is not near the planted 0.9"
+        );
+        assert!(
+            fit.slope[j] > 0.1,
+            "group {j}: the fitted slope norm is {}",
+            fit.slope[j]
+        );
+    }
+}
+
+/// An edge row does not attenuate the slope. The model estimates the conditional
+/// on the rows that show a value; a joint normal that also has to explain the rows
+/// on the edge reads a flatter conditional, which is the defect this round fixed.
+#[test]
+fn the_edge_does_not_attenuate_the_inside_slope() {
+    let (rows, edge, inside) = drawn(260, 83);
+    assert!(edge > 40 && inside > 60);
+    let specs = vec![spec(0, -0.455, 0.4)];
+    let fitted = Pattern::fit(&rows, &specs, 1, 2, 200, 83);
+    let mixture = Mixture::fit(&rows, 1, Family::Full, 2, 200, 83);
+    let columns = vec![1, 2, 3];
+    let two = vec![0.0, 0.0, 0.0, 0.0];
+    let one = vec![1.0, 1.0, 1.0, 0.0];
+    let slope = |component: &Component| {
+        gate::conditional(component, &columns, 0, &one).unwrap().0
+            - gate::conditional(component, &columns, 0, &two).unwrap().0
     };
-    let impute = Impute::build(&component, &[1], &[0]).unwrap();
-    let (mean, cov) = impute.apply(&[0.0, 3.0], &[1]);
-    // The conditioning block carries the numerical floor, so its variance is
-    // 1 + FLOOR: mean = 1 + 1.5 * 1 / 1.001, variance = 4 - 1.5^2 / 1.001.
-    let held = 1.0 + FLOOR;
-    assert!((mean[0] - (1.0 + 1.5 / held)).abs() < 1e-9, "{}", mean[0]);
+    let pattern_slope = slope(&fitted.components[0]);
+    let joint_slope = slope(&mixture.components[0]);
     assert!(
-        (cov[0][0] - (4.0 - 2.25 / held)).abs() < 1e-9,
-        "{}",
-        cov[0][0]
+        (pattern_slope - 0.9).abs() < (joint_slope - 0.9).abs(),
+        "the pattern slope {pattern_slope} is no closer to the planted 0.9 than the joint {joint_slope}"
+    );
+}
+
+/// Two gates keep their residual correlation. Conditional independence is a
+/// claim, and on this panel it is false, so the model carries the measured
+/// correlation instead of assuming it away.
+#[test]
+fn the_coupling_is_measured_not_assumed() {
+    let mut rng = Rng::new(97);
+    let mut rows = Vec::new();
+    let (mut both, mut first_only) = (0, 0);
+    for _ in 0..300 {
+        let first = rng.normal(0.0, 1.0);
+        let second = rng.normal(0.0, 1.0);
+        let shared = rng.normal(0.0, 0.6);
+        let on_first = rng.chance(0.3);
+        let on_second = rng.chance(0.3);
+        let a = if on_first { 0.0 } else { 0.5 * first + shared };
+        let b = if on_second {
+            1.0
+        } else {
+            0.5 * second + shared
+        };
+        both += usize::from(!on_first && !on_second);
+        first_only += usize::from(!on_first && on_second);
+        rows.push(vec![a, b, first, second]);
+    }
+    assert!(both > 100 && first_only > 40);
+    let specs = vec![spec(0, 0.0, 0.3), spec(1, 1.0, 0.3)];
+    let fitted = Pattern::fit(&rows, &specs, 1, 2, 200, 97);
+    let coupling = fitted.coupling.first().expect("a pair");
+    assert!(
+        coupling.correlation[0] > 0.5,
+        "the planted shared shock reads {}",
+        coupling.correlation[0]
+    );
+    assert!(
+        coupling.rows[0] > 100,
+        "measured on {} rows",
+        coupling.rows[0]
     );
 }
 
