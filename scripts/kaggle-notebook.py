@@ -341,6 +341,16 @@ brief = run("legal", "explain", notice).stdout
 print(brief)
 # The notice is part of the instrument, so it must survive the trip.
 assert "not legal advice" in brief.lower(), "the brief must carry the research notice"
+
+# The coverage check answers with an exit status, so a pipeline can gate on it:
+# every defined term the text needs either has a glossary row or it does not.
+clean = run("legal", "explain", notice, "--check")
+print("check, known terms :", clean.stderr.strip())
+gap = sh([str(BIN), "legal", "explain", "--check",
+          "The Fee (the \\"Service Fee\\") means the amount in Schedule 1."], check=False)
+print("check, unknown term:", gap.returncode, gap.stderr.strip().splitlines()[-1])
+assert clean.returncode == 0, "a brief over known terms must pass the check"
+assert gap.returncode != 0, "an unglossed defined term must fail the check"
 print(run("churn", "check").stdout)
 print("\\n".join(run("emotion", "coverage",
                      "--words", "data/emotion/listed.tsv",
