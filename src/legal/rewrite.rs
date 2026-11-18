@@ -131,7 +131,7 @@ impl Rules {
                 .case_insensitive(true)
                 .build()
                 .map_err(|e| format!("{}: {e}", rule.id))?;
-            check_references(&rule, &regex)?;
+            check_references(rule, &regex)?;
             patterns.push(regex);
         }
         Ok(Self { rules, patterns })
@@ -299,7 +299,7 @@ fn check_references(rule: &Rule, regex: &Regex) -> Result<(), String> {
         let known = if name.chars().all(|c| c.is_ascii_digit()) {
             name.parse::<usize>().map(|n| n < groups).unwrap_or(false)
         } else {
-            names.iter().any(|known| *known == name.as_str())
+            names.contains(&name.as_str())
         };
         if !known {
             return Err(format!(

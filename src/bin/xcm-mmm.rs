@@ -17,12 +17,12 @@ use xcm_mmm::forecast::{
     SelectionProblem, SparseAccuracy, DEFAULT_LAMBDA,
 };
 use xcm_mmm::learn::Learner;
+use xcm_mmm::legal::cli::{run as run_legal, LegalArgs};
 use xcm_mmm::metrics::{hypervolume_report, igd, reference_front};
 use xcm_mmm::moead::scalar::Scalarization;
 use xcm_mmm::moead::{self, MoeadConfig, MoeadOutcome};
 use xcm_mmm::problem::Problem;
 use xcm_mmm::profile::cli::{run as run_read, ReadArgs};
-use xcm_mmm::legal::cli::{run as run_legal, LegalArgs};
 use xcm_mmm::segment::cli::{run as run_segment, SegmentArgs};
 
 #[derive(Parser)]
@@ -63,7 +63,8 @@ enum Command {
     Segment(SegmentArgs),
     /// Read emotion over any English word, and measure its coverage.
     Emotion(EmotionArgs),
-    /// Name the legal words in a text, and rewrite it in plain words.
+    /// Name the legal words in a text, rewrite it in plain words, and explain
+    /// what it requires, forbids and allows.
     Legal(LegalArgs),
     /// Score one text on every model: detectors, emotion, semantics, segment.
     #[command(visible_alias = "profile")]

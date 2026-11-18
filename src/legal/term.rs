@@ -85,14 +85,56 @@ pub struct Band {
     pub note: String,
 }
 
+/// The word lists a brief is read with, from `settings.json`.
+///
+/// They live in the data for the same reason the citation patterns do: a cue a
+/// person can read and edit is a published convention of the corpus, not a
+/// constant buried in the compiler. Order does not matter; the matcher always
+/// takes the earliest cue, and the longest at a shared start, so `shall not`
+/// wins over `shall` without depending on which line comes first.
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ClauseWords {
+    #[serde(default)]
+    pub duty: Vec<String>,
+    #[serde(default)]
+    pub prohibition: Vec<String>,
+    #[serde(default)]
+    pub permission: Vec<String>,
+    #[serde(default)]
+    pub condition: Vec<String>,
+    #[serde(default)]
+    pub deadline: Vec<String>,
+    #[serde(default)]
+    pub negation: Vec<String>,
+    /// Negated subjects that state a limit rather than forbid an act, such as
+    /// "Nothing in this section shall ...". Such a sentence is a statement.
+    #[serde(default)]
+    pub statement: Vec<String>,
+    /// Shortenings whose full stop does not end a sentence.
+    #[serde(default)]
+    pub abbreviations: Vec<String>,
+    /// Names a contract defines for its own cast, which are not terms of art:
+    /// `the Buyer`, `the Agreement`, `the Term`. `legal explain --check` stays
+    /// quiet about these, because the glossary rightly carries no row for them.
+    #[serde(default)]
+    pub defined_ignore: Vec<String>,
+}
+
 /// The settings beside the glossary.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Settings {
     pub version: u32,
+    /// The notice every brief carries, so the text and the packaging cards
+    /// cannot drift apart.
+    #[serde(default)]
+    pub disclaimer: String,
     pub bands: Vec<Band>,
     /// Citation patterns the rewrite must not touch.
     #[serde(default)]
     pub protect: Vec<String>,
+    /// The cues `legal explain` sorts a sentence by.
+    #[serde(default)]
+    pub clauses: ClauseWords,
 }
 
 impl Settings {
@@ -195,6 +237,18 @@ impl Lexicon {
         &self.terms[hit.index]
     }
 
+    /// Whether a glossary row carries `phrase`, in any spelling and whatever the
+    /// case. Used by the gap check, which asks the glossary a question the
+    /// matcher cannot: does a term this document defines have a row at all.
+    pub fn knows(&self, phrase: &str) -> bool {
+        let wanted = normalise(phrase);
+        !wanted.is_empty()
+            && self.terms.iter().any(|term| {
+                term.spellings()
+                    .any(|spelling| normalise(spelling) == wanted)
+            })
+    }
+
     /// Every occurrence, longest match first at a shared start, with no term
     /// reported inside another.
     pub fn find(&self, text: &str) -> Vec<Hit> {
@@ -255,21 +309,30 @@ fn tolerant(spelling: &str) -> String {
         .join(r"\s+")
 }
 
+/// A spelling reduced to what a lookup compares: lower case, one space between
+/// words, no punctuation a sentence wraps around it.
+fn normalise(spelling: &str) -> String {
+    spelling
+        .trim_matches(|c: char| !c.is_alphanumeric())
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+        .to_lowercase()
+}
+
 /// Whether a match stands on its own: a word character before or after it means
 /// the match is part of a longer word and is not a term.
 fn bounded(text: &str, start: usize, end: usize) -> bool {
     let first = text[start..end].chars().next();
     let last = text[start..end].chars().next_back();
     let word = |c: char| c.is_alphanumeric() || c == '_';
-    if first.map(word).unwrap_or(false) {
-        if text[..start].chars().next_back().map(word).unwrap_or(false) {
-            return false;
-        }
+    let before = text[..start].chars().next_back().map(word).unwrap_or(false);
+    let after = text[end..].chars().next().map(word).unwrap_or(false);
+    if first.map(word).unwrap_or(false) && before {
+        return false;
     }
-    if last.map(word).unwrap_or(false) {
-        if text[end..].chars().next().map(word).unwrap_or(false) {
-            return false;
-        }
+    if last.map(word).unwrap_or(false) && after {
+        return false;
     }
     true
 }
@@ -354,6 +417,8 @@ mod tests {
     fn bands_are_read_as_ceiling_values() {
         let settings = Settings {
             version: 1,
+            disclaimer: String::new(),
+            clauses: ClauseWords::default(),
             bands: vec![
                 Band {
                     name: "plain".into(),

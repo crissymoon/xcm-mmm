@@ -1,44 +1,56 @@
 {
-  "bands": {
-    "legal": {
-      "documents": 46,
-      "quantiles": {
-        "max": 9.09,
-        "q25": 0.81,
-        "q50": 2.16,
-        "q75": 4.2
-      },
-      "rows": {
-        "dense": 8,
-        "heavy": 17,
-        "light": 12,
-        "plain": 9
-      }
+  "name": "marketlab-legal-language",
+  "version": 1,
+  "built_at": "2026-11-18T22:11:44Z",
+  "files": [
+    {
+      "name": "bank.jsonl",
+      "rows": 2324,
+      "bytes": 589611,
+      "fnv64": "bd10ccb89514c9f3"
     },
-    "plain": {
-      "documents": 41,
-      "quantiles": {
-        "max": 0.48,
-        "q25": 0.0,
-        "q50": 0.0,
-        "q75": 0.0
-      },
-      "rows": {
-        "dense": 0,
-        "heavy": 0,
-        "light": 0,
-        "plain": 41
-      }
+    {
+      "name": "detector_features.json",
+      "rows": 1,
+      "bytes": 19769,
+      "fnv64": "5508ba3238501a59"
+    },
+    {
+      "name": "pairs.jsonl",
+      "rows": 71,
+      "bytes": 58778,
+      "fnv64": "18fd48418ce1957f"
+    },
+    {
+      "name": "rewrites.jsonl",
+      "rows": 110,
+      "bytes": 22441,
+      "fnv64": "df11240365d3c7b1"
+    },
+    {
+      "name": "settings.json",
+      "rows": 1,
+      "bytes": 3325,
+      "fnv64": "eb753d10ec4db471"
+    },
+    {
+      "name": "sources.json",
+      "rows": 1,
+      "bytes": 28730,
+      "fnv64": "009eeea48e1d44c2"
+    },
+    {
+      "name": "substitutions.json",
+      "rows": 1,
+      "bytes": 29457,
+      "fnv64": "747c529d8c50ac7c"
+    },
+    {
+      "name": "terms.jsonl",
+      "rows": 171,
+      "bytes": 49688,
+      "fnv64": "23874477cd8f59ab"
     }
-  },
-  "built_at": "2026-11-18T10:27:15-08:00",
-  "clause_rules": [
-    "any-whatsoever",
-    "date-upon-which",
-    "for-purposes-of-this",
-    "in-or-incidental-to",
-    "not-entitled-to-payment",
-    "within-days-of-receipt"
   ],
   "counts": {
     "advisory": 2,
@@ -59,144 +71,5 @@
     "sources": 115,
     "substitutions": 119,
     "terms": 171
-  },
-  "files": [
-    {
-      "bytes": 589611,
-      "fnv64": "bd10ccb89514c9f3",
-      "name": "bank.jsonl",
-      "rows": 2324
-    },
-    {
-      "bytes": 19769,
-      "fnv64": "5508ba3238501a59",
-      "name": "detector_features.json",
-      "rows": 1
-    },
-    {
-      "bytes": 58778,
-      "fnv64": "18fd48418ce1957f",
-      "name": "pairs.jsonl",
-      "rows": 71
-    },
-    {
-      "bytes": 22441,
-      "fnv64": "df11240365d3c7b1",
-      "name": "rewrites.jsonl",
-      "rows": 110
-    },
-    {
-      "bytes": 1088,
-      "fnv64": "0f6638bb4c3d70b9",
-      "name": "settings.json",
-      "rows": 1
-    },
-    {
-      "bytes": 28730,
-      "fnv64": "009eeea48e1d44c2",
-      "name": "sources.json",
-      "rows": 1
-    },
-    {
-      "bytes": 29457,
-      "fnv64": "747c529d8c50ac7c",
-      "name": "substitutions.json",
-      "rows": 1
-    },
-    {
-      "bytes": 49688,
-      "fnv64": "23874477cd8f59ab",
-      "name": "terms.jsonl",
-      "rows": 171
-    }
-  ],
-  "name": "marketlab-legal-language",
-  "unbacked_rules": [
-    "know-all-men-by-these-presents",
-    "for-and-on-behalf-of",
-    "for-the-avoidance-of-doubt",
-    "including-but-not-limited-to",
-    "shall-have-the-right-to",
-    "at-such-time-as",
-    "during-such-time-as",
-    "for-the-purpose-of",
-    "full-force-and-effect",
-    "has-the-obligation-to",
-    "in-the-absence-of",
-    "in-the-event-of",
-    "in-the-near-future",
-    "shall-be-entitled-to",
-    "to-the-extent-that",
-    "a-number-of",
-    "any-and-all",
-    "at-all-times",
-    "by-virtue-of",
-    "due-and-payable",
-    "each-and-every",
-    "give-consideration-to",
-    "goods-and-chattels",
-    "in-connection-with",
-    "in-furtherance-of",
-    "in-lieu-of",
-    "in-relation-to",
-    "in-witness-whereof",
-    "including-without-limitation",
-    "is-required-to",
-    "no-later-than",
-    "not-later-than",
-    "null-and-void",
-    "on-or-about",
-    "on-or-before",
-    "over-and-above",
-    "save-and-except",
-    "time-for-filing",
-    "unless-and-until",
-    "with-respect-to",
-    "ab-initio",
-    "in-perpetuity",
-    "inter-alia",
-    "inter-alios",
-    "is-applicable",
-    "make-application",
-    "mala-fide",
-    "mutatis-mutandis",
-    "pari-passu",
-    "pro-rata",
-    "provide-notification",
-    "provided-that",
-    "shall-not",
-    "to-wit",
-    "aforesaid",
-    "and-or",
-    "e-g",
-    "expiration",
-    "facilitate",
-    "forthwith",
-    "henceforth",
-    "hereafter",
-    "hereby",
-    "herein",
-    "hereinabove",
-    "hereinafter",
-    "hereinbefore",
-    "hereinunder",
-    "hereof",
-    "hereto",
-    "hereunder",
-    "herewith",
-    "i-e",
-    "quash",
-    "shall",
-    "thereby",
-    "therein",
-    "thereof",
-    "thereto",
-    "theretofore",
-    "viz",
-    "whereby",
-    "wherein",
-    "whereof",
-    "witnesseth"
-  ],
-  "version": 1
+  }
 }

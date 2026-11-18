@@ -25,3 +25,6 @@ synthetic.csv
 # python bytecode
 __pycache__/
 *.pyc
+
+# staged artefacts (scripts/package-kaggle.sh writes dist/kaggle*)
+dist/

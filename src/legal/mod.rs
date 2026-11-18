@@ -27,14 +27,20 @@
 //! doctrine, and replacing it would change what the document claims, so it is
 //! counted separately and explained in place.
 
+pub mod brief;
 pub mod cli;
+mod cues;
+pub mod gaps;
 pub mod guard;
 pub mod rewrite;
 pub mod term;
 pub mod translate;
 
+pub use brief::{Brief, Clause, Definition, Kind};
 pub use cli::{LegalArgs, LegalCommand};
+pub use cues::Cues;
+pub use gaps::Gap;
 pub use guard::{Guard, Span};
 pub use rewrite::{Case, Change, Rule, Rules};
-pub use term::{Band, Hit, Lexicon, Settings, Term};
+pub use term::{Band, ClauseWords, Hit, Lexicon, Settings, Term};
 pub use translate::{Gloss, Legal, Reading, Scan, Stats, TermHit};

@@ -339,7 +339,7 @@ pub fn read_text(path: &str) -> Result<String, String> {
 mod tests {
     use super::*;
     use crate::legal::rewrite::{Case, Rule};
-    use crate::legal::term::Band;
+    use crate::legal::term::{Band, ClauseWords};
 
     fn term(id: &str, word: &str, plain: &str, kind: &str, avoidable: bool) -> Term {
         Term {
@@ -390,6 +390,8 @@ mod tests {
         .unwrap();
         let settings = Settings {
             version: 1,
+            disclaimer: String::new(),
+            clauses: ClauseWords::default(),
             bands: vec![
                 Band {
                     name: "plain".into(),
@@ -482,6 +484,8 @@ mod tests {
         let rules = Rules::new(Vec::new()).unwrap();
         let settings = Settings {
             version: 1,
+            disclaimer: String::new(),
+            clauses: ClauseWords::default(),
             bands: vec![Band {
                 name: "plain".into(),
                 max_per_100: 1e9,
@@ -508,6 +512,8 @@ mod tests {
         let rules = Rules::new(vec![rule("herein", r"\bherein\b", "in this document")]).unwrap();
         let settings = Settings {
             version: 1,
+            disclaimer: String::new(),
+            clauses: ClauseWords::default(),
             bands: vec![Band {
                 name: "plain".into(),
                 max_per_100: 1e9,

@@ -439,7 +439,10 @@ mod tests {
     fn an_artifact_without_extension_banks_round_trips() {
         let artifact = artifact();
         let json = serde_json::to_string(&artifact).expect("serialise");
-        assert!(!json.contains("bank_exts"), "empty extensions are not written");
+        assert!(
+            !json.contains("bank_exts"),
+            "empty extensions are not written"
+        );
         let back: Artifact = serde_json::from_str(&json).expect("read");
         assert!(back.source.bank_exts.is_empty());
     }

@@ -1,4 +1,5 @@
 {
+  "disclaimer": "Research project, not legal advice. This is a reading of the words in the document, not a legal opinion, and it is no substitute for a lawyer.",
   "bands": [
     {
       "max_per_100": 0.5,
@@ -21,6 +22,125 @@
       "note": "More drafting than content. Rewrite before anyone signs it."
     }
   ],
+  "clauses": {
+    "abbreviations": [
+      "No",
+      "Inc",
+      "Ltd",
+      "Co",
+      "Corp",
+      "v",
+      "vs",
+      "etc",
+      "al",
+      "Mr",
+      "Mrs",
+      "Ms",
+      "Dr",
+      "Jr",
+      "Sr",
+      "Sec",
+      "Art"
+    ],
+    "condition": [
+      "if",
+      "unless",
+      "except",
+      "except that",
+      "provided that",
+      "in the event that",
+      "on the condition that",
+      "so long as",
+      "as long as"
+    ],
+    "deadline": [
+      "within",
+      "no later than",
+      "not later than",
+      "on or before",
+      "prior to",
+      "by the end of",
+      "before the expiration of"
+    ],
+    "defined_ignore": [
+      "agreement",
+      "act",
+      "amendment",
+      "annex",
+      "appendix",
+      "assignment",
+      "buyer",
+      "borrower",
+      "company",
+      "contract",
+      "customer",
+      "discloser",
+      "effective date",
+      "exhibit",
+      "guarantor",
+      "landlord",
+      "lender",
+      "licence",
+      "license",
+      "licensee",
+      "licensor",
+      "notice",
+      "party",
+      "premises",
+      "recipient",
+      "seller",
+      "schedule",
+      "section",
+      "supplier",
+      "tenant",
+      "term",
+      "vendor"
+    ],
+    "duty": [
+      "shall",
+      "must",
+      "is required to",
+      "is obligated to",
+      "has an obligation to",
+      "agrees to"
+    ],
+    "negation": [
+      "no",
+      "not",
+      "none",
+      "nothing",
+      "neither",
+      "nor",
+      "never"
+    ],
+    "permission": [
+      "may",
+      "is entitled to",
+      "is permitted to",
+      "has the right to",
+      "is allowed to",
+      "shall be entitled to",
+      "shall have the right to",
+      "shall be permitted to"
+    ],
+    "prohibition": [
+      "shall not",
+      "must not",
+      "may not",
+      "is prohibited from",
+      "is not permitted to",
+      "shall in no event"
+    ],
+    "statement": [
+      "nothing",
+      "no provision",
+      "no part of",
+      "none of",
+      "no term of",
+      "no section of",
+      "no portion of"
+    ]
+  },
   "protect": [
     "\\u00a7+\\s*[0-9]+[0-9A-Za-z.\\-]*(?:\\([0-9a-zA-Z]+\\))*",
     "\\b(?:Section|Sections|Rule|Rules|Code|Chapter|Title|Article|Part)\\s+[0-9]+[0-9A-Za-z.\\-]*",
@@ -29,5 +149,5 @@
     "\\bFed\\.\\s+R\\.\\s+(?:Civ|App|Evid)\\.\\s+P\\.\\s+[0-9]+",
     "\\b[0-9]+\\s+[A-Z][A-Za-z.]*\\s+[0-9]+\\b"
   ],
-  "version": 1
+  "version": 3
 }

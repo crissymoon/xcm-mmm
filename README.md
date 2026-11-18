@@ -34,7 +34,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Forecasting.** CSV and JSON Lines reading, blocked walk-forward folds with an embargo, ridge regression by Cholesky, and a report with per fold detail.
 - **Corpus cleaning and pairs.** Character folding, markup and boilerplate screening, quality rules with a called-out reason per rejection, MinHash near duplicate clustering, two selection rules (thresholded marginal relevance and target-aware importance resampling), and a pair miner that writes rank, preference and contrast banks in one schema with an audit that gates leakage, triviality and contamination.
 - **Seven text detectors.** Two learned axes (legal register, abstraction) fitted as smoothed log odds over a labelled bank plus a logistic regression over surface readings, five declared cue indices behind a gate (fear, publicity, manipulation, followers, narrative), and an artifact that carries its terms, cuts, metrics and audit beside the data it was fitted on.
-- **Legal words and plain words.** A 171 row glossary of legal English and the rule table built from it, including six authored clause rewrites that reorder a construction rather than replace one word, a reader that names every term in a document with its offsets and bands its density, and a translator that rewrites the avoidable terms, rewrites the constructions, and glosses the terms of art it must keep, with the page each meaning was checked against carried in the row.
+- **Legal words and plain words.** A 171 row glossary of legal English and the rule table built from it, including six authored clause rewrites that reorder a construction rather than replace one word, a reader that names every term in a document with its offsets and bands its density, a translator that rewrites the avoidable terms, rewrites the constructions, and glosses the terms of art it must keep, with the page each meaning was checked against carried in the row, and a brief that sorts a document by what it requires, forbids and allows and defines the terms it reads.
 - **Emotion readings.** Eight Plutchik axes over the whole English vocabulary: a 673 word seed, a VADER valence list, a labelled bank of twenty contact-centre transcripts, suffix and prefix derivation, and a character-analogy fallback that needs a shared opening three letters unless the spelling is very close. Seven tiers, every word in a list resolved to one of them, and `emotion coverage` counts which tier answered for a 235,976 word dictionary and for running text.
 - **Churn outcome.** A 7,043 customer telecom panel into a churn label, a retention hazard by tenure month with right censoring, and the 1,869 churn reasons read on the emotion axes. A fourteen-feature logistic with folds assigned by customer id reports held-out AUC beside the AUC of tenure and monthly charge alone.
 - **Behavioural segments.** Advertisers grouped by what they did in an ad panel: volume, cadence and its spread, banded spend, copy length, terms bought against, creative reuse and copy concentration. k-means++ with a silhouette sweep, a shuffled control and a resampling audit, and a folder that rebuilds from its own entities.
@@ -99,18 +99,25 @@ The other five have no labelled corpus, so nothing here is an accuracy. They shi
 - `rewrites.jsonl` holds 110 rules: 104 derived from the glossary, so the two cannot disagree, and 6 clause rules written in the corpus builder. 108 edit and 2 only advise, because `said` means "the" in `said vehicle` and "spoke" in `he said`. A replacement may name its own capture groups, which is what lets a clause rule reorder what it matched: `shall not be entitled to payment or reimbursement for` becomes `shall not be paid for`, where a word rule had produced `must not be entitled to`.
 - `bank.jsonl` is the labelled side: 1,402 sentences from statutes and rules fetched from their publisher, and 922 plain sentences about legal subjects from court self-help pages and advertisers' copy. The self-help sentences are the point of the file, because a detector fitted only against ads learns that courts are legal English rather than what legal English is.
 - `pairs.jsonl` is 71 legal to plain pairs, 43 published (a page prints both sides) and 28 written here from authority sentences and tagged editorial. Twelve of the editorial pairs quote a contract clause or a code of ethics, each with the document's URL on the pair and in `sources.json`, because the published pairs are thin on contract and securities wording.
-- `settings.json` holds the citation patterns a rewrite must not touch and the density bands. On this bank every one of the 41 self-help documents lands in `plain`, at 0.48 avoidable terms per hundred words at the top, while the 46 statutory documents spread across light, heavy and dense.
+- `settings.json` holds the citation patterns a rewrite must not touch, the density bands, the notice every brief carries, and the clause cues `legal explain` sorts a sentence by: duty, prohibition, permission, condition, deadline, negation, statement and abbreviation. On this bank every one of the 41 self-help documents lands in `plain`, at 0.48 avoidable terms per hundred words at the top, while the 46 statutory documents spread across light, heavy and dense.
 
 The distinction the reading is built on is avoidable against necessary. `pursuant to` becomes `under`; `res judicata` keeps its name and gets a gloss on first use, because replacing it would change what the document claims. A term inside a citation or a quotation is reported and never edited.
+
+`legal explain` is the third reading. It sorts every sentence by the verb that carries it, so a duty, a prohibition, a permission and a condition are reported apart from each other and from statements that do neither. Each clause carries the actor, the condition that limits it and the deadline that dates it; each term of art the text relies on gets its plain reading, the note that says why it is kept, and its authority. A sentence that holds two rules, `..., and the Licensee shall be liable`, is cut in two rather than filed under one verb. The cue words come from `settings.json` and the definitions from `terms.jsonl`, so a brief cannot disagree with a scan of the same text. Every brief ends with the notice `settings.json` carries, so the text output, the JSON and the dataset cards on Kaggle state the same thing: this is a research project, a brief is a reading of the words in the document, and it is not legal advice.
 
 ```bash
 ./xcm-mmm legal terms --kind latin
 ./xcm-mmm legal scan --file notice.txt
 ./xcm-mmm legal translate --explain --file notice.txt
+./xcm-mmm legal explain --file notice.txt
+./xcm-mmm legal explain --file notice.txt --check
 ./xcm-mmm legal check --verbose
+./xcm-mmm legal check --fix
 ```
 
-`legal check` recomputes the folder's digests and its coverage, then runs the translator over the whole bank. On the legal side 1.28 avoidable terms per hundred words fall to 0.27, of which 95 are the two advisory words and 4 sit inside citations; 7 of the 922 plain sentences are edited at all. The corpus is built by `tools/build-marketlab-legallanguage.py` in the marketlab repository, which writes both this folder and `data/marketlab-legal-language/` from the same bytes.
+`legal explain --check` is the coverage question a pipeline asks. A glossary answer has to start somewhere, so a name the document defines and the glossary has no row for is reported under `UNGLOSSED TERMS`, counted in a warning and, with `--check`, turned into a non-zero exit. The definitional cues it reads are the document's own: `(the "Service Fee")` and `Service Fee means`. A name a contract defines for its own cast, `the Buyer`, `the Agreement`, `the Term`, is not a term of art, so `clauses.defined_ignore` in `settings.json` lists those and the check stays quiet about them; that list is data, so a corpus with a different cast can change it without a build.
+
+`legal check` recomputes the folder's digests and its coverage, then runs the translator over the whole bank. On the legal side 1.41 avoidable terms per hundred words fall to 0.27, of which 95 are the two advisory words and 4 sit inside citations; 310 of the 1402 legal rows change at all, and 10 of the 922 plain rows. The corpus is built by `tools/build-marketlab-legallanguage.py` in the marketlab repository, which writes both this folder and `data/marketlab-legal-language/` from the same bytes.
 
 ## Behavioural segments
 
@@ -301,6 +308,18 @@ From labelled rows to one trained model:
 ```
 
 Training fills a batch in parallel and can be paused: `--checkpoint tmp/run.cp.json` writes the optimizer state after each epoch group, and `transformer train --pairs tmp/pairs.jsonl --out tmp/model.json --resume tmp/run.cp.json` continues the same plan and lands on the model the uninterrupted run produces.
+
+### In a Kaggle notebook
+
+Kaggle images hold no Rust toolchain and, by default, no network, so the tool arrives as two datasets: the static binary (`crissymoon/xcm-mmm-static-linux-x86-64`) and the fitted artefacts (`crissymoon/xcm-mmm-models`). Both mounts are read only and neither keeps the executable bit, so a notebook copies them out. Because every command defaults to a path under `data/`, the copy puts the artefacts beside the binary and changes directory, after which `detect score`, `read`, `segment assign`, `legal scan`, `legal explain` and `churn check` run with no path flags.
+
+```bash
+scripts/package-kaggle.sh --push    # binary dataset
+scripts/package-models.sh --push    # artefacts dataset, staged as data/<model>/
+python3 scripts/kaggle-notebook.py --push   # the notebook that uses both
+```
+
+`scripts/build-linux.sh` is the part that is not obvious: cross compiling from macOS fails until `rust-lld` from the musl target is named as the linker, because cargo otherwise hands the link to Apple's `cc`, which rejects every GNU flag. The result is a static-pie ELF that does not track the image's glibc.
 
 ## Benchmarks
 

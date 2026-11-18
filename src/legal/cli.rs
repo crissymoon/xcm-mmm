@@ -15,6 +15,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::text::hash::{fnv1a, hex64};
 
+use super::brief::{Brief, Kind};
 use super::term::Settings;
 use super::translate::Legal;
 
@@ -39,6 +40,9 @@ pub enum LegalCommand {
     Scan(ScanArgs),
     /// Rewrite a text in plain words and gloss the terms of art.
     Translate(TranslateArgs),
+    /// Explain a text: what it requires, forbids and allows, and what its terms
+    /// of art mean.
+    Explain(ExplainArgs),
     /// Recompute the folder's digests and coverage.
     Check(CheckArgs),
 }
@@ -119,10 +123,31 @@ pub struct TranslateArgs {
 }
 
 #[derive(Args)]
+pub struct ExplainArgs {
+    #[command(flatten)]
+    source: Source,
+    /// How many definitions to show. Zero shows all of them.
+    #[arg(long, default_value_t = 0, value_name = "N")]
+    top: usize,
+    /// Write the brief here as well as printing it.
+    #[arg(long, value_name = "PATH")]
+    out: Option<String>,
+    /// Print the brief as JSON.
+    #[arg(long)]
+    json: bool,
+    /// Exit non-zero when the text defines a term the glossary has no row for.
+    #[arg(long)]
+    check: bool,
+}
+
+#[derive(Args)]
 pub struct CheckArgs {
     /// Print every file and count, not only the faults.
     #[arg(long)]
     verbose: bool,
+    /// Recompute every row of the manifest, then check it.
+    #[arg(long)]
+    fix: bool,
 }
 
 /// One file as the manifest declares it.
@@ -152,6 +177,7 @@ pub fn run(args: LegalArgs) -> Result<(), Box<dyn Error>> {
         LegalCommand::Terms(list) => terms(&dir, &list),
         LegalCommand::Scan(scan) => read_scan(&dir, &scan),
         LegalCommand::Translate(job) => translate(&dir, &job),
+        LegalCommand::Explain(job) => explain(&dir, &job),
         LegalCommand::Check(check) => verify(&dir, &check),
     }
 }
@@ -313,6 +339,191 @@ fn translate(dir: &str, args: &TranslateArgs) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+fn explain(dir: &str, args: &ExplainArgs) -> Result<(), Box<dyn Error>> {
+    let legal = Legal::load(dir)?;
+    let text = args.source.read()?;
+    let brief = Brief::build(&legal, &text)?;
+    let rendered = if args.json {
+        serde_json::to_string_pretty(&brief)?
+    } else {
+        render(&brief, args.top)
+    };
+    if let Some(path) = &args.out {
+        fs::write(path, format!("{rendered}\n"))?;
+    }
+    println!("{rendered}");
+    if args.check {
+        return coverage_check(&brief);
+    }
+    Ok(())
+}
+
+/// Fail the run when the glossary cannot answer for a term the text defines.
+///
+/// This is the check a research loop wants: an exit status, not a sentence to
+/// read. An empty list is the pass, and the pass is still said out loud so a
+/// pipeline can tell "nothing missing" from "the check never ran".
+fn coverage_check(brief: &Brief) -> Result<(), Box<dyn Error>> {
+    if brief.gaps.is_empty() {
+        eprintln!("check: every defined term in the text has a glossary row");
+        return Ok(());
+    }
+    for gap in &brief.gaps {
+        eprintln!(
+            "gap: {} at byte {} has no glossary row",
+            gap.term, gap.offset
+        );
+    }
+    Err(format!(
+        "{} defined term{} the glossary cannot gloss",
+        brief.gaps.len(),
+        if brief.gaps.len() == 1 { "" } else { "s" }
+    )
+    .into())
+}
+
+/// A brief for a person: the summary, then one section per kind of clause, then
+/// the definitions the text depends on.
+fn render(brief: &Brief, top: usize) -> String {
+    let stats = &brief.stats;
+    let mut out = String::new();
+    out.push_str(&format!(
+        "BRIEF  {} words, {} {}, {:.2} avoidable per 100, band {}\n\n",
+        brief.words,
+        brief.counts.definitions,
+        if brief.counts.definitions == 1 {
+            "glossary term"
+        } else {
+            "glossary terms"
+        },
+        stats.avoidable_per_100,
+        stats.band
+    ));
+    out.push_str(&format!("{}\n", brief.summary));
+    for warning in &brief.warnings {
+        out.push_str(&format!("note: {warning}\n"));
+    }
+
+    for (kind, title) in [
+        (Kind::Duty, "WHAT IT REQUIRES"),
+        (Kind::Prohibition, "WHAT IT FORBIDS"),
+        (Kind::Permission, "WHAT IT ALLOWS"),
+        (Kind::Condition, "CONDITIONS"),
+        (Kind::Statement, "ALSO STATES"),
+    ] {
+        let mut shown = 0;
+        let mut section = String::new();
+        for clause in brief.of(kind) {
+            if clause.heading {
+                continue;
+            }
+            shown += 1;
+            section.push_str(&format!("  {shown}. {}\n", one_line(&clause.text)));
+            let mut detail: Vec<String> = Vec::new();
+            if !clause.actor.is_empty() {
+                detail.push(format!("who {}", clause.actor));
+            }
+            if let Some(condition) = &clause.condition {
+                if clause.kind != Kind::Condition {
+                    detail.push(format!("condition: {condition}"));
+                }
+            }
+            for deadline in &clause.deadlines {
+                detail.push(format!("when {}", deadline));
+            }
+            if !clause.terms.is_empty() {
+                detail.push(format!("see {}", clause.terms.join(", ")));
+            }
+            if !detail.is_empty() {
+                section.push_str(&format!("     {}\n", detail.join(" | ")));
+            }
+        }
+        if !section.is_empty() {
+            out.push_str(&format!("\n{title}\n{section}"));
+        }
+    }
+
+    let definitions: Vec<&super::brief::Definition> = if top == 0 {
+        brief.definitions.iter().collect()
+    } else {
+        brief.definitions.iter().take(top).collect()
+    };
+    if definitions.is_empty() {
+        out.push_str("\nDEFINITIONS\n  none: no glossary term appears outside a citation.\n");
+    } else {
+        out.push_str("\nDEFINITIONS\n");
+        for (n, definition) in definitions.iter().enumerate() {
+            out.push_str(&format!(
+                "  {}. {} ({}): {}\n",
+                n + 1,
+                definition.term,
+                definition.kind,
+                definition.plain
+            ));
+            if !definition.note.is_empty() {
+                out.push_str(&format!("     why it matters: {}\n", definition.note));
+            }
+            if !definition.law.is_empty() {
+                out.push_str(&format!("     authority: {}\n", definition.law));
+            }
+            if !definition.sources.is_empty() {
+                let shown = definition
+                    .sources
+                    .iter()
+                    .take(2)
+                    .cloned()
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let more = definition.sources.len().saturating_sub(2);
+                out.push_str(&format!(
+                    "     sources: {shown}{}\n",
+                    if more > 0 {
+                        format!(" (+{more} more)")
+                    } else {
+                        String::new()
+                    }
+                ));
+            }
+            if definition.uses > 1 {
+                out.push_str(&format!("     used {} times\n", definition.uses));
+            }
+        }
+        if top > 0 && top < brief.definitions.len() {
+            out.push_str(&format!(
+                "  {} more, raise --top\n",
+                brief.definitions.len() - top
+            ));
+        }
+    }
+
+    if !brief.gaps.is_empty() {
+        out.push_str("\nUNGLOSSED TERMS\n");
+        for (n, gap) in brief.gaps.iter().enumerate() {
+            out.push_str(&format!(
+                "  {}. {} (byte {}): defined here, no glossary row, so no plain reading\n",
+                n + 1,
+                gap.term,
+                gap.offset
+            ));
+        }
+    }
+
+    out.push_str(&format!("\n{}\n", brief.disclaimer));
+    out
+}
+
+fn one_line(text: &str) -> String {
+    let mut line = text.split_whitespace().collect::<Vec<_>>().join(" ");
+    if line
+        .chars()
+        .last()
+        .is_some_and(|c| c.is_alphanumeric() || c == ')' || c == '\'' || c == '"')
+    {
+        line.push('.');
+    }
+    line
+}
+
 /// Run the reader over the bank and report what it does to both registers.
 ///
 /// A check that only compares digests says the folder did not move, not that
@@ -382,9 +593,44 @@ fn rate(hits: usize, words: usize) -> f64 {
     }
 }
 
+/// Recompute every declared row from the bytes on disk. Rows keep their order
+/// and their names; only the counts, the byte lengths and the digests move.
+fn rebuild_manifest(dir: &str) -> Result<Manifest, Box<dyn Error>> {
+    let path = format!("{dir}/manifest.json");
+    let mut manifest: Manifest = serde_json::from_str(&fs::read_to_string(&path)?)?;
+    for row in &mut manifest.files {
+        let bytes =
+            fs::read(format!("{dir}/{}", row.name)).map_err(|e| format!("{}: {e}", row.name))?;
+        row.bytes = bytes.len();
+        row.rows = if row.name.ends_with(".jsonl") {
+            String::from_utf8_lossy(&bytes)
+                .lines()
+                .filter(|line| !line.trim().is_empty())
+                .count()
+        } else {
+            1
+        };
+        row.fnv64 = hex64(fnv1a(&bytes));
+    }
+    manifest.built_at = crate::dataset::built_at();
+    Ok(manifest)
+}
+
 fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
     let legal = Legal::load(dir)?;
     let path = format!("{dir}/manifest.json");
+    if args.fix {
+        let repaired = rebuild_manifest(dir)?;
+        fs::write(
+            &path,
+            format!("{}\n", serde_json::to_string_pretty(&repaired)?),
+        )?;
+        println!(
+            "manifest: {} files recomputed, built_at {}",
+            repaired.files.len(),
+            repaired.built_at
+        );
+    }
     let text = fs::read_to_string(&path)?;
     let manifest: Manifest = serde_json::from_str(&text)?;
 
