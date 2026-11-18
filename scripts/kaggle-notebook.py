@@ -13,6 +13,11 @@ questions a reader would otherwise have to guess at:
   * what does a real workload look like when the tool is the worker inside a
     map over shards, which is the pattern that makes a notebook advanced.
 
+The kernel is public: a reader can open it, run it and read the figures without
+owning the datasets. Every figure is drawn from numbers the binary printed in
+the same session, saved as a PNG under charts/ and displayed inline, so the
+pictures cannot drift from the run that produced them.
+
     python3 scripts/kaggle-notebook.py            # stage dist/kaggle-kernel
     python3 scripts/kaggle-notebook.py --push     # stage, then push the kernel
 
@@ -87,6 +92,18 @@ shard reports reduce into one table. The text half runs the shipped models over
 the 518 ads they were fitted on. A Rust binary in a notebook is useful for the
 work it does per core, not for one interactive call.
 
+Four figures follow, and each one reads a number the tool printed in this
+session rather than a constant copied into the notebook:
+
+| figure | what it answers |
+| --- | --- |
+| `01-nested-folds.png` | which fold the nested selection scored highest, and which columns survived all four folds |
+| `02-shard-timings.png` | whether four shards in threads beat one shard in wall clock, given rayon already fills the cores |
+| `03-detector-axes.png` | how far each of the seven axes moves over 518 ads, and the shape of the top score by split |
+| `04-emotion-coverage.png` | how much of the emotion list and of running text reaches an answer above the neutral prior |
+
+The figures are written to `charts/` and kept as part of the kernel output.
+
 xcm-mmm {version()} is MIT licensed. Source: https://github.com/crissymoon/xcm-mmm
 """),
     ("code", """
@@ -143,6 +160,79 @@ except OSError:
     mem = f"{platform.machine()} host, /proc not mounted"
 print("memory        :", mem)
 """),
+    ("markdown", """
+## The plotting kit
+
+Every figure below is drawn from output the binary printed in this same run, so
+a picture cannot outlive the number behind it. matplotlib is pinned to `Agg`
+because a notebook image supplies no display, the PNG is written under `charts/`
+first and then displayed from that file, and the palette is named once so four
+figures read as one set.
+"""),
+    ("code", '''
+import matplotlib
+
+# Agg is the backend a headless image has; the saved PNG is what gets displayed,
+# not a live canvas, so the file on disk and the inline picture are the same
+# bytes.
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import math
+import pandas as pd
+import re
+
+try:
+    from IPython.display import Image, display
+except ImportError:  # the cells still run when extracted to a plain script
+    def display(*_args, **_kwargs):
+        return None
+
+    class Image:  # noqa: D101
+        def __init__(self, filename):
+            self.filename = filename
+
+CHARTS = WORK / "charts"
+CHARTS.mkdir(parents=True, exist_ok=True)
+
+INK = {"text": "#1f2933", "grid": "#d7dde3", "bar": "#3b6ea5",
+       "accent": "#c25e2a", "muted": "#8a9baa"}
+
+
+def decorate(ax, axis="y"):
+    """House axes: two spines, one grid direction, no box."""
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(INK["grid"])
+    ax.tick_params(colors=INK["text"], labelsize=9)
+    ax.grid(axis=axis, color=INK["grid"], linewidth=0.6, alpha=0.7)
+    ax.grid(axis="x" if axis == "y" else "y", visible=False)
+    ax.set_axisbelow(True)
+    return ax
+
+
+def panels(count=1, width=9.0, height=3.6, **kwargs):
+    fig, axes = plt.subplots(1, count, figsize=(width, height), dpi=130, **kwargs)
+    fig.patch.set_facecolor("white")
+    axes = [axes] if count == 1 else list(axes)
+    for ax in axes:
+        decorate(ax)
+    return fig, axes
+
+
+def show(fig, name, note):
+    """Save, then display the file, so the notebook and charts/ cannot diverge."""
+    path = CHARTS / f"{name}.png"
+    fig.tight_layout()
+    fig.savefig(path, facecolor="white")
+    plt.close(fig)
+    print(f"{path.name}  {path.stat().st_size / 1e3:5.0f} KB  {note}")
+    display(Image(filename=str(path)))
+    return path
+
+
+print("matplotlib", matplotlib.__version__, "| pandas", pd.__version__, "| charts ->", CHARTS)
+'''),
     ("markdown", """
 ## The claim, printed before it is acted on
 
@@ -208,20 +298,93 @@ print(run("--version").stdout.strip())
 `synth` writes a panel with a known signal, `forecast` runs the walk-forward
 search over it behind an embargo, and `--nested` makes the inner loop choose
 while the outer loop scores. The number to watch is the honest one: the nested
-skill, not the score from the selection that picked itself.
+skill, not the score from a selection that picked itself on the rows it is then
+scored on.
+
+`--json` and `--out` are what make the result a figure instead of a paragraph:
+the JSON carries one record per outer fold, including the columns the inner
+search chose, and the CSV holds the same rows for a reader who works in R or in
+awk. Neither flag changes the run.
 """),
     ("code", """
 panel = WORK / "panel.csv"
+FOLDS = WORK / "folds.csv"
 print(run("synth", "--rows", 4000, "--features", 24, "--informative", 6,
           "--seed", 7, "--out", panel).stdout.strip())
 
 t0 = time.perf_counter()
-flat = run("forecast", str(panel), "--folds", 4, "--horizon", 3,
-           "--budget", 3000, "--seed", 1).stdout
-flat_s = time.perf_counter() - t0
-print(flat)
-print(f"elapsed {flat_s:.2f}s on {os.cpu_count()} cores")
+report = json.loads(run("forecast", str(panel), "--folds", 4, "--horizon", 3,
+                        "--nested", "--inner-folds", 3, "--nested-budget", 3000,
+                        "--seed", 1, "--json", "--out", FOLDS).stdout)
+nested_s = time.perf_counter() - t0
+
+table = pd.DataFrame([{
+    "fold": f["fold"],
+    "test": f"{f['test_start']}-{f['test_end']}",
+    "mse": f["mse"],
+    "r2": f["r2"],
+    "ic": f["ic"],
+    "skill": f["skill"],
+    "columns": len(f["names"]),
+} for f in report["outer"]])
+print(f"nested   {report['outer_folds']} outer x {report['inner_folds']} inner folds, "
+      f"{report['rows']} rows, {report['features']} candidates, {nested_s:.2f}s on {os.cpu_count()} cores")
+print(table.to_string(index=False, float_format=lambda v: f"{v:.4f}"))
+print(f"skill    {report['mean_skill'] * 100:.1f}% +/- {report['spread'] * 100:.1f}   "
+      f"columns {report['mean_features']:.1f} of {report['features']}")
+print(f"folds.csv {FOLDS.stat().st_size} bytes")
+
+# A nested run that keeps every candidate has selected nothing, and a skill at
+# or below zero is worse than predicting the training mean. Both are the
+# failures that look like a table of plausible numbers.
+assert len(report["outer"]) == 4, "four folds were asked for"
+assert report["mean_features"] < report["features"], "selection kept every column"
+assert report["mean_skill"] > 0.0, "nested skill must beat the training mean"
 """),
+    ("code", '''
+fig, (left, right) = panels(2, width=11.0, height=3.9,
+                            gridspec_kw={"width_ratios": [1.0, 1.25]})
+
+xs = [f["fold"] for f in report["outer"]]
+skill = [f["skill"] for f in report["outer"]]
+# Skill and r2 land within a point of each other on this panel, so drawing both
+# would hide one behind the other. Skill is the line; r2 keeps its place in the
+# tick label, where the table in the cell above prints it too.
+low = max(0.0, min(skill) - 0.06)
+high = min(1.0, max(skill) + 0.09)
+left.plot(xs, skill, "o-", color=INK["accent"], markersize=7, linewidth=1.4,
+          label="skill over the mean")
+for x, v in zip(xs, skill):
+    left.annotate(f"{v * 100:.1f}%", (x, v), textcoords="offset points",
+                  xytext=(0, 10), ha="center", fontsize=8, color=INK["text"])
+left.axhline(report["mean_skill"], color=INK["muted"], linestyle="--", linewidth=1.0)
+left.text(xs[0], low + 0.01, f"mean skill {report['mean_skill'] * 100:.1f}%",
+          color=INK["text"], fontsize=8, va="bottom")
+left.set_xticks(xs)
+left.set_xticklabels([f"fold {x} (r2 {f['r2']:.3f})" for x, f in zip(xs, report["outer"])],
+                     fontsize=8)
+left.set_xlim(xs[0] - 0.4, xs[-1] + 0.4)
+left.set_ylim(low, high)
+left.set_ylabel("skill, axis over the fold range only", color=INK["text"], fontsize=9)
+left.set_title("Nested walk-forward: the inner loop chooses, the outer loop scores",
+               fontsize=10, color=INK["text"], loc="left")
+left.legend(frameon=False, fontsize=8, loc="upper left")
+
+chosen = report["selection"][:12][::-1]
+right.barh([c["name"] for c in chosen], [c["folds"] for c in chosen],
+           color=INK["bar"], height=0.62)
+for i, c in enumerate(chosen):
+    right.text(c["folds"] + 0.06, i, str(c["folds"]), va="center",
+               fontsize=8, color=INK["text"])
+right.set_xlim(0, report["outer_folds"] + 0.6)
+right.set_xlabel("outer folds that chose the column", color=INK["text"], fontsize=9)
+right.set_title(f"Which of {report['features']} candidates survived all "
+                f"{report['outer_folds']} folds", fontsize=10, color=INK["text"], loc="left")
+right.tick_params(axis="y", labelsize=8)
+decorate(right, axis="x")
+
+show(fig, "01-nested-folds", "fold skill beside selection stability")
+'''),
     ("markdown", """
 ## The pattern: the binary as a worker in a shard map
 
@@ -233,27 +396,54 @@ one interactive call, and it is how a long sweep survives the 12 hour limit,
 because each shard is a finished unit that can be resumed.
 """),
     ("code", """
+ORIGIN = time.perf_counter()
+
+
 def shard(i: int) -> dict:
     path = WORK / f"shard{i}.csv"
     run("synth", "--rows", 2000, "--features", 20, "--informative", 5,
         "--seed", 100 + i, "--out", path)
-    t0 = time.perf_counter()
+    start = time.perf_counter() - ORIGIN
     out = run("forecast", str(path), "--folds", 3, "--horizon", 2,
               "--budget", 1500, "--seed", 10 + i).stdout
-    elapsed = time.perf_counter() - t0
+    end = time.perf_counter() - ORIGIN
     best = [ln for ln in out.splitlines() if "best" in ln.lower()]
-    return {"shard": i, "seconds": round(elapsed, 2), "best": best[0].strip() if best else out.strip()[:80]}
+    return {"shard": i, "start": round(start, 3), "end": round(end, 3),
+            "seconds": round(end - start, 3),
+            "best": best[0].strip() if best else out.strip()[:80]}
 
 
 t0 = time.perf_counter()
 with ThreadPoolExecutor(max_workers=min(4, os.cpu_count() or 1)) as pool:
     reports = list(pool.map(shard, range(4)))
-wall = time.perf_counter() - t0
+wall = time.perf_counter() - ORIGIN
 
 for r in reports:
-    print(f"shard {r['shard']}: {r['seconds']:>6.2f}s  {r['best']}")
+    print(f"shard {r['shard']}: {r['seconds']:>6.2f}s  started {r['start']:>5.2f}s  {r['best']}")
 print(f"wall {wall:.2f}s, sum of shard time {sum(r['seconds'] for r in reports):.2f}s")
 """),
+    ("code", '''
+fig, axes = panels(width=9.0, height=3.0)
+ax = axes[0]
+for r in reports:
+    ax.barh(f"shard {r['shard']}", r["end"] - r["start"], left=r["start"],
+            height=0.55, color=INK["bar"])
+    ax.text(r["start"] + wall * 0.012, r["shard"], f"{r['end'] - r['start']:.2f}s",
+            va="center", fontsize=8, color="white")
+ax.axvline(wall, color=INK["accent"], linestyle="--", linewidth=1.2)
+ax.text(wall * 0.985, -0.8, f"wall clock {wall:.2f}s for all four", color=INK["accent"],
+        fontsize=8, ha="right")
+ax.set_xlim(0, wall * 1.08)
+ax.set_ylim(len(reports) - 0.38, -1.1)
+ax.set_xlabel("seconds since the pool started", color=INK["text"], fontsize=9)
+ax.set_title("Four forecasts at once: the bars overlap, so the wall clock is not their sum",
+             fontsize=10, color=INK["text"], loc="left")
+decorate(ax, axis="x")
+
+show(fig, "02-shard-timings",
+     f"{len(reports)} shards, {sum(r['seconds'] for r in reports):.2f}s of work in "
+     f"{wall:.2f}s of wall clock")
+'''),
     ("markdown", """
 ## The text side, now that the artefacts are present
 
@@ -292,8 +482,6 @@ against and a `train`/`test` split, which makes the output a check on the model
 rather than a demo of it.
 """),
     ("code", """
-import pandas as pd
-
 SCORED = WORK / "scored.jsonl"
 t0 = time.perf_counter()
 print(run("detect", "score", "--input", "data/detectors/ads.jsonl",
@@ -317,6 +505,51 @@ for r in peaks:
     flat_text = " ".join(r["text"].split())[:64]
     print(f"  {v['score']:.2f}  {axis:12s} {r['split']:5s} {flat_text}")
 """),
+    ("code", '''
+fig, (left, right) = panels(2, width=11.0, height=3.9,
+                            gridspec_kw={"width_ratios": [1.1, 1.0]})
+
+ordered = summary.sort_values("mean")
+ys = list(range(len(ordered)))
+left.barh(ys, ordered["mean"], 0.6, color=INK["bar"])
+for y, mean, flagged in zip(ys, ordered["mean"], ordered["flagged"]):
+    left.text(mean + ordered["mean"].max() * 0.02, y, f"{flagged} ads",
+              va="center", fontsize=7.5, color=INK["muted"])
+left.set_yticks(ys)
+left.set_yticklabels(ordered["axis"])
+left.set_xlim(0, ordered["mean"].max() * 1.32)
+left.set_xlabel("mean score across the ad set, with the ads it flags", color=INK["text"], fontsize=9)
+left.set_title(f"Seven axes over {len(rows)} ads", fontsize=10, color=INK["text"], loc="left")
+decorate(left, axis="x")
+
+# The top score per ad, split the way the model was split. Train is drawn as
+# bars and test as an outline, because 127 rows behind 391 taller bars would
+# otherwise be invisible, and the comparison is the point of the panel. The bins
+# start at the lowest observed score, not at zero: no ad is near zero and an
+# empty half axis would hide the shape.
+tops = {split: [max(v["score"] for v in r["axes"].values())
+                for r in rows if r["split"] == split]
+        for split in ("train", "test")}
+start = max(0.0, math.floor(min(map(min, tops.values())) / 0.05) * 0.05)
+stop = math.ceil(max(map(max, tops.values())) / 0.05) * 0.05 + 0.02
+step = (stop - start) / 20
+bins = [start + i * step for i in range(21)]
+# Counts per bin would put 391 train rows against 127 test rows and say nothing
+# about shape; density is what makes the two curves comparable.
+right.hist(tops["train"], bins=bins, density=True, color=INK["bar"], alpha=0.45,
+           edgecolor="white", linewidth=0.4, label=f"train ({len(tops['train'])})")
+right.hist(tops["test"], bins=bins, density=True, histtype="step", color=INK["accent"],
+           linewidth=1.4, label=f"test ({len(tops['test'])})")
+right.set_xlim(start, stop)
+right.set_xlabel("highest axis score for one ad", color=INK["text"], fontsize=9)
+right.set_ylabel("share of ads per bin", color=INK["text"], fontsize=9)
+right.set_title("Top score by split", fontsize=10, color=INK["text"], loc="left")
+right.legend(frameon=False, fontsize=8)
+
+show(fig, "03-detector-axes",
+     f"{len(ordered)} axes, {int(summary['flagged'].sum())} flagged cells of "
+     f"{len(rows) * len(ordered)}")
+'''),
     ("markdown", """
 ## The other four folders
 
@@ -352,9 +585,45 @@ print("check, unknown term:", gap.returncode, gap.stderr.strip().splitlines()[-1
 assert clean.returncode == 0, "a brief over known terms must pass the check"
 assert gap.returncode != 0, "an unglossed defined term must fail the check"
 print(run("churn", "check").stdout)
-print("\\n".join(run("emotion", "coverage",
-                     "--words", "data/emotion/listed.tsv",
-                     "--corpus", "data/emotion/bank.jsonl").stdout.splitlines()[-5:]))
+coverage = run("emotion", "coverage",
+               "--words", "data/emotion/listed.tsv",
+               "--corpus", "data/emotion/bank.jsonl").stdout
+for line in coverage.splitlines()[-5:]:
+    print(line)
+'''),
+    ("markdown", """
+## Coverage, as a picture
+
+The last count in that cell is the one worth a chart: of the 1 108 tokens in the
+corpus, 70.9% reach no tier at all and fall back to the neutral prior, which is
+the honest way to say how much of running text the emotion model actually reads.
+`prior` is drawn in the accent colour because it is the fallback, not an answer.
+"""),
+    ("code", '''
+# The coverage table is indented two spaces; the summary lines are not, which is
+# what keeps "corpus" and "evidence" out of the tier counts.
+TIER = re.compile(r"^\\s{2,}(\\w+)\\s+([\\d,]+)\\s+([\\d.]+)%$")
+tiers = {m.group(1): (int(m.group(2).replace(",", "")), float(m.group(3)))
+         for m in map(TIER.match, coverage.splitlines()) if m}
+assert "prior" in tiers, "the coverage table must name the fallback tier"
+
+order = sorted(tiers, key=lambda name: (-tiers[name][0], name))
+fig, axes = panels(width=9.0, height=3.6)
+ax = axes[0]
+bars = ax.bar(order, [tiers[name][0] for name in order], width=0.6,
+              color=[INK["accent"] if name == "prior" else INK["bar"] for name in order])
+top = max(count for count, _ in tiers.values())
+for bar, name in zip(bars, order):
+    ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + top * 0.02,
+            f"{tiers[name][1]:.1f}%", ha="center", fontsize=8, color=INK["text"])
+ax.set_ylabel("tokens in the corpus", color=INK["text"], fontsize=9)
+ax.set_ylim(0, top * 1.15)
+ax.set_title("Which tier answers for a token, out of "
+             f"{sum(count for count, _ in tiers.values())} tokens",
+             fontsize=10, color=INK["text"], loc="left")
+
+show(fig, "04-emotion-coverage",
+     f"prior is {tiers['prior'][1]:.1f}% of running text")
 '''),
     ("markdown", """
 ## What to carry forward
@@ -368,6 +637,13 @@ print("\\n".join(run("emotion", "coverage",
   quietly needs the network breaks for every reader who leaves the default on.
 - Wrap the binary in one `run()` helper that raises with the tool's own stderr,
   and make every step a shard that can be re-run alone.
+- Draw every figure from output the same run produced, save the PNG, then
+  display the file. A screenshot outlives the run; a chart built from the JSON
+  the tool just printed cannot.
+
+The kernel is public, so the run above and the four figures under `charts/` are
+visible without the datasets: fork it, swap the two `dataset_sources` for your
+own binary and artefacts, and the rest of the notebook is the part you keep.
 """),
 ]
 
@@ -391,9 +667,13 @@ def metadata() -> dict:
         "code_file": "notebook.ipynb",
         "language": "python",
         "kernel_type": "notebook",
-        "is_private": True,
+        # Public: the figures and the assertions are the point, and a reader who
+        # cannot open the kernel cannot check either one.
+        "is_private": False,
         "enable_gpu": False,
         "enable_tpu": False,
+        # No network, on purpose: the notebook has to prove a static binary and
+        # a local data tree are all it needs.
         "enable_internet": False,
         "dataset_sources": [f"crissymoon/{SLUG}", f"crissymoon/{MODELS}"],
         "competition_sources": [],

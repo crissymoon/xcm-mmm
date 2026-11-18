@@ -319,6 +319,8 @@ scripts/package-models.sh --push    # artefacts dataset, staged as data/<model>/
 python3 scripts/kaggle-notebook.py --push   # the notebook that uses both
 ```
 
+The kernel ([`crissymoon/xcm-mmm-binary-in-a-notebook`](https://www.kaggle.com/code/crissymoon/xcm-mmm-binary-in-a-notebook)) is public. It runs the binary with `enable_internet: false`, asserts each of the four claims above, and draws four figures from numbers the same run printed, saved under `charts/` and displayed inline: the nested fold skill beside selection stability, four shard forecasts as overlapping bars, the seven detector axes with the top-score distribution by split, and the emotion tiers with the neutral prior as its own bar.
+
 `scripts/build-linux.sh` is the part that is not obvious: cross compiling from macOS fails until `rust-lld` from the musl target is named as the linker, because cargo otherwise hands the link to Apple's `cc`, which rejects every GNU flag. The result is a static-pie ELF that does not track the image's glibc.
 
 ## Benchmarks
