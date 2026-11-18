@@ -14,6 +14,7 @@
 {"applies": true, "case": "preserve", "id": "for-the-purpose-of", "kind": "periphrasis", "pattern": "\\b(?:for\\s+the\\s+purpose\\s+of)\\b", "priority": 4, "replace": "to", "why": "To, when it introduces a verb"}
 {"applies": true, "case": "preserve", "id": "full-force-and-effect", "kind": "doublet", "pattern": "\\b(?:full\\s+force\\s+and\\s+effect)\\b", "priority": 4, "replace": "in effect", "why": "In effect"}
 {"applies": true, "case": "preserve", "id": "has-the-obligation-to", "kind": "nominal", "pattern": "\\b(?:have\\s+the\\s+obligation\\s+to|has\\s+the\\s+obligation\\s+to)\\b", "priority": 4, "replace": "must", "why": "Must"}
+{"applies": true, "case": "preserve", "id": "in-the-absence-of", "kind": "periphrasis", "pattern": "\\b(?:in\\s+the\\s+absence\\s+of)\\b", "priority": 4, "replace": "without", "why": "Without"}
 {"applies": true, "case": "preserve", "id": "in-the-amount-of", "kind": "periphrasis", "pattern": "\\b(?:in\\s+the\\s+amount\\s+of)\\b", "priority": 4, "replace": "for", "why": "For"}
 {"applies": true, "case": "preserve", "id": "in-the-event-of", "kind": "periphrasis", "pattern": "\\b(?:in\\s+the\\s+event\\s+of)\\b", "priority": 4, "replace": "if there is", "why": "The same five words before a noun rather than a clause"}
 {"applies": true, "case": "preserve", "id": "in-the-event-that", "kind": "periphrasis", "pattern": "\\b(?:in\\s+the\\s+event\\s+that)\\b", "priority": 4, "replace": "if", "why": "Five words for if"}
@@ -43,8 +44,10 @@
 {"applies": true, "case": "preserve", "id": "not-later-than", "kind": "periphrasis", "pattern": "\\b(?:not\\s+later\\s+than)\\b", "priority": 3, "replace": "by", "why": "By"}
 {"applies": true, "case": "preserve", "id": "null-and-void", "kind": "doublet", "pattern": "\\b(?:null\\s+and\\s+void)\\b", "priority": 3, "replace": "void", "why": "Null is a nullity and void is void"}
 {"applies": true, "case": "preserve", "id": "on-or-about", "kind": "periphrasis", "pattern": "\\b(?:on\\s+or\\s+about)\\b", "priority": 3, "replace": "about", "why": "About"}
+{"applies": true, "case": "preserve", "id": "on-or-before", "kind": "doublet", "pattern": "\\b(?:on\\s+or\\s+before)\\b", "priority": 3, "replace": "by", "why": "By"}
 {"applies": true, "case": "preserve", "id": "over-and-above", "kind": "doublet", "pattern": "\\b(?:over\\s+and\\s+above)\\b", "priority": 3, "replace": "more than", "why": "More than"}
 {"applies": true, "case": "preserve", "id": "save-and-except", "kind": "doublet", "pattern": "\\b(?:save\\s+and\\s+except)\\b", "priority": 3, "replace": "except", "why": "Except"}
+{"applies": true, "case": "preserve", "id": "time-for-filing", "kind": "nominal", "pattern": "\\b(?:time\\s+for\\s+filing)\\b", "priority": 3, "replace": "time to file", "why": "Time to file"}
 {"applies": true, "case": "preserve", "id": "unless-and-until", "kind": "doublet", "pattern": "\\b(?:unless\\s+and\\s+until)\\b", "priority": 3, "replace": "unless", "why": "Unless"}
 {"applies": true, "case": "preserve", "id": "with-respect-to", "kind": "periphrasis", "pattern": "\\b(?:with\\s+respect\\s+to)\\b", "priority": 3, "replace": "about", "why": "About, or for, depending on the noun"}
 {"applies": true, "case": "preserve", "id": "ab-initio", "kind": "latin", "pattern": "\\b(?:ab\\s+initio)\\b", "priority": 2, "replace": "from the start", "why": "From the start"}
@@ -69,6 +72,7 @@
 {"applies": true, "case": "preserve", "id": "commence", "kind": "nominal", "pattern": "\\b(?:commencing|commenced|commences|commence)\\b", "priority": 1, "replace": "start", "why": "Start"}
 {"applies": true, "case": "preserve", "id": "e-g", "kind": "latin", "pattern": "\\b(?:e\\.g\\.|e\\.g)", "priority": 1, "replace": "for example", "why": "For example"}
 {"applies": true, "case": "preserve", "id": "endeavor", "kind": "nominal", "pattern": "\\b(?:endeavoring|endeavored|endeavors|endeavor)\\b", "priority": 1, "replace": "try", "why": "Try"}
+{"applies": true, "case": "preserve", "id": "expiration", "kind": "nominal", "pattern": "\\b(?:expiration)\\b", "priority": 1, "replace": "end", "why": "End"}
 {"applies": true, "case": "preserve", "id": "facilitate", "kind": "nominal", "pattern": "\\b(?:facilitating|facilitated|facilitates|facilitate)\\b", "priority": 1, "replace": "help", "why": "Help"}
 {"applies": true, "case": "preserve", "id": "forthwith", "kind": "archaic", "pattern": "\\b(?:forthwith)\\b", "priority": 1, "replace": "immediately", "why": "Immediately"}
 {"applies": true, "case": "preserve", "id": "henceforth", "kind": "archaic", "pattern": "\\b(?:henceforth)\\b", "priority": 1, "replace": "from now on", "why": "From now on"}

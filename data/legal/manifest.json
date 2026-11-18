@@ -4,9 +4,9 @@
       "documents": 46,
       "quantiles": {
         "max": 9.09,
-        "q25": 0.71,
+        "q25": 0.81,
         "q50": 2.16,
-        "q75": 4.04
+        "q75": 4.2
       },
       "rows": {
         "dense": 8,
@@ -31,7 +31,7 @@
       }
     }
   },
-  "built_at": "2026-11-18T10:19:43-08:00",
+  "built_at": "2026-11-18T10:26:18-08:00",
   "clause_rules": [
     "any-whatsoever",
     "date-upon-which",
@@ -42,8 +42,8 @@
   ],
   "counts": {
     "advisory": 2,
-    "applying": 104,
-    "avoidable": 100,
+    "applying": 108,
+    "avoidable": 104,
     "bank": 2324,
     "bank_legal": 1402,
     "bank_plain": 922,
@@ -53,12 +53,12 @@
     "pairs": 71,
     "pairs_editorial": 28,
     "pairs_published": 43,
-    "rules": 106,
+    "rules": 110,
     "rules_clause": 6,
     "rules_published": 17,
     "sources": 115,
     "substitutions": 119,
-    "terms": 167
+    "terms": 171
   },
   "files": [
     {
@@ -80,10 +80,10 @@
       "rows": 71
     },
     {
-      "bytes": 21728,
-      "fnv64": "d8fccbe458ca8512",
+      "bytes": 22441,
+      "fnv64": "df11240365d3c7b1",
       "name": "rewrites.jsonl",
-      "rows": 106
+      "rows": 110
     },
     {
       "bytes": 1088,
@@ -104,10 +104,10 @@
       "rows": 1
     },
     {
-      "bytes": 48287,
-      "fnv64": "c1435b8fe73ff204",
+      "bytes": 49688,
+      "fnv64": "23874477cd8f59ab",
       "name": "terms.jsonl",
-      "rows": 167
+      "rows": 171
     }
   ],
   "name": "marketlab-legal-language",
@@ -122,6 +122,7 @@
     "for-the-purpose-of",
     "full-force-and-effect",
     "has-the-obligation-to",
+    "in-the-absence-of",
     "in-the-event-of",
     "in-the-near-future",
     "shall-be-entitled-to",
@@ -145,8 +146,10 @@
     "not-later-than",
     "null-and-void",
     "on-or-about",
+    "on-or-before",
     "over-and-above",
     "save-and-except",
+    "time-for-filing",
     "unless-and-until",
     "with-respect-to",
     "ab-initio",
@@ -166,6 +169,7 @@
     "aforesaid",
     "and-or",
     "e-g",
+    "expiration",
     "facilitate",
     "forthwith",
     "henceforth",
