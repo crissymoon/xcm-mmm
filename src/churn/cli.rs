@@ -39,6 +39,8 @@ pub enum ChurnCommand {
     Uplift(ChurnUpliftArgs),
     /// Compare a reference panel with a current one by PSI and KS.
     Monitor(ChurnMonitorArgs),
+    /// Run a sequential reading on the batch series, and print the refusals.
+    Stream(ChurnStreamArgs),
     /// Publish the current artifact as the next registry version.
     Publish(ChurnPublishArgs),
     /// Print the published versions, their audit trails and the log.
@@ -139,6 +141,31 @@ pub struct ChurnMonitorArgs {
 }
 
 #[derive(Args)]
+pub struct ChurnStreamArgs {
+    /// Folder holding `series.csv`.
+    #[arg(long, default_value = "data/churn")]
+    pub dir: String,
+    /// Column of `series.csv` to read, which must be a rate in `[0, 1]`.
+    #[arg(long, default_value = "hazard")]
+    pub column: String,
+    /// Level for a change anywhere in the stream. Absent means the grid is
+    /// calibrated on a stationary stream and the level is chosen from it.
+    #[arg(long)]
+    pub delta: Option<f64>,
+    /// Share of stationary streams allowed to raise a cut.
+    #[arg(long, default_value_t = 0.05)]
+    pub target: f64,
+    /// Batches per stationary stream.
+    #[arg(long, default_value_t = 1000)]
+    pub batches: usize,
+    /// Stationary streams per grid point.
+    #[arg(long, default_value_t = 100)]
+    pub trials: usize,
+    #[arg(long)]
+    pub json: bool,
+}
+
+#[derive(Args)]
 pub struct ChurnPublishArgs {
     #[arg(long, default_value = "data/churn/registry")]
     pub registry: String,
@@ -219,6 +246,7 @@ pub fn run(args: ChurnArgs) -> Result<(), Box<dyn Error>> {
         }
         ChurnCommand::Uplift(a) => uplift(a),
         ChurnCommand::Monitor(a) => monitor(a),
+        ChurnCommand::Stream(a) => stream(a),
         ChurnCommand::Publish(a) => {
             let model = fit::read(&a.model)?;
             let audit = audit_for(&a.model, &model)?;
@@ -515,6 +543,95 @@ fn uplift(args: ChurnUpliftArgs) -> Result<(), Box<dyn Error>> {
         );
     }
     println!("\n{}", report.note);
+    Ok(())
+}
+
+/// A sequential reading on a batch series, with the calibration that chose its
+/// level and the refusals it carries.
+fn stream(args: ChurnStreamArgs) -> Result<(), Box<dyn Error>> {
+    let path = format!("{}/{}", args.dir, panel::SERIES);
+    let table = super::csvx::read(&path)?;
+    let column = table.require(&args.column)?;
+    let mut series = Vec::with_capacity(table.rows.len());
+    for (number, cells) in table.rows.iter().enumerate() {
+        let at = number + 2;
+        let value = cells[column].trim().parse::<f64>().map_err(|_| {
+            format!(
+                "row {at} of {path} has a non numeric {}: {:?}",
+                args.column, cells[column]
+            )
+        })?;
+        series.push(value);
+    }
+    let mut config = monitor::CalibrationConfig {
+        target_share: args.target,
+        stationary: monitor::Stream {
+            batches: args.batches,
+            trials: args.trials,
+            ..monitor::Stream::default()
+        },
+        ..monitor::CalibrationConfig::default()
+    };
+    if let Some(delta) = args.delta {
+        config.grid = vec![delta];
+    }
+    let report = monitor::report(&series, &config)?;
+    if args.json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+        return Ok(());
+    }
+    println!(
+        "series    {} {}  {} batches",
+        panel::SERIES,
+        args.column,
+        commas(report.reading.points)
+    );
+    println!("assumed   {}", report.assumption);
+    println!("bound     {} at delta {}", report.bound, report.delta);
+    println!("choice    {}", report.calibration.reason);
+    println!("delta  streams  raised   share   upper   window   delay  detected");
+    for point in &report.calibration.points {
+        println!(
+            "{:>5} {:>8} {:>7} {:>7.3} {:>7.3} {:>8} {:>7} {:>9.2}",
+            point.delta,
+            point.streams,
+            point.raised,
+            point.share,
+            point.high,
+            point.mean_window,
+            point
+                .delay
+                .map(|delay| format!("{delay:.0}"))
+                .unwrap_or_else(|| "none".to_string()),
+            point.detected
+        );
+    }
+    if let Some(shift) = report.shift {
+        println!(
+            "shift     {} to {} at batch {}: {} batches, median delay {}",
+            report.stream.rate,
+            shift.to,
+            shift.at,
+            commas(shift.batches),
+            report
+                .calibration
+                .points
+                .get(report.calibration.chosen)
+                .and_then(|point| point.delay)
+                .map(|delay| format!("{delay:.0} batches"))
+                .unwrap_or_else(|| "never".to_string())
+        );
+    }
+    println!("reading   {}", report.note);
+    for cut in &report.reading.cuts {
+        println!(
+            "cut       after batch {}  {:.4} to {:.4}  bound {:.4}  {} batches dropped, {} kept",
+            cut.at, cut.before, cut.after, cut.epsilon, cut.dropped, cut.kept
+        );
+    }
+    println!("shuffle   {}", report.shuffle_line());
+    println!("cost      {}", report.comparison);
+    println!("refusal   {}", report.refusal.verdict);
     Ok(())
 }
 

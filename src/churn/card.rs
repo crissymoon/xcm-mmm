@@ -447,6 +447,57 @@ tenure-only reference on the same rows, which is the comparison that is valid wi
             model.score.auc
         ));
     }
+    out.push_str("## A sequential reading\n\n");
+    let sequential = &model.score.sequential;
+    if sequential.bound.is_empty() {
+        out.push_str(&format!(
+            "The reading is missing: {}. Rebuild with `churn fit` to populate it.\n\n",
+            sequential.note
+        ));
+    } else {
+        out.push_str(&format!(
+            "The tenure hazard is the one batch series this panel has: {} observations, one a \
+month. A sequential rule asks whether the process has moved without being told when to look, \
+which is a different question from the weekly gate and costs more data. The window is ADWIN's \
+(Bifet and Gavalda, 2007) on the {} bound at delta {}, chosen from a grid rather than defaulted: \
+{}\n\n",
+            sequential.reading.points,
+            sequential.bound,
+            sequential.delta,
+            sequential.calibration.reason
+        ));
+        out.push_str("| delta | streams | raised | share | upper | delay | detected |\n");
+        out.push_str("|---:|---:|---:|---:|---:|---:|---:|\n");
+        for point in &sequential.calibration.points {
+            out.push_str(&format!(
+                "| {} | {} | {} | {:.3} | {:.3} | {} | {:.2} |\n",
+                point.delta,
+                point.streams,
+                point.raised,
+                point.share,
+                point.high,
+                point
+                    .delay
+                    .map(|delay| format!("{delay:.0}"))
+                    .unwrap_or_else(|| "none".to_string()),
+                point.detected
+            ));
+        }
+        out.push_str(&format!("\n{}\n\n", sequential.assumption));
+        out.push_str(&format!("{}\n\n", sequential.note));
+        out.push_str(&format!("{}\n\n", sequential.comparison));
+        out.push_str(&format!("{}\n\n", sequential.shuffle_line()));
+        out.push_str(&format!("{}\n\n", sequential.refusal.verdict));
+        out.push_str(
+            "The per-event refusal is the operational point. A dashboard that fires on a single \
+event cannot exist at this rate, and the batch reading above needs thousands of batches before it \
+resolves a change the size of the one calibrated, so the size-aware weekly gate and the \
+matured-cohort table are what a review can stand on. A cut here would be the shape of the tenure \
+curve rather than an alarm, which is why the months are read in tenure order and why the shuffle \
+null is quoted beside the count: on this series the window is shorter than its own resolution, so \
+the count is arithmetic and the card says so instead of reading the absence of a cut as stability.\n\n",
+        );
+    }
     out.push_str("## Coefficients\n\n");
     out.push_str(
         "On the standardised scale the fit uses. A sign is a direction, not a\ncause.\n\n",
@@ -475,6 +526,7 @@ tenure-only reference on the same rows, which is the comparison that is valid wi
     out.push_str("- Drift and rollback are commands, not a daemon. `churn monitor` compares a\n  reference panel with a current one, scoring each feature against a null simulated at\n  the row counts the reading was taken at, combining the index with a Cramer-von Mises\n  distance under Benjamini-Hochberg, and reporting a kernel two-sample reading on the\n  whole standardised vector; `churn rollback` moves the artifact pointer back one\n  version. A scheduler still has to call them.\n");
     out.push_str("- The folklore PSI bands are not used. A fixed 0.1 or 0.25 threshold is a\n  different test at every sample size, so the gate calibrates its own. What the gate\n  cannot do is tell drift from a legitimate change in the population; it says the two\n  panels differ, not why, and it needs labels on the current panel before anything can\n  be said about whether the difference mattered.\n");
     out.push_str("- No cohort here is a horizon rate. The snapshot records that a customer\n  churned, not when, so maturity says which bands could carry a dated rate, not what it\n  is. Young bands are refused rather than corrected.\n");
+    out.push_str("- The sequential reading is a rule a scheduler calls, not a daemon, and on this\n  panel it refuses: seventy-two tenure months cannot support a uniform bound, whose\n  resolution at that length is tens of times the level, so the absence of a cut is\n  arithmetic rather than stability. The calibration is where the useful number sits, and\n  it says a tripling of a two percent rate costs about 1,600 weekly batches against a batch\n  and a fifth for a fixed-sample test on the same shift. That gap is the price of\n  a rule that has to hold at every stopping time, and it is why no per-event alarm is\n  offered at all.\n");
     out.push_str("- Calibration, conformal coverage and the tree comparison are measured on\n  the same held-out rows as the AUC. None of them transports to a new operator.\n");
     out.push_str("- The label audit bounds what this bank's own labels can carry; it does not\n  audit the construct. A ceiling of one would mean the labels are consistent with\n  the model, not that they are right about churn.\n");
     out.push_str("- The resolution reading is a property of the panel's size and class\n  balance. A gain the card does not claim is not proof of absence, only a\n  difference this bank cannot see.\n");

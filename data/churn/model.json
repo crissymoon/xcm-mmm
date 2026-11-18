@@ -1,7 +1,7 @@
 {
   "name": "xcm-mmm-churn-baseline",
   "version": 3,
-  "built_at": "2026-11-18T03:12:02Z",
+  "built_at": "2026-11-18T03:34:57Z",
   "features": [
     "tenure",
     "monthly",
@@ -616,6 +616,119 @@
       "mature_churned": 870,
       "mature_auc": 0.8588343864130313,
       "note": "4,974 of 7,043 rows have been watched for the whole 12 month horizon and carry the readings; 2 bands are younger than that and are printed with their reason instead. A snapshot cannot date a churn, so no band here is a 12 month rate, and two bands are never compared because each is measured against its own base rate."
+    },
+    "sequential": {
+      "bound": "variance",
+      "delta": 0.05,
+      "target_share": 0.05,
+      "stream": {
+        "rate": 0.02,
+        "batch_rows": 200,
+        "batches": 1000,
+        "trials": 100
+      },
+      "shift": {
+        "to": 0.06,
+        "at": 1500,
+        "batches": 4000,
+        "trials": 20
+      },
+      "calibration": {
+        "points": [
+          {
+            "delta": 0.001,
+            "streams": 100,
+            "raised": 0,
+            "share": 0.0,
+            "low": 0.0,
+            "high": 0.037,
+            "batches": 1000,
+            "mean_window": 1000.0,
+            "delay": 1993.0,
+            "detected": 1.0
+          },
+          {
+            "delta": 0.01,
+            "streams": 100,
+            "raised": 0,
+            "share": 0.0,
+            "low": 0.0,
+            "high": 0.037,
+            "batches": 1000,
+            "mean_window": 1000.0,
+            "delay": 1773.0,
+            "detected": 1.0
+          },
+          {
+            "delta": 0.05,
+            "streams": 100,
+            "raised": 0,
+            "share": 0.0,
+            "low": 0.0,
+            "high": 0.037,
+            "batches": 1000,
+            "mean_window": 1000.0,
+            "delay": 1623.0,
+            "detected": 1.0
+          },
+          {
+            "delta": 0.2,
+            "streams": 100,
+            "raised": 0,
+            "share": 0.0,
+            "low": 0.0,
+            "high": 0.037,
+            "batches": 1000,
+            "mean_window": 1000.0,
+            "delay": 1491.0,
+            "detected": 1.0
+          },
+          {
+            "delta": 0.5,
+            "streams": 100,
+            "raised": 0,
+            "share": 0.0,
+            "low": 0.0,
+            "high": 0.037,
+            "batches": 1000,
+            "mean_window": 1000.0,
+            "delay": 1400.0,
+            "detected": 1.0
+          }
+        ],
+        "chosen": 2,
+        "reason": "delta 0.05 is the largest level that promises at most 0.05 of streams in error and is measured inside that, with 0 of 100 stationary streams raising a cut and an upper bound of 0.037; the looser grid points are excluded by their own promise, which the measurement cannot rank at this length",
+        "target_share": 0.05
+      },
+      "reading": {
+        "points": 72,
+        "cuts": [],
+        "window": 72,
+        "mean": 0.007210405222127426,
+        "resolves": 0.5372404382488828
+      },
+      "shuffle": {
+        "observed": 0,
+        "expected": 0.0,
+        "high": 0,
+        "p_value": 1.0,
+        "permutations": 200,
+        "verdict": "the order carries no measurable structure: 0 cuts against a shuffled mean of 0"
+      },
+      "refusal": {
+        "rate": 0.02,
+        "batch_rows": 200,
+        "events": 4.0,
+        "relative_se": 0.495,
+        "event_se": 7.0,
+        "shift": 2.0,
+        "rows": 240.3058,
+        "batches": 1.2015,
+        "verdict": "a per-event alarm is refused: one label at a rate of 0.02 carries a relative standard error of 700 percent, and a batch of 200 carries 49 percent, so a single event is not a signal; a 200 percent shift needs at least 241 rows, 1.2 batches, before even a fixed-sample test resolves it"
+      },
+      "note": "no cut in 72 batches, where the bound resolves a difference of 0.5372, which is 74.5 times the window mean of 0.0072: at this length the absence of a cut is arithmetic rather than evidence",
+      "comparison": "a fixed-sample test resolves the same shift in 241 rows, 1.2 batches; the sequential rule takes 1623 batches, 1351 times as long, which is the price of a bound that has to hold at every stopping time",
+      "assumption": "The level is calibrated at 200 labels a batch at a rate of 0.02, which is the operating shape a weekly dashboard has; the series is then read at the level that calibration chose, not at its own row counts."
     }
   },
   "metrics": {

@@ -1,6 +1,6 @@
 # Churn baseline
 
-xcm-mmm-churn-baseline v3, built 2026-11-18T03:12:02Z. A logistic over the telecom panel, fitted so a marketing
+xcm-mmm-churn-baseline v3, built 2026-11-18T03:34:57Z. A logistic over the telecom panel, fitted so a marketing
 model has a retention baseline to beat rather than a number to quote.
 
 ## Panel
@@ -193,6 +193,30 @@ The bands below the horizon, 0-6 months (1470), 7-12 months (716), carry a rate 
 
 Pooled over the mature bands there are 4,974 rows carrying 870 churners and an AUC of 0.859 against 0.867 over the whole panel, so the young rows were not carrying the score. Each band is measured against its own base rate and its own rows, so no two bands are compared with each other here; the paired column is the shipped model against the tenure-only reference on the same rows, which is the comparison that is valid within a band.
 
+## A sequential reading
+
+The tenure hazard is the one batch series this panel has: 72 observations, one a month. A sequential rule asks whether the process has moved without being told when to look, which is a different question from the weekly gate and costs more data. The window is ADWIN's (Bifet and Gavalda, 2007) on the variance bound at delta 0.05, chosen from a grid rather than defaulted: delta 0.05 is the largest level that promises at most 0.05 of streams in error and is measured inside that, with 0 of 100 stationary streams raising a cut and an upper bound of 0.037; the looser grid points are excluded by their own promise, which the measurement cannot rank at this length
+
+| delta | streams | raised | share | upper | delay | detected |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0.001 | 100 | 0 | 0.000 | 0.037 | 1993 | 1.00 |
+| 0.01 | 100 | 0 | 0.000 | 0.037 | 1773 | 1.00 |
+| 0.05 | 100 | 0 | 0.000 | 0.037 | 1623 | 1.00 |
+| 0.2 | 100 | 0 | 0.000 | 0.037 | 1491 | 1.00 |
+| 0.5 | 100 | 0 | 0.000 | 0.037 | 1400 | 1.00 |
+
+The level is calibrated at 200 labels a batch at a rate of 0.02, which is the operating shape a weekly dashboard has; the series is then read at the level that calibration chose, not at its own row counts.
+
+no cut in 72 batches, where the bound resolves a difference of 0.5372, which is 74.5 times the window mean of 0.0072: at this length the absence of a cut is arithmetic rather than evidence
+
+a fixed-sample test resolves the same shift in 241 rows, 1.2 batches; the sequential rule takes 1623 batches, 1351 times as long, which is the price of a bound that has to hold at every stopping time
+
+not informative: at a resolution of 0.5372 against a window mean of 0.0072, a cut needs a jump of 74.5 times the level, so the null is the bound's arithmetic rather than evidence about the series
+
+a per-event alarm is refused: one label at a rate of 0.02 carries a relative standard error of 700 percent, and a batch of 200 carries 49 percent, so a single event is not a signal; a 200 percent shift needs at least 241 rows, 1.2 batches, before even a fixed-sample test resolves it
+
+The per-event refusal is the operational point. A dashboard that fires on a single event cannot exist at this rate, and the batch reading above needs thousands of batches before it resolves a change the size of the one calibrated, so the size-aware weekly gate and the matured-cohort table are what a review can stand on. A cut here would be the shape of the tenure curve rather than an alarm, which is why the months are read in tenure order and why the shuffle null is quoted beside the count: on this series the window is shorter than its own resolution, so the count is arithmetic and the card says so instead of reading the absence of a cut as stability.
+
 ## Coefficients
 
 On the standardised scale the fit uses. A sign is a direction, not a
@@ -270,6 +294,14 @@ measured; the reason text is where a driver is named.
 - No cohort here is a horizon rate. The snapshot records that a customer
   churned, not when, so maturity says which bands could carry a dated rate, not what it
   is. Young bands are refused rather than corrected.
+- The sequential reading is a rule a scheduler calls, not a daemon, and on this
+  panel it refuses: seventy-two tenure months cannot support a uniform bound, whose
+  resolution at that length is tens of times the level, so the absence of a cut is
+  arithmetic rather than stability. The calibration is where the useful number sits, and
+  it says a tripling of a two percent rate costs about 1,600 weekly batches against a batch
+  and a fifth for a fixed-sample test on the same shift. That gap is the price of
+  a rule that has to hold at every stopping time, and it is why no per-event alarm is
+  offered at all.
 - Calibration, conformal coverage and the tree comparison are measured on
   the same held-out rows as the AUC. None of them transports to a new operator.
 - The label audit bounds what this bank's own labels can carry; it does not

@@ -24,6 +24,7 @@
 mod drift;
 mod gate;
 mod registry;
+mod sequential;
 
 pub use drift::{
     compare, counts, coverage_series, edges, ks, paired_columns, psi, psi_counts, psi_shares,
@@ -33,3 +34,7 @@ pub use gate::{
     assess, bh, cvm, CvmNull, GateConfig, GateFeature, GateReport, MmdReport, PsiNull, GATE_SEED,
 };
 pub use registry::{Audit, Event, Registry, Version};
+pub use sequential::{
+    calibrate, reading, refusal, report, shuffle, Adwin, Bound, Calibration, CalibrationConfig,
+    Cut, Point, Reading, Refusal, Report, Shift, Shuffle, Stream, SEQUENTIAL_SEED,
+};

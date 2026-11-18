@@ -208,6 +208,9 @@ pub struct Score {
     pub tree_gain: Option<PairedAuc>,
     /// Every reading split by how long its outcome has been watched.
     pub cohorts: super::cohort::CohortTable,
+    /// A sequential reading on the tenure hazard, with the calibration that
+    /// set its level and the refusals it carries.
+    pub sequential: crate::monitor::Report,
 }
 
 /// One coefficient, on the standardised scale the fit uses.
@@ -383,10 +386,55 @@ pub fn fit(samples: &[Sample], folds: usize) -> ChurnModel {
             power,
             tree_gain,
             cohorts,
+            sequential: sequential_reading(samples),
         },
         metrics,
         window: None,
     }
+}
+
+/// The hazard by tenure month, which is the batch series a sequential reading
+/// can watch.
+///
+/// Month `m` is at risk for every customer whose tenure reaches `m`, and its
+/// events are the customers who left during it. The series is recovered from
+/// the design matrix rather than read from `series.csv`, so the card cannot
+/// disagree with the panel it describes.
+fn hazard(samples: &[Sample]) -> Vec<f64> {
+    let last = samples
+        .iter()
+        .map(|sample| sample.values[0].max(0.0) as usize)
+        .max()
+        .unwrap_or(0);
+    let mut at_risk = vec![0usize; last + 1];
+    let mut churned = vec![0usize; last + 1];
+    for sample in samples {
+        let month = sample.values[0].max(0.0) as usize;
+        let month = month.min(last);
+        churned[month] += usize::from(sample.churn);
+        for reach in at_risk.iter_mut().take(month + 1) {
+            *reach += 1;
+        }
+    }
+    (1..=last)
+        .filter(|month| at_risk[*month] > 0)
+        .map(|month| churned[month] as f64 / at_risk[month] as f64)
+        .collect()
+}
+
+/// The sequential reading, with its level chosen on a stationary stream.
+///
+/// The months are ordered by tenure, which is the order a retention curve has,
+/// so a cut here is the shape of the curve rather than an operational alarm.
+/// That distinction is on the card, beside the shuffle null that can tell the
+/// two apart when the window is long enough to cut at all.
+fn sequential_reading(samples: &[Sample]) -> crate::monitor::Report {
+    let series = hazard(samples);
+    let config = crate::monitor::CalibrationConfig::default();
+    crate::monitor::report(&series, &config).unwrap_or_else(|error| crate::monitor::Report {
+        note: error,
+        ..Default::default()
+    })
 }
 
 /// The coverage simulation, run at the shape the intervals were challenged at.
