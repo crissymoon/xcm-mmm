@@ -1,13 +1,13 @@
 {
   "name": "marketlab-ad-detectors",
   "version": 1,
-  "built_at": "2026-11-18T02:20:14Z",
+  "built_at": "2026-11-18T17:55:38Z",
   "files": [
     {
       "name": "model.json",
       "rows": 7,
-      "bytes": 34168,
-      "fnv64": "0c10ba01b5121148"
+      "bytes": 34146,
+      "fnv64": "ac0308abd07cc440"
     }
   ],
   "config": {
@@ -50,16 +50,16 @@
     "jargon": {
       "method": "lexicon",
       "tag": "",
-      "rows": 2246,
-      "balanced": 0.7658,
-      "prevalence": 0.2618
+      "rows": 2669,
+      "balanced": 0.7786,
+      "prevalence": 0.2203
     },
     "legal": {
       "method": "lexicon",
       "tag": "",
-      "rows": 2259,
-      "balanced": 0.8397,
-      "prevalence": 0.266
+      "rows": 4084,
+      "balanced": 0.8359,
+      "prevalence": 0.4905
     },
     "manipulation": {
       "method": "index",

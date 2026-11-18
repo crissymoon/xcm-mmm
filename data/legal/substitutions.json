@@ -1,0 +1,835 @@
+[
+  {
+    "evidence": "commence | begin, start",
+    "kind": "word",
+    "plain": "begin, start",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "commence"
+  },
+  {
+    "evidence": "implement | carry out, start",
+    "kind": "word",
+    "plain": "carry out, start",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "implement"
+  },
+  {
+    "evidence": "in accordance with | by, following, per, under",
+    "kind": "phrase",
+    "plain": "by, following, per, under",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "in accordance with"
+  },
+  {
+    "evidence": "in the amount of | for",
+    "kind": "phrase",
+    "plain": "for",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "in the amount of"
+  },
+  {
+    "evidence": "promulgate | issue, publish",
+    "kind": "word",
+    "plain": "issue, publish",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "promulgate"
+  },
+  {
+    "evidence": "addressees | you",
+    "kind": "word",
+    "plain": "you",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "addressees"
+  },
+  {
+    "evidence": "a and/or b | a or b or both",
+    "kind": "phrase",
+    "plain": "a or b or both",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "a and/or b"
+  },
+  {
+    "evidence": "accomplish | carry out, do",
+    "kind": "word",
+    "plain": "carry out, do",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "accomplish"
+  },
+  {
+    "evidence": "accrue | add, gain",
+    "kind": "word",
+    "plain": "add, gain",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "accrue"
+  },
+  {
+    "evidence": "adversely impact on | hurt, set back",
+    "kind": "phrase",
+    "plain": "hurt, set back",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "adversely impact on"
+  },
+  {
+    "evidence": "afford an opportunity | allow, let",
+    "kind": "phrase",
+    "plain": "allow, let",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "afford an opportunity"
+  },
+  {
+    "evidence": "ascertain | find out, learn",
+    "kind": "word",
+    "plain": "find out, learn",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "ascertain"
+  },
+  {
+    "evidence": "as prescribed by | in, under",
+    "kind": "phrase",
+    "plain": "in, under",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "as prescribed by"
+  },
+  {
+    "evidence": "initiate | start",
+    "kind": "word",
+    "plain": "start",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "initiate"
+  },
+  {
+    "evidence": "at the present time | at present, now",
+    "kind": "phrase",
+    "plain": "at present, now",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "at the present time"
+  },
+  {
+    "evidence": "by means of | by, with",
+    "kind": "phrase",
+    "plain": "by, with",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "by means of"
+  },
+  {
+    "evidence": "caveat | warning",
+    "kind": "word",
+    "plain": "warning",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "caveat"
+  },
+  {
+    "evidence": "comprise | form, include, make up",
+    "kind": "word",
+    "plain": "form, include, make up",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "comprise"
+  },
+  {
+    "evidence": "constitutes | is, forms, makes up",
+    "kind": "word",
+    "plain": "is, forms, makes up",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "constitutes"
+  },
+  {
+    "evidence": "deem | believe, consider, think",
+    "kind": "word",
+    "plain": "believe, consider, think",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "deem"
+  },
+  {
+    "evidence": "demonstrate | prove, show",
+    "kind": "word",
+    "plain": "prove, show",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "demonstrate"
+  },
+  {
+    "evidence": "determine | decide, figure, find",
+    "kind": "word",
+    "plain": "decide, figure, find",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "determine"
+  },
+  {
+    "evidence": "disclose | show",
+    "kind": "word",
+    "plain": "show",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "disclose"
+  },
+  {
+    "evidence": "due to the fact that | due to, since",
+    "kind": "phrase",
+    "plain": "due to, since",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "due to the fact that"
+  },
+  {
+    "evidence": "endeavor | try",
+    "kind": "word",
+    "plain": "try",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "endeavor"
+  },
+  {
+    "evidence": "establish | set up, prove, show",
+    "kind": "word",
+    "plain": "set up, prove, show",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "establish"
+  },
+  {
+    "evidence": "expedite | hasten, speed up",
+    "kind": "word",
+    "plain": "hasten, speed up",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "expedite"
+  },
+  {
+    "evidence": "herein | here",
+    "kind": "word",
+    "plain": "here",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "herein"
+  },
+  {
+    "evidence": "heretofore | until now",
+    "kind": "word",
+    "plain": "until now",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "heretofore"
+  },
+  {
+    "evidence": "herewith | below, here",
+    "kind": "word",
+    "plain": "below, here",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "herewith"
+  },
+  {
+    "evidence": "inasmuch as | since",
+    "kind": "phrase",
+    "plain": "since",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "inasmuch as"
+  },
+  {
+    "evidence": "in a timely manner | on time, promptly",
+    "kind": "phrase",
+    "plain": "on time, promptly",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "in a timely manner"
+  },
+  {
+    "evidence": "in lieu of | instead",
+    "kind": "phrase",
+    "plain": "instead",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "in lieu of"
+  },
+  {
+    "evidence": "in order to | to",
+    "kind": "phrase",
+    "plain": "to",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "in order to"
+  },
+  {
+    "evidence": "inter alia | (omit)",
+    "kind": "phrase",
+    "plain": "(omit)",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "inter alia"
+  },
+  {
+    "evidence": "is authorized to | may",
+    "kind": "phrase",
+    "plain": "may",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "is authorized to"
+  },
+  {
+    "evidence": "it is requested | please, we request, I request",
+    "kind": "phrase",
+    "plain": "please, we request, I request",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "it is requested"
+  },
+  {
+    "evidence": "obligate | bind, compel",
+    "kind": "word",
+    "plain": "bind, compel",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "obligate"
+  },
+  {
+    "evidence": "pertaining to | about, of, on",
+    "kind": "phrase",
+    "plain": "about, of, on",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "pertaining to"
+  },
+  {
+    "evidence": "preclude | prevent",
+    "kind": "word",
+    "plain": "prevent",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "preclude"
+  },
+  {
+    "evidence": "remuneration | pay, payment",
+    "kind": "word",
+    "plain": "pay, payment",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "remuneration"
+  },
+  {
+    "evidence": "render | give, make",
+    "kind": "word",
+    "plain": "give, make",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "render"
+  },
+  {
+    "evidence": "set forth in | in",
+    "kind": "phrase",
+    "plain": "in",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "set forth in"
+  },
+  {
+    "evidence": "solicit | ask for, request",
+    "kind": "word",
+    "plain": "ask for, request",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "solicit"
+  },
+  {
+    "evidence": "subsequent | later, next",
+    "kind": "word",
+    "plain": "later, next",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "subsequent"
+  },
+  {
+    "evidence": "therein | there",
+    "kind": "word",
+    "plain": "there",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "therein"
+  },
+  {
+    "evidence": "thereof | its, their",
+    "kind": "word",
+    "plain": "its, their",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "thereof"
+  },
+  {
+    "evidence": "the undersigned | I",
+    "kind": "phrase",
+    "plain": "I",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "term": "the undersigned"
+  },
+  {
+    "evidence": "The word \"must\" is the clearest way to convey to your audience that they have to do something.",
+    "kind": "word",
+    "plain": "must (an obligation), must not (a prohibition), may (a discretionary action), should (a recommendation)",
+    "source_url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/conversational/use-must-to-indicate-requirements.md",
+    "term": "shall"
+  },
+  {
+    "evidence": "in the event that if",
+    "kind": "phrase",
+    "plain": "if",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "in the event that"
+  },
+  {
+    "evidence": "subsequent to after",
+    "kind": "phrase",
+    "plain": "after",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "subsequent to"
+  },
+  {
+    "evidence": "despite the fact that although",
+    "kind": "phrase",
+    "plain": "although",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "despite the fact that"
+  },
+  {
+    "evidence": "because of the fact that because, since",
+    "kind": "phrase",
+    "plain": "because, since",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "because of the fact that"
+  },
+  {
+    "evidence": "in light of because, since",
+    "kind": "phrase",
+    "plain": "because, since",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "in light of"
+  },
+  {
+    "evidence": "owing to the fact that because, since",
+    "kind": "phrase",
+    "plain": "because, since",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "owing to the fact that"
+  },
+  {
+    "evidence": "explain rather than elucidate",
+    "kind": "word",
+    "plain": "explain",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "elucidate"
+  },
+  {
+    "evidence": "use instead of utilize",
+    "kind": "word",
+    "plain": "use",
+    "source_url": "https://www.sec.gov/pdf/handbook.pdf",
+    "term": "utilize"
+  },
+  {
+    "evidence": "aforesaid | this, earlier in this document",
+    "kind": "word",
+    "plain": "this, earlier in this document",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "aforesaid"
+  },
+  {
+    "evidence": "notwithstanding | even if, despite, still, yet",
+    "kind": "word",
+    "plain": "even if, despite, still, yet",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "notwithstanding"
+  },
+  {
+    "evidence": "peruse | read, read carefully, look at",
+    "kind": "word",
+    "plain": "read, read carefully, look at",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "peruse"
+  },
+  {
+    "evidence": "procure | get, obtain, arrange",
+    "kind": "word",
+    "plain": "get, obtain, arrange",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "procure"
+  },
+  {
+    "evidence": "prohibit | ban, stop",
+    "kind": "word",
+    "plain": "ban, stop",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "prohibit"
+  },
+  {
+    "evidence": "provided that | if, as long as",
+    "kind": "phrase",
+    "plain": "if, as long as",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "provided that"
+  },
+  {
+    "evidence": "provisions | rules, terms",
+    "kind": "word",
+    "plain": "rules, terms",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "provisions"
+  },
+  {
+    "evidence": "pursuant to | under, because of, in line with",
+    "kind": "phrase",
+    "plain": "under, because of, in line with",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "pursuant to"
+  },
+  {
+    "evidence": "said/such/same | the, this, that",
+    "kind": "phrase",
+    "plain": "the, this, that",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "said/such/same"
+  },
+  {
+    "evidence": "subsequently | later",
+    "kind": "word",
+    "plain": "later",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "subsequently"
+  },
+  {
+    "evidence": "until such time | until",
+    "kind": "phrase",
+    "plain": "until",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "until such time"
+  },
+  {
+    "evidence": "whereas | but",
+    "kind": "word",
+    "plain": "but",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "whereas"
+  },
+  {
+    "evidence": "permit | let, allow",
+    "kind": "word",
+    "plain": "let, allow",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "permit"
+  },
+  {
+    "evidence": "proximity | closeness, nearness",
+    "kind": "word",
+    "plain": "closeness, nearness",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "proximity"
+  },
+  {
+    "evidence": "proportion | part",
+    "kind": "word",
+    "plain": "part",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "term": "proportion"
+  },
+  {
+    "evidence": "additional (extra)",
+    "kind": "word",
+    "plain": "extra",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "additional"
+  },
+  {
+    "evidence": "applicant (you)",
+    "kind": "word",
+    "plain": "you",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "applicant"
+  },
+  {
+    "evidence": "complete (fill in)",
+    "kind": "word",
+    "plain": "fill in",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "complete"
+  },
+  {
+    "evidence": "comply with (keep to)",
+    "kind": "phrase",
+    "plain": "keep to",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "comply with"
+  },
+  {
+    "evidence": "consequently (so)",
+    "kind": "word",
+    "plain": "so",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "consequently"
+  },
+  {
+    "evidence": "ensure (make sure)",
+    "kind": "word",
+    "plain": "make sure",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "ensure"
+  },
+  {
+    "evidence": "forward (send)",
+    "kind": "word",
+    "plain": "send",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "forward"
+  },
+  {
+    "evidence": "in excess of (more than)",
+    "kind": "phrase",
+    "plain": "more than",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "in excess of"
+  },
+  {
+    "evidence": "in respect of (for)",
+    "kind": "phrase",
+    "plain": "for",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "in respect of"
+  },
+  {
+    "evidence": "in the event of (if)",
+    "kind": "phrase",
+    "plain": "if",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "in the event of"
+  },
+  {
+    "evidence": "on receipt (when we/you get)",
+    "kind": "phrase",
+    "plain": "when we/you get",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "on receipt"
+  },
+  {
+    "evidence": "on request (if you ask)",
+    "kind": "phrase",
+    "plain": "if you ask",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "on request"
+  },
+  {
+    "evidence": "particulars (details)",
+    "kind": "word",
+    "plain": "details",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "particulars"
+  },
+  {
+    "evidence": "per annum (a year)",
+    "kind": "phrase",
+    "plain": "a year",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "per annum"
+  },
+  {
+    "evidence": "persons (people)",
+    "kind": "word",
+    "plain": "people",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "persons"
+  },
+  {
+    "evidence": "prior to (before)",
+    "kind": "phrase",
+    "plain": "before",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "prior to"
+  },
+  {
+    "evidence": "purchase (buy)",
+    "kind": "word",
+    "plain": "buy",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "purchase"
+  },
+  {
+    "evidence": "regarding (about)",
+    "kind": "word",
+    "plain": "about",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "regarding"
+  },
+  {
+    "evidence": "should you wish (if you want)",
+    "kind": "phrase",
+    "plain": "if you want",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "should you wish"
+  },
+  {
+    "evidence": "terminate (end)",
+    "kind": "word",
+    "plain": "end",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "terminate"
+  },
+  {
+    "evidence": "whilst (while)",
+    "kind": "word",
+    "plain": "while",
+    "source_url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "term": "whilst"
+  },
+  {
+    "evidence": "agenda (unless it’s for a meeting), use ‘plan’ instead",
+    "kind": "word",
+    "plain": "plan",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "agenda"
+  },
+  {
+    "evidence": "advance, use ‘improve’ or something more specific",
+    "kind": "word",
+    "plain": "improve",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "advance"
+  },
+  {
+    "evidence": "collaborate, use ‘work with’",
+    "kind": "word",
+    "plain": "work with",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "collaborate"
+  },
+  {
+    "evidence": "combat (unless military), use ‘solve’, ‘fix’ or something more specific",
+    "kind": "word",
+    "plain": "solve, fix",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "combat"
+  },
+  {
+    "evidence": "counter, use ‘prevent’ or try to rephrase a solution to a problem",
+    "kind": "word",
+    "plain": "prevent",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "counter"
+  },
+  {
+    "evidence": "deliver, use ‘make’, ‘create’, ‘provide’ or a more specific term (pizzas, post and services are delivered - not abstract concepts like improvements)",
+    "kind": "word",
+    "plain": "make, create, provide",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "deliver"
+  },
+  {
+    "evidence": "deploy (unless it’s military or software), use ‘use’ or if putting something somewhere use ‘build’, ‘create’ or ‘put into place’",
+    "kind": "word",
+    "plain": "use",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "deploy"
+  },
+  {
+    "evidence": "dialogue, use ‘spoke to’ or ‘discussion’",
+    "kind": "word",
+    "plain": "spoke to, discussion",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "dialogue"
+  },
+  {
+    "evidence": "disincentivise, use ‘discourage’ or ‘deter’",
+    "kind": "word",
+    "plain": "discourage, deter",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "disincentivise"
+  },
+  {
+    "evidence": "empower, use ‘allow’ or ‘give permission’",
+    "kind": "word",
+    "plain": "allow, give permission",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "empower"
+  },
+  {
+    "evidence": "foster (unless it’s children), use ‘encourage’ or ‘help’",
+    "kind": "word",
+    "plain": "encourage, help",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "foster"
+  },
+  {
+    "evidence": "impact (unless talking about a collision), use ‘have an effect on’ or ‘influence’",
+    "kind": "word",
+    "plain": "have an effect on, influence",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "impact"
+  },
+  {
+    "evidence": "incentivise, use ‘encourage’ or ‘motivate’",
+    "kind": "word",
+    "plain": "encourage, motivate",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "incentivise"
+  },
+  {
+    "evidence": "key (unless it unlocks something), usually not needed but can use ‘important’ or ‘significant’",
+    "kind": "word",
+    "plain": "important, significant",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "key"
+  },
+  {
+    "evidence": "leverage (unless in the financial sense), use ‘influence’ or ‘use’",
+    "kind": "word",
+    "plain": "influence, use",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "leverage"
+  },
+  {
+    "evidence": "liaise, use ‘work with’ or ‘work alongside’",
+    "kind": "word",
+    "plain": "work with, work alongside",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "liaise"
+  },
+  {
+    "evidence": "overarching, usually superfluous but can use ‘encompassing’",
+    "kind": "word",
+    "plain": "encompassing",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "overarching"
+  },
+  {
+    "evidence": "progress, use ‘work on’ or ‘develop’ or ‘make progress’",
+    "kind": "word",
+    "plain": "work on, develop",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "progress"
+  },
+  {
+    "evidence": "promote (unless talking about an ad campaign or career advancement), use ‘recommend’ or ‘support’",
+    "kind": "word",
+    "plain": "recommend, support",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "promote"
+  },
+  {
+    "evidence": "robust (unless talking about a sturdy object), depending on context, use ‘well thought out’ or ‘comprehensive’",
+    "kind": "word",
+    "plain": "well thought out, comprehensive",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "robust"
+  },
+  {
+    "evidence": "streamline, use ‘simplify’ or ‘remove unnecessary administration’",
+    "kind": "word",
+    "plain": "simplify, remove unnecessary administration",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "streamline"
+  },
+  {
+    "evidence": "tackle (unless talking about fishing tackle or a physical tackle, like in rugby), use ‘stop’, ‘solve’ or ‘deal with’",
+    "kind": "word",
+    "plain": "stop, solve, deal with",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "tackle"
+  },
+  {
+    "evidence": "transform, describe what you’re doing to change the thing",
+    "kind": "word",
+    "plain": "describe what you are doing to change the thing",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "transform"
+  },
+  {
+    "evidence": "drive, use ‘create’, ‘cause’ or ‘encourage’ instead (you can only drive vehicles, not schemes or people)",
+    "kind": "word",
+    "plain": "create, cause, encourage",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "drive"
+  },
+  {
+    "evidence": "ring fencing, use ‘separate’ or when talking about budgets use ‘money that will be spent on x’",
+    "kind": "phrase",
+    "plain": "separate, money that will be spent on x",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "ring fencing"
+  },
+  {
+    "evidence": "utilise, use ‘use’",
+    "kind": "word",
+    "plain": "use",
+    "source_url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "term": "utilise"
+  }
+]

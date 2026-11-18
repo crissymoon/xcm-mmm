@@ -1,0 +1,392 @@
+[
+  {
+    "description": "Pronominal adverbs built on here-, there- and where- that replace a repeated noun phrase with a single opaque word.",
+    "evidence": "Words like hereof, thereof, and whereof (and further derivatives, including -at, -in, -after, -before, -with, -by, -above, -on, -upon) are not often used in standard English.",
+    "examples": [
+      "hereof",
+      "hereto",
+      "hereunder",
+      "thereof",
+      "therein",
+      "whereof",
+      "whereby"
+    ],
+    "feature": "here-compounds",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Count tokens matching (here|there|where)(of|to|in|by|under|after|before|with|upon|as|at) and report the count per 1000 words."
+  },
+  {
+    "description": "The modal shall used to impose a legal obligation rather than to mark future time, keeping it productive long after ordinary speech dropped it.",
+    "evidence": "Shall is, however, still widely used in bureaucratic documents, especially documents written by lawyers.",
+    "examples": [
+      "shall",
+      "shall not"
+    ],
+    "feature": "shall as mandatory modal",
+    "source_url": "https://en.wikipedia.org/wiki/Shall_and_will",
+    "testable": "Count shall and shall not as a share of all modals (shall, must, may, will, should); a shall share above roughly 20 percent marks drafting style."
+  },
+  {
+    "description": "A modal system in which shall and shall not encode mandatory action and prohibition instead of describing the future.",
+    "evidence": "Legislative acts and contracts sometimes use \"shall\" and \"shall not\" to express mandatory action and prohibition.",
+    "examples": [
+      "shall",
+      "shall not",
+      "must",
+      "is required to"
+    ],
+    "feature": "deontic obligation modals",
+    "source_url": "https://en.wikipedia.org/wiki/Shall_and_will",
+    "testable": "Tag every modal as obligation, permission or futurity and compute the obligation-to-futurity ratio per document."
+  },
+  {
+    "description": "May and should carry non-mandatory, discretionary meaning, so a detector has to separate permission from obligation.",
+    "evidence": "\"Will\" declares intent or simple futurity, and \"should\" and \"may\" express nonmandatory provisions.",
+    "examples": [
+      "may",
+      "should",
+      "is entitled to"
+    ],
+    "feature": "permissive may",
+    "source_url": "https://en.wikipedia.org/wiki/Shall_and_will",
+    "testable": "Count may, is entitled to and is authorized to alongside shall; rights-granting text shows may-dominant modality with few conditions."
+  },
+  {
+    "description": "The same shall can mean must, may or will, which is why plain-language bodies advise dropping the word and why it attracts litigation.",
+    "evidence": "Owing its use in varying legal contexts, its meaning can be ambiguous; the United States government's Plain Language group advises writers not to use the word at all.",
+    "examples": [
+      "shall",
+      "shall be entitled",
+      "shall mean"
+    ],
+    "feature": "shall ambiguity",
+    "source_url": "https://en.wikipedia.org/wiki/Shall_and_will",
+    "testable": "Flag documents where shall takes an inanimate subject, co-occurs with must, or appears in a definition, as candidates for ambiguous use."
+  },
+  {
+    "description": "Fixed old-fashioned adverbs and adverbial phrases survive in legal text where a plain equivalent exists.",
+    "evidence": "When you’re making word choices, pick the familiar or commonly used word over the unusual or obscure.",
+    "examples": [
+      "heretofore",
+      "herein",
+      "herewith",
+      "theretofore",
+      "hereinbefore"
+    ],
+    "feature": "archaic adverbials",
+    "source_url": "https://web.archive.org/web/20231216153511/https://www.plainlanguage.gov/guidelines/words/use-simple-words-phrases/",
+    "testable": "Match a closed list (heretofore, herein, herewith, theretofore, hereinbefore, hitherto) and report hits per 1000 words."
+  },
+  {
+    "description": "Two near-synonyms joined by and or or to express one legal concept, a habit inherited from mixed-language drafting.",
+    "evidence": "The mix of languages used in early legalese led to the tendency in legal English to string together two or three words to convey a single legal concept.",
+    "examples": [
+      "null and void",
+      "fit and proper",
+      "terms and conditions",
+      "cease and desist"
+    ],
+    "feature": "binomial pairs",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Match a lexicon of known pairs and also count any two coordinated words separated by and/or whose meanings overlap by WordNet similarity."
+  },
+  {
+    "description": "Three or more coordinated near-synonyms chained together, a conjoined phrase that survives because every word is presumed to carry meaning.",
+    "evidence": "Conjoining words is still extremely common in legal language.",
+    "examples": [
+      "give, devise and bequeath",
+      "rest, residue and remainder",
+      "promise, agree and covenant"
+    ],
+    "feature": "trinomials and longer strings",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Count runs of three or more comma-and coordinated items inside one clause, excluding list contexts introduced by such as or including."
+  },
+  {
+    "description": "Wordy, repeated formulaic phrasing that fills space without adding meaning.",
+    "evidence": "Lawyers are very prone to use wordy and redundant phraseology, including what is sometimes called boilerplate.",
+    "examples": [
+      "in witness whereof",
+      "for the avoidance of doubt",
+      "subject to and in accordance with"
+    ],
+    "feature": "boilerplate redundancy",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Match recurring multi-word formulas across a corpus and score documents by the share of tokens inside repeated n-grams."
+  },
+  {
+    "description": "Verbs are turned into abstract nouns and propped up by a light verb, so the action disappears into a thing.",
+    "evidence": "A hidden verb (or nominalization) is a verb converted into a noun.",
+    "examples": [
+      "make an application",
+      "carry out a review",
+      "in the assessment of",
+      "termination",
+      "payment"
+    ],
+    "feature": "nominalisation",
+    "source_url": "https://web.archive.org/web/20231216153730/https://www.plainlanguage.gov/guidelines/words/avoid-hidden-verbs/",
+    "testable": "Count nouns in -tion, -ment, -ance, -sion preceded by make, give, effect, conduct, carry out or undertake, plus bare nominalisations of common legal verbs."
+  },
+  {
+    "description": "Passives drop the actor, which hides who must act and lends the text an impersonal, authoritative tone.",
+    "evidence": "Passive sentences allow the speaker or writer to omit reference to the actor (as in the girl was injured at 5:30).",
+    "examples": [
+      "the girl was injured",
+      "notice shall be given",
+      "the parties are deemed to have agreed"
+    ],
+    "feature": "passive without an agent",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Parse be/get plus past participle and compute the proportion with no by-phrase, per 1000 words."
+  },
+  {
+    "description": "Legal sentences run far longer than general prose and stack embedded clauses inside each other.",
+    "evidence": "Studies show that sentences in legal language are quite a bit longer than in other styles, and also have more embeddings, making them more complex.",
+    "examples": [
+      "provided that",
+      "subject to",
+      "notwithstanding that",
+      "in the event that"
+    ],
+    "feature": "long complex sentences",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Compute mean words per sentence and count subordinators (that, which, provided that, subject to, unless) per sentence; flag sentences over 45 words."
+  },
+  {
+    "description": "Latin vocabulary and Latin case-name formulae persist untranslated in legal writing.",
+    "evidence": "Names of writs (mandamus, certiorari) and terminology for case names (versus, ex rel., etc.) are still in Latin, perhaps a reflection of the use of Latin for writs and court records until the early 18th century.",
+    "examples": [
+      "mandamus",
+      "certiorari",
+      "versus",
+      "ex rel."
+    ],
+    "feature": "Latin terms and maxims",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Match a Latin lexicon plus the case-name pattern \\b[A-Z][a-z]+ v\\. [A-Z][a-z]+ and count occurrences per document."
+  },
+  {
+    "description": "Everyday legal nouns descend from Anglo-Norman Law French and form a closed core vocabulary that general English does not use.",
+    "evidence": "In legal pleadings, Anglo-Norman developed into Law French, from which many words in modern legal English are derived. These include property, estate, chattel, lease, executor, and tenant.",
+    "examples": [
+      "property",
+      "estate",
+      "chattel",
+      "lease",
+      "executor",
+      "tenant"
+    ],
+    "feature": "Law French vocabulary",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Score the share of tokens drawn from a Law French term list, including -or/-ee pairs and -age endings."
+  },
+  {
+    "description": "Technical vocabulary peculiar to law that a lay reader cannot decode from ordinary meaning.",
+    "evidence": "Legal English, in common with the language used by other trades and professions, employs a great deal of technical terminology which is unfamiliar to the layman (e.g. waiver, restraint of trade, restrictive covenant, promissory estoppel).",
+    "examples": [
+      "waiver",
+      "restraint of trade",
+      "restrictive covenant",
+      "promissory estoppel"
+    ],
+    "feature": "terms of art",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Match a domain lexicon of multi-word terms of art and report density per 1000 words against a general-English baseline."
+  },
+  {
+    "description": "Common English words are redefined inside law and mean something different from their everyday sense.",
+    "evidence": "These terms of art include ordinary words used with special meanings.",
+    "examples": [
+      "consideration",
+      "construction",
+      "prefer",
+      "redemption",
+      "furnish",
+      "hold",
+      "find"
+    ],
+    "feature": "ordinary words with legal meaning",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Flag high-frequency everyday words from a legal-sense list when they appear in a contract or statute context rather than in narrative prose."
+  },
+  {
+    "description": "A defined word or phrase is written with initial capitals every time it recurs, turning capitalisation into a grammatical signal.",
+    "evidence": "Make sure all instances of a defined term use initial capitals.",
+    "examples": [
+      "the Company",
+      "the Agreement",
+      "Effective Date",
+      "Permitted Encumbrance"
+    ],
+    "feature": "defined-term capitalisation",
+    "source_url": "https://www.adamsdrafting.com/category/defined-terms/",
+    "testable": "Find definitions (X means, X has the meaning given in) then count mid-sentence capitalised noun phrases that repeat that head noun."
+  },
+  {
+    "description": "Text points at other provisions and at external authority by number and abbreviation instead of restating them.",
+    "evidence": "Statutes are divided into parts, sections, subsections, paragraphs and subparagraphs.",
+    "examples": [
+      "s 15(1)(b)",
+      "section 5(1)(a)",
+      "381 U.S. 479, 480",
+      "v."
+    ],
+    "feature": "cross references and citations",
+    "source_url": "https://libanswers.liverpool.ac.uk/faq/149197",
+    "testable": "Count patterns of (section|s|clause|paragraph|schedule|Article|pt) plus a number, and reporter patterns such as \\d+ U\\.S\\. \\d+."
+  },
+  {
+    "description": "Citations add a page pinpoint after the first page so the reader lands on the exact passage relied on.",
+    "evidence": "The reference to page 480 is referred to as a \"pincite\" or \"pinpoint.\"",
+    "examples": [
+      "479, 480",
+      "527"
+    ],
+    "feature": "pincites",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_citation",
+    "testable": "Detect a reporter citation followed by a second page number and comma, then count such pincites per 1000 words."
+  },
+  {
+    "description": "Exceptions and conditions are tacked on with provided that, save that or subject to instead of being written as separate sentences.",
+    "evidence": "So I disagree with Ben on all counts: First, the traditional trappings that often accompany provisos are archaic.",
+    "examples": [
+      "provided that",
+      "save that",
+      "except that",
+      "subject to",
+      "without prejudice to"
+    ],
+    "feature": "provisos and exceptions",
+    "source_url": "https://www.adamsdrafting.com/revisiting-provided-that/",
+    "testable": "Count proviso introducers per sentence and flag sentences containing two or more (provided that plus however), which signals bolted-on modules."
+  },
+  {
+    "description": "Verbs such as agree, grant and warrant do the legal act by being uttered, typically in the present tense with hereby.",
+    "evidence": "One can identify a performative verb by using the hereby test.",
+    "examples": [
+      "hereby agrees",
+      "hereby grants",
+      "hereby represents and warrants",
+      "hereby assigns"
+    ],
+    "feature": "performative verbs",
+    "source_url": "https://en.wikipedia.org/wiki/Performative_verb",
+    "testable": "Count present-tense verbs with a party subject that sit next to hereby, using the hereby test as the criterion."
+  },
+  {
+    "description": "Legal style avoids first and second person, so obligations are stated about third-person roles rather than about I or you.",
+    "evidence": "A related characteristic of legal style is impersonal constructions.",
+    "examples": [
+      "the Borrower shall",
+      "the Company shall",
+      "the parties shall"
+    ],
+    "feature": "impersonal constructions",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Count I, we and you per 1000 words; a near-zero rate with third-person role subjects indicates impersonality."
+  },
+  {
+    "description": "The same noun is repeated where ordinary English would use a pronoun, to remove any chance of ambiguous reference.",
+    "evidence": "One means of gaining precision is to repeat nouns (e.g., player), rather than using a pronoun (e.g., he) after a person or thing is introduced.",
+    "examples": [
+      "the Player ... the Player",
+      "the Seller ... the Seller"
+    ],
+    "feature": "noun repetition instead of pronouns",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Measure the ratio of repeated definite noun phrases to third-person pronouns within a document; high repetition with few pronouns marks the feature."
+  },
+  {
+    "description": "Drafting declares the masculine to include the feminine, or uses generic he, instead of gender-neutral wording.",
+    "evidence": "Legal documents often declare that the masculine includes the feminine, the singular includes the plural, or that one tense includes the other.",
+    "examples": [
+      "the masculine includes the feminine",
+      "he",
+      "his",
+      "him"
+    ],
+    "feature": "gendered and archaic pronouns",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Count generic he/his/him and the clause the masculine includes the feminine or he or she per 1000 words."
+  },
+  {
+    "description": "The said, such and the same are used as adjectives pointing back at a noun already named, so the words double as articles.",
+    "evidence": "The use of the terms often do not replace the noun but are used as adjectives to modify the noun.",
+    "examples": [
+      "the said Agreement",
+      "such Party",
+      "the same",
+      "the aforementioned",
+      "aforesaid"
+    ],
+    "feature": "said and such as determiners",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Count the said, such, the same and the aforementioned immediately before a noun, and such with no preceding as."
+  },
+  {
+    "description": "Adverbs and complements are placed after the noun they modify, splitting subjects from verbs in ways ordinary English forbids.",
+    "evidence": "For example, the provisions for termination hereinafter appearing or will at the cost of the borrower forthwith comply with the same.",
+    "examples": [
+      "the provisions for termination hereinafter appearing",
+      "forthwith comply with the same"
+    ],
+    "feature": "unusual word order",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Flag post-modified nouns with hereinafter/aforesaid after the head noun, and sentences whose subject and finite verb are more than eight words apart."
+  },
+  {
+    "description": "Reciprocal roles are marked by -er/-or for the actor and -ee for the party acted upon.",
+    "evidence": "Legal English contains some words and titles, such as employer and employee; lessor and lessee, in which the reciprocal and opposite nature of the relationship is indicated by the use of alternative endings.",
+    "examples": [
+      "employer",
+      "employee",
+      "lessor",
+      "lessee"
+    ],
+    "feature": "er-or-ee role pairs",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Count -ee nouns whose -er/-or counterpart also appears in the document, which marks a two-party instrument."
+  },
+  {
+    "description": "Multi-word verbs take a quasi-technical legal sense that differs from the everyday verb.",
+    "evidence": "Phrasal verbs play a large role in legal English and are often used in a quasi-technical sense, such as parties enter into contracts, put down deposits, serve [documents] upon other parties, write off debts, attend at locations, and so on.",
+    "examples": [
+      "enter into",
+      "put down",
+      "serve upon",
+      "write off",
+      "attend at"
+    ],
+    "feature": "legal phrasal verbs",
+    "source_url": "https://en.wikipedia.org/wiki/Legal_English",
+    "testable": "Match a list of phrasal verbs in legal senses (enter into a contract, serve upon, attend at) and count them per 1000 words."
+  },
+  {
+    "description": "Prohibitions are written as negations, often several to a clause, rather than as positive statements.",
+    "evidence": "Legal language seems to use an inordinate amount of negation.",
+    "examples": [
+      "shall not",
+      "unless",
+      "except",
+      "no person shall",
+      "not later than"
+    ],
+    "feature": "negation density",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Count not, no, never, unless and except per sentence and flag clauses carrying more than one negator."
+  },
+  {
+    "description": "A prepositional phrase replaces a single adverb or preposition, adding bulk without adding meaning.",
+    "evidence": "Lawyers also tend to use ponderous phrases (such as at slow speed or subsequent to) where a single word would suffice (slowly; after).",
+    "examples": [
+      "subsequent to",
+      "prior to",
+      "in the event of",
+      "at slow speed"
+    ],
+    "feature": "ponderous multi-word prepositions",
+    "source_url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "testable": "Match a list (prior to, subsequent to, in the event of, in accordance with, with respect to) and count against single-word equivalents (before, after, if, under)."
+  }
+]

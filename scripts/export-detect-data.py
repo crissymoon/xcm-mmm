@@ -7,6 +7,10 @@ Three files come out of the marketlab ad corpus, and nothing here fits a model:
   row names its axis, its label, the source it came from and its text. Legal
   sentences are Federal Register abstracts (label 1), jargon sentences are
   grants.gov synopses (label 1), and ad copy is the plain side (label 0).
+  Extension banks passed with ``--extend`` join the same file under the same
+  axes, with their source prefixed by the bank's folder name; the legal
+  language bank is one, and it is the only source of statute register and of
+  plain sentences that talk about the law.
 * ``ads.jsonl`` is ad copy at document grain, with the source split kept, so the
   index axes fit their reference quantiles on the training ads and nothing else.
 * ``cues.json`` is the declared cue table for the five index axes, including
@@ -53,15 +57,39 @@ def write_json(path: Path, value: dict) -> None:
     )
 
 
-def export_bank(corpus: Path, out: Path) -> int:
-    bank = rows(corpus / "bank_sentences.jsonl")
-    kept = [
+def export_bank(corpus: Path, out: Path, extras: list[Path]) -> tuple[int, int]:
+    """Write the bank, then fold in any extension banks named on the command line.
+
+    An extension bank answers the same four fields in the same shape, so its
+    rows are taken as they stand; only the source is prefixed, so a row can
+    always be traced to the bank it arrived in. Rows are de-duplicated on the
+    axis, the label and the text, because a sentence that appears in two banks
+    would otherwise be weighted twice and, worse, could land on both sides of a
+    fold. The return is (rows written, rows the extensions added).
+    """
+    base = [
         {"axis": r["axis"], "label": int(r["label"]), "source": r["source"], "text": r["text"]}
-        for r in bank
+        for r in rows(corpus / "bank_sentences.jsonl")
     ]
+    seen = {(r["axis"], r["label"], r["text"]) for r in base}
+    kept = list(base)
+    for path in extras:
+        for r in rows(path):
+            key = (r["axis"], int(r["label"]), r["text"])
+            if key in seen:
+                continue
+            seen.add(key)
+            kept.append(
+                {
+                    "axis": key[0],
+                    "label": key[1],
+                    "source": f"{path.parent.name}/{r['source']}",
+                    "text": r["text"],
+                }
+            )
     kept.sort(key=lambda r: (r["axis"], r["label"], r["source"], r["text"]))
     write_jsonl(out / "bank.jsonl", kept)
-    return len(kept)
+    return len(kept), len(kept) - len(base)
 
 
 def export_ads(corpus: Path, out: Path) -> int:
@@ -138,6 +166,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--xcb", default=str(Path.home() / "Documents/sql-mgr/XcaliburBiz"))
     parser.add_argument("--out", default=str(OUT))
+    parser.add_argument(
+        "--extend",
+        action="append",
+        default=[],
+        metavar="BANK",
+        help="an extension bank.jsonl whose rows join the bank (repeatable)",
+    )
     args = parser.parse_args()
 
     out = Path(args.out)
@@ -145,11 +180,15 @@ def main() -> int:
     corpus = Path(args.xcb) / CORPUS
     if not corpus.is_dir():
         parser.error(f"no ad corpus under {corpus}")
+    extras = [Path(p) for p in args.extend]
+    for path in extras:
+        if not path.is_file():
+            parser.error(f"no extension bank at {path}")
 
-    bank = export_bank(corpus, out)
+    bank, added = export_bank(corpus, out, extras)
     ads = export_ads(corpus, out)
     axes = export_cues(Path(args.xcb), out)
-    print(f"bank      {bank} sentences -> {out / 'bank.jsonl'}")
+    print(f"bank      {bank} sentences ({added} from extension banks) -> {out / 'bank.jsonl'}")
     print(f"ads       {ads} documents -> {out / 'ads.jsonl'}")
     print(f"cues      {axes} index axes -> {out / 'cues.json'}")
     return 0

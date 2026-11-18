@@ -103,12 +103,47 @@ pub struct Artifact {
     pub axes: BTreeMap<String, Axis>,
 }
 
+/// An extension bank that joined `bank.jsonl` before the fit.
+///
+/// The exporter prefixes every extension row's source with the bank's folder
+/// name, and no source in the base corpus contains a slash, so the prefix is
+/// the whole provenance needed to count what a bank added.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct BankExt {
+    pub name: String,
+    pub rows: usize,
+}
+
+impl BankExt {
+    /// Group sources by the slash that separates an extension bank's name.
+    ///
+    /// Sources without a slash are the base corpus and are not reported.
+    pub fn group<'a>(sources: impl IntoIterator<Item = &'a str>) -> Vec<BankExt> {
+        let mut tally: BTreeMap<&str, usize> = BTreeMap::new();
+        for source in sources {
+            if let Some((name, _)) = source.split_once('/') {
+                *tally.entry(name).or_default() += 1;
+            }
+        }
+        tally
+            .into_iter()
+            .map(|(name, rows)| BankExt {
+                name: name.to_string(),
+                rows,
+            })
+            .collect()
+    }
+}
+
 /// Digests of the three files the fit read.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Source {
     pub bank: String,
     pub bank_rows: usize,
     pub bank_fnv64: String,
+    /// Extension banks folded into the bank, empty when there were none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub bank_exts: Vec<BankExt>,
     pub ads: String,
     pub ads_rows: usize,
     pub ads_fnv64: String,
@@ -386,6 +421,28 @@ pub fn same_fit(left: &Artifact, right: &Artifact) -> bool {
 mod tests {
     use super::*;
     use crate::detect::lexicon::FitReport;
+
+    #[test]
+    fn extension_banks_are_counted_by_the_source_prefix() {
+        let exts = BankExt::group(["legal/one", "city.gov", "legal/two", "legal/one"]);
+        assert_eq!(
+            exts,
+            vec![BankExt {
+                name: "legal".to_string(),
+                rows: 3,
+            }]
+        );
+        assert!(BankExt::group(["city.gov", "grants.gov"]).is_empty());
+    }
+
+    #[test]
+    fn an_artifact_without_extension_banks_round_trips() {
+        let artifact = artifact();
+        let json = serde_json::to_string(&artifact).expect("serialise");
+        assert!(!json.contains("bank_exts"), "empty extensions are not written");
+        let back: Artifact = serde_json::from_str(&json).expect("read");
+        assert!(back.source.bank_exts.is_empty());
+    }
 
     fn artifact() -> Artifact {
         let lexicon = Lexicon {

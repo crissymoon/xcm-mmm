@@ -49,6 +49,7 @@ pub mod emotion;
 pub mod eval;
 pub mod forecast;
 pub mod learn;
+pub mod legal;
 pub mod linalg;
 pub mod metrics;
 pub mod moead;

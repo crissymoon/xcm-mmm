@@ -1,0 +1,33 @@
+{
+  "bands": [
+    {
+      "max_per_100": 0.5,
+      "name": "plain",
+      "note": "No avoidable drafting words, or so few they do not shape the sentence."
+    },
+    {
+      "max_per_100": 2.0,
+      "name": "light",
+      "note": "A drafting word or two. Ordinary in a form, and readable."
+    },
+    {
+      "max_per_100": 5.0,
+      "name": "heavy",
+      "note": "The drafting is doing the work. A reader will notice the effort."
+    },
+    {
+      "max_per_100": 1000000000.0,
+      "name": "dense",
+      "note": "More drafting than content. Rewrite before anyone signs it."
+    }
+  ],
+  "protect": [
+    "\\u00a7+\\s*[0-9]+[0-9A-Za-z.\\-]*(?:\\([0-9a-zA-Z]+\\))*",
+    "\\b(?:Section|Sections|Rule|Rules|Code|Chapter|Title|Article|Part)\\s+[0-9]+[0-9A-Za-z.\\-]*",
+    "\\b[0-9]+\\s+U\\.S\\.C\\.\\s*(?:\\u00a7+\\s*)?[0-9]+[0-9A-Za-z()\\-]*",
+    "\\bCal\\.\\s+(?:Code\\s+Civ\\.\\s+Proc\\.|Gov\\.\\s+Code|Civ\\.\\s+Code|Rules\\s+of\\s+Court)",
+    "\\bFed\\.\\s+R\\.\\s+(?:Civ|App|Evid)\\.\\s+P\\.\\s+[0-9]+",
+    "\\b[0-9]+\\s+[A-Z][A-Za-z.]*\\s+[0-9]+\\b"
+  ],
+  "version": 1
+}

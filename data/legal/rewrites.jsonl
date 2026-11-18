@@ -1,0 +1,100 @@
+{"applies": true, "case": "preserve", "id": "know-all-men-by-these-presents", "kind": "archaic", "pattern": "\\b(?:know\\s+all\\s+men\\s+by\\s+these\\s+presents)\\b", "priority": 6, "replace": "", "why": "The opening of a deed, addressed to a public that no longer reads Latin and never included women"}
+{"applies": true, "case": "preserve", "id": "for-and-on-behalf-of", "kind": "doublet", "pattern": "\\b(?:for\\s+and\\s+on\\s+behalf\\s+of)\\b", "priority": 5, "replace": "for", "why": "For"}
+{"applies": true, "case": "preserve", "id": "for-the-avoidance-of-doubt", "kind": "periphrasis", "pattern": "\\b(?:for\\s+the\\s+avoidance\\s+of\\s+doubt)\\b", "priority": 5, "replace": "to be clear", "why": "To be clear"}
+{"applies": true, "case": "preserve", "id": "including-but-not-limited-to", "kind": "doublet", "pattern": "\\b(?:including\\s+but\\s+not\\s+limited\\s+to)\\b", "priority": 5, "replace": "including", "why": "Including is already non-exhaustive in ordinary usage; the qualifier exists to defeat a reading that is not available"}
+{"applies": true, "case": "preserve", "id": "shall-have-the-right-to", "kind": "modal", "pattern": "\\b(?:shall\\s+have\\s+the\\s+right\\s+to)\\b", "priority": 5, "replace": "may", "why": "Four words for may"}
+{"applies": true, "case": "preserve", "id": "at-such-time-as", "kind": "periphrasis", "pattern": "\\b(?:at\\s+such\\s+time\\s+as)\\b", "priority": 4, "replace": "when", "why": "When"}
+{"applies": true, "case": "preserve", "id": "during-such-time-as", "kind": "periphrasis", "pattern": "\\b(?:during\\s+such\\s+time\\s+as)\\b", "priority": 4, "replace": "while", "why": "While"}
+{"applies": true, "case": "preserve", "id": "for-the-purpose-of", "kind": "periphrasis", "pattern": "\\b(?:for\\s+the\\s+purpose\\s+of)\\b", "priority": 4, "replace": "to", "why": "To, when it introduces a verb"}
+{"applies": true, "case": "preserve", "id": "full-force-and-effect", "kind": "doublet", "pattern": "\\b(?:full\\s+force\\s+and\\s+effect)\\b", "priority": 4, "replace": "in effect", "why": "In effect"}
+{"applies": true, "case": "preserve", "id": "has-the-obligation-to", "kind": "nominal", "pattern": "\\b(?:have\\s+the\\s+obligation\\s+to|has\\s+the\\s+obligation\\s+to)\\b", "priority": 4, "replace": "must", "why": "Must"}
+{"applies": true, "case": "preserve", "id": "in-the-amount-of", "kind": "periphrasis", "pattern": "\\b(?:in\\s+the\\s+amount\\s+of)\\b", "priority": 4, "replace": "for", "why": "For"}
+{"applies": true, "case": "preserve", "id": "in-the-event-of", "kind": "periphrasis", "pattern": "\\b(?:in\\s+the\\s+event\\s+of)\\b", "priority": 4, "replace": "if there is", "why": "The same five words before a noun rather than a clause"}
+{"applies": true, "case": "preserve", "id": "in-the-event-that", "kind": "periphrasis", "pattern": "\\b(?:in\\s+the\\s+event\\s+that)\\b", "priority": 4, "replace": "if", "why": "Five words for if"}
+{"applies": true, "case": "preserve", "id": "in-the-near-future", "kind": "nominal", "pattern": "\\b(?:in\\s+the\\s+near\\s+future)\\b", "priority": 4, "replace": "soon", "why": "Soon"}
+{"applies": true, "case": "preserve", "id": "shall-be-entitled-to", "kind": "modal", "pattern": "\\b(?:shall\\s+be\\s+entitled\\s+to)\\b", "priority": 4, "replace": "may", "why": "A right dressed as a duty"}
+{"applies": true, "case": "preserve", "id": "to-the-extent-that", "kind": "periphrasis", "pattern": "\\b(?:to\\s+the\\s+extent\\s+that)\\b", "priority": 4, "replace": "as far as", "why": "As far as"}
+{"applies": true, "case": "preserve", "id": "a-number-of", "kind": "nominal", "pattern": "\\b(?:a\\s+number\\s+of)\\b", "priority": 3, "replace": "some", "why": "Some, or a stated number"}
+{"applies": true, "case": "preserve", "id": "afford-an-opportunity", "kind": "nominal", "pattern": "\\b(?:afforded\\s+an\\s+opportunity|affords\\s+an\\s+opportunity|afford\\s+an\\s+opportunity)\\b", "priority": 3, "replace": "allow", "why": "Allow, or give a chance to"}
+{"applies": true, "case": "preserve", "id": "any-and-all", "kind": "doublet", "pattern": "\\b(?:any\\s+and\\s+all)\\b", "priority": 3, "replace": "all", "why": "All already reaches the singular"}
+{"applies": true, "case": "preserve", "id": "at-all-times", "kind": "periphrasis", "pattern": "\\b(?:at\\s+all\\s+times)\\b", "priority": 3, "replace": "always", "why": "Always"}
+{"applies": true, "case": "preserve", "id": "by-virtue-of", "kind": "periphrasis", "pattern": "\\b(?:by\\s+virtue\\s+of)\\b", "priority": 3, "replace": "under", "why": "Names the source of a power without saying anything virtue adds"}
+{"applies": true, "case": "preserve", "id": "due-and-payable", "kind": "doublet", "pattern": "\\b(?:due\\s+and\\s+payable)\\b", "priority": 3, "replace": "due", "why": "Due"}
+{"applies": true, "case": "preserve", "id": "each-and-every", "kind": "doublet", "pattern": "\\b(?:each\\s+and\\s+every)\\b", "priority": 3, "replace": "each", "why": "Each"}
+{"applies": true, "case": "preserve", "id": "give-consideration-to", "kind": "nominal", "pattern": "\\b(?:gives\\s+consideration\\s+to|gave\\s+consideration\\s+to|give\\s+consideration\\s+to)\\b", "priority": 3, "replace": "consider", "why": "Consider"}
+{"applies": true, "case": "preserve", "id": "goods-and-chattels", "kind": "doublet", "pattern": "\\b(?:goods\\s+and\\s+chattels)\\b", "priority": 3, "replace": "goods", "why": "Goods"}
+{"applies": true, "case": "preserve", "id": "in-accordance-with", "kind": "periphrasis", "pattern": "\\b(?:in\\s+accordance\\s+with)\\b", "priority": 3, "replace": "under", "why": "Means under when it names an authority, and as when it names a method"}
+{"applies": true, "case": "preserve", "id": "in-connection-with", "kind": "periphrasis", "pattern": "\\b(?:in\\s+connection\\s+with)\\b", "priority": 3, "replace": "about", "why": "About"}
+{"applies": true, "case": "preserve", "id": "in-furtherance-of", "kind": "periphrasis", "pattern": "\\b(?:in\\s+furtherance\\s+of)\\b", "priority": 3, "replace": "to advance", "why": "To advance"}
+{"applies": true, "case": "preserve", "id": "in-lieu-of", "kind": "periphrasis", "pattern": "\\b(?:in\\s+lieu\\s+of)\\b", "priority": 3, "replace": "instead of", "why": "Law French for in place of"}
+{"applies": true, "case": "preserve", "id": "in-order-to", "kind": "periphrasis", "pattern": "\\b(?:in\\s+order\\s+to)\\b", "priority": 3, "replace": "to", "why": "Two words of scaffolding around an infinitive"}
+{"applies": true, "case": "preserve", "id": "in-relation-to", "kind": "periphrasis", "pattern": "\\b(?:in\\s+relation\\s+to)\\b", "priority": 3, "replace": "about", "why": "About, or compared with"}
+{"applies": true, "case": "preserve", "id": "in-witness-whereof", "kind": "archaic", "pattern": "\\b(?:in\\s+witness\\s+whereof)\\b", "priority": 3, "replace": "", "why": "The signature clause"}
+{"applies": true, "case": "preserve", "id": "including-without-limitation", "kind": "doublet", "pattern": "\\b(?:including\\s+without\\s+limitation)\\b", "priority": 3, "replace": "including", "why": "The same point, four words shorter"}
+{"applies": true, "case": "preserve", "id": "is-authorized-to", "kind": "nominal", "pattern": "\\b(?:are\\s+authorized\\s+to|is\\s+authorized\\s+to)\\b", "priority": 3, "replace": "may", "why": "May, when it grants a power"}
+{"applies": true, "case": "preserve", "id": "is-required-to", "kind": "nominal", "pattern": "\\b(?:are\\s+required\\s+to|is\\s+required\\s+to)\\b", "priority": 3, "replace": "must", "why": "Must, when it imposes a duty"}
+{"applies": true, "case": "preserve", "id": "no-later-than", "kind": "periphrasis", "pattern": "\\b(?:no\\s+later\\s+than)\\b", "priority": 3, "replace": "by", "why": "By"}
+{"applies": true, "case": "preserve", "id": "not-later-than", "kind": "periphrasis", "pattern": "\\b(?:not\\s+later\\s+than)\\b", "priority": 3, "replace": "by", "why": "By"}
+{"applies": true, "case": "preserve", "id": "null-and-void", "kind": "doublet", "pattern": "\\b(?:null\\s+and\\s+void)\\b", "priority": 3, "replace": "void", "why": "Null is a nullity and void is void"}
+{"applies": true, "case": "preserve", "id": "on-or-about", "kind": "periphrasis", "pattern": "\\b(?:on\\s+or\\s+about)\\b", "priority": 3, "replace": "about", "why": "About"}
+{"applies": true, "case": "preserve", "id": "over-and-above", "kind": "doublet", "pattern": "\\b(?:over\\s+and\\s+above)\\b", "priority": 3, "replace": "more than", "why": "More than"}
+{"applies": true, "case": "preserve", "id": "save-and-except", "kind": "doublet", "pattern": "\\b(?:save\\s+and\\s+except)\\b", "priority": 3, "replace": "except", "why": "Except"}
+{"applies": true, "case": "preserve", "id": "unless-and-until", "kind": "doublet", "pattern": "\\b(?:unless\\s+and\\s+until)\\b", "priority": 3, "replace": "unless", "why": "Unless"}
+{"applies": true, "case": "preserve", "id": "with-respect-to", "kind": "periphrasis", "pattern": "\\b(?:with\\s+respect\\s+to)\\b", "priority": 3, "replace": "about", "why": "About, or for, depending on the noun"}
+{"applies": true, "case": "preserve", "id": "ab-initio", "kind": "latin", "pattern": "\\b(?:ab\\s+initio)\\b", "priority": 2, "replace": "from the start", "why": "From the start"}
+{"applies": true, "case": "preserve", "id": "in-perpetuity", "kind": "periphrasis", "pattern": "\\b(?:in\\s+perpetuity)\\b", "priority": 2, "replace": "forever", "why": "Forever"}
+{"applies": true, "case": "preserve", "id": "inter-alia", "kind": "latin", "pattern": "\\b(?:inter\\s+alias|inter\\s+alia)\\b", "priority": 2, "replace": "among other things", "why": "Among other things"}
+{"applies": true, "case": "preserve", "id": "inter-alios", "kind": "latin", "pattern": "\\b(?:inter\\s+alios)\\b", "priority": 2, "replace": "among other people", "why": "Among other people"}
+{"applies": true, "case": "preserve", "id": "is-applicable", "kind": "nominal", "pattern": "\\b(?:are\\s+applicable|is\\s+applicable)\\b", "priority": 2, "replace": "applies", "why": "Applies"}
+{"applies": true, "case": "preserve", "id": "make-application", "kind": "nominal", "pattern": "\\b(?:making\\s+application|makes\\s+application|made\\s+application|make\\s+application)\\b", "priority": 2, "replace": "apply", "why": "Apply"}
+{"applies": true, "case": "preserve", "id": "mala-fide", "kind": "latin", "pattern": "\\b(?:mala\\s+fide)\\b", "priority": 2, "replace": "in bad faith", "why": "In bad faith"}
+{"applies": true, "case": "preserve", "id": "mutatis-mutandis", "kind": "latin", "pattern": "\\b(?:mutatis\\s+mutandis)\\b", "priority": 2, "replace": "with the necessary changes", "why": "With the necessary changes"}
+{"applies": true, "case": "preserve", "id": "pari-passu", "kind": "latin", "pattern": "\\b(?:pari\\s+passu)\\b", "priority": 2, "replace": "equally", "why": "Equally, or at the same rate"}
+{"applies": true, "case": "preserve", "id": "prior-to", "kind": "periphrasis", "pattern": "\\b(?:prior\\s+to)\\b", "priority": 2, "replace": "before", "why": "Before"}
+{"applies": true, "case": "preserve", "id": "pro-rata", "kind": "latin", "pattern": "\\b(?:pro\\s+rata)\\b", "priority": 2, "replace": "in proportion", "why": "In proportion"}
+{"applies": true, "case": "preserve", "id": "provide-notification", "kind": "nominal", "pattern": "\\b(?:provided\\s+notification|provides\\s+notification|provide\\s+notification)\\b", "priority": 2, "replace": "notify", "why": "Notify"}
+{"applies": true, "case": "preserve", "id": "provided-that", "kind": "periphrasis", "pattern": "\\b(?:provided,\\s+that|provided\\s+that)\\b", "priority": 2, "replace": "but only if", "why": "Introduces a condition on the sentence before it"}
+{"applies": true, "case": "preserve", "id": "pursuant-to", "kind": "periphrasis", "pattern": "\\b(?:pursuant\\s+to)\\b", "priority": 2, "replace": "under", "why": "Means under"}
+{"applies": true, "case": "preserve", "id": "shall-not", "kind": "modal", "pattern": "\\b(?:shall\\s+not)\\b", "priority": 2, "replace": "must not", "why": "A prohibition"}
+{"applies": true, "case": "preserve", "id": "subsequent-to", "kind": "periphrasis", "pattern": "\\b(?:subsequent\\s+to)\\b", "priority": 2, "replace": "after", "why": "After"}
+{"applies": true, "case": "preserve", "id": "to-wit", "kind": "archaic", "pattern": "\\b(?:to\\s+wit)\\b", "priority": 2, "replace": "namely", "why": "Namely"}
+{"applies": true, "case": "preserve", "id": "aforesaid", "kind": "archaic", "pattern": "\\b(?:aforesaid)\\b", "priority": 1, "replace": "mentioned earlier", "why": "Earlier"}
+{"applies": true, "case": "preserve", "id": "and-or", "kind": "doublet", "pattern": "\\b(?:and/or)\\b", "priority": 1, "replace": "or", "why": "Ambiguous by construction: it can mean both, either, or one and then the other"}
+{"applies": true, "case": "preserve", "id": "commence", "kind": "nominal", "pattern": "\\b(?:commencing|commenced|commences|commence)\\b", "priority": 1, "replace": "start", "why": "Start"}
+{"applies": true, "case": "preserve", "id": "e-g", "kind": "latin", "pattern": "\\b(?:e\\.g\\.|e\\.g)", "priority": 1, "replace": "for example", "why": "For example"}
+{"applies": true, "case": "preserve", "id": "endeavor", "kind": "nominal", "pattern": "\\b(?:endeavoring|endeavored|endeavors|endeavor)\\b", "priority": 1, "replace": "try", "why": "Try"}
+{"applies": true, "case": "preserve", "id": "facilitate", "kind": "nominal", "pattern": "\\b(?:facilitating|facilitated|facilitates|facilitate)\\b", "priority": 1, "replace": "help", "why": "Help"}
+{"applies": true, "case": "preserve", "id": "forthwith", "kind": "archaic", "pattern": "\\b(?:forthwith)\\b", "priority": 1, "replace": "immediately", "why": "Immediately"}
+{"applies": true, "case": "preserve", "id": "henceforth", "kind": "archaic", "pattern": "\\b(?:henceforth)\\b", "priority": 1, "replace": "from now on", "why": "From now on"}
+{"applies": true, "case": "preserve", "id": "hereafter", "kind": "archaic", "pattern": "\\b(?:hereafter)\\b", "priority": 1, "replace": "after this", "why": "After this"}
+{"applies": true, "case": "preserve", "id": "hereby", "kind": "deictic", "pattern": "\\b(?:hereby)\\b", "priority": 1, "replace": "", "why": "Usually deletable: I hereby certify and I certify are the same act"}
+{"applies": true, "case": "preserve", "id": "herein", "kind": "deictic", "pattern": "\\b(?:herein)\\b", "priority": 1, "replace": "in this document", "why": "Points at the document the reader is holding"}
+{"applies": true, "case": "preserve", "id": "hereinabove", "kind": "deictic", "pattern": "\\b(?:hereinabove)\\b", "priority": 1, "replace": "earlier in this document", "why": "Earlier"}
+{"applies": true, "case": "preserve", "id": "hereinafter", "kind": "deictic", "pattern": "\\b(?:hereinafter)\\b", "priority": 1, "replace": "later in this document", "why": "Usually introducing a defined term, where called is the plain verb"}
+{"applies": true, "case": "preserve", "id": "hereinbefore", "kind": "deictic", "pattern": "\\b(?:hereinbefore)\\b", "priority": 1, "replace": "earlier in this document", "why": "Earlier"}
+{"applies": true, "case": "preserve", "id": "hereinunder", "kind": "deictic", "pattern": "\\b(?:hereinunder)\\b", "priority": 1, "replace": "below in this document", "why": "Below"}
+{"applies": true, "case": "preserve", "id": "hereof", "kind": "deictic", "pattern": "\\b(?:hereof)\\b", "priority": 1, "replace": "of this document", "why": "Of this lease, of this agreement"}
+{"applies": true, "case": "preserve", "id": "hereto", "kind": "deictic", "pattern": "\\b(?:hereto)\\b", "priority": 1, "replace": "to this document", "why": "To this agreement"}
+{"applies": true, "case": "preserve", "id": "heretofore", "kind": "deictic", "pattern": "\\b(?:heretofore)\\b", "priority": 1, "replace": "until now", "why": "Until now"}
+{"applies": true, "case": "preserve", "id": "hereunder", "kind": "deictic", "pattern": "\\b(?:hereunder)\\b", "priority": 1, "replace": "under this document", "why": "Under this lease, under this agreement"}
+{"applies": true, "case": "preserve", "id": "herewith", "kind": "deictic", "pattern": "\\b(?:herewith)\\b", "priority": 1, "replace": "with this document", "why": "With this notice, with this letter"}
+{"applies": true, "case": "preserve", "id": "i-e", "kind": "latin", "pattern": "\\b(?:i\\.e\\.|i\\.e)", "priority": 1, "replace": "that is", "why": "That is"}
+{"applies": true, "case": "preserve", "id": "implement", "kind": "nominal", "pattern": "\\b(?:implementing|implemented|implements|implement)\\b", "priority": 1, "replace": "carry out", "why": "Carry out"}
+{"applies": true, "case": "preserve", "id": "notwithstanding", "kind": "periphrasis", "pattern": "\\b(?:notwithstanding)\\b", "priority": 1, "replace": "despite", "why": "Despite"}
+{"applies": true, "case": "preserve", "id": "quash", "kind": "french", "pattern": "\\b(?:quashing|quashed|quashes|quash)\\b", "priority": 1, "replace": "cancel", "why": "Cancel, or set aside"}
+{"applies": false, "case": "preserve", "id": "said", "kind": "archaic", "pattern": "\\b(?:said)\\b", "priority": 1, "replace": "the", "why": "Advisory only: in said vehicle it means the vehicle, and in he said it means spoke"}
+{"applies": true, "case": "preserve", "id": "shall", "kind": "modal", "pattern": "\\b(?:shall)\\b", "priority": 1, "replace": "must", "why": "In a California statute shall is mandatory and may is permissive"}
+{"applies": true, "case": "preserve", "id": "subsequent", "kind": "nominal", "pattern": "\\b(?:subsequent)\\b", "priority": 1, "replace": "later", "why": "Later"}
+{"applies": false, "case": "preserve", "id": "such", "kind": "archaic", "pattern": "\\b(?:such)\\b", "priority": 1, "replace": "the", "why": "Advisory only: as an article it means the; in such as it means for example; before a noun it often means that"}
+{"applies": true, "case": "preserve", "id": "terminate", "kind": "nominal", "pattern": "\\b(?:terminating|terminated|terminates|terminate)\\b", "priority": 1, "replace": "end", "why": "End"}
+{"applies": true, "case": "preserve", "id": "thereby", "kind": "deictic", "pattern": "\\b(?:thereby)\\b", "priority": 1, "replace": "by doing that", "why": "By doing that"}
+{"applies": true, "case": "preserve", "id": "therein", "kind": "deictic", "pattern": "\\b(?:therein)\\b", "priority": 1, "replace": "in it", "why": "In it, or in that agreement"}
+{"applies": true, "case": "preserve", "id": "thereof", "kind": "deictic", "pattern": "\\b(?:thereof)\\b", "priority": 1, "replace": "of it", "why": "Of it"}
+{"applies": true, "case": "preserve", "id": "thereto", "kind": "deictic", "pattern": "\\b(?:thereto)\\b", "priority": 1, "replace": "to it", "why": "To it"}
+{"applies": true, "case": "preserve", "id": "theretofore", "kind": "deictic", "pattern": "\\b(?:theretofore)\\b", "priority": 1, "replace": "before then", "why": "Before then"}
+{"applies": true, "case": "preserve", "id": "utilize", "kind": "nominal", "pattern": "\\b(?:utilizing|utilized|utilizes|utilize)\\b", "priority": 1, "replace": "use", "why": "Use"}
+{"applies": true, "case": "preserve", "id": "viz", "kind": "latin", "pattern": "\\b(?:viz\\.|viz)", "priority": 1, "replace": "namely", "why": "Namely"}
+{"applies": true, "case": "preserve", "id": "whereby", "kind": "deictic", "pattern": "\\b(?:whereby)\\b", "priority": 1, "replace": "by which", "why": "By which"}
+{"applies": true, "case": "preserve", "id": "wherein", "kind": "deictic", "pattern": "\\b(?:wherein)\\b", "priority": 1, "replace": "in which", "why": "In which"}
+{"applies": true, "case": "preserve", "id": "whereof", "kind": "deictic", "pattern": "\\b(?:whereof)\\b", "priority": 1, "replace": "of which", "why": "Of which"}
+{"applies": true, "case": "preserve", "id": "witnesseth", "kind": "archaic", "pattern": "\\b(?:witnesseth:|witnesseth)\\b", "priority": 1, "replace": "", "why": "A verb from the old introductory clause"}

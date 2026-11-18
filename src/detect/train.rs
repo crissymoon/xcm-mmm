@@ -30,7 +30,8 @@ use super::index::{self, Index, IndexSpec};
 use super::lexicon::{self, round4, Lexicon};
 use super::logistic::Logistic;
 use super::model::{
-    Artifact, Audit, Axis, AxisStamp, CheckRun, FileStamp, IndexAxis, LexiconAxis, Manifest, Source,
+    Artifact, Audit, Axis, AxisStamp, BankExt, CheckRun, FileStamp, IndexAxis, LexiconAxis,
+    Manifest, Source,
 };
 use super::token;
 use super::{TrainConfig, ADS, BANK, CARD, CUES, MANIFEST, MODEL};
@@ -134,6 +135,7 @@ pub fn fit(
             bank: file_name(bank_path),
             bank_rows: bank.rows.len(),
             bank_fnv64: bank.digest(),
+            bank_exts: BankExt::group(bank.rows.iter().map(|r| r.source.as_str())),
             ads: file_name(ads_path),
             ads_rows: ads.rows.len(),
             ads_fnv64: ads.digest(),

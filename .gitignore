@@ -14,6 +14,7 @@
 /data/*
 !/data/training/
 !/data/detectors/
+!/data/legal/
 !/data/segments/
 !/data/emotion/
 !/data/churn/

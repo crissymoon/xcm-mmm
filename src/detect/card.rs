@@ -2,7 +2,22 @@
 
 use std::fmt::Write;
 
-use super::model::{Artifact, Axis, Manifest};
+use super::model::{Artifact, Axis, BankExt, Manifest};
+
+/// The sentence naming the extension banks, or nothing when there were none.
+fn extension_clause(exts: &[BankExt]) -> String {
+    if exts.is_empty() {
+        return String::new();
+    }
+    let named: Vec<String> = exts
+        .iter()
+        .map(|ext| format!("`{}` ({} sentences)", ext.name, ext.rows))
+        .collect();
+    format!(
+        " Extension banks join the same axes under the same labels with their source prefixed by the bank folder: {}.",
+        named.join(", ")
+    )
+}
 
 /// Render `card.md` for a fitted folder.
 pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
@@ -38,7 +53,8 @@ pub fn render(artifact: &Artifact, manifest: &Manifest) -> String {
     let _ = writeln!(out);
     let _ = writeln!(
         out,
-        "The bank is legal register from Federal Register abstracts and abstraction from grants.gov synopses, each set against advertisers' own copy as the negative side. The ads file is the same copy at document grain with its source split kept, so the index references are fitted on training ads and nothing else."
+        "The bank is legal register from Federal Register abstracts and abstraction from grants.gov synopses, each set against advertisers' own copy as the negative side.{} The ads file is the same copy at document grain with its source split kept, so the index references are fitted on training ads and nothing else.",
+        extension_clause(&artifact.source.bank_exts)
     );
     let _ = writeln!(out);
 
@@ -253,6 +269,7 @@ mod tests {
                 bank: "bank.jsonl".into(),
                 bank_rows: 10,
                 bank_fnv64: "abc".into(),
+                bank_exts: Vec::new(),
                 ads: "ads.jsonl".into(),
                 ads_rows: 2,
                 ads_fnv64: "def".into(),
@@ -267,5 +284,37 @@ mod tests {
         assert!(text.contains("bank.jsonl"));
         assert!(text.contains("## Limits"));
         assert!(text.contains("detect check"));
+        assert!(!text.contains("Extension banks"));
+    }
+
+    #[test]
+    fn the_card_names_an_extension_bank_it_was_fitted_with() {
+        let mut artifact = Artifact {
+            name: "marketlab-ad-detectors".into(),
+            version: 1,
+            built_at: "now".into(),
+            source: Source {
+                bank: "bank.jsonl".into(),
+                bank_rows: 12,
+                bank_fnv64: "abc".into(),
+                bank_exts: vec![BankExt {
+                    name: "legal".to_string(),
+                    rows: 2,
+                }],
+                ads: "ads.jsonl".into(),
+                ads_rows: 2,
+                ads_fnv64: "def".into(),
+                cues: "cues.json".into(),
+                cues_axes: 5,
+                cues_fnv64: "ghi".into(),
+            },
+            config: TrainConfig::default(),
+            axes: BTreeMap::new(),
+        };
+        let text = render(&artifact, &manifest());
+        assert!(text.contains("Extension banks join the same axes"));
+        assert!(text.contains("`legal` (2 sentences)"));
+        artifact.source.bank_exts.clear();
+        assert!(!render(&artifact, &manifest()).contains("Extension banks"));
     }
 }

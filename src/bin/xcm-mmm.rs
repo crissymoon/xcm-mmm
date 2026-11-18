@@ -22,6 +22,7 @@ use xcm_mmm::moead::scalar::Scalarization;
 use xcm_mmm::moead::{self, MoeadConfig, MoeadOutcome};
 use xcm_mmm::problem::Problem;
 use xcm_mmm::profile::cli::{run as run_read, ReadArgs};
+use xcm_mmm::legal::cli::{run as run_legal, LegalArgs};
 use xcm_mmm::segment::cli::{run as run_segment, SegmentArgs};
 
 #[derive(Parser)]
@@ -62,6 +63,8 @@ enum Command {
     Segment(SegmentArgs),
     /// Read emotion over any English word, and measure its coverage.
     Emotion(EmotionArgs),
+    /// Name the legal words in a text, and rewrite it in plain words.
+    Legal(LegalArgs),
     /// Score one text on every model: detectors, emotion, semantics, segment.
     #[command(visible_alias = "profile")]
     Read(ReadArgs),
@@ -798,6 +801,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Detect(args) => run_detect(args),
         Command::Segment(args) => run_segment(args),
         Command::Emotion(args) => run_emotion(args),
+        Command::Legal(args) => run_legal(args),
         Command::Read(args) => run_read(args),
         Command::Churn(args) => run_churn(args),
         Command::Transformer(args) => run_transformer(args),

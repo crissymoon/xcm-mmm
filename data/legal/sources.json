@@ -1,0 +1,1328 @@
+[
+  {
+    "rows": 700,
+    "url": "https://www.law.cornell.edu/rules/frcp/rule_23",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 396,
+    "url": "https://www.law.cornell.edu/rules/frap/rule_4",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 86,
+    "url": "https://www.law.cornell.edu/rules/frcp/rule_58",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 79,
+    "url": "https://www.law.cornell.edu/uscode/text/42/2000d",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 67,
+    "url": "https://www.law.cornell.edu/rules/frcp/rule_60",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 52,
+    "url": "https://housing.lacity.gov/wp-content/uploads/2021/08/Tenant-Anti-Harassment-Ordinance-TAHO-187109-8.6.21.pdf",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 48,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/words/use-simple-words-phrases.md",
+    "used_for": [
+      "plain-substitution"
+    ]
+  },
+  {
+    "rows": 39,
+    "url": "https://www.law.cornell.edu/uscode/text/42/3610",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 30,
+    "url": "https://codes.findlaw.com/ca/government-code/gov-sect-12940/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 27,
+    "url": "https://www.courts.ca.gov/cms/rules/index.cfm?title=eight&linkid=rule8_104",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 26,
+    "url": "https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style",
+    "used_for": [
+      "plain-substitution"
+    ]
+  },
+  {
+    "rows": 23,
+    "url": "https://selfhelp.courts.ca.gov/divorce-forms",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 23,
+    "url": "https://selfhelp.courts.ca.gov/eviction-forms",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 23,
+    "url": "https://selfhelp.courts.ca.gov/family-law-service-different-way",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 22,
+    "url": "https://california.public.law/codes/ca_civ_code_section_51",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 22,
+    "url": "https://selfhelp.courts.ca.gov/fee-waiver",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 22,
+    "url": "https://selfhelp.courts.ca.gov/hire-lawyer",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 22,
+    "url": "https://selfhelp.courts.ca.gov/remote-court-hearings",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 22,
+    "url": "https://selfhelp.courts.ca.gov/sheriff-serves",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 21,
+    "url": "https://selfhelp.courts.ca.gov/small-claims-forms",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 21,
+    "url": "https://www.courts.ca.gov/cms/rules/index.cfm?title=three&linkid=rule3_1110",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 21,
+    "url": "https://www.plainenglish.co.uk/free-guides/how-to-write-in-plain-english",
+    "used_for": [
+      "plain-substitution"
+    ]
+  },
+  {
+    "rows": 19,
+    "url": "https://codes.findlaw.com/ca/code-of-civil-procedure/ccp-sect-1005/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 19,
+    "url": "https://www.law.cornell.edu/uscode/text/42/3604",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 18,
+    "url": "https://california.public.law/codes/ca_civ_code_section_1942.5",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 18,
+    "url": "https://codes.findlaw.com/ca/government-code/gov-sect-12965/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 18,
+    "url": "https://selfhelp.courts.ca.gov/civil-lawsuit",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 18,
+    "url": "https://selfhelp.courts.ca.gov/eviction-mediation",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 17,
+    "url": "https://california.public.law/codes/ca_civ_code_section_52.1",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 17,
+    "url": "https://selfhelp.courts.ca.gov/tips-your-day-court",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 15,
+    "url": "https://www.law.cornell.edu/rules/frcp/rule_70",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 15,
+    "url": "https://www.plainenglish.co.uk/free-guides/a-to-z-of-alternative-words",
+    "used_for": [
+      "plain-substitution"
+    ]
+  },
+  {
+    "rows": 14,
+    "url": "https://selfhelp.courts.ca.gov/eviction-tenant",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 14,
+    "url": "https://www.law.cornell.edu/uscode/text/42/2000e-2",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 13,
+    "url": "https://california.public.law/codes/ca_civ_code_section_1940.2",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 13,
+    "url": "https://selfhelp.courts.ca.gov/court-basics",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 12,
+    "url": "https://codes.findlaw.com/ca/code-of-civil-procedure/ccp-sect-664-6/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 12,
+    "url": "https://codes.findlaw.com/ca/government-code/gov-sect-12955/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 12,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/brochures/jury-instructions.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://california.public.law/codes/ca_civ_code_section_51.7",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://california.public.law/codes/ca_civ_code_section_52",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://codes.findlaw.com/ca/code-of-civil-procedure/ccp-sect-128/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://codes.findlaw.com/ca/code-of-civil-procedure/ccp-sect-904-1/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://selfhelp.courts.ca.gov/divorce-california",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://selfhelp.courts.ca.gov/eviction-landlord",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://selfhelp.courts.ca.gov/get-free-or-low-cost-legal-help",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 11,
+    "url": "https://selfhelp.courts.ca.gov/understanding-legal-terms-debt-collection-cases",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "http://www.languageandlaw.org/LEGALLANG.HTM",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://california.public.law/codes/ca_civ_code_section_54.1",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://codes.findlaw.com/ca/code-of-civil-procedure/ccp-sect-1008/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://codes.findlaw.com/ca/code-of-civil-procedure/ccp-sect-1209/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://codes.findlaw.com/ca/government-code/gov-sect-12960/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/wordiness.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://s540406496.onlinehome.us/cpl2014/wp-content/uploads/2014/04/la-contract-before.pdf",
+    "used_for": [
+      "editorial-pair-source"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://selfhelp.courts.ca.gov/divorce-disclosures-info",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://www.hkex.com.hk/-/media/HKEX-Market/Listing/Rules-and-Guidance/Other-Resources/Listing-Document-Simplification-Guide/Seminars/Prospectus-Simplification-and-Plain-Language-Seminar-(March-2012)/us_sec_initiative.pdf",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 10,
+    "url": "https://www.law.cornell.edu/uscode/text/29/794",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 9,
+    "url": "https://en.wikipedia.org/wiki/Legal_English",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 9,
+    "url": "https://www.law.cornell.edu/uscode/text/42/3614",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 8,
+    "url": "https://www.consumerfinance.gov/ask-cfpb/what-happens-if-my-car-is-repossessed-en-865/",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 8,
+    "url": "https://www.law.cornell.edu/uscode/text/42/12182",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 8,
+    "url": "https://www.sec.gov/pdf/handbook.pdf",
+    "used_for": [
+      "plain-substitution"
+    ]
+  },
+  {
+    "rows": 7,
+    "url": "https://selfhelp.courts.ca.gov/small-claims-california",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 7,
+    "url": "https://www.courts.ca.gov/cms/rules/index.cfm?title=three&linkid=rule3_1300",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 6,
+    "url": "https://california.public.law/codes/ca_civ_code_section_54",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 6,
+    "url": "https://selfhelp.courts.ca.gov/respond-divorce-papers",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 6,
+    "url": "https://www.law.cornell.edu/uscode/text/20/1681",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 5,
+    "url": "https://california.public.law/codes/ca_civ_code_section_54.3",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 5,
+    "url": "https://codes.findlaw.com/ca/government-code/gov-sect-12981/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 5,
+    "url": "https://selfhelp.courts.ca.gov/eviction-resources",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 5,
+    "url": "https://selfhelp.courts.ca.gov/get-ready-your-restraining-order-court-hearing",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 5,
+    "url": "https://selfhelp.courts.ca.gov/resources-small-claims-cases",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 5,
+    "url": "https://selfhelp.courts.ca.gov/start-divorce-case",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 5,
+    "url": "https://selfhelp.courts.ca.gov/subpoena",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://en.wikipedia.org/wiki/Shall_and_will",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/ambiguity.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://selfhelp.courts.ca.gov/divorce-finalizejudgment",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://selfhelp.courts.ca.gov/landlords-and-tenants",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://selfhelp.courts.ca.gov/prepare-and-go-your-small-claims-trial",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://selfhelp.courts.ca.gov/restraining-orders",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://selfhelp.courts.ca.gov/small-claims",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 4,
+    "url": "https://www.cu.edu/coleman/examples-writing-samples-and-after-plain-language",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 3,
+    "url": "https://california.public.law/codes/ca_civ_code_section_51.5",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 3,
+    "url": "https://california.public.law/codes/ca_civ_code_section_55",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 3,
+    "url": "https://codes.findlaw.com/ca/code-of-civil-procedure/ccp-sect-683-020/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 3,
+    "url": "https://codes.findlaw.com/ca/government-code/gov-sect-12955-8/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 3,
+    "url": "https://lacounty-ca.elaws.us/code/coor_title2_div3_ch2.78_sec2.78.070",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 3,
+    "url": "https://selfhelp.courts.ca.gov/eviction-and-housing",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 3,
+    "url": "https://selfhelp.courts.ca.gov/make-decisions-finish-your-divorce",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "http://s540406496.onlinehome.us/cpl2014/wp-content/uploads/2014/04/aarp-financialcode-before.pdf",
+    "used_for": [
+      "editorial-pair-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://centerforplainlanguage.org/before-and-after-describing-a-law-without-legalese/",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://makingitclearuk.com/plain-english/plain-english-example/",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/application-due-date.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/application-federal-assistance.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/employment-assistance.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/fungi-hazards.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/lead-warning.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/medicaid-eligibility.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/medicaid-initiative.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/natural-disasters.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/printer-recommendations.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/register-pesticide.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/use-less-water.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/before-and-after/water-resources.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/notices/failure-to-provide-claim-information.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/notices/medicare-fraud-letter.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/regulations/animal-care.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/regulations/disaster-assistance.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/regulations/disaster-regulation.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/regulations/international-terrorism.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/regulations/quick-reference-card.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/regulations/smoking-regulation.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/examples/regulations/student-loans.md",
+    "used_for": [
+      "published-pair"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://selfhelp.courts.ca.gov/divorce-topics",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://selfhelp.courts.ca.gov/types-restraining-orders",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://selfhelp.courts.ca.gov/what-expect-restraining-order-hearing",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.consumerfinance.gov/ask-cfpb/what-should-i-do-when-a-debt-collector-contacts-me-en-1695/",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/uscode/text/42/1981",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/uscode/text/42/3605",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/ab_initio",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/actus_reus",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/affidavit",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/bona_fide",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/caveat_emptor",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/certiorari",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/consideration",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/contempt",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/covenant",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/de_minimis",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/de_novo",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/declaratory_relief",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/demurrer",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/deposition",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/discovery",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/easement",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/escrow",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/estoppel",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/et_seq",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/ex_parte",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/habeas_corpus",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/hold_harmless",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/in_forma_pauperis",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/indemnify",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/injunction",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/inter_alia",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/laches",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/lien",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/mandamus",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/mens_rea",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/moot",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/prima_facie",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/pro_se",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/quantum_meruit",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/quid_pro_quo",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/res_judicata",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/ripe",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/severability_clause",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/standing",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/stare_decisis",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/sua_sponte",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/subpoena",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/tort",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/voir_dire",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 2,
+    "url": "https://www.law.cornell.edu/wex/waiver",
+    "used_for": [
+      "meaning-check",
+      "glossary-source"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://codes.findlaw.com/ca/government-code/gov-sect-11135/",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://en.wikipedia.org/wiki/Legal_citation",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://en.wikipedia.org/wiki/Performative_verb",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://libanswers.liverpool.ac.uk/faq/149197",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://raw.githubusercontent.com/GSA/plainlanguage.gov/main/_pages/guidelines/conversational/use-must-to-indicate-requirements.md",
+    "used_for": [
+      "plain-substitution"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://selfhelp.courts.ca.gov/debt-collection",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://selfhelp.courts.ca.gov/eviction-index",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://selfhelp.courts.ca.gov/get-ready-small-claims",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://web.archive.org/web/20231216153511/https://www.plainlanguage.gov/guidelines/words/use-simple-words-phrases/",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://web.archive.org/web/20231216153730/https://www.plainlanguage.gov/guidelines/words/avoid-hidden-verbs/",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.adamsdrafting.com/category/defined-terms/",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.adamsdrafting.com/revisiting-provided-that/",
+    "used_for": [
+      "detector-feature"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.consumerfinance.gov/ask-cfpb/how-do-i-negotiate-a-settlement-with-a-debt-collector-en-1447/",
+    "used_for": [
+      "plain-legal-sentence"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.law.cornell.edu/uscode/text/42/1982",
+    "used_for": [
+      "statute-sentence"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.law.cornell.edu/wex/arbitration",
+    "used_for": [
+      "meaning-check"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.law.cornell.edu/wex/force_majeure",
+    "used_for": [
+      "meaning-check"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.law.cornell.edu/wex/replevin",
+    "used_for": [
+      "meaning-check"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.law.cornell.edu/wex/trover",
+    "used_for": [
+      "meaning-check"
+    ]
+  },
+  {
+    "rows": 1,
+    "url": "https://www.law.cornell.edu/wex/venue",
+    "used_for": [
+      "meaning-check"
+    ]
+  }
+]
