@@ -128,7 +128,7 @@ cat > "$OUT/dataset-metadata.json" <<META
   "title": "xcm-mmm fitted artefacts",
   "id": "crissymoon/${SLUG}",
   "licenses": [{"name": "MIT"}],
-  "subtitle": "Detector, emotion, segment, legal, churn and routing artefacts for the xcm-mmm CLI",
+  "subtitle": "Detector, emotion, segment, legal, churn and routing artefacts",
   "description": "The data folders read by the xcm-mmm command line tool: data/detectors (seven lexical axes plus 518 ads), data/emotion (listed and analogy tiers), data/segments (4 behavioural groups over 251 entities), data/legal (glossary, rules, pairs, rewrites), data/churn (model, panel, reasons, source) and data/route (the routing policy and seven sample arrivals). ${FILES} files, ${BYTES} bytes, version ${VERSION}, tree digest ${DIGEST}, MIT. Staged as data/<model>/ so the CLI defaults resolve: copy the tree beside the xcm-mmm binary, cd into that directory and detect score, read, segment assign, legal scan, legal explain, churn check and route organize all run with no path flags. The executable is a separate dataset, crissymoon/xcm-mmm-static-linux-x86-64. ${DISCLAIMER}",
   "keywords": ["mathematics", "software"],
   "isPrivate": false
