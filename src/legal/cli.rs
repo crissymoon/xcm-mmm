@@ -78,8 +78,10 @@ pub struct BenchArgs {
 #[derive(Args)]
 pub struct CoverageArgs {
     /// The sentence bank to split. Defaults to `bank.jsonl` in the folder.
+    /// Repeat it to score the shipped bank together with collected text:
+    /// `--bank data/legal/bank.jsonl --bank data/legal/bank-ext.jsonl`.
     #[arg(long, value_name = "PATH")]
-    bank: Option<String>,
+    bank: Vec<String>,
     /// Print the audit as JSON.
     #[arg(long)]
     json: bool,
@@ -254,11 +256,13 @@ fn score_pairs(dir: &str, args: &BenchArgs) -> Result<(), Box<dyn Error>> {
 
 fn registers(dir: &str, args: &CoverageArgs) -> Result<(), Box<dyn Error>> {
     let legal = Legal::load(dir)?;
-    let path = args
-        .bank
-        .clone()
-        .unwrap_or_else(|| format!("{dir}/bank.jsonl"));
-    let coverage = registers::Coverage::audit(&legal, &path)?;
+    let paths: Vec<String> = if args.bank.is_empty() {
+        vec![format!("{dir}/bank.jsonl")]
+    } else {
+        args.bank.clone()
+    };
+    let refs: Vec<&str> = paths.iter().map(String::as_str).collect();
+    let coverage = registers::Coverage::audit_many(&legal, &refs)?;
     if args.json {
         println!("{}", serde_json::to_string_pretty(&coverage)?);
     } else {
@@ -800,17 +804,26 @@ fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
     }
 
     let audit = audit(&legal, &format!("{dir}/bank.jsonl"))?;
+    // The collected text for the registers the shipped bank lacks sits beside
+    // it in `bank-ext.jsonl`. When it is there, the warning is about the
+    // folder as it stands, not about the file the manifest hashes.
     let bank = format!("{dir}/bank.jsonl");
+    let ext = format!("{dir}/bank-ext.jsonl");
+    let mut banks = vec![bank.as_str()];
+    if fs::metadata(&ext).is_ok() {
+        banks.push(ext.as_str());
+    }
     let split = if fs::metadata(&bank).is_ok() {
-        Some(registers::Coverage::audit(&legal, &bank)?)
+        Some(registers::Coverage::audit_many(&legal, &banks)?)
     } else {
         None
     };
     let gaps = split.as_ref().map(|split| split.gaps()).unwrap_or_default();
     if !gaps.is_empty() {
         warnings.push(format!(
-            "{} target registers are absent, thin or blind, so nothing is claimed there: {}",
+            "{} target register{} absent, thin or blind, so nothing is claimed there: {}",
             gaps.len(),
+            if gaps.len() == 1 { " is" } else { "s are" },
             gaps.join(", ")
         ));
     }

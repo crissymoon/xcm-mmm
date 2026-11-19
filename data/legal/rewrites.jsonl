@@ -108,3 +108,11 @@
 {"applies": true, "case": "preserve", "id": "wherein", "kind": "deictic", "pattern": "\\b(?:wherein)\\b", "priority": 1, "replace": "in which", "why": "In which"}
 {"applies": true, "case": "preserve", "id": "whereof", "kind": "deictic", "pattern": "\\b(?:whereof)\\b", "priority": 1, "replace": "of which", "why": "Of which"}
 {"applies": true, "case": "preserve", "id": "witnesseth", "kind": "archaic", "pattern": "\\b(?:witnesseth:|witnesseth)\\b", "priority": 1, "replace": "", "why": "A verb from the old introductory clause"}
+{"applies": true, "case": "preserve", "id": "provisions", "kind": "nominal", "pattern": "\\b(?:provisions)\\b", "priority": 3, "replace": "terms", "why": "Name the terms the sentence is talking about"}
+{"applies": true, "case": "preserve", "id": "determine", "kind": "nominal", "pattern": "\\b(?:determine)\\b", "priority": 3, "replace": "decide", "why": "Decide is the plain verb; find or work out when the sentence means those"}
+{"applies": true, "case": "preserve", "id": "regarding", "kind": "nominal", "pattern": "\\b(?:regarding)\\b", "priority": 3, "replace": "about", "why": "About"}
+{"applies": true, "case": "preserve", "id": "persons", "kind": "nominal", "pattern": "\\b(?:persons)\\b", "priority": 3, "replace": "people", "why": "People"}
+{"applies": true, "case": "preserve", "id": "preclude", "kind": "nominal", "pattern": "\\b(?:preclude)\\b", "priority": 3, "replace": "prevent", "why": "Prevent"}
+{"applies": true, "case": "preserve", "id": "constitutes", "kind": "nominal", "pattern": "\\b(?:constitutes)\\b", "priority": 3, "replace": "is", "why": "Is"}
+{"applies": true, "case": "preserve", "id": "set-forth-in", "kind": "periphrasis", "pattern": "\\b(?:set\\s+forth\\s+in)\\b", "priority": 4, "replace": "in", "why": "In, as the plain language guidance directs"}
+{"applies": true, "case": "preserve", "id": "deemed", "kind": "periphrasis", "pattern": "\\b(?:deemed)\\b", "priority": 3, "replace": "treated as", "why": "Treated as, or considered"}

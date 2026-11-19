@@ -327,3 +327,62 @@ fn a_bench_floor_above_the_measured_rate_is_a_failure() {
     ]);
     assert!(out.status.success());
 }
+
+#[test]
+fn vocabulary_mined_from_the_collected_registers_is_rewritten() {
+    let dir = data();
+    let sentence = "The facts set forth in the notice are deemed admitted, and the carrier shall determine the amount.";
+    let out = run(&[
+        "legal",
+        "translate",
+        "--dir",
+        dir.to_str().unwrap(),
+        sentence,
+    ]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let text = stdout(&out);
+    // The edit list quotes the source, so the rewritten sentence is the first
+    // line and the claims below are about it alone.
+    let rewritten = text.lines().next().unwrap_or_default();
+    // Each of these was mined from the contract, regulation and opinion text
+    // in bank-ext.jsonl, and each is a row the shipped glossary did not hold.
+    assert!(rewritten.contains("The facts in the notice"), "{text}");
+    assert!(rewritten.contains("treated as admitted"), "{text}");
+    assert!(rewritten.contains("must decide"), "{text}");
+    assert!(!rewritten.contains("set forth in"), "{text}");
+}
+
+#[test]
+fn the_audit_scores_the_collected_text_beside_the_shipped_bank() {
+    let dir = data();
+    let bank = dir.join("bank.jsonl");
+    let ext = dir.join("bank-ext.jsonl");
+    let out = run(&[
+        "legal",
+        "coverage",
+        "--json",
+        "--bank",
+        bank.to_str().unwrap(),
+        "--bank",
+        ext.to_str().unwrap(),
+    ]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let value: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let rows = value["rows"].as_array().unwrap();
+    for register in ["contract", "opinion", "regulation", "agency-notice"] {
+        let row = rows
+            .iter()
+            .find(|row| row["register"] == register)
+            .unwrap_or_else(|| panic!("missing {register}"));
+        assert_ne!(row["verdict"], "absent", "{register}: {row}");
+        assert!(row["rows"].as_u64().unwrap() >= 100, "{register}: {row}");
+    }
+}

@@ -1,0 +1,26 @@
+{
+ "rows": 988,
+ "registers": {
+  "agency-notice": {
+   "rows": 243,
+   "duplicates_dropped": 243
+  },
+  "contract": {
+   "rows": 247,
+   "duplicates_dropped": 247
+  },
+  "opinion": {
+   "rows": 249,
+   "duplicates_dropped": 249
+  },
+  "regulation": {
+   "rows": 249,
+   "duplicates_dropped": 249
+  }
+ },
+ "sources": {
+  "regulation": "eCFR 2026-08-10",
+  "agency-notice": "Federal Register API",
+  "contract": "theatticusproject/cuad"
+ }
+}

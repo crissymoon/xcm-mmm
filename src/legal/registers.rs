@@ -125,7 +125,14 @@ pub const REGISTERS: &[Register] = &[
     },
     Register {
         name: "opinion",
-        markers: &["opinion", "ca-opinion", "court-opinion", "holding"],
+        markers: &[
+            "cap",
+            "courtlistener",
+            "opinion",
+            "ca-opinion",
+            "court-opinion",
+            "holding",
+        ],
         role: Role::Target,
         note: "judicial reasoning, which argues in prose rather than clauses",
     },
@@ -267,7 +274,24 @@ pub fn read_bank(path: &str) -> Result<Vec<BankRow>, String> {
 impl Coverage {
     /// Split the bank and scan every row with the shipped glossary.
     pub fn audit(legal: &Legal, bank_path: &str) -> Result<Self, String> {
-        let bank = read_bank(bank_path)?;
+        Self::audit_many(legal, &[bank_path])
+    }
+
+    /// Split one or more banks and scan every row with the shipped glossary.
+    ///
+    /// Several paths are what makes the widening pass visible: the shipped
+    /// bank is reproducible and hashed, so text collected for the registers it
+    /// lacks lands in a separate file, and the two are scored together here
+    /// rather than by rewriting the shipped bank.
+    pub fn audit_many(legal: &Legal, bank_paths: &[&str]) -> Result<Self, String> {
+        let mut bank = Vec::new();
+        for path in bank_paths {
+            bank.extend(read_bank(path)?);
+        }
+        Self::audit_rows(legal, &bank)
+    }
+
+    fn audit_rows(legal: &Legal, bank: &[BankRow]) -> Result<Self, String> {
         let mut buckets: BTreeMap<&'static str, Row> = BTreeMap::new();
         for register in REGISTERS {
             buckets.insert(
@@ -292,7 +316,7 @@ impl Coverage {
             },
         );
 
-        for entry in &bank {
+        for entry in bank {
             let name = classify(&entry.source);
             let row = buckets.entry(name).or_default();
             row.rows += 1;
@@ -525,6 +549,38 @@ mod tests {
     fn an_unknown_source_is_named_rather_than_folded_in() {
         assert_eq!(classify(""), "unclassified");
         assert_eq!(classify("random-crawl"), "unclassified");
+    }
+
+    #[test]
+    fn a_collected_row_lands_in_the_register_it_was_fetched_for() {
+        assert_eq!(classify("cuad-00200"), "contract");
+        assert_eq!(classify("cfr-29-1604"), "regulation");
+        assert_eq!(classify("fedreg-2026-23515"), "agency-notice");
+        assert_eq!(classify("cap-f3d-200-4233516"), "opinion");
+    }
+
+    #[test]
+    fn the_audit_reads_every_bank_it_is_given() {
+        let legal = Legal::load("data/legal").unwrap();
+        let shipped = Coverage::audit(&legal, "data/legal/bank.jsonl").unwrap();
+        let both = Coverage::audit_many(
+            &legal,
+            &["data/legal/bank.jsonl", "data/legal/bank-ext.jsonl"],
+        )
+        .unwrap();
+        assert!(
+            both.bank > shipped.bank,
+            "{} vs {}",
+            both.bank,
+            shipped.bank
+        );
+        // The collected text is what turns the absent registers into measured
+        // ones; a merge that silently dropped a file would leave them absent.
+        for register in ["contract", "opinion", "regulation", "agency-notice"] {
+            let row = both.rows.iter().find(|r| r.register == register).unwrap();
+            assert!(row.rows >= 100, "{register}: {}", row.rows);
+            assert_ne!(row.verdict, "absent", "{register}");
+        }
     }
 
     #[test]
