@@ -323,6 +323,8 @@ The kernel ([`crissymoon/xcm-mmm-binary-in-a-notebook`](https://www.kaggle.com/c
 
 `scripts/build-linux.sh` is the part that is not obvious: cross compiling from macOS fails until `rust-lld` from the musl target is named as the linker, because cargo otherwise hands the link to Apple's `cc`, which rejects every GNU flag. The result is a static-pie ELF that does not track the image's glibc.
 
+The build is reproducible, and the binary states its own origin: `xcm-mmm provenance` prints the commit, target, `rustc` and build date that `build.rs` compiled in, `scripts/build-linux.sh` writes the same facts with the sha256 to `provenance.json`, and the notebook recomputes the hash and fails if the two disagree. The reasoning behind the evaluation, the settings that make a rebuild byte identical and the Kaggle limits the notebook is written around are in [Research and provenance](README/DOCS/RESEARCH.md).
+
 ## Benchmarks
 
 Both tables come from `xcm-mmm bench --runs 5` on one development machine, release build. Times are wall clock per run and only show scale; compare the objective values, not the clocks.
@@ -358,6 +360,7 @@ Hypervolume uses the reference point 1.1 in every objective for the ZDT set, 0.6
 - [Benchmarks](README/DOCS/BENCHMARKS.md) - methodology, the tables above and how they compare with published results.
 - [Install](README/DOCS/INSTALL.md) - requirements, build, install and using the crate as a dependency.
 - [Development](README/DOCS/DEVELOPMENT.md) - layout, design rules, tests, lints and how to add a problem.
+- [Research and provenance](README/DOCS/RESEARCH.md) - the literature behind the evaluation, the reproducible build, and how a reader checks which binary produced a table.
 
 ## Testing
 

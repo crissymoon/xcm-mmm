@@ -11,7 +11,14 @@ questions a reader would otherwise have to guess at:
   * how do the fitted artefacts reach the CLI, given that both mounts are read
     only and every command defaults to a path under data/;
   * what does a real workload look like when the tool is the worker inside a
-    map over shards, which is the pattern that makes a notebook advanced.
+    map over shards, which is the pattern that makes a notebook advanced;
+  * which binary and which artefacts produced the numbers, which is answered by
+    a provenance record that travels with the file rather than by a hash in a
+    card nobody recomputes.
+
+The evaluation and packaging decisions each cite the source that forced them,
+listed in full in README/DOCS/RESEARCH.md and repeated at the end of the
+notebook.
 
 The kernel is public: a reader can open it, run it and read the figures without
 owning the datasets. Every figure is drawn from numbers the binary printed in
@@ -28,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import shutil
 import subprocess
@@ -105,6 +113,36 @@ session rather than a constant copied into the notebook:
 The figures are written to `charts/` and kept as part of the kernel output.
 
 xcm-mmm {version()} is MIT licensed. Source: https://github.com/crissymoon/xcm-mmm
+"""),
+    ("markdown", """
+## Research behind the four steps
+
+Two literatures decide what the numbers below are worth: how to evaluate a model
+that was chosen from many, and how to ship a compiled artefact somewhere it
+cannot be rebuilt.
+
+The numeric half is a nested selection over a synthetic panel, and it is nested
+rather than a single cross-validated maximum for a reason that is settled rather
+than stylistic. Cawley and Talbot (2010) show the optimism of a selected score
+grows with the number of candidates compared against the noise of the criterion,
+and Varma and Simon (2006) prescribe the outer loop that `--nested` implements.
+Tashman (2000) fixes the rolling-origin vocabulary, which is why the folds are
+successive origins rather than shuffled rows, and Bergmeir, Hyndman and Koo
+(2018) are why the fold geometry should follow the residual autocorrelation
+instead of assuming that blocked folds are always required.
+
+| the question | what answers it | what it forced in this notebook |
+| --- | --- | --- |
+| is the selected score an estimate? | Cawley and Talbot (2010); Varma and Simon (2006) | the outer loop is run and scored per fold, never as a mean of the inner scores |
+| how should folds be laid out? | Tashman (2000); Bergmeir, Hyndman and Koo (2018) | successive origins with an embargo, and four of them described as a small sample |
+| which search runs inside | Tanabe and Fukunaga (2013, 2014); Zhang and Li (2007) | the 24 candidates are SHADE and MOEA/D configurations, not arbitrary settings |
+| why repeat rather than widen | Cerqueira, Torgo and Mozetič (2020) | the shard map, which repeats a cheap scheme four times |
+| can the artefact be trusted? | Reproducible Builds; the Cargo and rustc references | a byte identical rebuild, a build id, and a hash the notebook recomputes |
+
+The full list, with links, is `README/DOCS/RESEARCH.md` in the repository and is
+repeated at the end of this notebook. The provenance of the binary this run used
+is not a citation: it is printed two cells from here and asserted against the
+copy the dataset shipped.
 """),
     ("code", """
 import hashlib
@@ -292,6 +330,59 @@ for rel in ("detectors/model.json", "emotion/model.json", "segments/model.json",
 
 print(run("--version").stdout.strip())
 """),
+    ("markdown", """
+## What built this, asked of three sources
+
+A checksum in a card proves nothing on its own: it says the file did not change
+after it was hashed, not that it came from the commit beside it. Three
+independent descriptions of the same artefact are printed here instead.
+
+| source | what it can speak for |
+| --- | --- |
+| `xcm-mmm provenance --json` | the crate version, the commit, the target and the `rustc` that compiled it, baked in by `build.rs` |
+| `provenance.json` beside the binary in the dataset | the sha256 and byte count the packaging step measured, written by the same fetch that produced `dist/kaggle` |
+| the interpreter | Python, pandas, matplotlib and the core count the four figures were drawn on |
+
+The two that describe the binary must agree on the hash and on the commit. The
+record is written to `provenance.json` in the working directory as well, so a
+reader who forks the kernel has the same facts for their own run rather than
+mine.
+"""),
+    ("code", '''
+# Nothing in this cell is a constant: every value is read from the binary, the
+# dataset or the interpreter, so the record cannot survive a change that the
+# code did not make.
+stated = json.loads(run("provenance", "--json").stdout)
+for key in ("version", "commit", "dirty", "target", "rustc", "built"):
+    print(f"{key:<8} {stated[key]}")
+
+digest = hashlib.sha256(BIN.read_bytes()).hexdigest()
+card = SRC.parent / "provenance.json"
+if card.exists():
+    shipped = json.loads(card.read_text())
+    agrees = shipped["sha256"] == digest
+    print(f"card     sha256 {'agrees' if agrees else 'DIFFERS'} with the mounted file")
+    assert agrees, "the mounted binary is not the one the dataset description names"
+    assert shipped["commit"].startswith(stated["commit"]), (
+        f"card commit {shipped['commit'][:7]} against binary commit {stated['commit']}")
+else:
+    print(f"card     absent at {card}; only the binary reports for itself")
+
+record = {
+    "binary": {**stated, "sha256": digest, "bytes": BIN.stat().st_size},
+    "runtime": {
+        "python": platform.python_version(),
+        "machine": platform.machine(),
+        "cpus": os.cpu_count(),
+        "pandas": pd.__version__,
+        "matplotlib": matplotlib.__version__,
+    },
+    "datasets": ["crissymoon/xcm-mmm-static-linux-x86-64", "crissymoon/xcm-mmm-models"],
+    "recorded": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+}
+(RUN / "provenance.json").write_text(json.dumps(record, indent=2) + "\\n")
+print("wrote    provenance.json,", len(json.dumps(record)), "bytes")
+'''),
     ("markdown", """
 ## A workload, and the timing that matters
 
@@ -640,10 +731,67 @@ show(fig, "04-emotion-coverage",
 - Draw every figure from output the same run produced, save the PNG, then
   display the file. A screenshot outlives the run; a chart built from the JSON
   the tool just printed cannot.
+- Make the artefact describe itself. A hash in a dataset card is a receipt; the
+  same hash recomputed here and compared against the record shipped beside the
+  binary is what turns it into evidence.
+- Cite what constrains the method. A nested loop is either the procedure the
+  literature prescribes or a shape someone liked, and the reader cannot tell
+  without the reference.
 
 The kernel is public, so the run above and the four figures under `charts/` are
 visible without the datasets: fork it, swap the two `dataset_sources` for your
 own binary and artefacts, and the rest of the notebook is the part you keep.
+"""),
+    ("markdown", """
+## References
+
+The evaluation, the search and the packaging, in the order the notebook uses
+them. DOIs and the page that explains each decision are in
+`README/DOCS/RESEARCH.md` of the repository.
+
+1. Cawley, G. C. and Talbot, N. L. C. (2010). On over-fitting in model selection
+   and subsequent selection bias in performance evaluation. JMLR 11, 2079-2107.
+   [jmlr.org/papers/v11/cawley10a.html](https://www.jmlr.org/papers/v11/cawley10a.html)
+2. Varma, S. and Simon, R. (2006). Bias in error estimation when using
+   cross-validation for model selection. BMC Bioinformatics 7, 91.
+   [doi:10.1186/1471-2105-7-91](https://doi.org/10.1186/1471-2105-7-91)
+3. Bergmeir, C., Hyndman, R. J. and Koo, B. (2018). A note on the validity of
+   cross-validation for evaluating autoregressive time series prediction.
+   CSDA 120, 70-83. [doi:10.1016/j.csda.2017.11.003](https://doi.org/10.1016/j.csda.2017.11.003)
+4. Tashman, L. J. (2000). Out-of-sample tests of forecasting accuracy.
+   International Journal of Forecasting 16(4), 437-450.
+   [doi:10.1016/S0169-2070(00)00065-0](https://doi.org/10.1016/S0169-2070(00)00065-0)
+5. Bergmeir, C. and Benítez, J. M. (2012). On the use of cross-validation for
+   time series predictor evaluation. Information Sciences 191, 192-213.
+   [doi:10.1016/j.ins.2011.12.028](https://doi.org/10.1016/j.ins.2011.12.028)
+6. Cerqueira, V., Torgo, L. and Mozetič, I. (2020). Evaluating time series
+   forecasting models. Machine Learning 109(11), 1997-2028.
+   [doi:10.1007/s10994-020-05910-7](https://doi.org/10.1007/s10994-020-05910-7)
+7. Demšar, J. (2006). Statistical comparisons of classifiers over multiple data
+   sets. JMLR 7, 1-30.
+   [jmlr.org/papers/v7/demsar06a.html](https://www.jmlr.org/papers/v7/demsar06a.html)
+8. Tanabe, R. and Fukunaga, A. (2013). Success-history based parameter
+   adaptation for differential evolution. IEEE CEC. DOI 10.1109/CEC.2013.6557555
+9. Tanabe, R. and Fukunaga, A. (2014). Improving the search performance of
+   SHADE using linear population size reduction. IEEE CEC.
+   DOI 10.1109/CEC.2014.6900380
+10. Zhang, Q. and Li, H. (2007). MOEA/D: a multiobjective evolutionary algorithm
+    based on decomposition. IEEE TEVC 11(6), 712-731.
+    DOI 10.1109/TEVC.2007.892759
+11. Lavinas, Y., Aranha, C., Ladeira, M. and Campelo, F. (2020). MOEA/D with
+    random partial update strategy. IEEE CEC. DOI 10.1109/CEC48606.2020.9185527
+12. Reproducible Builds. SOURCE_DATE_EPOCH.
+    [reproducible-builds.org/docs/source-date-epoch](https://reproducible-builds.org/docs/source-date-epoch/)
+13. The Cargo Book. Profiles, the `strip` option.
+    [doc.rust-lang.org/cargo/reference/profiles.html](https://doc.rust-lang.org/cargo/reference/profiles.html)
+14. The rustc book. `--remap-path-prefix`.
+    [doc.rust-lang.org/rustc/command-line-arguments.html](https://doc.rust-lang.org/rustc/command-line-arguments.html)
+15. Kaggle. Notebooks, technical specifications.
+    [kaggle.com/docs/notebooks](https://www.kaggle.com/docs/notebooks#technical-specifications)
+
+`provenance.json` in this version's output tab carries the binary's own report,
+the runtime versions and the two dataset slugs, so a fork records its own run
+rather than inheriting this one.
 """),
 ]
 
@@ -661,6 +809,16 @@ def notebook() -> dict:
 
 
 def metadata() -> dict:
+    # A notebook that names a dataset by slug alone follows every future
+    # version of it, so a re-run can quietly score a different binary. The two
+    # version environment variables append the number as a third path segment,
+    # which is the documented pin, and leave the slug alone when unset.
+    def pinned(slug: str, version: str) -> str:
+        version = version.strip()
+        return f"crissymoon/{slug}" + (f"/{version}" if version else "")
+
+    binary = pinned(SLUG, os.environ.get("XCM_BINARY_VERSION", ""))
+    models = pinned(MODELS, os.environ.get("XCM_MODELS_VERSION", ""))
     return {
         "id": KERNEL,
         "title": "xcm-mmm binary in a notebook",
@@ -675,7 +833,7 @@ def metadata() -> dict:
         # No network, on purpose: the notebook has to prove a static binary and
         # a local data tree are all it needs.
         "enable_internet": False,
-        "dataset_sources": [f"crissymoon/{SLUG}", f"crissymoon/{MODELS}"],
+        "dataset_sources": [binary, models],
         "competition_sources": [],
         "kernel_sources": [],
         "model_sources": [],

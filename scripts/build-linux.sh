@@ -13,6 +13,12 @@
 # A static-pie ELF runs on any glibc or musl distribution, which is the point:
 # the Kaggle image upgrades its libc between seasons and a dynamically linked
 # binary would break without warning.
+#
+# Two reproducibility settings are part of the build, not an afterthought:
+# SOURCE_DATE_EPOCH pins the timestamp the binary reports, and the path remap
+# keeps this machine's home directory out of the artefact. Build the same commit
+# twice and the two checksums agree; that is what makes the hash in the dataset
+# card mean something.
 set -euo pipefail
 
 TARGET="${TARGET:-x86_64-unknown-linux-musl}"
@@ -33,9 +39,20 @@ if [ -z "$LLD" ]; then
 fi
 
 BIN="target/$TARGET/release/xcm-mmm"
+
+# The commit timestamp is the reproducible default; an explicit SOURCE_DATE_EPOCH
+# in the environment wins, which is what a CI rebuild from a tarball needs.
+export SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct 2>/dev/null || echo 0)}"
+
+# --build-id gives the ELF a GNU note naming the link inputs, so a crash report
+# or a debug session can be matched to one artefact. The remap is the same trick
+# Debian uses on Rust packages: strip is not a guarantee, and a path leak is the
+# usual reason two builds of one commit differ.
 CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER="$LLD" \
-RUSTFLAGS="-C linker-flavor=ld.lld -C link-self-contained=yes -C strip=symbols" \
-  cargo build --release --target "$TARGET"
+RUSTFLAGS="-C linker-flavor=ld.lld -C link-self-contained=yes -C strip=symbols \
+  -C link-arg=--build-id=sha1 --remap-path-prefix=$ROOT=. \
+  --remap-path-prefix=$HOME/.cargo=/cargo" \
+  cargo build --release --locked --target "$TARGET"
 
 if [ -n "${OUT:-}" ]; then
   mkdir -p "$OUT"
@@ -48,4 +65,30 @@ fi
 # would then be a real risk instead of a note.
 file "$BIN"
 ls -l "$BIN"
-shasum -a 256 "$BIN"
+DIGEST="$(shasum -a 256 "$BIN" | awk '{print $1}')"
+echo "sha256    $DIGEST"
+
+# The card and the notebook both quote a hash and a commit. Writing them beside
+# the artefact means neither has to be retyped, and the notebook can check that
+# the binary it just chmodded is the one this file describes rather than one
+# that merely shares a name.
+if [ -n "${OUT:-}" ]; then
+  DIRTY=false
+  if [ -n "$(git status --porcelain 2>/dev/null)" ]; then DIRTY=true; fi
+  COMMIT="$(git rev-parse HEAD 2>/dev/null || echo unknown)"
+  cat > "$OUT/provenance.json" <<JSON
+{
+  "binary": "xcm-mmm",
+  "version": "$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)",
+  "sha256": "$DIGEST",
+  "bytes": $(wc -c < "$BIN" | tr -d ' '),
+  "target": "$TARGET",
+  "commit": "$COMMIT",
+  "dirty": $DIRTY,
+  "source_date_epoch": $SOURCE_DATE_EPOCH,
+  "rustc": "$(rustc --version)",
+  "flags": "lto=thin codegen-units=1 panic=abort strip=symbols build-id=sha1"
+}
+JSON
+  echo "provenance $OUT/provenance.json"
+fi

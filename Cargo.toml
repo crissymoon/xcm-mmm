@@ -13,6 +13,8 @@ documentation = "https://github.com/crissymoon/xcm-mmm#readme"
 readme = "README.md"
 keywords = ["optimization", "evolutionary-algorithms", "differential-evolution", "moead", "forecasting"]
 categories = ["science", "algorithms", "mathematics"]
+# Records the commit, target and toolchain in the binary; see src/provenance.rs.
+build = "build.rs"
 
 [[bin]]
 name = "xcm-mmm"
@@ -32,6 +34,10 @@ approx = "0.5"
 lto = "thin"
 codegen-units = 1
 panic = "abort"
+# Strip in the profile as well as in scripts/build-linux.sh: `cargo install`
+# never sees those RUSTFLAGS, and a 12 MB binary with symbols is a slower upload
+# to every dataset that carries it.
+strip = "symbols"
 
 [profile.bench]
 lto = "thin"

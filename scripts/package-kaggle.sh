@@ -61,6 +61,11 @@ a Rust toolchain and without enabling the network.
 | target | x86_64-unknown-linux-musl, static-pie |
 | licence | MIT |
 
+`provenance.json` beside the binary carries the same hash with the full commit,
+the target triple, the `rustc` that produced it and the flags the build used. The
+notebook reads both and fails if they disagree, which is the only reason to
+trust either.
+
 ## Using it in a notebook
 
     import hashlib, os, shutil, stat, subprocess

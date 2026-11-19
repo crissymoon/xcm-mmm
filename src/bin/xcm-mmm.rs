@@ -41,6 +41,8 @@ struct Cli {
 enum Command {
     /// List the benchmark problems and their defaults.
     List,
+    /// State the commit, target and toolchain this binary was built from.
+    Provenance(ProvenanceArgs),
     /// Solve a single objective problem with differential evolution.
     De(DeArgs),
     /// Solve a multi-objective problem with MOEA/D.
@@ -73,6 +75,13 @@ enum Command {
     Churn(ChurnArgs),
     /// Train, score or inspect the shared transformer on a pair corpus.
     Transformer(TransformerArgs),
+}
+
+#[derive(clap::Args)]
+struct ProvenanceArgs {
+    /// Print one JSON object, for a dataset card or a notebook to read.
+    #[arg(long)]
+    json: bool,
 }
 
 #[derive(clap::Args)]
@@ -791,6 +800,7 @@ fn main() {
 fn run() -> Result<(), Box<dyn Error>> {
     match Cli::parse().command {
         Command::List => list(),
+        Command::Provenance(args) => run_provenance(args),
         Command::De(args) => run_de(args),
         Command::Moead(args) => run_moead(args),
         Command::Forecast(args) => run_forecast(args),
@@ -822,6 +832,28 @@ fn list() -> Result<(), Box<dyn Error>> {
     for (name, dim, description) in CATALOGUE {
         println!("{name:<12} {dim:>4}  {description}");
     }
+    Ok(())
+}
+
+fn run_provenance(args: ProvenanceArgs) -> Result<(), Box<dyn Error>> {
+    let build = xcm_mmm::provenance::build();
+    if args.json {
+        println!("{}", serde_json::to_string_pretty(&build)?);
+        return Ok(());
+    }
+    // `dirty` is printed only when it is a problem: a clean tree is the norm,
+    // and a line reading "dirty false" invites the reader to check it means
+    // what it says instead of checking the commit.
+    let tree = match build.dirty {
+        "true" => " (dirty tree)",
+        "unknown" => " (no repository)",
+        _ => "",
+    };
+    println!("version   {}{tree}", build.version);
+    println!("commit    {}", build.commit);
+    println!("target    {}", build.target);
+    println!("rustc     {}", build.rustc);
+    println!("built     {}", build.built);
     Ok(())
 }
 

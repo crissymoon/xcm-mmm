@@ -30,6 +30,23 @@ Prints the benchmark catalogue with the default dimension and a one line descrip
 xcm-mmm list
 ```
 
+### provenance
+
+Prints the commit, target triple, `rustc` and build date compiled into the
+binary, which is what a dataset card or a notebook checks itself against. The
+values come from `build.rs`, so a binary built from a source tarball reports
+`unknown` rather than a guess.
+
+```bash
+xcm-mmm provenance
+xcm-mmm provenance --json
+```
+
+The JSON form has the same fields plus `epoch`, the integer the date was
+formatted from, so a script does not have to parse a timestamp. See
+[Research and provenance](RESEARCH.md) for the chain that starts here and ends in
+the Kaggle notebook.
+
 ### de
 
 Solves a single objective problem with differential evolution.

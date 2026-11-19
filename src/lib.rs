@@ -33,7 +33,8 @@
 //! [`monitor`] measures PSI and KS drift, tracks coverage over batches and keeps
 //! a versioned artifact with a rollback path. [`support`] reports events per
 //! feature and a learning curve so a small bank is visible as a slope rather
-//! than a caveat.
+//! than a caveat. [`provenance`] carries the commit, target and toolchain the
+//! binary was built from, so a release can state its own origin.
 
 pub mod audit;
 pub mod benchmarks;
@@ -58,6 +59,7 @@ pub mod num;
 pub mod pairs;
 pub mod problem;
 pub mod profile;
+pub mod provenance;
 pub mod rng;
 pub mod segment;
 pub mod stats;
