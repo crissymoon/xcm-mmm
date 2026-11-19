@@ -1,0 +1,1009 @@
+{
+ "meta": {
+  "read_at": "2026-11-19T15:09:40+00:00",
+  "source": "data/marketlab-ticker-ads-2026-11-19/ticker-ads.jsonl",
+  "ads": 209,
+  "with_reach": 209,
+  "reach_total": 91380118,
+  "languages": {
+   "en": 174,
+   "pl": 16,
+   "und": 12,
+   "es": 7
+  },
+  "tickers": 7,
+  "areas": {
+   "ENRG": 68,
+   "STPL": 61,
+   "FINL": 46,
+   "HLTH": 32,
+   "UTIL": 2
+  },
+  "terms": 1617,
+  "top_terms": 200,
+  "topics": 12,
+  "floor": 0.35,
+  "note": "reach is the DSA figure for a European ad and the midpoint of a published impression range for an American issue ad; the two are never summed into one column"
+ },
+ "topics": [
+  {
+   "name": "pur / ambi / dom",
+   "terms": [
+    "pur",
+    "ambi",
+    "dom",
+    "si\u0119",
+    "m\u00f3j",
+    "sam",
+    "przekonaj",
+    "gotowy"
+   ],
+   "ads": 19,
+   "reach": 41259261,
+   "midpoint": 19,
+   "tickers": [
+    "PG"
+   ],
+   "areas": [
+    "STPL"
+   ],
+   "languages": {
+    "pl": 14,
+    "und": 5
+   },
+   "linked": 1.071,
+   "example": {
+    "ticker": "PG",
+    "page": "Procter and Gamble Polska",
+    "reach": 11874406,
+    "started": "2026-11-16",
+    "copy": "Ciep\u0142e zapachy na zimne dni? Wypr\u00f3buj od\u015bwie\u017cacze Ambi Pur, teraz dost\u0119pne w drogeriach Rossmann! Ciep\u0142e zapachy na zimne dni? Wypr\u00f3buj od\u015bwie\u017cacze Ambi Pur, teraz dost\u0119pne w drogeriach Rossmann!"
+   }
+  },
+  {
+   "name": "rossmann / dni / zimne",
+   "terms": [
+    "rossmann",
+    "dni",
+    "zimne",
+    "dost\u0119pne",
+    "od\u015bwie\u017cacze",
+    "\u017cyj",
+    "bez",
+    "okresu"
+   ],
+   "ads": 3,
+   "reach": 15373869,
+   "midpoint": 3,
+   "tickers": [
+    "PG"
+   ],
+   "areas": [
+    "STPL"
+   ],
+   "languages": {
+    "und": 3
+   },
+   "linked": 0.55,
+   "example": {
+    "ticker": "PG",
+    "page": "Procter and Gamble Polska",
+    "reach": 11874406,
+    "started": "2026-11-16",
+    "copy": "Ciep\u0142e zapachy na zimne dni? Wypr\u00f3buj od\u015bwie\u017cacze Ambi Pur, teraz dost\u0119pne w drogeriach Rossmann! Ciep\u0142e zapachy na zimne dni? Wypr\u00f3buj od\u015bwie\u017cacze Ambi Pur, teraz dost\u0119pne w drogeriach Rossmann!"
+   }
+  },
+  {
+   "name": "small / businesses / helping",
+   "terms": [
+    "small",
+    "businesses",
+    "helping",
+    "proud",
+    "futures",
+    "athletes",
+    "miami",
+    "customers"
+   ],
+   "ads": 10,
+   "reach": 8414996,
+   "midpoint": 10,
+   "tickers": [
+    "JPM",
+    "PFE"
+   ],
+   "areas": [
+    "FINL",
+    "HLTH"
+   ],
+   "languages": {
+    "en": 10
+   },
+   "linked": 0.732,
+   "example": {
+    "ticker": "JPM",
+    "page": "JPMorganChase",
+    "reach": 3000000,
+    "started": "2026-07-02",
+    "copy": "Proud to invest in communities around stadiums. Supporting small businesses, jobs and helping athletes build futures."
+   }
+  },
+  {
+   "name": "building / investing / local",
+   "terms": [
+    "building",
+    "investing",
+    "local",
+    "financial",
+    "workshops",
+    "offers",
+    "reach",
+    "goals"
+   ],
+   "ads": 10,
+   "reach": 7062707,
+   "midpoint": 10,
+   "tickers": [
+    "JPM",
+    "XOM",
+    "KO"
+   ],
+   "areas": [
+    "FINL",
+    "ENRG",
+    "STPL"
+   ],
+   "languages": {
+    "en": 10
+   },
+   "linked": 0.431,
+   "example": {
+    "ticker": "JPM",
+    "page": "JPMorganChase",
+    "reach": 1762496,
+    "started": "2026-06-25",
+    "copy": "Investing in sports opens doors for the bigger play\u2014building up local economies around stadiums for fans across the country. Investing in sports opens doors for the bigger play\u2014building up local economies around stadiums for fans across the country. Investing in sports opens door"
+   }
+  },
+  {
+   "name": "ooo / \u015bwi\u0119ta / powietrzu",
+   "terms": [
+    "ooo",
+    "\u015bwi\u0119ta",
+    "powietrzu",
+    "\u015bwi\u0105teczny"
+   ],
+   "ads": 1,
+   "reach": 5719513,
+   "midpoint": 1,
+   "tickers": [
+    "PG"
+   ],
+   "areas": [
+    "STPL"
+   ],
+   "languages": {
+    "pl": 1
+   },
+   "linked": 1.1,
+   "example": {
+    "ticker": "PG",
+    "page": "Procter and Gamble Polska",
+    "reach": 5719513,
+    "started": "2026-11-16",
+    "copy": "Ooo, a\u017c czu\u0107 w powietrzu \u015bwi\u0105teczny klimat! Dzi\u0119ki Ambi Pur m\u00f3j dom jest ju\u017c gotowy na \u015bwi\u0119ta! Przekonaj si\u0119 sam! Ooo, a\u017c czu\u0107 w powietrzu \u015bwi\u0105teczny klimat! Dzi\u0119ki Ambi Pur m\u00f3j dom jest ju\u017c gotowy na \u015bwi\u0119ta! Przekonaj si\u0119 sam!"
+   }
+  },
+  {
+   "name": "chcesz / mama / rzeczy",
+   "terms": [
+    "chcesz",
+    "mama",
+    "rzeczy",
+    "prostu",
+    "kt\u00f3rymi",
+    "podzieli\u0107",
+    "zapachami"
+   ],
+   "ads": 2,
+   "reach": 5619497,
+   "midpoint": 2,
+   "tickers": [
+    "PG"
+   ],
+   "areas": [
+    "STPL"
+   ],
+   "languages": {
+    "pl": 2
+   },
+   "linked": 0.778,
+   "example": {
+    "ticker": "PG",
+    "page": "Procter and Gamble Polska",
+    "reach": 3601001,
+    "started": "2026-11-09",
+    "copy": "S\u0105 rzeczy, kt\u00f3rymi jako mama po prostu chcesz si\u0119 podzieli\u0107. \ud83c\udf3c"
+   }
+  },
+  {
+   "name": "head / global / research",
+   "terms": [
+    "head",
+    "global",
+    "research",
+    "james",
+    "sullivan",
+    "market",
+    "minute",
+    "week"
+   ],
+   "ads": 8,
+   "reach": 5467118,
+   "midpoint": 8,
+   "tickers": [
+    "JPM",
+    "PFE"
+   ],
+   "areas": [
+    "FINL",
+    "HLTH"
+   ],
+   "languages": {
+    "en": 8
+   },
+   "linked": 0.369,
+   "example": {
+    "ticker": "JPM",
+    "page": "J.P. Morgan",
+    "reach": 2382326,
+    "started": "2026-11-05",
+    "copy": "U.S. neocloud and semiconductor stocks have taken a hit. James Sullivan, co-head of Global Fundamental Research, looks at what\u2019s driving the concerns and whether they are justified in this week\u2019s Minute on the Market.\ud83d\udcca"
+   }
+  },
+  {
+   "name": "across / economies / country",
+   "terms": [
+    "across",
+    "economies",
+    "country",
+    "bigger",
+    "fans",
+    "opens",
+    "doors",
+    "sports"
+   ],
+   "ads": 7,
+   "reach": 5461250,
+   "midpoint": 7,
+   "tickers": [
+    "JPM",
+    "XOM",
+    "KO"
+   ],
+   "areas": [
+    "FINL",
+    "ENRG",
+    "STPL"
+   ],
+   "languages": {
+    "en": 7
+   },
+   "linked": 0.578,
+   "example": {
+    "ticker": "JPM",
+    "page": "JPMorganChase",
+    "reach": 1762496,
+    "started": "2026-06-25",
+    "copy": "Investing in sports opens doors for the bigger play\u2014building up local economies around stadiums for fans across the country. Investing in sports opens doors for the bigger play\u2014building up local economies around stadiums for fans across the country. Investing in sports opens door"
+   }
+  },
+  {
+   "name": "jobs / communities / economic",
+   "terms": [
+    "jobs",
+    "communities",
+    "economic"
+   ],
+   "ads": 10,
+   "reach": 5097744,
+   "midpoint": 10,
+   "tickers": [
+    "XOM",
+    "JPM"
+   ],
+   "areas": [
+    "ENRG",
+    "FINL"
+   ],
+   "languages": {
+    "en": 10
+   },
+   "linked": 0.362,
+   "example": {
+    "ticker": "JPM",
+    "page": "JPMorganChase",
+    "reach": 3000000,
+    "started": "2026-07-02",
+    "copy": "Proud to invest in communities around stadiums. Supporting small businesses, jobs and helping athletes build futures."
+   }
+  },
+  {
+   "name": "help / support / free",
+   "terms": [
+    "help",
+    "support",
+    "free",
+    "new"
+   ],
+   "ads": 27,
+   "reach": 4208490,
+   "midpoint": 27,
+   "tickers": [
+    "XOM",
+    "PFE",
+    "JPM",
+    "KO"
+   ],
+   "areas": [
+    "ENRG",
+    "HLTH",
+    "FINL",
+    "STPL"
+   ],
+   "languages": {
+    "en": 27
+   },
+   "linked": 0.492,
+   "example": {
+    "ticker": "JPM",
+    "page": "JPMorganChase",
+    "reach": 1124999,
+    "started": "2026-07-01",
+    "copy": "For over 135 years, JPMorganChase has invested in the economic growth of Los Angeles to help create jobs, support business and help communities thrive. For over 135 years, JPMorganChase has invested in the economic growth of Los Angeles to help create jobs, support business and h"
+   }
+  },
+  {
+   "name": "invest / supporting",
+   "terms": [
+    "invest",
+    "supporting"
+   ],
+   "ads": 2,
+   "reach": 3850000,
+   "midpoint": 2,
+   "tickers": [
+    "JPM"
+   ],
+   "areas": [
+    "FINL"
+   ],
+   "languages": {
+    "en": 2
+   },
+   "linked": 0.413,
+   "example": {
+    "ticker": "JPM",
+    "page": "JPMorganChase",
+    "reach": 3000000,
+    "started": "2026-07-02",
+    "copy": "Proud to invest in communities around stadiums. Supporting small businesses, jobs and helping athletes build futures."
+   }
+  },
+  {
+   "name": "chain / supply / resilient",
+   "terms": [
+    "chain",
+    "supply",
+    "resilient",
+    "build"
+   ],
+   "ads": 9,
+   "reach": 3483146,
+   "midpoint": 9,
+   "tickers": [
+    "KO",
+    "JPM"
+   ],
+   "areas": [
+    "STPL",
+    "FINL"
+   ],
+   "languages": {
+    "en": 9
+   },
+   "linked": 0.967,
+   "example": {
+    "ticker": "JPM",
+    "page": "J.P. Morgan",
+    "reach": 2213407,
+    "started": "2026-11-18",
+    "copy": "What will it take to build a more resilient pharmaceutical supply chain?\n\nAlex Gorsky joins J.P. Morgan\u2019s Jerry Lee to explore how reshoring, diversified manufacturing, public-private collaboration and AI could help strengthen the way critical medicines are produced and delivered"
+   }
+  }
+ ],
+ "hot_ads": [
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-16",
+   "ads": 1,
+   "reach": 11874406,
+   "copy": "Ciep\u0142e zapachy na zimne dni? Wypr\u00f3buj od\u015bwie\u017cacze Ambi Pur, teraz dost\u0119pne w drogeriach Rossmann! Ciep\u0142e zapachy na zimne dni? Wypr\u00f3buj od\u015bwie\u017cacze Ambi Pur, teraz dost\u0119pne w drogeriach Rossmann!"
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-10-21",
+   "ads": 1,
+   "reach": 10214697,
+   "copy": "Teraz mog\u0119 przyjmowa\u0107 go\u015bci, kiedy tylko chc\u0119! Z Ambi Pur m\u00f3j dom zawsze pi\u0119knie pachnie i jest gotowy na go\u015bci. Przekonaj si\u0119 sam! Teraz mog\u0119 przyjmowa\u0107 go\u015bci, kiedy tylko chc\u0119! Z Ambi Pur m\u00f3j dom zawsze pi\u0119knie pachnie i jest gotowy na go\u015bci. Przekonaj si\u0119 sam!"
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-16",
+   "ads": 1,
+   "reach": 5719513,
+   "copy": "Ooo, a\u017c czu\u0107 w powietrzu \u015bwi\u0105teczny klimat! Dzi\u0119ki Ambi Pur m\u00f3j dom jest ju\u017c gotowy na \u015bwi\u0119ta! Przekonaj si\u0119 sam! Ooo, a\u017c czu\u0107 w powietrzu \u015bwi\u0105teczny klimat! Dzi\u0119ki Ambi Pur m\u00f3j dom jest ju\u017c gotowy na \u015bwi\u0119ta! Przekonaj si\u0119 sam!"
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-09",
+   "ads": 1,
+   "reach": 3601001,
+   "copy": "S\u0105 rzeczy, kt\u00f3rymi jako mama po prostu chcesz si\u0119 podzieli\u0107. \ud83c\udf3c"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-06-25",
+   "ads": 3,
+   "reach": 3252996,
+   "copy": "Investing in sports opens doors for the bigger play\u2014building up local economies around stadiums for fans across the country. Investing in sports opens doors for the bigger play\u2014building up local economies around stadiums for fans across the country. Investing in sports opens door"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-07-02",
+   "ads": 1,
+   "reach": 3000000,
+   "copy": "Proud to invest in communities around stadiums. Supporting small businesses, jobs and helping athletes build futures."
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-10-31",
+   "ads": 1,
+   "reach": 2591678,
+   "copy": "\u017byj bez ogranicze\u0144, nawet w trakcie okresu! Odkryj tampony TAMPAX w ROSSMANN"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "J.P. Morgan",
+   "brand": "JPMorgan Chase",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-05",
+   "ads": 1,
+   "reach": 2382326,
+   "copy": "U.S. neocloud and semiconductor stocks have taken a hit. James Sullivan, co-head of Global Fundamental Research, looks at what\u2019s driving the concerns and whether they are justified in this week\u2019s Minute on the Market.\ud83d\udcca"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "J.P. Morgan",
+   "brand": "JPMorgan Chase",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-18",
+   "ads": 2,
+   "reach": 2213424,
+   "copy": "What will it take to build a more resilient pharmaceutical supply chain?\n\nAlex Gorsky joins J.P. Morgan\u2019s Jerry Lee to explore how reshoring, diversified manufacturing, public-private collaboration and AI could help strengthen the way critical medicines are produced and delivered"
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-10-26",
+   "ads": 1,
+   "reach": 2018496,
+   "copy": "[p\u0142atna wsp\u00f3\u0142praca z mark\u0105 Ambi Pur] @procterandgamble_pl Nie ma to jak jesienna atmosfera w domu! \ud83c\udf42\ud83e\udd79 Niezale\u017cnie od tego, jaki vibe chcesz czu\u0107 w swoim mieszkaniu, wyczarujesz go z zapachami do wn\u0119trz Ambi Pur w i\u015bcie jesiennych wariantach \u2728 Tw\u00f3j dom. Tw\u00f3j vibe. Stworzone przez "
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-07-01",
+   "ads": 1,
+   "reach": 2000000,
+   "copy": "With support from JPMorganChase, Iowa agtech startup Sabanto is transforming farming practices across the state and beyond. With support from JPMorganChase, Iowa agtech startup Sabanto is transforming farming practices across the state and beyond."
+  },
+  {
+   "ticker": "PFE",
+   "area": "HLTH",
+   "page": "Pfizer",
+   "brand": "Pfizer",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2025-05-15",
+   "ads": 1,
+   "reach": 1923680,
+   "copy": "This ad ran without a required disclaimer."
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "J.P. Morgan",
+   "brand": "JPMorgan Chase",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-15",
+   "ads": 1,
+   "reach": 1863317,
+   "copy": "Rare outperformance from hyperscalers is sparking new questions. James Sullivan, co-head of Global Fundamental Research, dives into chips depreciation, revenue per gigawatt and which AI models will take market share in this week\u2019s Minute on the Market. \ud83d\udcca"
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-10-21",
+   "ads": 1,
+   "reach": 1753624,
+   "copy": "Jak to mo\u017cliwe, \u017ce ta jedna rzecz sprawia, \u017ce \u200b\u200bca\u0142a moja \u0142azienka pachnie tak \u015bwie\u017co? Z Ambi Pur to takie proste! Wypr\u00f3buj, a poczujesz r\u00f3\u017cnic\u0119! Jak to mo\u017cliwe, \u017ce ta jedna rzecz sprawia, \u017ce \u200b\u200bca\u0142a moja \u0142azienka pachnie tak \u015bwie\u017co? Z Ambi Pur to takie proste! Wypr\u00f3buj, a poczuje"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-07-01",
+   "ads": 2,
+   "reach": 1750000,
+   "copy": "From credit building to first-time homebuying, JPMorganChase offers free workshops to help Iowans reach their financial goals. From credit building to first-time homebuying, JPMorganChase offers free workshops to help Iowans reach their financial goals."
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-07-28",
+   "ads": 1,
+   "reach": 1649999,
+   "copy": "Together with JPMorganChase, On Lok CEO Grace is helping Bay Area seniors live independently \ud83e\udd1d Together with JPMorganChase, On Lok CEO Grace is helping Bay Area seniors live independently \ud83e\udd1d Together with JPMorganChase, On Lok CEO Grace is helping Bay Area seniors live independent"
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-16",
+   "ads": 1,
+   "reach": 1604944,
+   "copy": "Ambi Pur wprowadza do mojego domu prawdziwie zimowy klimat. Teraz wszystko jest gotowe! Przekonaj si\u0119 sam! Ambi Pur wprowadza do mojego domu prawdziwie zimowy klimat. Teraz wszystko jest gotowe! Przekonaj si\u0119 sam!"
+  },
+  {
+   "ticker": "PFE",
+   "area": "HLTH",
+   "page": "Pfizer",
+   "brand": "Pfizer",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2025-10-24",
+   "ads": 1,
+   "reach": 1425000,
+   "copy": "Patients deserve timely treatment. Roadblocks and delays put patients last. It\u2019s time to fix prior authorization. Patients deserve timely treatment. Roadblocks and delays put patients last. It\u2019s time to fix prior authorization. Patients deserve timely treatment. Roadblocks and de"
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-16",
+   "ads": 1,
+   "reach": 1395653,
+   "copy": "Je\u015bli uwielbiasz ciep\u0142e, waniliowe zapachy, te produkty Ambi Pur mog\u0105 skra\u015b\u0107 twoje serce... Je\u015bli uwielbiasz ciep\u0142e, waniliowe zapachy, te produkty Ambi Pur mog\u0105 skra\u015b\u0107 twoje serce..."
+  },
+  {
+   "ticker": "PG",
+   "area": "STPL",
+   "page": "Procter and Gamble Polska",
+   "brand": "Procter and Gamble",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-10-21",
+   "ads": 1,
+   "reach": 1153346,
+   "copy": "To tylko ja, w drodze, by wymieni\u0107 m\u00f3j Ambi Pur! Teraz u\u017cywam zapachu Spring Awakening, ale mam ju\u017c zapas Flowers and Spring. To tylko ja, w drodze, by wymieni\u0107 m\u00f3j Ambi Pur! Teraz u\u017cywam zapachu Spring Awakening, ale mam ju\u017c zapas Flowers and Spring."
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "J.P. Morgan",
+   "brand": "JPMorgan Chase",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-17",
+   "ads": 1,
+   "reach": 1144168,
+   "copy": "Strong economies depend on secure, resilient supply chains. Jay Horine, global head of JPMorganChase\u2019s Security and Resiliency Initiative, is advancing SRI\u2019s $1.5 trillion-dollar plan to facilitate, finance and invest in companies driving progress across five strategic focus area"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-07-01",
+   "ads": 1,
+   "reach": 1124999,
+   "copy": "For over 135 years, JPMorganChase has invested in the economic growth of Los Angeles to help create jobs, support business and help communities thrive. For over 135 years, JPMorganChase has invested in the economic growth of Los Angeles to help create jobs, support business and h"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "J.P. Morgan",
+   "brand": "JPMorgan Chase",
+   "market": "EU",
+   "scope": "eu_all",
+   "started": "2026-11-17",
+   "ads": 1,
+   "reach": 1033473,
+   "copy": "Financing windows are wide open. \n \nBrian Tramontozzi, Head of North America Leveraged Finance Capital Markets, shares what he\u2019s seeing across high yield bonds, leveraged loans, and sponsor finance as markets look toward 2027."
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-08-03",
+   "ads": 1,
+   "reach": 1000000,
+   "copy": "More keys, more neighbors. JPMorganChase helps more people become homeowners, which builds wealth and community. See how. More keys, more neighbors. JPMorganChase helps more people become homeowners, which builds wealth and community. See how. More keys, more neighbors. JPMorganC"
+  },
+  {
+   "ticker": "JPM",
+   "area": "FINL",
+   "page": "JPMorganChase",
+   "brand": "JPMorgan Chase",
+   "market": "US",
+   "scope": "us_issue",
+   "started": "2026-08-10",
+   "ads": 1,
+   "reach": 1000000,
+   "copy": "Small businesses, representing over 99% of businesses in Georgia, are the backbone of the state\u2019s economy. JPMorganChase serves more than 160,000 small-business customers in Greater Atlanta, providing them with credit, capital, and expertise to help them grow and thrive. \n\nAs res"
+  }
+ ],
+ "keywords": [
+  {
+   "term": "ambi",
+   "ads": 19,
+   "reach": 87186662,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "pur",
+   "ads": 19,
+   "reach": 87186662,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "for",
+   "ads": 47,
+   "reach": 44232327,
+   "lift": 1.4,
+   "leaning": "KO"
+  },
+  {
+   "term": "go\u015bci",
+   "ads": 2,
+   "reach": 43586223,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "si\u0119",
+   "ads": 10,
+   "reach": 43265909,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "dom",
+   "ads": 10,
+   "reach": 39216248,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "m\u00f3j",
+   "ads": 7,
+   "reach": 36839460,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "przekonaj",
+   "ads": 5,
+   "reach": 36114369,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "sam",
+   "ads": 5,
+   "reach": 36114369,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "gotowy",
+   "ads": 4,
+   "reach": 32904481,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "rossmann",
+   "ads": 4,
+   "reach": 29106919,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "wypr\u00f3buj",
+   "ads": 3,
+   "reach": 28267622,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "ciep\u0142e",
+   "ads": 2,
+   "reach": 26540118,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "zapachy",
+   "ads": 2,
+   "reach": 26540118,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "pachnie",
+   "ads": 4,
+   "reach": 25357043,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "drogeriach",
+   "ads": 2,
+   "reach": 24699671,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "dost\u0119pne",
+   "ads": 2,
+   "reach": 23911398,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "zimne",
+   "ads": 1,
+   "reach": 23748812,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "dni",
+   "ads": 1,
+   "reach": 23748812,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "od\u015bwie\u017cacze",
+   "ads": 1,
+   "reach": 23748812,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "helping",
+   "ads": 11,
+   "reach": 23239476,
+   "lift": 3.8,
+   "leaning": "JPM"
+  },
+  {
+   "term": "zawsze",
+   "ads": 3,
+   "reach": 22374600,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "mog\u0119",
+   "ads": 2,
+   "reach": 22247684,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "across",
+   "ads": 14,
+   "reach": 21839912,
+   "lift": 2.61,
+   "leaning": "JPM"
+  },
+  {
+   "term": "chc\u0119",
+   "ads": 3,
+   "reach": 21669583,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "przyjmowa\u0107",
+   "ads": 2,
+   "reach": 21338539,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "pi\u0119knie",
+   "ads": 2,
+   "reach": 21338539,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "building",
+   "ads": 7,
+   "reach": 19284768,
+   "lift": 3.73,
+   "leaning": "JPM"
+  },
+  {
+   "term": "stadiums",
+   "ads": 5,
+   "reach": 18621479,
+   "lift": 5.22,
+   "leaning": "JPM"
+  },
+  {
+   "term": "help",
+   "ads": 35,
+   "reach": 18079506,
+   "lift": 1.67,
+   "leaning": "XOM"
+  },
+  {
+   "term": "patients",
+   "ads": 8,
+   "reach": 17784920,
+   "lift": 6.53,
+   "leaning": "PFE"
+  },
+  {
+   "term": "investing",
+   "ads": 8,
+   "reach": 16301142,
+   "lift": 4.57,
+   "leaning": "JPM"
+  },
+  {
+   "term": "economies",
+   "ads": 4,
+   "reach": 15915648,
+   "lift": 5.23,
+   "leaning": "JPM"
+  },
+  {
+   "term": "small",
+   "ads": 8,
+   "reach": 15873876,
+   "lift": 4.57,
+   "leaning": "JPM"
+  },
+  {
+   "term": "play",
+   "ads": 33,
+   "reach": 15202300,
+   "lift": 5.43,
+   "leaning": "KO"
+  },
+  {
+   "term": "local",
+   "ads": 7,
+   "reach": 15173394,
+   "lift": 2.99,
+   "leaning": "JPM"
+  },
+  {
+   "term": "klimat",
+   "ads": 4,
+   "reach": 15065796,
+   "lift": 8.04,
+   "leaning": "PG"
+  },
+  {
+   "term": "country",
+   "ads": 4,
+   "reach": 14796478,
+   "lift": 3.92,
+   "leaning": "JPM"
+  },
+  {
+   "term": "bigger",
+   "ads": 4,
+   "reach": 14777094,
+   "lift": 3.92,
+   "leaning": "JPM"
+  },
+  {
+   "term": "sports",
+   "ads": 3,
+   "reach": 14771480,
+   "lift": 5.22,
+   "leaning": "JPM"
+  }
+ ]
+}
