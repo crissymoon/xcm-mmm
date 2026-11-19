@@ -76,7 +76,7 @@ CELLS = [
 
 > **{disclaimer()}**
 
-The notebook does four things and asserts each one, because all four are things
+The notebook does five things and asserts each one, because all five are things
 people get wrong when they ship a compiled tool to Kaggle.
 
 1. **A dataset file arrives without the executable bit** and `/kaggle/input` is
@@ -93,6 +93,10 @@ people get wrong when they ship a compiled tool to Kaggle.
    flags, exactly as they do in the repository.
 4. **No network is needed.** The kernel metadata sets `enable_internet: false`
    and every command below is a local run.
+5. **The binary can name its own origin.** `xcm-mmm provenance --json` reports
+   the commit, target and toolchain compiled in by `build.rs`, and the notebook
+   hashes the file and compares it with the record shipped beside it. A hash in
+   a card is a receipt; the same hash recomputed by the consumer is evidence.
 
 The numeric half of the notebook treats the binary as a worker: a synthetic
 panel is written, split into shards, scored by parallel `forecast` runs, and the
@@ -140,9 +144,9 @@ instead of assuming that blocked folds are always required.
 | can the artefact be trusted? | Reproducible Builds; the Cargo and rustc references | a byte identical rebuild, a build id, and a hash the notebook recomputes |
 
 The full list, with links, is `README/DOCS/RESEARCH.md` in the repository and is
-repeated at the end of this notebook. The provenance of the binary this run used
-is not a citation: it is printed two cells from here and asserted against the
-copy the dataset shipped.
+repeated at the end of this notebook. The provenance of the binary this run uses
+is not a citation: it is printed in the provenance section below and asserted
+against the record the dataset shipped.
 """),
     ("code", """
 import hashlib
