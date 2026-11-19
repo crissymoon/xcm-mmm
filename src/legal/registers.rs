@@ -20,12 +20,14 @@
 //! should come out plain, so a hit is a false positive and the share is a cost.
 //! Scoring both with one word would read a clean negative as a blind spot.
 //!
-//! * `covered`, at least [`MIN_ROWS`] rows and at least [`MIN_REACH`] of those
-//!   rows carrying a hit;
+//! * `covered`, at least [`MIN_ROWS`] rows from at least [`MIN_DOCS`] distinct
+//!   sources and at least [`MIN_REACH`] of those rows carrying a hit;
 //! * `thin`, rows present but fewer than [`MIN_ROWS`], so nothing is claimed
 //!   from them;
-//! * `blind`, enough rows to measure, but the glossary reaches fewer than
-//!   [`MIN_REACH`] of them;
+//! * `narrow`, enough rows, but fewer than [`MIN_DOCS`] sources carry them, so
+//!   the share describes those instruments and not the register;
+//! * `blind`, a wide enough sample that the glossary still reaches fewer than
+//!   [`MIN_REACH`] of it;
 //! * `clean`, a contrast register the glossary leaves alone;
 //! * `leaky`, a contrast register where the glossary fires on more than
 //!   [`MAX_LEAK`] of the rows;
@@ -33,7 +35,9 @@
 //!
 //! `absent` is the interesting column. Contracts, judicial opinions,
 //! regulations and agency notices are each absent from the shipped bank, so
-//! every claim the card makes stops at the four registers it does hold.
+//! every claim the card makes stops at the four registers it does hold. The
+//! widening pass fills them in a separate file, and then `narrow` takes over
+//! the same job: a register can hold 249 rows and still be four documents.
 //!
 //! The taxonomy is not invented here. LegalBench (Guha et al., 2023, 162 tasks)
 //! splits legal reasoning into six IRAC categories rather than one accuracy,
@@ -43,6 +47,12 @@
 //! own: the parties define their own terms and the clauses are negotiated, so a
 //! glossary read off statutes misses them. The list below is those registers
 //! reduced to the ones this instrument could plausibly be asked to read.
+//!
+//! A plain restatement register was declared in an earlier draft and is gone.
+//! No source in the bank begins with `plain`, so it could only ever report
+//! `absent`, and a contrast register that no corpus can ever fill takes a line
+//! in the table without measuring anything. The plain side is the ad copy and
+//! the court self-help pages, which hold real text.
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -56,6 +66,10 @@ use super::translate::{words, Legal};
 
 /// Rows a register needs before a share over it means anything.
 pub const MIN_ROWS: usize = 100;
+/// Distinct sources a target register needs before a share over it describes
+/// the register. A hundred rows cut from four opinions is a share over four
+/// opinions, and the sentence count hides that while the source count does not.
+pub const MIN_DOCS: usize = 20;
 /// Share of rows the glossary must touch for a target register to count as read.
 pub const MIN_REACH: f64 = 0.20;
 /// Share of contrast rows a hit may land on before the scan is called leaky.
@@ -142,12 +156,6 @@ pub const REGISTERS: &[Register] = &[
         role: Role::Target,
         note: "notices, bulletins and forms that tell a person what to do next",
     },
-    Register {
-        name: "plain-summary",
-        markers: &["plain"],
-        role: Role::Contrast,
-        note: "plain restatements, the reference side of a pair",
-    },
 ];
 
 /// One bank row, narrowed to what the audit needs.
@@ -188,6 +196,9 @@ pub struct Row {
     pub role: String,
     pub note: String,
     pub rows: usize,
+    /// Distinct sources the rows come from. A register can be long and still
+    /// be one document, and this is the column that shows it.
+    pub documents: usize,
     pub legal: usize,
     pub plain: usize,
     pub words: usize,
@@ -209,10 +220,18 @@ pub struct Coverage {
     pub absent: Vec<String>,
     pub blind: Vec<String>,
     pub thin: Vec<String>,
+    /// Registers with enough rows but too few distinct sources to speak for
+    /// themselves. Their rows still count in the bank and in `reach`, and the
+    /// share over them describes those sources.
+    pub narrow: Vec<String>,
+    /// Target registers with enough rows and enough sources behind them.
+    pub held: Vec<String>,
     /// Contrast registers the glossary fires on too often.
     pub leaky: Vec<String>,
     /// The share of target rows the glossary touches. The instrument's reach
     /// over drafting, with the negative side left out of the denominator.
+    /// Rows in `narrow` registers are counted here, because the glossary did
+    /// read them; what they cannot carry is a claim about the register.
     pub reach: f64,
     /// The share of contrast rows the glossary touches: the false positive
     /// cost of scanning copy that is already plain.
@@ -321,11 +340,14 @@ impl Coverage {
         );
 
         let mut unmapped: std::collections::BTreeSet<String> = Default::default();
+        let mut sources: BTreeMap<&'static str, std::collections::BTreeSet<&str>> =
+            Default::default();
         for entry in bank {
             let name = classify(&entry.source);
             if name == "unclassified" {
                 unmapped.insert(entry.source.trim().to_string());
             }
+            sources.entry(name).or_default().insert(entry.source.trim());
             let row = buckets.entry(name).or_default();
             row.rows += 1;
             if entry.label {
@@ -346,10 +368,14 @@ impl Coverage {
 
         let mut rows: Vec<Row> = buckets.into_values().collect();
         for row in &mut rows {
+            row.documents = sources
+                .get(row.register.as_str())
+                .map(|set| set.len())
+                .unwrap_or(0);
             if row.words > 0 {
                 row.hits_per_100 = round4(row.hits as f64 * 100.0 / row.words as f64);
             }
-            row.verdict = verdict(row.rows, row.reached, &row.role).to_string();
+            row.verdict = verdict(row.rows, row.documents, row.reached, &row.role).to_string();
         }
         // An empty mapping bucket is not a register with no text: it is a table
         // with nothing to complain about, and it should not take a line.
@@ -361,10 +387,17 @@ impl Coverage {
         rows.retain(|row| row.verdict != "none");
         let (reached, total) = tally(&rows, "target");
         let (leaked, contrast) = tally(&rows, "contrast");
+        let held: Vec<String> = rows
+            .iter()
+            .filter(|row| row.role == "target" && row.verdict == "covered")
+            .map(|row| row.register.clone())
+            .collect();
         Ok(Self {
             absent: collect(&rows, "absent"),
             blind: collect(&rows, "blind"),
             thin: collect(&rows, "thin"),
+            narrow: collect(&rows, "narrow"),
+            held,
             leaky: collect(&rows, "leaky"),
             reach: round4(reached as f64 / total.max(1) as f64),
             leak: round4(leaked as f64 / contrast.max(1) as f64),
@@ -393,6 +426,14 @@ impl Coverage {
                 note(name)
             ));
         }
+        for name in &self.narrow {
+            let count = self.pick(name).map(|row| row.documents).unwrap_or(0);
+            let rows = self.pick(name).map(|row| row.rows).unwrap_or(0);
+            out.push(format!(
+                "add {name} sources: {count} source{} carry all {rows} rows, so the share describes those documents",
+                if count == 1 { "" } else { "s" }
+            ));
+        }
         for name in &self.blind {
             out.push(format!(
                 "add {name} words: the glossary reaches under {:.0} percent of its rows",
@@ -419,11 +460,16 @@ impl Coverage {
     pub fn gaps(&self) -> Vec<String> {
         self.absent
             .iter()
-            .chain(self.blind.iter())
             .chain(self.thin.iter())
+            .chain(self.narrow.iter())
+            .chain(self.blind.iter())
             .filter(|name| is_target(name))
             .cloned()
             .collect()
+    }
+
+    fn pick(&self, register: &str) -> Option<&Row> {
+        self.rows.iter().find(|row| row.register == register)
     }
 
     pub fn render(&self) -> String {
@@ -436,15 +482,25 @@ impl Coverage {
             self.leak * 100.0
         ));
         lines.push(format!(
-            "{:<14} {:>8} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7} {:>11}",
-            "register", "role", "rows", "legal", "plain", "reached", "hits", "per100", "verdict"
+            "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7} {:>11}",
+            "register",
+            "role",
+            "rows",
+            "docs",
+            "legal",
+            "plain",
+            "reached",
+            "hits",
+            "per100",
+            "verdict"
         ));
         for row in &self.rows {
             lines.push(format!(
-                "{:<14} {:>8} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7.2} {:>11}",
+                "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7.2} {:>11}",
                 row.register,
                 row.role,
                 row.rows,
+                row.documents,
                 row.legal,
                 row.plain,
                 row.reached,
@@ -453,6 +509,34 @@ impl Coverage {
                 row.verdict
             ));
         }
+        let targets = REGISTERS
+            .iter()
+            .filter(|register| register.role == Role::Target)
+            .count();
+        let narrow: Vec<String> = self
+            .narrow
+            .iter()
+            .map(|name| {
+                format!(
+                    "{name} {}",
+                    self.pick(name).map(|row| row.documents).unwrap_or(0)
+                )
+            })
+            .collect();
+        lines.push(format!(
+            "sample: {} of {targets} target registers {} at least {MIN_DOCS} sources{}",
+            self.held.len(),
+            if self.held.len() == 1 {
+                "carries"
+            } else {
+                "carry"
+            },
+            if narrow.is_empty() {
+                String::new()
+            } else {
+                format!("; narrow: {}", narrow.join(", "))
+            }
+        ));
         for advice in self.widen() {
             lines.push(format!("widen: {advice}"));
         }
@@ -477,9 +561,15 @@ impl Coverage {
     }
 }
 
-/// The verdict for one register: how many rows it holds, how many of those the
-/// glossary reached, and what a hit there means.
-pub fn verdict(rows: usize, reached: usize, role: &str) -> &'static str {
+/// The verdict for one register: how many rows it holds, how many distinct
+/// sources carry them, how many rows the glossary reached, and what a hit there
+/// means.
+///
+/// `narrow` outranks `blind` for a target register. A share over four opinions
+/// cannot say whether the glossary is blind to judicial reasoning or whether
+/// those four opinions are unusual, so the honest next step is more opinions
+/// rather than more words. Once the sample is wide, `blind` means what it says.
+pub fn verdict(rows: usize, documents: usize, reached: usize, role: &str) -> &'static str {
     // A mapping bucket is never a register, so the row floor says nothing
     // about it: it is a table fault when it holds rows and absent when it does.
     if role == "unmapped" {
@@ -501,7 +591,9 @@ pub fn verdict(rows: usize, reached: usize, role: &str) -> &'static str {
             }
         }
         _ => {
-            if share < MIN_REACH {
+            if documents < MIN_DOCS {
+                "narrow"
+            } else if share < MIN_REACH {
                 "blind"
             } else {
                 "covered"
@@ -616,26 +708,29 @@ mod tests {
 
     #[test]
     fn a_register_with_no_rows_is_absent_before_anything_else() {
-        assert_eq!(verdict(0, 0, "target"), "absent");
-        assert_eq!(verdict(0, 0, "contrast"), "absent");
+        assert_eq!(verdict(0, 0, 0, "target"), "absent");
+        assert_eq!(verdict(0, 0, 0, "contrast"), "absent");
     }
 
     #[test]
     fn a_register_below_the_row_floor_is_thin_rather_than_scored() {
-        assert_eq!(verdict(MIN_ROWS - 1, MIN_ROWS - 1, "target"), "thin");
-        assert_eq!(verdict(MIN_ROWS - 1, 0, "contrast"), "thin");
+        assert_eq!(
+            verdict(MIN_ROWS - 1, MIN_DOCS, MIN_ROWS - 1, "target"),
+            "thin"
+        );
+        assert_eq!(verdict(MIN_ROWS - 1, 1, 0, "contrast"), "thin");
     }
 
     #[test]
     fn a_mapping_bucket_is_judged_by_the_table_and_not_by_the_row_floor() {
-        assert_eq!(verdict(0, 0, "unmapped"), "none");
-        assert_eq!(verdict(3, 2, "unmapped"), "unmapped");
+        assert_eq!(verdict(0, 0, 0, "unmapped"), "none");
+        assert_eq!(verdict(3, 1, 2, "unmapped"), "unmapped");
     }
 
     #[test]
     fn an_unmapped_source_is_a_table_fault_and_not_a_language_gap() {
         let coverage = Coverage {
-            rows: vec![row("unclassified", "unmapped", "unmapped")],
+            rows: vec![row("unclassified", "unmapped", "unmapped", 1)],
             unmapped: vec!["random-crawl".to_string()],
             ..Default::default()
         };
@@ -647,40 +742,59 @@ mod tests {
 
     #[test]
     fn a_target_register_is_blind_when_the_glossary_rarely_reaches_it() {
-        assert_eq!(verdict(1000, 100, "target"), "blind");
-        assert_eq!(verdict(1000, MIN_ROWS * 2, "target"), "covered");
+        assert_eq!(verdict(1000, MIN_DOCS, 100, "target"), "blind");
+        assert_eq!(verdict(1000, MIN_DOCS, MIN_ROWS * 2, "target"), "covered");
     }
 
     #[test]
     fn a_contrast_register_is_clean_when_the_glossary_leaves_it_alone() {
-        assert_eq!(verdict(1000, 10, "contrast"), "clean");
-        assert_eq!(verdict(1000, 500, "contrast"), "leaky");
+        assert_eq!(verdict(1000, 1, 10, "contrast"), "clean");
+        assert_eq!(verdict(1000, 1, 500, "contrast"), "leaky");
     }
 
-    fn row(name: &str, role: &str, verdict: &str) -> Row {
+    fn row(name: &str, role: &str, verdict: &str, documents: usize) -> Row {
         Row {
             register: name.to_string(),
             role: role.to_string(),
             verdict: verdict.to_string(),
+            documents,
             ..Default::default()
         }
     }
 
     #[test]
+    fn a_target_register_is_narrow_when_few_sources_carry_its_rows() {
+        // Four F.3d opinions, 249 sentences, 62 reached: a real share over four
+        // documents, and not a claim about judicial reasoning.
+        assert_eq!(verdict(249, 4, 62, "target"), "narrow");
+        // 137 rules, 674 sentences, 172 reached: the sample can speak.
+        assert_eq!(verdict(674, 137, 172, "target"), "covered");
+    }
+
+    #[test]
+    fn narrow_outranks_blind_because_few_documents_cannot_show_which_fault_it_is() {
+        assert_eq!(verdict(249, 4, 0, "target"), "narrow");
+        assert_eq!(verdict(249, MIN_DOCS, 0, "target"), "blind");
+    }
+
+    #[test]
     fn the_gap_list_holds_target_registers_and_not_the_plain_side() {
+        let mut contract = row("contract", "target", "narrow", 13);
+        contract.rows = 247;
         let coverage = Coverage {
             rows: vec![
-                row("contract", "target", "absent"),
-                row("court-rule", "target", "covered"),
-                row("plain-summary", "contrast", "absent"),
-                row("ad-copy", "contrast", "clean"),
+                contract,
+                row("court-rule", "target", "covered", 137),
+                row("ad-copy", "contrast", "absent", 0),
             ],
-            absent: vec!["contract".to_string(), "plain-summary".to_string()],
+            absent: vec!["ad-copy".to_string()],
+            narrow: vec!["contract".to_string()],
             ..Default::default()
         };
         assert_eq!(coverage.gaps(), vec!["contract".to_string()]);
         let advice = coverage.widen();
         assert_eq!(advice.len(), 1, "{advice:?}");
         assert!(advice[0].contains("contract"), "{advice:?}");
+        assert!(advice[0].contains("13 sources"), "{advice:?}");
     }
 }

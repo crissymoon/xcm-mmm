@@ -821,7 +821,7 @@ fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
     let gaps = split.as_ref().map(|split| split.gaps()).unwrap_or_default();
     if !gaps.is_empty() {
         warnings.push(format!(
-            "{} target register{} absent, thin or blind, so nothing is claimed there: {}",
+            "{} target register{} absent, thin, narrow or blind, so nothing is claimed there: {}",
             gaps.len(),
             if gaps.len() == 1 { " is" } else { "s are" },
             gaps.join(", ")
