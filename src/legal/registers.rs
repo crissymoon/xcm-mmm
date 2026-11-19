@@ -10,8 +10,11 @@
 //! scans every row with the shipped glossary, and reports three things per
 //! register: how many rows exist, how many of them the glossary touches at all,
 //! and which term kinds it fires. A register with no rows is not measured. A
-//! register with rows that the glossary never touches is blind, and the fix is
-//! words, not code.
+//! register with rows that the glossary never touches has one of two faults,
+//! and the report separates them: the word list is missing its vocabulary, or
+//! the rows are single sentences and most of them carry no wordy phrasing at
+//! all. The first is fixed with words, the second is not a fault in the
+//! instrument.
 //!
 //! The verdicts are deliberately coarse, and each one carries its threshold:
 //!
@@ -26,8 +29,14 @@
 //!   from them;
 //! * `narrow`, enough rows, but fewer than [`MIN_DOCS`] sources carry them, so
 //!   the share describes those instruments and not the register;
-//! * `blind`, a wide enough sample that the glossary still reaches fewer than
-//!   [`MIN_REACH`] of it;
+//! * `sparse`, a wide enough sample the glossary reaches fewer than
+//!   [`MIN_REACH`] of, but at least [`MIN_AVOIDABLE`] avoidable terms per 100
+//!   words, so the text does carry drafting the instrument can remove and the
+//!   row share is low because most rows are sentences with none, not because
+//!   the words are missing;
+//! * `blind`, a wide enough sample where both the row share is under
+//!   [`MIN_REACH`] and the avoidable density is under [`MIN_AVOIDABLE`], so the
+//!   glossary has nothing to say about the register at all;
 //! * `clean`, a contrast register the glossary leaves alone;
 //! * `leaky`, a contrast register where the glossary fires on more than
 //!   [`MAX_LEAK`] of the rows;
@@ -72,6 +81,19 @@ pub const MIN_ROWS: usize = 100;
 pub const MIN_DOCS: usize = 20;
 /// Share of rows the glossary must touch for a target register to count as read.
 pub const MIN_REACH: f64 = 0.20;
+/// Avoidable terms per 100 words below which drafting is not there to remove.
+///
+/// The row share answers "does the glossary see this register at all", and it
+/// is the right question for a bank of clauses, where a clause without a term
+/// is unusual. It is the wrong question for a bank of single sentences: a
+/// sentence of judicial reasoning often holds no wordy phrasing, so the share
+/// falls with the sentence style rather than with the word list. Density over
+/// words is not sensitive to that. The two contrast registers, copy and legal
+/// content already written for a lay reader, both measure 0.09; every drafting
+/// register measures at or above 0.78, so three times the plain baseline is a
+/// floor that separates the plain side from the drafting side with room to
+/// spare.
+pub const MIN_AVOIDABLE: f64 = 0.20;
 /// Share of contrast rows a hit may land on before the scan is called leaky.
 pub const MAX_LEAK: f64 = 0.10;
 
@@ -206,6 +228,11 @@ pub struct Row {
     pub reached: usize,
     pub hits: usize,
     pub hits_per_100: f64,
+    /// Hits the rewrite would actually remove: avoidable terms outside a
+    /// quotation or a citation. A citation is not wordiness, and a rule inside
+    /// a quoted holding is not the court's own drafting.
+    pub avoidable_hits: usize,
+    pub avoidable_per_100: f64,
     /// Term kinds the glossary fired here, with counts.
     pub kinds: BTreeMap<String, usize>,
     pub verdict: String,
@@ -219,6 +246,10 @@ pub struct Coverage {
     /// Registers with no rows in this bank, in declaration order.
     pub absent: Vec<String>,
     pub blind: Vec<String>,
+    /// Target registers the glossary reads at a normal density while touching
+    /// few rows, because their rows are single sentences and most carry no
+    /// drafting. Not a gap: the words are there to remove.
+    pub sparse: Vec<String>,
     pub thin: Vec<String>,
     /// Registers with enough rows but too few distinct sources to speak for
     /// themselves. Their rows still count in the bank and in `reach`, and the
@@ -361,6 +392,11 @@ impl Coverage {
                 row.reached += 1;
             }
             row.hits += scan.terms.len();
+            row.avoidable_hits += scan
+                .terms
+                .iter()
+                .filter(|term| term.avoidable && !term.in_citation)
+                .count();
             for term in &scan.terms {
                 *row.kinds.entry(term.kind.clone()).or_default() += 1;
             }
@@ -374,8 +410,17 @@ impl Coverage {
                 .unwrap_or(0);
             if row.words > 0 {
                 row.hits_per_100 = round4(row.hits as f64 * 100.0 / row.words as f64);
+                row.avoidable_per_100 =
+                    round4(row.avoidable_hits as f64 * 100.0 / row.words as f64);
             }
-            row.verdict = verdict(row.rows, row.documents, row.reached, &row.role).to_string();
+            row.verdict = verdict(
+                row.rows,
+                row.documents,
+                row.reached,
+                row.avoidable_per_100,
+                &row.role,
+            )
+            .to_string();
         }
         // An empty mapping bucket is not a register with no text: it is a table
         // with nothing to complain about, and it should not take a line.
@@ -395,6 +440,7 @@ impl Coverage {
         Ok(Self {
             absent: collect(&rows, "absent"),
             blind: collect(&rows, "blind"),
+            sparse: collect(&rows, "sparse"),
             thin: collect(&rows, "thin"),
             narrow: collect(&rows, "narrow"),
             held,
@@ -436,8 +482,19 @@ impl Coverage {
         }
         for name in &self.blind {
             out.push(format!(
-                "add {name} words: the glossary reaches under {:.0} percent of its rows",
+                "add {name} words: the glossary reaches under {:.0} percent of its rows and under {MIN_AVOIDABLE:.2} avoidable terms per 100 words",
                 MIN_REACH * 100.0
+            ));
+        }
+        for name in &self.sparse {
+            let row = self.pick(name);
+            let density = row.map(|row| row.avoidable_per_100).unwrap_or(0.0);
+            let share = row
+                .map(|row| row.reached as f64 / row.rows.max(1) as f64)
+                .unwrap_or(0.0);
+            out.push(format!(
+                "read {name} sentences: {density:.2} avoidable terms per 100 words and {:.0} percent of rows, so the rows are single sentences rather than a gap in the word list",
+                share * 100.0
             ));
         }
         for name in &self.thin {
@@ -482,7 +539,7 @@ impl Coverage {
             self.leak * 100.0
         ));
         lines.push(format!(
-            "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7} {:>11}",
+            "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7} {:>7} {:>11}",
             "register",
             "role",
             "rows",
@@ -492,11 +549,12 @@ impl Coverage {
             "reached",
             "hits",
             "per100",
+            "av/100",
             "verdict"
         ));
         for row in &self.rows {
             lines.push(format!(
-                "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7.2} {:>11}",
+                "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7.2} {:>7.2} {:>11}",
                 row.register,
                 row.role,
                 row.rows,
@@ -506,6 +564,7 @@ impl Coverage {
                 row.reached,
                 row.hits,
                 row.hits_per_100,
+                row.avoidable_per_100,
                 row.verdict
             ));
         }
@@ -569,7 +628,13 @@ impl Coverage {
 /// cannot say whether the glossary is blind to judicial reasoning or whether
 /// those four opinions are unusual, so the honest next step is more opinions
 /// rather than more words. Once the sample is wide, `blind` means what it says.
-pub fn verdict(rows: usize, documents: usize, reached: usize, role: &str) -> &'static str {
+pub fn verdict(
+    rows: usize,
+    documents: usize,
+    reached: usize,
+    avoidable_per_100: f64,
+    role: &str,
+) -> &'static str {
     // A mapping bucket is never a register, so the row floor says nothing
     // about it: it is a table fault when it holds rows and absent when it does.
     if role == "unmapped" {
@@ -594,7 +659,11 @@ pub fn verdict(rows: usize, documents: usize, reached: usize, role: &str) -> &'s
             if documents < MIN_DOCS {
                 "narrow"
             } else if share < MIN_REACH {
-                "blind"
+                if avoidable_per_100 < MIN_AVOIDABLE {
+                    "blind"
+                } else {
+                    "sparse"
+                }
             } else {
                 "covered"
             }
@@ -708,23 +777,23 @@ mod tests {
 
     #[test]
     fn a_register_with_no_rows_is_absent_before_anything_else() {
-        assert_eq!(verdict(0, 0, 0, "target"), "absent");
-        assert_eq!(verdict(0, 0, 0, "contrast"), "absent");
+        assert_eq!(verdict(0, 0, 0, 0.0, "target"), "absent");
+        assert_eq!(verdict(0, 0, 0, 0.0, "contrast"), "absent");
     }
 
     #[test]
     fn a_register_below_the_row_floor_is_thin_rather_than_scored() {
         assert_eq!(
-            verdict(MIN_ROWS - 1, MIN_DOCS, MIN_ROWS - 1, "target"),
+            verdict(MIN_ROWS - 1, MIN_DOCS, MIN_ROWS - 1, 0.0, "target"),
             "thin"
         );
-        assert_eq!(verdict(MIN_ROWS - 1, 1, 0, "contrast"), "thin");
+        assert_eq!(verdict(MIN_ROWS - 1, 1, 0, 0.0, "contrast"), "thin");
     }
 
     #[test]
     fn a_mapping_bucket_is_judged_by_the_table_and_not_by_the_row_floor() {
-        assert_eq!(verdict(0, 0, 0, "unmapped"), "none");
-        assert_eq!(verdict(3, 1, 2, "unmapped"), "unmapped");
+        assert_eq!(verdict(0, 0, 0, 0.0, "unmapped"), "none");
+        assert_eq!(verdict(3, 1, 2, 0.0, "unmapped"), "unmapped");
     }
 
     #[test]
@@ -742,14 +811,28 @@ mod tests {
 
     #[test]
     fn a_target_register_is_blind_when_the_glossary_rarely_reaches_it() {
-        assert_eq!(verdict(1000, MIN_DOCS, 100, "target"), "blind");
-        assert_eq!(verdict(1000, MIN_DOCS, MIN_ROWS * 2, "target"), "covered");
+        assert_eq!(verdict(1000, MIN_DOCS, 100, 0.0, "target"), "blind");
+        assert_eq!(
+            verdict(1000, MIN_DOCS, MIN_ROWS * 2, 0.0, "target"),
+            "covered"
+        );
+    }
+
+    #[test]
+    fn a_register_of_single_sentences_is_sparse_when_the_density_is_normal() {
+        // 250 opinion sentences, 74 sources, 45 reached, 0.78 avoidable terms
+        // per 100 words: court rules measure 0.78 too, so the words are there
+        // and the row share is low because most sentences carry none.
+        assert_eq!(verdict(250, 74, 45, 0.78, "target"), "sparse");
+        // The same rows with the density of the self-help pages are a gap in
+        // the word list, not a sentence style.
+        assert_eq!(verdict(250, 74, 45, 0.06, "target"), "blind");
     }
 
     #[test]
     fn a_contrast_register_is_clean_when_the_glossary_leaves_it_alone() {
-        assert_eq!(verdict(1000, 1, 10, "contrast"), "clean");
-        assert_eq!(verdict(1000, 1, 500, "contrast"), "leaky");
+        assert_eq!(verdict(1000, 1, 10, 0.0, "contrast"), "clean");
+        assert_eq!(verdict(1000, 1, 500, 0.0, "contrast"), "leaky");
     }
 
     fn row(name: &str, role: &str, verdict: &str, documents: usize) -> Row {
@@ -766,15 +849,15 @@ mod tests {
     fn a_target_register_is_narrow_when_few_sources_carry_its_rows() {
         // Four F.3d opinions, 249 sentences, 62 reached: a real share over four
         // documents, and not a claim about judicial reasoning.
-        assert_eq!(verdict(249, 4, 62, "target"), "narrow");
+        assert_eq!(verdict(249, 4, 62, 0.0, "target"), "narrow");
         // 137 rules, 674 sentences, 172 reached: the sample can speak.
-        assert_eq!(verdict(674, 137, 172, "target"), "covered");
+        assert_eq!(verdict(674, 137, 172, 0.0, "target"), "covered");
     }
 
     #[test]
     fn narrow_outranks_blind_because_few_documents_cannot_show_which_fault_it_is() {
-        assert_eq!(verdict(249, 4, 0, "target"), "narrow");
-        assert_eq!(verdict(249, MIN_DOCS, 0, "target"), "blind");
+        assert_eq!(verdict(249, 4, 0, 0.0, "target"), "narrow");
+        assert_eq!(verdict(249, MIN_DOCS, 0, 0.0, "target"), "blind");
     }
 
     #[test]
