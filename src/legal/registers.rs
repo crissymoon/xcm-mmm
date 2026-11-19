@@ -94,7 +94,7 @@ pub const REGISTERS: &[Register] = &[
         name: "statute",
         markers: &[
             "usc-", "ca-ccp-", "ca-civ-", "ca-gov-", "ca-lamc-", "ca-lab-", "ca-pen-", "ca-bpc-",
-            "ca-edu-", "ca-hs-",
+            "ca-edu-", "ca-hs-", "ca-lac-",
         ],
         role: Role::Target,
         note: "codes and session law, where the definition sections live",
@@ -217,6 +217,10 @@ pub struct Coverage {
     /// The share of contrast rows the glossary touches: the false positive
     /// cost of scanning copy that is already plain.
     pub leak: f64,
+    /// Sources no marker matched, sorted. These rows are counted in the bank
+    /// total and in no register, so they are a fault in the table rather than a
+    /// gap in the language, and they are reported as one.
+    pub unmapped: Vec<String>,
 }
 
 /// Place a source in a register. The first marker that matches wins, so the
@@ -309,15 +313,19 @@ impl Coverage {
             "unclassified",
             Row {
                 register: "unclassified".to_string(),
-                role: "target".to_string(),
+                role: "unmapped".to_string(),
                 note: note("unclassified").to_string(),
-                verdict: "absent".to_string(),
+                verdict: "none".to_string(),
                 ..Default::default()
             },
         );
 
+        let mut unmapped: std::collections::BTreeSet<String> = Default::default();
         for entry in bank {
             let name = classify(&entry.source);
+            if name == "unclassified" {
+                unmapped.insert(entry.source.trim().to_string());
+            }
             let row = buckets.entry(name).or_default();
             row.rows += 1;
             if entry.label {
@@ -343,6 +351,14 @@ impl Coverage {
             }
             row.verdict = verdict(row.rows, row.reached, &row.role).to_string();
         }
+        // An empty mapping bucket is not a register with no text: it is a table
+        // with nothing to complain about, and it should not take a line.
+        let unmapped_rows: usize = rows
+            .iter()
+            .filter(|row| row.role == "unmapped")
+            .map(|row| row.rows)
+            .sum();
+        rows.retain(|row| row.verdict != "none");
         let (reached, total) = tally(&rows, "target");
         let (leaked, contrast) = tally(&rows, "contrast");
         Ok(Self {
@@ -352,7 +368,8 @@ impl Coverage {
             leaky: collect(&rows, "leaky"),
             reach: round4(reached as f64 / total.max(1) as f64),
             leak: round4(leaked as f64 / contrast.max(1) as f64),
-            bank: total + contrast,
+            bank: total + contrast + unmapped_rows,
+            unmapped: unmapped.into_iter().collect(),
             rows,
         })
     }
@@ -362,6 +379,14 @@ impl Coverage {
     /// registers the glossary cannot see.
     pub fn widen(&self) -> Vec<String> {
         let mut out = Vec::new();
+        if !self.unmapped.is_empty() {
+            out.push(format!(
+                "map {} source{} the register table does not know: {}",
+                self.unmapped.len(),
+                if self.unmapped.len() == 1 { "" } else { "s" },
+                self.unmapped.join(", ")
+            ));
+        }
         for name in self.absent.iter().filter(|name| is_target(name)) {
             out.push(format!(
                 "add {name} text: no bank row exists, so nothing is claimed ({})",
@@ -455,6 +480,11 @@ impl Coverage {
 /// The verdict for one register: how many rows it holds, how many of those the
 /// glossary reached, and what a hit there means.
 pub fn verdict(rows: usize, reached: usize, role: &str) -> &'static str {
+    // A mapping bucket is never a register, so the row floor says nothing
+    // about it: it is a table fault when it holds rows and absent when it does.
+    if role == "unmapped" {
+        return if rows == 0 { "none" } else { "unmapped" };
+    }
     if rows == 0 {
         return "absent";
     }
@@ -480,15 +510,16 @@ pub fn verdict(rows: usize, reached: usize, role: &str) -> &'static str {
     }
 }
 
-/// True when a register name is one the instrument is meant to read. A name
-/// the table does not know is treated as a target, so an unclassified source is
-/// reported as a gap rather than excused.
+/// True when a register name is one the instrument is meant to read. A target
+/// register is a gap when it is absent, thin or blind; a contrast register is
+/// the reference side, and `unclassified` is a fault in the table rather than a
+/// register, so neither is reported as a language gap.
 fn is_target(name: &str) -> bool {
     REGISTERS
         .iter()
         .find(|register| register.name == name)
         .map(|register| register.role == Role::Target)
-        .unwrap_or(true)
+        .unwrap_or(false)
 }
 
 fn role_name(role: Role) -> &'static str {
@@ -593,6 +624,25 @@ mod tests {
     fn a_register_below_the_row_floor_is_thin_rather_than_scored() {
         assert_eq!(verdict(MIN_ROWS - 1, MIN_ROWS - 1, "target"), "thin");
         assert_eq!(verdict(MIN_ROWS - 1, 0, "contrast"), "thin");
+    }
+
+    #[test]
+    fn a_mapping_bucket_is_judged_by_the_table_and_not_by_the_row_floor() {
+        assert_eq!(verdict(0, 0, "unmapped"), "none");
+        assert_eq!(verdict(3, 2, "unmapped"), "unmapped");
+    }
+
+    #[test]
+    fn an_unmapped_source_is_a_table_fault_and_not_a_language_gap() {
+        let coverage = Coverage {
+            rows: vec![row("unclassified", "unmapped", "unmapped")],
+            unmapped: vec!["random-crawl".to_string()],
+            ..Default::default()
+        };
+        assert!(coverage.gaps().is_empty(), "{:?}", coverage.gaps());
+        let advice = coverage.widen();
+        assert_eq!(advice.len(), 1, "{advice:?}");
+        assert!(advice[0].contains("random-crawl"), "{advice:?}");
     }
 
     #[test]

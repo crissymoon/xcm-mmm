@@ -827,6 +827,15 @@ fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
             gaps.join(", ")
         ));
     }
+    let unmapped = split.as_ref().map(|split| &split.unmapped);
+    if let Some(sources) = unmapped.filter(|sources| !sources.is_empty()) {
+        warnings.push(format!(
+            "{} source{} match no register in the table, so their rows are counted nowhere: {}",
+            sources.len(),
+            if sources.len() == 1 { "" } else { "s" },
+            sources.join(", ")
+        ));
+    }
 
     if args.verbose || !faults.is_empty() {
         println!(

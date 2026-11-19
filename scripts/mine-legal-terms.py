@@ -38,7 +38,7 @@ MARKERS = {
     "court-rule": ("frcp-", "frap-", "fre-", "ca-crc-", "crc-"),
     "statute": (
         "usc-", "ca-ccp-", "ca-civ-", "ca-gov-", "ca-lamc-",
-        "ca-lab-", "ca-pen-", "ca-bpc-", "ca-edu-", "ca-hs-",
+        "ca-lab-", "ca-pen-", "ca-bpc-", "ca-edu-", "ca-hs-", "ca-lac-",
     ),
     "contract": ("cuad-",),
     "regulation": ("cfr-", "ca-code-regs", "ca-reg-"),
