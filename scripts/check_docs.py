@@ -26,6 +26,11 @@ DOCS = ROOT / "README" / "DOCS"
 
 LINK = re.compile(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)")
 BAD_DASHES = ("\u2014", "\u2013")
+FIGURE = re.compile(r'show\(fig,\s*"(\d\d-[a-z0-9-]+)"')
+COUNT_WORD = {
+    1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five",
+    6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten",
+}
 
 
 def markdown_files() -> list[Path]:
@@ -112,6 +117,45 @@ def check_continuations() -> list[str]:
     return problems
 
 
+def check_notebook() -> list[str]:
+    """The kernel's prose and its figures have to name the same set.
+
+    The generator writes a table of figures in its opening cell and one
+    ``show(fig, ...)`` call per picture. Adding a figure without the table, or
+    the table without the figure, is the drift this catches; both are invisible
+    until somebody opens the notebook on Kaggle.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import nbgen  # noqa: PLC0415  (path is only set up here)
+    finally:
+        sys.path.pop(0)
+
+    problems: list[str] = []
+    code = [src for kind, src in nbgen.CELLS if kind == "code"]
+    prose = "\n".join(src for kind, src in nbgen.CELLS if kind == "markdown")
+
+    names = [name for src in code for name in FIGURE.findall(src)]
+    if len(names) != len(set(names)):
+        problems.append("notebook: a figure name is used by two cells")
+    if names != sorted(names):
+        problems.append(f"notebook: figures are written out of order: {names}")
+
+    for name in names:
+        if f"`{name}.png`" not in prose:
+            problems.append(f"notebook: {name}.png is drawn but not in the figure table")
+
+    stated = re.search(r"^(\w+) figures follow", prose, re.M)
+    if not stated:
+        problems.append("notebook: the opening cell no longer states how many figures follow")
+    elif stated.group(1) != COUNT_WORD.get(len(names)):
+        problems.append(
+            f"notebook: the opening cell says {stated.group(1)} figures, "
+            f"the cells draw {len(names)}"
+        )
+    return problems
+
+
 def main() -> int:
     files = markdown_files()
     problems: list[str] = []
@@ -120,6 +164,7 @@ def main() -> int:
         problems.extend(check_dashes(path))
     problems.extend(check_docs_index())
     problems.extend(check_continuations())
+    problems.extend(check_notebook())
 
     if problems:
         for problem in problems:

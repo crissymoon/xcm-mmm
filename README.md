@@ -356,10 +356,11 @@ Kaggle images hold no Rust toolchain and, by default, no network, so the tool ar
 ```bash
 scripts/package-kaggle.sh --push    # binary dataset
 scripts/package-models.sh --push    # artefacts dataset, staged as data/<model>/
+python3 scripts/rehearse-kernel.py          # run the panel cells here first
 python3 scripts/kaggle-notebook.py --push   # the notebook that uses both
 ```
 
-The kernel ([`crissymoon/xcm-mmm-binary-in-a-notebook`](https://www.kaggle.com/code/crissymoon/xcm-mmm-binary-in-a-notebook)) is public. It runs the binary with `enable_internet: false`, asserts each of the four claims above, and draws four figures from numbers the same run printed, saved under `charts/` and displayed inline: the nested fold skill beside selection stability, four shard forecasts as overlapping bars, the seven detector axes with the top-score distribution by split, and the emotion tiers with the neutral prior as its own bar. A research section states which source forces each methodological choice, a provenance section compares the binary's own report with the record shipped beside it and writes `provenance.json` into the output, and the references at the end carry the links.
+The kernel ([`crissymoon/xcm-mmm-binary-in-a-notebook`](https://www.kaggle.com/code/crissymoon/xcm-mmm-binary-in-a-notebook)) is public. It runs the binary with `enable_internet: false`, asserts each of the five claims above, and draws six figures from numbers the same run printed, saved under `charts/` and displayed inline: the nested fold skill beside selection stability, four shard forecasts as overlapping bars, the seven detector axes with the top-score distribution by split, the emotion tiers with the neutral prior as its own bar, the cost that holds a demand letter while it ignores a newsletter, and the reach each of the twelve topics carried, with the floor that makes the narrowest area refuse a term rank. A research section states which source forces each methodological choice, a provenance section compares the binary's own report with the record shipped beside it and writes `provenance.json` into the output, and the references at the end carry the links.
 
 `scripts/build-linux.sh` is the part that is not obvious: cross compiling from macOS fails until `rust-lld` from the musl target is named as the linker, because cargo otherwise hands the link to Apple's `cc`, which rejects every GNU flag. The result is a static-pie ELF that does not track the image's glibc.
 
