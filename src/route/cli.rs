@@ -2,10 +2,10 @@
 //!
 //! `decide` answers one message and prints every number behind the answer.
 //! `organize` runs a folder of arrivals, dry by default, and writes the ledger
-//! that makes the run auditable. Neither sends mail: a reply or a forward is
-//! written as an `eml` draft for a person or a queue to release, because a tool
-//! that decides from a score has no business also being the thing that
-//! transmits.
+//! that makes the run auditable and that the next run reads to hold the repeat
+//! window. Neither sends mail: a reply or a forward is written as an `eml`
+//! draft for a person or a queue to release, because a tool that decides from a
+//! score has no business also being the thing that transmits.
 
 use std::error::Error;
 use std::fs;
@@ -15,9 +15,10 @@ use std::path::Path;
 use crate::detect::Detector;
 use clap::{Args, Subcommand};
 
-use super::decide::{decide, forward_draft, reply_draft, Decision, Readings};
+use super::decide::{decide, forward_draft, reply_draft, Budget, Decision, Readings};
 use super::envelope::Envelope;
-use super::organize::{organize, read_arrival, Summary};
+use super::history::{unix_now, History};
+use super::organize::{organize, read_arrival, Run, Summary};
 use super::policy::{Policy, POLICY};
 
 /// Arguments for `route`.
@@ -53,6 +54,13 @@ pub struct DecideArgs {
     /// Add the legal and manipulation readings from a detector artifact.
     #[arg(long, value_name = "PATH")]
     detectors: Option<String>,
+    /// Folder an earlier `organize` wrote, read for the repeat window.
+    #[arg(long, value_name = "PATH")]
+    ledger: Option<String>,
+    /// Seconds since the epoch. Defaults to now; fixed, it makes a window check
+    /// reproducible.
+    #[arg(long, value_name = "SECONDS")]
+    at: Option<u64>,
     /// Print the reply or forward that the action would produce.
     #[arg(long)]
     draft: bool,
@@ -81,6 +89,10 @@ pub struct OrganizeArgs {
     /// Add detector readings, at the cost of one model load per file.
     #[arg(long, value_name = "PATH")]
     pub detectors: Option<String>,
+    /// Seconds since the epoch. The ledger is stamped with it and the repeat
+    /// window is measured against it.
+    #[arg(long, value_name = "SECONDS")]
+    pub at: Option<u64>,
     #[arg(long)]
     pub json: bool,
     #[arg(long, default_value = "xcm-router@localhost")]
@@ -135,7 +147,16 @@ fn decide_one(dir: &str, args: &DecideArgs) -> Result<(), Box<dyn Error>> {
         }
     };
     let readings = readings(args.detectors.as_deref(), &envelope.reading_text())?;
-    let decision = decide(&envelope, &policy, &readings, 0);
+    let now = args.at.unwrap_or_else(unix_now);
+    let since_reply_days = match &args.ledger {
+        Some(dir) => History::load(Path::new(dir))?.reply_age_days(&envelope.from_address, now),
+        None => None,
+    };
+    let budget = Budget {
+        in_run: 0,
+        since_reply_days,
+    };
+    let decision = decide(&envelope, &policy, &readings, budget);
 
     if args.json {
         let row = serde_json::json!({
@@ -151,6 +172,10 @@ fn decide_one(dir: &str, args: &DecideArgs) -> Result<(), Box<dyn Error>> {
             "drafts": {
                 "reply": reply_draft(&envelope, &decision, &policy, &args.from),
                 "forward": forward_draft(&envelope, &decision, &args.from),
+            },
+            "repeat_window": {
+                "days": policy.guards.reply_window_days,
+                "since_last_reply_days": since_reply_days,
             },
         });
         println!("{}", serde_json::to_string_pretty(&row)?);
@@ -180,14 +205,16 @@ fn organize_many(dir: &str, args: &OrganizeArgs) -> Result<(), Box<dyn Error>> {
         return Err("organize reads headers and cues only; pass --detectors to decide".into());
     }
     let policy = load(dir)?;
-    let summary = organize(
-        Path::new(&args.inbox),
-        Path::new(&args.out),
-        &policy,
-        args.apply,
-        args.keep_ignored,
-        &args.from,
-    )?;
+    let run = Run {
+        inbox: Path::new(&args.inbox),
+        out: Path::new(&args.out),
+        policy: &policy,
+        apply: args.apply,
+        keep_ignored: args.keep_ignored,
+        from: &args.from,
+        now: args.at.unwrap_or_else(unix_now),
+    };
+    let summary = organize(&run)?;
     if args.json {
         println!("{}", serde_json::to_string_pretty(&summary)?);
     } else {
@@ -243,6 +270,10 @@ fn show_policy(dir: &str, args: &PolicyArgs) -> Result<(), Box<dyn Error>> {
     println!(
         "  at most {} reply per sender per run",
         policy.guards.max_replies_per_sender
+    );
+    println!(
+        "  no answer to a sender answered in the last {} days, measured from the ledger",
+        policy.guards.reply_window_days
     );
     println!(
         "  never reply to: {}",
@@ -346,6 +377,17 @@ fn print_summary(summary: &Summary) {
         summary.duplicates,
         if summary.duplicates == 1 { "" } else { "s" },
         summary.policy.fnv64
+    );
+    println!(
+        "repeat window: {} days; ledger held {} dated replies for {} sender{} ({} undated, {} unreadable); {} answer{} refused",
+        summary.window_days,
+        summary.history.dated_replies,
+        summary.history.senders,
+        if summary.history.senders == 1 { "" } else { "s" },
+        summary.history.undated_replies,
+        summary.history.malformed_lines,
+        summary.window_blocked,
+        if summary.window_blocked == 1 { "" } else { "s" },
     );
     let width = summary
         .rows

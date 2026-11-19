@@ -58,6 +58,10 @@ pub struct Guards {
     pub min_top_share: f64,
     pub min_margin: f64,
     pub max_replies_per_sender: usize,
+    /// Days a sender is left alone after an answer, counted from the ledger.
+    /// RFC 3834, section 7 uses seven; the number is a file field because a
+    /// support desk with a short backlog may reasonably choose fewer.
+    pub reply_window_days: u64,
     pub blocked_local_parts: Vec<String>,
     pub never_reply_classes: Vec<String>,
     pub never_forward_classes: Vec<String>,
@@ -152,6 +156,16 @@ impl Policy {
         }
         if guards.max_replies_per_sender == 0 {
             problems.push("max_replies_per_sender is zero, so reply is never allowed".to_string());
+        }
+        if !(1..=366).contains(&guards.reply_window_days) {
+            // Zero would read as "no window" and quietly delete the RFC 3834
+            // protection, which is exactly the kind of typo a validator exists
+            // to catch. A year is the ceiling because a longer silence is a
+            // decision to stop answering, not a window.
+            problems.push(format!(
+                "reply_window_days is {}, outside 1..366",
+                guards.reply_window_days
+            ));
         }
         for class in guards
             .never_reply_classes

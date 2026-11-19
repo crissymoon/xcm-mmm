@@ -58,9 +58,29 @@ pub struct Decision {
 /// Detector readings the caller already computed. Absent axes change nothing.
 pub type Readings = BTreeMap<String, f64>;
 
-/// Decide one message. `sent` is how many replies this sender already received
-/// in the current run, which is the only loop budget a stateless call can hold.
-pub fn decide(envelope: &Envelope, policy: &Policy, readings: &Readings, sent: usize) -> Decision {
+/// Marks the veto the repeat window adds, so a caller can count the refusals
+/// without matching on prose it does not own.
+pub const WINDOW_VETO: &str = "reply vetoed: this sender was answered";
+
+/// The two things a run can know about previous answers to one sender.
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct Budget {
+    /// replies already written for this sender in the current run
+    pub in_run: usize,
+    /// days since the ledger last recorded a reply to this sender
+    pub since_reply_days: Option<f64>,
+}
+
+/// Decide one message. `budget` carries the loop history: the run's own count,
+/// and the age of the last answer the ledger holds for this sender. Both are
+/// refusals a price cannot buy past, because RFC 3834, section 7 refuses a
+/// responder that answers a sender who was answered in the previous week.
+pub fn decide(
+    envelope: &Envelope,
+    policy: &Policy,
+    readings: &Readings,
+    budget: Budget,
+) -> Decision {
     let text = envelope.reading_text().to_lowercase();
     let mut weights: BTreeMap<String, f64> = policy
         .classes
@@ -195,10 +215,19 @@ pub fn decide(envelope: &Envelope, policy: &Policy, readings: &Readings, sent: u
     } else if policy.reply_template(&class).is_none() {
         vetoes.push(format!("reply vetoed: no template for {class}"));
     }
-    if sent >= policy.guards.max_replies_per_sender {
+    if budget.in_run >= policy.guards.max_replies_per_sender {
         vetoes.push(format!(
-            "reply vetoed: this sender already has {sent} replies in this run"
+            "reply vetoed: this sender already has {} replies in this run",
+            budget.in_run
         ));
+    }
+    if let Some(days) = budget.since_reply_days {
+        let window = policy.guards.reply_window_days as f64;
+        if days < window {
+            vetoes.push(format!(
+                "{WINDOW_VETO} {days:.1} days ago, inside the {window:.0}-day window (RFC 3834, 7)"
+            ));
+        }
     }
     let never_forward = policy
         .guards
@@ -261,9 +290,9 @@ pub fn decide(envelope: &Envelope, policy: &Policy, readings: &Readings, sent: u
     let reply_expected = policy.cost(&class, "reply").unwrap_or(f64::MAX)
         < policy.cost(&class, "ignore").unwrap_or(f64::MAX);
     let reply_blocked_temporarily = vetoes.iter().any(|line| {
-        line.starts_with("reply vetoed") && {
-            line.contains("already has") || line.contains("no address survives")
-        }
+        line.starts_with(WINDOW_VETO)
+            || (line.starts_with("reply vetoed")
+                && (line.contains("already has") || line.contains("no address survives")))
     });
     if gate.is_none()
         && action == "file"

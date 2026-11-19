@@ -298,6 +298,7 @@
     "min_top_share": 0.5,
     "min_margin": 0.4,
     "max_replies_per_sender": 1,
+    "reply_window_days": 7,
     "blocked_local_parts": [
       "mailer-daemon",
       "postmaster",

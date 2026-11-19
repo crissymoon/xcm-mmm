@@ -444,14 +444,26 @@ xcm-mmm route check
 | `--inbox`, `--out` | none | organize: the arrivals, and where the tree and ledger go |
 | `--apply` | off | organize: write the copies, drafts and ledger |
 | `--keep-ignored` | off | organize: copy bulk mail too |
+| `--ledger` | none | decide: a folder an earlier organize wrote, read for the repeat window |
+| `--at` | now | seconds since the epoch, so the ledger stamp and the window check are reproducible |
 | `--from` | xcm-router@localhost | the identity written into a draft |
 | `--json` | off | one JSON object instead of a report |
 
 The report names the class, the action, the folder, the expected cost of every action, the evidence that raised the class and every veto with its reason. A reply or a forward is a draft with `Auto-Submitted: auto-replied` and its `In-Reply-To` and `References` set; nothing is transmitted.
 
-Three properties keep a run safe. It is dry unless `--apply` is given. It copies rather than moves, so a wrong reading costs a duplicate and not a lost message. It appends `ledger.jsonl` with the decision, the folder, the drafts and the digest of the policy that produced it, so a filing can be audited and replayed after the rulebook changes. A redelivered message is recognised by its `Message-Id` and counted once.
+Three properties keep a run safe. It is dry unless `--apply` is given. It copies rather than moves, so a wrong reading costs a duplicate and not a lost message. It appends `ledger.jsonl` with the decision, the folder, the drafts, the second the decision was made and the digest of the policy that produced it, so a filing can be audited and replayed after the rulebook changes. A redelivered message is recognised by its `Message-Id` and counted once.
 
-`policy.json` is the whole rulebook: class cues, the cost of each action under each class, the folder tree, the forward queues, reply templates and the guards. `route check` refuses a file where a class is missing a cost, two classes share a folder, a guard names a class that does not exist or a threshold is outside zero to one.
+The ledger is also read before the run. A sender who was answered less than `reply_window_days` ago is not answered again: the reply is vetoed, the message is held for a person, and the summary counts it. That is the repeat window of RFC 3834, section 7, and it is the one thing a run cannot learn from the arrivals alone. A ledger line written before the ledger stored a timestamp is counted as undated and reported rather than guessed at, because a guessed stamp either silences a real answer or releases a repeat.
+
+```
+xcm-mmm route organize --inbox incoming/ --out filed/ --apply --at 1760000000
+xcm-mmm route organize --inbox incoming/ --out filed/ --apply   # a day later
+xcm-mmm route decide --file incoming/support-1.eml --ledger filed/
+```
+
+The second run reads the first run's ledger, so a follow-up from a sender answered the day before is held instead of answered twice. `--at` fixes the clock, which is what makes that behaviour a test rather than a demonstration.
+
+`policy.json` is the whole rulebook: class cues, the cost of each action under each class, the folder tree, the forward queues, reply templates and the guards. `route check` refuses a file where a class is missing a cost, two classes share a folder, a guard names a class that does not exist, a threshold is outside zero to one or `reply_window_days` is outside one to 366, since zero would read as "no window" and quietly delete the RFC 3834 protection.
 
 ## Error behaviour
 

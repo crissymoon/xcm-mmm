@@ -159,8 +159,8 @@ they cannot. A demand letter costs nine to answer unreviewed and one to hold; a
 newsletter costs ten to answer and one to ignore. Reverse those numbers and the
 router does the opposite, which is the point of putting them in a file.
 
-Three things the command deliberately cannot do, because each would be a
-stronger claim than the implementation supports:
+Two things the command deliberately cannot do, because each would be a stronger
+claim than the implementation supports:
 
 - **Send.** A reply or a forward is written as an `eml` body with the headers
   RFC 3834 requires (`Auto-Submitted: auto-replied`, `In-Reply-To`,
@@ -169,11 +169,18 @@ stronger claim than the implementation supports:
 - **Delete or move.** Every filing is a copy beside a ledger. A wrong reading
   costs a duplicate under the wrong folder, not a message nobody can find, which
   is the implicit-keep rule of RFC 5228 applied one level up.
-- **Honour the repeat window.** RFC 3834, section 2 recommends the same sender
-  receive the same notice at most once in seven days. A stateless call cannot
-  know that history, so `decide` takes a received count for the current run and
-  the ledger is the record a service would use to enforce the window. The code
-  says this instead of implying a guarantee it does not make.
+
+The repeat window is enforced, from memory it can name. RFC 3834, section 7
+illustrates a vacation responder that refuses a message when the sender "has
+been sent a response within the previous 7 days"; the section is illustration
+rather than a rule, and the window is still the only thing between an automatic
+responder and writing to the same person on every follow-up. `decide` takes the
+run's own count and the age of the last answer the ledger holds for that sender,
+and a sender answered inside `reply_window_days` is refused, then held for a
+person, because they did write again. The limit is the record: a ledger line
+without a timestamp is counted as undated and reported rather than guessed at,
+and an answer a person sent by hand is invisible to it. The code says that
+instead of implying a guarantee it does not make.
 
 The seven files in `data/route/samples/` are fixtures, not decoration: the test
 suite asserts the action each one must receive, so a cue weight that moves a

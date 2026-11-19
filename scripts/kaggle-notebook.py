@@ -758,8 +758,10 @@ document.
 Nothing here sends mail. A reply or a forward is written as a draft with
 `Auto-Submitted: auto-replied` and its `In-Reply-To` set, and a person or a queue
 releases it. Every filing is a copy beside a ledger that carries the digest of
-the policy that produced it, so the run can be audited after the rulebook
-changes.
+the policy that produced it and the second the decision was made, so the run can
+be audited after the rulebook changes and the next run can hold the repeat
+window of RFC 3834, section 7: a sender answered inside `reply_window_days` is
+held for a person instead of answered twice.
 """),
     ("code", """
 ROUTE = WORK / "route"
@@ -798,6 +800,35 @@ assert "Auto-Submitted: auto-replied" in reply, "RFC 3834 header is missing"
 assert "In-Reply-To: <support-1@example.com>" in reply
 print()
 print("\\n".join(reply.splitlines()[:6]))
+"""),
+    ("code", """
+# The ledger is also the memory behind the repeat window of RFC 3834, section 7.
+# Two runs over the same arrivals with a fixed clock, a day apart, show it: the
+# second run reads the first run's ledger and refuses the answer it already gave.
+WINDOW = WORK / "route-window"
+shutil.rmtree(WINDOW, ignore_errors=True)
+DAY = 86_400
+T0 = 1_760_000_000
+
+first = json.loads(run("route", "organize", "--inbox", SAMPLES, "--out", WINDOW,
+                       "--apply", "--at", str(T0), "--json").stdout)
+second = json.loads(run("route", "organize", "--inbox", SAMPLES, "--out", WINDOW,
+                        "--apply", "--at", str(T0 + DAY), "--json").stdout)
+
+print(f"day 0  {first['by_action']}")
+print(f"day 1  {second['by_action']}")
+print(f"window {second['window_days']} days, "
+      f"ledger held {second['history']['dated_replies']} dated replies, "
+      f"{second['window_blocked']} answer refused")
+
+held = {row["file"]: row for row in second["rows"]}
+assert first["window_blocked"] == 0, "an empty ledger blocks nothing"
+assert second["window_blocked"] == 1, second["window_blocked"]
+assert held["support-login.eml"]["action"] == "hold"
+assert held["support-login.eml"]["drafts"] == [], "a refused answer wrote a draft"
+assert held["support-login.eml"]["dest"] == "review/support-login.eml"
+assert second["history"]["dated_replies"] == 1
+assert all(row["at"] == T0 + DAY for row in second["rows"]), "the ledger carries no clock"
 """),
     ("code", """
 def reading(name):

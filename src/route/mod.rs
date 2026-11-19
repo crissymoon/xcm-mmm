@@ -31,10 +31,16 @@
 //! [`decide::reply_draft`] and [`decide::forward_draft`] produce an `eml` body
 //! with the headers RFC 3834 requires, and a person or a queue releases it.
 //! Nothing here deletes: [`organize`] copies and appends to a ledger, so every
-//! filing is additive and the original stays where it landed. A run also cannot
-//! honour RFC 3834's seven-day repeat window for the same notice, because that
-//! needs history; the ledger is the history, and a service that keeps it can
-//! enforce the window when it releases the drafts.
+//! filing is additive and the original stays where it landed.
+//!
+//! The repeat window of RFC 3834, section 7 is enforced from that ledger.
+//! [`history`] reads `ledger.jsonl` back, keeps the latest answer to each
+//! sender, and [`decide`] refuses a second answer inside `reply_window_days`.
+//! The window is only as good as the record: a line without a timestamp is
+//! counted and reported rather than guessed at, and a message answered by a
+//! person rather than by the router is invisible to it. That is why a refused
+//! answer is a hold and not an ignore: the sender did write again, and a person
+//! may want to know why.
 //!
 //! The shares are shares of evidence, not probabilities. Nothing in this module
 //! has measured whether a share of 0.7 is right seven times in ten, and Guo and
@@ -46,13 +52,15 @@
 pub mod cli;
 pub mod decide;
 pub mod envelope;
+pub mod history;
 pub mod organize;
 pub mod policy;
 
 pub use cli::{RouteArgs, RouteCommand};
-pub use decide::{decide, forward_draft, reply_draft, Decision};
+pub use decide::{decide, forward_draft, reply_draft, Budget, Decision};
 pub use envelope::Envelope;
-pub use organize::{organize, Summary};
+pub use history::History;
+pub use organize::{organize, Run, Summary};
 pub use policy::Policy;
 
 /// The folder this module ships, relative to the repository root.
