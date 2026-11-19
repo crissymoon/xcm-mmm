@@ -126,8 +126,12 @@ because each one breaks a naive port:
   research below is about not needing a download at run time.
 - `dataset_sources` accepts `owner/slug/version`, and the third segment is the
   exact version. `kernel-metadata.json` is generated with the pin when
-  `XCM_BINARY_VERSION` and `XCM_MODELS_VERSION` are set, so a published kernel
-  cannot silently follow a later upload.
+  `XCM_BINARY_VERSION` and `XCM_MODELS_VERSION` are set. What was observed:
+  the push accepted the pinned refs and the run used the version named, but
+  `kernels pull` returns the sources as bare slugs, so the number is resolved at
+  push time rather than recorded on the notebook. The hash the notebook
+  recomputes is the check that survives, which is why the provenance cell comes
+  before the workload rather than after it.
 
 ## What was read and not adopted
 

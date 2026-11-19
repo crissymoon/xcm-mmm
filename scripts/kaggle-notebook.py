@@ -105,7 +105,7 @@ session rather than a constant copied into the notebook:
 
 | figure | what it answers |
 | --- | --- |
-| `01-nested-folds.png` | which fold the nested selection scored highest, and which columns survived all four folds |
+| `01-nested-folds.png` | which fold the nested selection scored highest, and how often each column was chosen |
 | `02-shard-timings.png` | whether four shards in threads beat one shard in wall clock, given rayon already fills the cores |
 | `03-detector-axes.png` | how far each of the seven axes moves over 518 ads, and the shape of the top score by split |
 | `04-emotion-coverage.png` | how much of the emotion list and of running text reaches an answer above the neutral prior |
@@ -449,8 +449,11 @@ for x, v in zip(xs, skill):
     left.annotate(f"{v * 100:.1f}%", (x, v), textcoords="offset points",
                   xytext=(0, 10), ha="center", fontsize=8, color=INK["text"])
 left.axhline(report["mean_skill"], color=INK["muted"], linestyle="--", linewidth=1.0)
-left.text(xs[0], low + 0.01, f"mean skill {report['mean_skill'] * 100:.1f}%",
-          color=INK["text"], fontsize=8, va="bottom")
+# The label sits on the dashed line it names, at the right edge. Putting it at
+# the bottom of the axis read as a caption for the axis rather than for the mean.
+left.text(xs[-1] + 0.35, report["mean_skill"],
+          f"mean {report['mean_skill'] * 100:.1f}%", color=INK["muted"],
+          fontsize=8, va="bottom", ha="right")
 left.set_xticks(xs)
 left.set_xticklabels([f"fold {x} (r2 {f['r2']:.3f})" for x, f in zip(xs, report["outer"])],
                      fontsize=8)
@@ -469,8 +472,9 @@ for i, c in enumerate(chosen):
                fontsize=8, color=INK["text"])
 right.set_xlim(0, report["outer_folds"] + 0.6)
 right.set_xlabel("outer folds that chose the column", color=INK["text"], fontsize=9)
-right.set_title(f"Which of {report['features']} candidates survived all "
-                f"{report['outer_folds']} folds", fontsize=10, color=INK["text"], loc="left")
+right.set_title(f"How often each column was chosen, top {len(chosen)} of "
+                f"{report['features']} over {report['outer_folds']} folds",
+                fontsize=10, color=INK["text"], loc="left")
 right.tick_params(axis="y", labelsize=8)
 decorate(right, axis="x")
 
