@@ -65,16 +65,41 @@ ECFR_DATE = "2026-08-10"  # latest issue date reported by titles.json
 
 # Parts chosen for drafting density rather than subject matter: each of these
 # is written in the cross referenced, shall heavy style the instrument exists
-# to read. (title, part, label)
+# to read. One part per title across twenty six titles, because a share over
+# two parts of the CFR is a share over two parts of the CFR.
 ECFR_PARTS = [
-    (29, "1604", "EEOC sex discrimination guidelines"),
-    (24, "982", "housing choice vouchers"),
-    (45, "160", "HIPAA privacy rule"),
+    (5, "2635", "standards of ethical conduct for employees"),
     (7, "273", "SNAP certification"),
+    (8, "204", "immigration fees"),
+    (10, "50", "domestic licensing of production facilities"),
+    (12, "1026", "truth in lending, Regulation Z"),
+    (13, "121", "small business size regulations"),
+    (16, "310", "telemarketing sales rule"),
+    (16, "312", "children's online privacy protection"),
+    (17, "230", "investment advisers"),
+    (20, "404", "old age, survivors and disability insurance"),
+    (21, "50", "biological products"),
+    (22, "51", "state department rules of procedure"),
+    (24, "982", "housing choice vouchers"),
+    (28, "35", "nondiscrimination on the basis of disability"),
+    (29, "1604", "EEOC sex discrimination guidelines"),
+    (31, "1010", "bank secrecy act"),
+    (34, "668", "student assistance general provisions"),
+    (36, "1", "national park service general rules"),
+    (37, "201", "copyright recordation and licensing"),
+    (38, "3", "VA adjudication of claims"),
+    (40, "122", "NPDES permit program"),
+    (42, "405", "medicare payment for services"),
+    (45, "160", "HIPAA privacy rule"),
+    (47, "64", "FCC miscellaneous rules"),
+    (48, "1", "federal acquisition regulation system"),
+    (49, "40", "DOT procedures for transportation workplace testing"),
 ]
 # Federal Register notices. The type filter is what makes this the notice
-# register rather than rulemaking prose.
-FR_NOTICES = 12
+# register rather than rulemaking prose, and the cap is off the row count: forty
+# documents are fetched so that the ones with little text do not leave the
+# register resting on three.
+FR_NOTICES = 40
 
 # Court rules. LII serves one static page per rule with the operative text in
 # a single main-content block, which is why it is used instead of the PDFs on
@@ -203,7 +228,7 @@ def regulation(limit: int, refresh: bool) -> list[dict]:
         text = " ".join(node.text or "" for node in root.iter() if node.tag in
                         {"P", "FP", "PSPACE", "HEAD"})
         docs.append((f"cfr-{title}-{part}", url, f"{label}. {text}"))
-    return rows_of("regulation", docs)[:limit]
+    return interleave(rows_of("regulation", docs), limit)
 
 
 def agency_notice(limit: int, refresh: bool) -> list[dict]:
@@ -221,44 +246,43 @@ def agency_notice(limit: int, refresh: bool) -> list[dict]:
             continue
         body = fetch(raw, cache_path("agency-notice", number, ".txt"), refresh)
         docs.append((f"fedreg-{number}", raw, body.decode("utf-8", "replace")))
-    return rows_of("agency-notice", docs)[:limit]
+    return interleave(rows_of("agency-notice", docs), limit)
 
 
 def contract(limit: int, refresh: bool) -> list[dict]:
-    """CUAD, sampled evenly across the split so one filing cannot dominate.
+    """CUAD, one real contract per document.
 
-    The dataset is one row per paragraph (about 84,000 of them), so a row is a
-    clause fragment and consecutive rows belong to one contract. The whole
-    text column is pulled once from the parquet export and read a block of a
-    hundred paragraphs at a time, which keeps the sentence splitter inside a
-    real clause instead of starting every sentence at a heading. The rows API
-    was the first attempt and is not used here: it answers 429 under
-    pagination and a hundred small requests to avoid one file is a worse
-    trade than the file.
+    The parquet export is 84,000 paragraph rows concatenated with no contract
+    boundary preserved, so the first sampler cut arbitrary hundred-row blocks
+    and called them documents. Ten blocks of one corpus is not ten contracts
+    and the audit said so, which is why this reads CUAD_v1.json instead: one
+    entry per contract with its own title, 510 of them. A slice from the
+    middle of each lands in the operative clauses, because recitals, tables of
+    definitions and signature blocks sit at the ends, and interleave spreads
+    the cap evenly.
+
+    The PDFs under full_contract_pdf are the same contracts with one file per
+    document, and they are not used: 510 PDFs need a text layer this pass
+    would have to verify, and the JSON already carries the text.
     """
-    try:
-        import pyarrow.parquet as parquet
-    except ImportError:
-        raise SystemExit("contract needs pyarrow: python3 -m pip install pyarrow")
+    url = ("https://huggingface.co/datasets/theatticusproject/cuad"
+           "/resolve/main/CUAD_v1/CUAD_v1.json")
+    path = cache_path("contract", "cuad-v1", ".json")
+    data = json.loads(fetch(url, path, refresh)).get("data", [])
 
-    url = ("https://huggingface.co/api/datasets/theatticusproject/cuad"
-           "/parquet/default/train/0.parquet")
-    path = cache_path("contract", "cuad-train", ".parquet")
-    fetch(url, path, refresh)
-    texts = parquet.read_table(path, columns=["text"]).column("text").to_pylist()
-
-    block, wanted = 100, 24
-    step = max(block, len(texts) // wanted) if texts else block
+    wanted = 40
+    step = max(1, len(data) // wanted) if data else 1
     docs = []
-    for index in range(wanted):
-        start = index * step
-        paragraphs = [t for t in texts[start:start + block]
-                      if t and len(t) > 40 and not set(t) <= {"=", "-", " "}]
-        if paragraphs:
-            docs.append((f"cuad-{start:05d}",
-                         "https://huggingface.co/datasets/theatticusproject/cuad",
-                         "\n".join(paragraphs)))
-    return rows_of("contract", docs)[:limit]
+    for index in range(0, len(data), step):
+        entry = data[index]
+        text = (entry.get("paragraphs") or [{}])[0].get("context") or ""
+        if len(text) < 2000:
+            continue
+        middle = len(text) // 3
+        title = re.sub(r"[^a-z0-9]+", "-", entry.get("title", "").lower()).strip("-")
+        docs.append((f"cuad-{index:03d}-{title[:50]}", url,
+                     text[middle:middle + 4000]))
+    return interleave(rows_of("contract", docs), limit)
 
 
 def opinion(limit: int, refresh: bool) -> list[dict]:

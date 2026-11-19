@@ -1,13 +1,13 @@
 {
- "rows": 1663,
+ "rows": 1602,
  "registers": {
   "agency-notice": {
-   "rows": 243,
-   "duplicates_dropped": 7
+   "rows": 179,
+   "duplicates_dropped": 71
   },
   "contract": {
-   "rows": 247,
-   "duplicates_dropped": 3
+   "rows": 249,
+   "duplicates_dropped": 1
   },
   "court-rule": {
    "rows": 674,
@@ -18,8 +18,8 @@
    "duplicates_dropped": 0
   },
   "regulation": {
-   "rows": 249,
-   "duplicates_dropped": 1
+   "rows": 250,
+   "duplicates_dropped": 0
   }
  },
  "sources": {
