@@ -20,6 +20,10 @@ Sources and why these three:
   server). 510 commercial contracts from SEC filings with clause labels,
   the corpus Hendrycks et al. built precisely because contracts are a
   register of their own.
+* court-rule - Cornell LII rule pages. The shipped bank's court-rule rows are
+  86 percent Rule 23 and Rule 4, so its reach is a statement about two rules
+  and not about the register. This pulls a spread across the civil, appellate
+  and evidence rules so the share is about the drafting style.
 
 Every sentence is filtered for shape (length, word count, letter density) and
 deduplicated against itself and against the shipped bank. Rows are written to
@@ -38,6 +42,7 @@ from __future__ import annotations
 import argparse
 import gzip
 import hashlib
+import html as htmllib
 import io
 import json
 import re
@@ -68,6 +73,30 @@ ECFR_PARTS = [
 # register rather than rulemaking prose.
 FR_NOTICES = 12
 
+# Court rules. LII serves one static page per rule with the operative text in
+# a single main-content block, which is why it is used instead of the PDFs on
+# uscourts.gov: no PDF text layer to lose, no OCR to trust. The numbers are the
+# drafting-dense ones; a rule whose page is missing (the civil rules skip 87)
+# is skipped rather than retried.
+COURT_RULES = [
+    ("frcp", "civil", list(range(1, 17)) + [19] + list(range(23, 38)) +
+     [41, 45] + list(range(50, 66)) + list(range(68, 72)) +
+     list(range(77, 82)) + [83, 84, 85, 86]),
+    ("frap", "appellate", list(range(1, 7)) + list(range(8, 17)) +
+     list(range(21, 33)) + [35, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46]),
+    ("fre", "evidence", [103, 104, 105, 201, 301, 401, 402, 403, 404, 405,
+                         406, 407, 408, 409, 410, 411, 412, 413, 414, 415,
+                         501, 502, 601, 602, 603, 606, 608, 609, 610, 611,
+                         612, 613, 614, 615, 701, 702, 703, 704, 705, 706,
+                         801, 802, 803, 804, 805, 806, 807, 901, 902, 903,
+                         1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008]),
+]
+# The pages carry a long advisory committee commentary under the operative
+# text. It is a different register (essayistic commentary, not rule drafting),
+# so the extraction stops where the notes begin.
+NOTES = ("Notes of Advisory Committee", "Advisory Committee Notes",
+         "Committee Notes on Rules")
+
 MIN_CHARS, MAX_CHARS = 45, 320
 MIN_WORDS = 8
 MIN_ALPHA = 0.55
@@ -97,7 +126,7 @@ def fetch(url: str, path: Path, refresh: bool, accept: str | None = None) -> byt
     headers = {"User-Agent": UA, "Accept-Encoding": "gzip, deflate"}
     if accept:
         headers["Accept"] = accept
-    pause = 1.0 if "huggingface.co" in url else 0.4
+    pause = 1.0 if "huggingface.co" in url else 0.7 if "cornell.edu" in url else 0.4
     delay = 2.0
     for attempt in range(RETRIES + 1):
         request = urllib.request.Request(url, headers=headers)
@@ -149,12 +178,13 @@ def keep(sentence: str) -> bool:
     return True
 
 
-def rows_of(register: str, docs: list[tuple[str, str, str]]) -> list[dict]:
+def rows_of(register: str, docs: list[tuple[str, str, str]],
+            drop: re.Pattern[str] | None = None) -> list[dict]:
     """Turn (source, url, text) documents into sentence rows."""
     out = []
     for source, url, text in docs:
         for sentence in sentences(text):
-            if keep(sentence):
+            if keep(sentence) and not (drop and drop.match(sentence)):
                 out.append({"axis": "legal", "label": 1, "source": source,
                             "text": sentence, "url": url})
     return out
@@ -262,8 +292,86 @@ def opinion(limit: int, refresh: bool) -> list[dict]:
     return rows_of("opinion", docs)[:limit]
 
 
+def interleave(rows: list[dict], limit: int) -> list[dict]:
+    """Take rows from every document in turn instead of the first document.
+
+    A rule page yields a hundred sentences and Rule 26 yields more than that,
+    so truncating a concatenation spends the whole budget on the first two
+    documents and calls the result a register. Taking one sentence per
+    document per pass keeps every rule represented up to the cap.
+    """
+    buckets: dict[str, list[dict]] = {}
+    for row in rows:
+        buckets.setdefault(row["source"], []).append(row)
+    lists = list(buckets.values())
+    out: list[dict] = []
+    depth = 0
+    while len(out) < limit and depth < max((len(b) for b in lists), default=0):
+        for bucket in lists:
+            if depth < len(bucket):
+                out.append(bucket[depth])
+                if len(out) == limit:
+                    break
+        depth += 1
+    return out
+
+
+def court_rule(limit: int, refresh: bool) -> list[dict]:
+    """Rules of procedure and evidence, spread across every article.
+
+    The shipped bank carries eight court-rule sources and two of them are 86
+    percent of the rows, so a share computed over it says what the glossary
+    does with Rule 23 rather than what it does with rules. One page per rule is
+    the unit that keeps a long rule (26, 803) from owning the register.
+    """
+    docs = []
+    for rule_set, label, numbers in COURT_RULES:
+        for number in numbers:
+            url = f"https://www.law.cornell.edu/rules/{rule_set}/rule_{number}"
+            path = cache_path("court-rule", f"{rule_set}-{number}", ".html")
+            try:
+                page = fetch(url, path, refresh)
+            except urllib.error.HTTPError as error:
+                if error.code == 404:
+                    continue  # the civil rules have no Rule 87
+                raise
+            text = rule_text(page.decode("utf-8", "replace"))
+            if len(text) < 200:
+                continue
+            docs.append((f"{rule_set}-{number}", url, f"{label} rule {number}. {text}"))
+    return interleave(rows_of("court-rule", docs, drop=CONNECTOR), limit)
+
+
+def rule_text(page: str) -> str:
+    """The operative rule body from a LII rule page.
+
+    Cut on markup landmarks rather than class names: the title heading, the
+    commentary heading and the page footer are each one tag, and slicing at
+    their boundaries survives a restyle of the template. The commentary is
+    excluded because it is a different register, essayistic argument about the
+    rule rather than the rule.
+    """
+    start = page.find('id="main-content"')
+    if start < 0:
+        return ""
+    start = page.find(">", start) + 1
+    stop = page.find('id="page-bottom"', start)
+    segment = page[start:stop if stop > 0 else start + 60000]
+    segment = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", segment, flags=re.S)
+    segment = re.sub(r"<h1[^>]*id=\"page-title\".*?</h1>", " ", segment, flags=re.S)
+    segment = re.split(r"<h4[^>]*>\s*(?:Notes|Committee Notes|Source)", segment,
+                       maxsplit=1, flags=re.I)[0]
+    return SPACE.sub(" ", htmllib.unescape(re.sub(r"<[^>]+>", " ", segment))).strip()
+
+
+# Splitting on `;` is what keeps a rule's run-on clauses apart, but it also
+# leaves the list connectors at the front of a chunk ("or (ii) ..."). Those are
+# not sentences, so they are dropped instead of scored as one.
+CONNECTOR = re.compile(r"^(?:or|and|but|nor)\b", re.I)
+
+
 FETCH = {"regulation": regulation, "agency-notice": agency_notice,
-         "contract": contract, "opinion": opinion}
+         "contract": contract, "opinion": opinion, "court-rule": court_rule}
 
 
 def dedupe(rows: list[dict], seen: set[str]) -> list[dict]:
@@ -277,17 +385,38 @@ def dedupe(rows: list[dict], seen: set[str]) -> list[dict]:
     return out
 
 
+ROW_LIMIT = 250
+
+
+def per_register_limits(values: list[str] | None) -> dict[str, int]:
+    """`--limit 250` sets every register; `--limit court-rule=700` one of them.
+
+    A register whose corpus is one page per rule needs a higher cap than one
+    whose corpus is a handful of documents, and a single number would either
+    truncate the first or overfill the second.
+    """
+    limits: dict[str, int] = {}
+    for value in values or []:
+        name, sep, count = value.partition("=")
+        if not sep:
+            limits = dict.fromkeys(FETCH, int(name))
+            continue
+        limits[name.strip()] = int(count)
+    return limits
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--register", choices=sorted(FETCH), action="append")
-    ap.add_argument("--limit", type=int, default=250,
-                    help="rows per register after filtering")
+    ap.add_argument("--limit", action="append", default=None,
+                    help="rows per register: 250, or court-rule=700 (repeatable)")
     ap.add_argument("--refresh", action="store_true",
                     help="refetch instead of using tmp/widen")
     ap.add_argument("--out", type=Path, default=DATA / "bank-ext.jsonl")
     args = ap.parse_args(argv)
 
     wanted = args.register or sorted(FETCH)
+    limits = per_register_limits(args.limit)
     seen: set[str] = set()
     for line in open(DATA / "bank.jsonl", encoding="utf-8"):
         seen.add(hashlib.sha1(SPACE.sub(" ", json.loads(line)["text"].lower())
@@ -295,9 +424,10 @@ def main(argv: list[str]) -> int:
 
     report, all_rows = {}, []
     for name in wanted:
-        before = len(seen)
-        rows = dedupe(FETCH[name](args.limit, args.refresh), seen)
-        report[name] = {"rows": len(rows), "duplicates_dropped": len(seen) - before}
+        candidates = FETCH[name](limits.get(name, ROW_LIMIT), args.refresh)
+        rows = dedupe(candidates, seen)
+        report[name] = {"rows": len(rows),
+                        "duplicates_dropped": len(candidates) - len(rows)}
         all_rows.extend(rows)
         print(f"{name}: {len(rows)} sentences", file=sys.stderr)
 
@@ -306,7 +436,8 @@ def main(argv: list[str]) -> int:
     meta = {"rows": len(all_rows), "registers": report,
             "sources": {"regulation": f"eCFR {ECFR_DATE}",
                         "agency-notice": "Federal Register API",
-                        "contract": "theatticusproject/cuad"}}
+                        "contract": "theatticusproject/cuad",
+                        "court-rule": "Cornell LII federal rules"}}
     (args.out.with_suffix(".json")).write_text(json.dumps(meta, indent=1),
                                                encoding="utf-8")
     print(f"wrote {args.out} ({len(all_rows)} rows)")

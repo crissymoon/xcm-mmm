@@ -1,26 +1,31 @@
 {
- "rows": 988,
+ "rows": 1656,
  "registers": {
   "agency-notice": {
    "rows": 243,
-   "duplicates_dropped": 243
+   "duplicates_dropped": 7
   },
   "contract": {
    "rows": 247,
-   "duplicates_dropped": 247
+   "duplicates_dropped": 3
+  },
+  "court-rule": {
+   "rows": 668,
+   "duplicates_dropped": 32
   },
   "opinion": {
    "rows": 249,
-   "duplicates_dropped": 249
+   "duplicates_dropped": 1
   },
   "regulation": {
    "rows": 249,
-   "duplicates_dropped": 249
+   "duplicates_dropped": 1
   }
  },
  "sources": {
   "regulation": "eCFR 2026-08-10",
   "agency-notice": "Federal Register API",
-  "contract": "theatticusproject/cuad"
+  "contract": "theatticusproject/cuad",
+  "court-rule": "Cornell LII federal rules"
  }
 }

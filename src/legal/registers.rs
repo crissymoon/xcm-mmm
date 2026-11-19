@@ -88,7 +88,7 @@ pub const REGISTERS: &[Register] = &[
         name: "court-rule",
         markers: &["frcp-", "frap-", "fre-", "ca-crc-", "crc-"],
         role: Role::Target,
-        note: "rules of procedure and evidence, the densest legalese in the bank",
+        note: "rules of procedure and evidence, where every obligation has a deadline",
     },
     Register {
         name: "statute",

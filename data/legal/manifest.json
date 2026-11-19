@@ -1,7 +1,7 @@
 {
   "name": "marketlab-legal-language",
   "version": 1,
-  "built_at": "2026-11-19T02:28:10Z",
+  "built_at": "2026-11-19T02:51:55Z",
   "files": [
     {
       "name": "bank.jsonl",
@@ -47,9 +47,9 @@
     },
     {
       "name": "terms.jsonl",
-      "rows": 179,
-      "bytes": 53015,
-      "fnv64": "7a0868a5fd624e8a"
+      "rows": 184,
+      "bytes": 55448,
+      "fnv64": "eca5aae4208526f8"
     }
   ],
   "counts": {

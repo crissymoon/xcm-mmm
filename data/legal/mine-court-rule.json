@@ -1,1503 +1,973 @@
 {
  "register": "court-rule",
- "target_rows": 1014,
+ "target_rows": 1682,
  "contrast_rows": 922,
- "min_df": 5,
+ "min_df": 8,
  "queue": [
   {
-   "phrase": "notice of appeal",
-   "df": 59,
-   "log_odds": 4.744
+   "phrase": "under rule",
+   "df": 83,
+   "log_odds": 4.5676
   },
   {
    "phrase": "rule b",
-   "df": 59,
-   "log_odds": 4.744
+   "df": 77,
+   "log_odds": 4.4893
   },
   {
-   "phrase": "class counsel",
+   "phrase": "district court",
+   "df": 76,
+   "log_odds": 4.4757
+  },
+  {
+   "phrase": "days after",
+   "df": 56,
+   "log_odds": 4.1603
+  },
+  {
+   "phrase": "class members",
    "df": 54,
-   "log_odds": 4.651
+   "log_odds": 4.123
   },
   {
    "phrase": "class action",
    "df": 53,
-   "log_odds": 4.6314
+   "log_odds": 4.1039
   },
   {
-   "phrase": "class members",
-   "df": 51,
-   "log_odds": 4.5912
+   "phrase": "court of appeals",
+   "df": 53,
+   "log_odds": 4.1039
   },
   {
-   "phrase": "under rule",
-   "df": 51,
-   "log_odds": 4.5912
+   "phrase": "within days",
+   "df": 47,
+   "log_odds": 3.9813
   },
   {
-   "phrase": "district court",
-   "df": 45,
-   "log_odds": 4.4612
+   "phrase": "within days after",
+   "df": 38,
+   "log_odds": 3.7657
+  },
+  {
+   "phrase": "party may",
+   "df": 36,
+   "log_odds": 3.7111
   },
   {
    "phrase": "rule e",
-   "df": 35,
-   "log_odds": 4.2027
+   "df": 36,
+   "log_odds": 3.7111
   },
   {
-   "phrase": "separate document",
-   "df": 32,
-   "log_odds": 4.1114
+   "phrase": "rule d",
+   "df": 29,
+   "log_odds": 3.494
   },
   {
    "phrase": "civil rule",
    "df": 27,
-   "log_odds": 3.9392
+   "log_odds": 3.4226
   },
   {
-   "phrase": "days after",
+   "phrase": "clerk must",
    "df": 25,
-   "log_odds": 3.8617
+   "log_odds": 3.3458
+  },
+  {
+   "phrase": "court should",
+   "df": 25,
+   "log_odds": 3.3458
+  },
+  {
+   "phrase": "rule c",
+   "df": 25,
+   "log_odds": 3.3458
+  },
+  {
+   "phrase": "rules amendment",
+   "df": 25,
+   "log_odds": 3.3458
   },
   {
    "phrase": "proposed settlement",
    "df": 24,
-   "log_odds": 3.8207
+   "log_odds": 3.3052
   },
   {
-   "phrase": "within days",
-   "df": 24,
-   "log_odds": 3.8207
-  },
-  {
-   "phrase": "time to appeal",
+   "phrase": "s c",
    "df": 23,
-   "log_odds": 3.778
+   "log_odds": 3.263
   },
   {
-   "phrase": "court of appeals",
-   "df": 21,
-   "log_odds": 3.6871
+   "phrase": "u s c",
+   "df": 23,
+   "log_odds": 3.263
   },
   {
-   "phrase": "rule d",
+   "phrase": "under rule b",
+   "df": 22,
+   "log_odds": 3.2189
+  },
+  {
+   "phrase": "advisory committee",
    "df": 21,
-   "log_odds": 3.6871
+   "log_odds": 3.1728
   },
   {
    "phrase": "civil rules",
    "df": 20,
-   "log_odds": 3.6384
+   "log_odds": 3.1246
   },
   {
    "phrase": "class actions",
    "df": 20,
-   "log_odds": 3.6384
-  },
-  {
-   "phrase": "court should",
-   "df": 20,
-   "log_odds": 3.6384
-  },
-  {
-   "phrase": "fed r",
-   "df": 20,
-   "log_odds": 3.6384
-  },
-  {
-   "phrase": "rules- amendment",
-   "df": 20,
-   "log_odds": 3.6384
-  },
-  {
-   "phrase": "advisory committee",
-   "df": 19,
-   "log_odds": 3.5874
-  },
-  {
-   "phrase": "rule c",
-   "df": 19,
-   "log_odds": 3.5874
-  },
-  {
-   "phrase": "subdivision b",
-   "df": 19,
-   "log_odds": 3.5874
+   "log_odds": 3.1246
   },
   {
    "phrase": "under rule e",
-   "df": 19,
-   "log_odds": 3.5874
+   "df": 20,
+   "log_odds": 3.1246
   },
   {
-   "phrase": "appeal from",
-   "df": 18,
-   "log_odds": 3.5338
+   "phrase": "must be served",
+   "df": 19,
+   "log_odds": 3.074
+  },
+  {
+   "phrase": "party must",
+   "df": 19,
+   "log_odds": 3.074
+  },
+  {
+   "phrase": "unless the court",
+   "df": 19,
+   "log_odds": 3.074
   },
   {
    "phrase": "amended rule",
    "df": 17,
-   "log_odds": 3.4772
+   "log_odds": 2.9646
   },
   {
    "phrase": "members of the class",
    "df": 17,
-   "log_odds": 3.4772
+   "log_odds": 2.9646
   },
   {
-   "phrase": "good cause",
+   "phrase": "after entry",
    "df": 16,
-   "log_odds": 3.4173
+   "log_odds": 2.9051
   },
   {
-   "phrase": "set forth",
+   "phrase": "must be filed",
    "df": 16,
-   "log_odds": 3.4173
+   "log_odds": 2.9051
   },
   {
-   "phrase": "subdivision c",
+   "phrase": "only if",
    "df": 16,
-   "log_odds": 3.4173
+   "log_odds": 2.9051
   },
   {
    "phrase": "under subdivision",
    "df": 16,
-   "log_odds": 3.4173
+   "log_odds": 2.9051
   },
   {
-   "phrase": "within days after",
-   "df": 16,
-   "log_odds": 3.4173
+   "phrase": "committee notes",
+   "df": 15,
+   "log_odds": 2.842
+  },
+  {
+   "phrase": "local rule",
+   "df": 15,
+   "log_odds": 2.842
+  },
+  {
+   "phrase": "need not",
+   "df": 15,
+   "log_odds": 2.842
+  },
+  {
+   "phrase": "under this rule",
+   "df": 15,
+   "log_odds": 2.842
+  },
+  {
+   "phrase": "circuit clerk",
+   "df": 14,
+   "log_odds": 2.7747
   },
   {
    "phrase": "class certification",
    "df": 14,
-   "log_odds": 3.2861
+   "log_odds": 2.7747
   },
   {
-   "phrase": "notice to the class",
+   "phrase": "committee notes on rules",
    "df": 14,
-   "log_odds": 3.2861
+   "log_odds": 2.7747
   },
   {
-   "phrase": "under rule b",
+   "phrase": "do so",
    "df": 14,
-   "log_odds": 3.2861
+   "log_odds": 2.7747
   },
   {
-   "phrase": "after entry",
+   "phrase": "may file",
+   "df": 14,
+   "log_odds": 2.7747
+  },
+  {
+   "phrase": "notes on rules",
+   "df": 14,
+   "log_odds": 2.7747
+  },
+  {
+   "phrase": "notes on rules amendment",
+   "df": 14,
+   "log_odds": 2.7747
+  },
+  {
+   "phrase": "set out",
+   "df": 14,
+   "log_odds": 2.7747
+  },
+  {
+   "phrase": "within the time",
+   "df": 14,
+   "log_odds": 2.7747
+  },
+  {
+   "phrase": "court must",
+   "df": 40,
+   "log_odds": 2.7179
+  },
+  {
+   "phrase": "all parties",
    "df": 13,
-   "log_odds": 3.2137
+   "log_odds": 2.7026
+  },
+  {
+   "phrase": "any party",
+   "df": 13,
+   "log_odds": 2.7026
   },
   {
    "phrase": "certification decision",
    "df": 13,
-   "log_odds": 3.2137
-  },
-  {
-   "phrase": "civ p",
-   "df": 13,
-   "log_odds": 3.2137
+   "log_odds": 2.7026
   },
   {
    "phrase": "civil rule d",
    "df": 13,
-   "log_odds": 3.2137
+   "log_odds": 2.7026
   },
   {
-   "phrase": "fed r civ",
+   "phrase": "days after entry",
    "df": 13,
-   "log_odds": 3.2137
+   "log_odds": 2.7026
   },
   {
-   "phrase": "fed r civ p",
+   "phrase": "if a party",
    "df": 13,
-   "log_odds": 3.2137
+   "log_odds": 2.7026
   },
   {
-   "phrase": "r civ",
+   "phrase": "motion must",
    "df": 13,
-   "log_odds": 3.2137
+   "log_odds": 2.7026
   },
   {
-   "phrase": "r civ p",
+   "phrase": "must be made",
    "df": 13,
-   "log_odds": 3.2137
+   "log_odds": 2.7026
+  },
+  {
+   "phrase": "must state",
+   "df": 13,
+   "log_odds": 2.7026
+  },
+  {
+   "phrase": "adverse party",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "advisory committee on rules",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "after being",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "after the entry",
+   "df": 12,
+   "log_odds": 2.6251
   },
   {
    "phrase": "b class",
    "df": 12,
-   "log_odds": 3.1357
+   "log_odds": 2.6251
   },
   {
-   "phrase": "c b",
+   "phrase": "being served",
    "df": 12,
-   "log_odds": 3.1357
+   "log_odds": 2.6251
   },
   {
-   "phrase": "committee notes",
+   "phrase": "committee on rules",
    "df": 12,
-   "log_odds": 3.1357
+   "log_odds": 2.6251
   },
   {
    "phrase": "day period",
    "df": 12,
-   "log_odds": 3.1357
+   "log_odds": 2.6251
   },
   {
-   "phrase": "forth on a separate",
+   "phrase": "filed within",
    "df": 12,
-   "log_odds": 3.1357
+   "log_odds": 2.6251
   },
   {
-   "phrase": "subdivision e",
+   "phrase": "new trial",
    "df": 12,
-   "log_odds": 3.1357
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "notes of advisory",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "notes of advisory committee",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "order disposing",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "party who",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "provided in rule",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "supreme court",
+   "df": 12,
+   "log_odds": 2.6251
+  },
+  {
+   "phrase": "after being served",
+   "df": 11,
+   "log_odds": 2.5411
+  },
+  {
+   "phrase": "appeal filed",
+   "df": 11,
+   "log_odds": 2.5411
   },
   {
    "phrase": "been amended",
    "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
   },
   {
-   "phrase": "committee notes on rules-",
+   "phrase": "committee on rules amendment",
    "df": 11,
-   "log_odds": 3.0513
-  },
-  {
-   "phrase": "days after entry",
-   "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
   },
   {
    "phrase": "excusable neglect",
    "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
   },
   {
    "phrase": "fee award",
    "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
   },
   {
-   "phrase": "notes on rules-",
+   "phrase": "l rev",
    "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
   },
   {
-   "phrase": "notes on rules- amendment",
+   "phrase": "may order",
    "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
   },
   {
-   "phrase": "notice of the entry",
+   "phrase": "motion under",
    "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
+  },
+  {
+   "phrase": "other parties",
+   "df": 11,
+   "log_odds": 2.5411
   },
   {
    "phrase": "reopen the time",
    "df": 11,
-   "log_odds": 3.0513
-  },
-  {
-   "phrase": "time for appeal",
-   "df": 11,
-   "log_odds": 3.0513
+   "log_odds": 2.5411
   },
   {
    "phrase": "under civil",
    "df": 11,
-   "log_odds": 3.0513
-  },
-  {
-   "phrase": "advisory committee on rules-",
-   "df": 10,
-   "log_odds": 2.9594
-  },
-  {
-   "phrase": "appeal filed",
-   "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.5411
   },
   {
    "phrase": "appellate rule",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
    "phrase": "b or b",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
    "phrase": "civil rule b",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "committee on rules-",
+   "phrase": "coram nobis",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "entry of the judgment",
+   "phrase": "court approval",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "filed within",
+   "phrase": "court may admit",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "filing a notice",
+   "phrase": "extend the time",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "l rev",
+   "phrase": "federal rules",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "notes of advisory",
+   "phrase": "final judgment",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "notes of advisory committee",
+   "phrase": "may admit",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "subdivision a b",
+   "phrase": "may direct",
    "df": 10,
-   "log_odds": 2.9594
+   "log_odds": 2.4495
   },
   {
-   "phrase": "as a class",
+   "phrase": "notice of appeal filed",
+   "df": 10,
+   "log_odds": 2.4495
+  },
+  {
+   "phrase": "rule c b",
+   "df": 10,
+   "log_odds": 2.4495
+  },
+  {
+   "phrase": "rule g",
+   "df": 10,
+   "log_odds": 2.4495
+  },
+  {
+   "phrase": "than days",
+   "df": 10,
+   "log_odds": 2.4495
+  },
+  {
+   "phrase": "time after",
+   "df": 10,
+   "log_odds": 2.4495
+  },
+  {
+   "phrase": "court may",
+   "df": 100,
+   "log_odds": 2.3603
+  },
+  {
+   "phrase": "united states",
+   "df": 28,
+   "log_odds": 2.3592
+  },
+  {
+   "phrase": "action may",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "as provided in rule",
+   "df": 9,
+   "log_odds": 2.3489
   },
   {
    "phrase": "attorney fees",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
    "phrase": "certified under",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
    "phrase": "committee note",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "committee on rules- amendment",
+   "phrase": "court may direct",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "coram nobis",
+   "phrase": "days after being",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "court approval",
+   "phrase": "days after being served",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "from a judgment",
+   "phrase": "days before",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "determine whether",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "district court may",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "easily understood",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "file a notice",
+   "df": 9,
+   "log_odds": 2.3489
   },
   {
    "phrase": "has been amended",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "notice of appeal filed",
+   "phrase": "least days",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "order disposing",
+   "phrase": "notice must",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "orders otherwise",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "other than",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "party against",
+   "df": 9,
+   "log_odds": 2.3489
   },
   {
    "phrase": "party from",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
    "phrase": "rather than",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "rule c b",
+   "phrase": "required by rule",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "rule g",
+   "phrase": "rule does",
    "df": 9,
-   "log_odds": 2.8583
-  },
-  {
-   "phrase": "subdivision d",
-   "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
    "phrase": "under civil rule",
    "df": 9,
-   "log_odds": 2.8583
+   "log_odds": 2.3489
   },
   {
-   "phrase": "judgment or order",
+   "phrase": "under u",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "under u s",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "under u s c",
+   "df": 9,
+   "log_odds": 2.3489
+  },
+  {
+   "phrase": "any other",
    "df": 27,
-   "log_odds": 2.8395
+   "log_odds": 2.3229
+  },
+  {
+   "phrase": "against whom",
+   "df": 8,
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "as a matter",
+   "df": 8,
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "attorney's fees",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "certified under rule",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
    "phrase": "certified under rule b",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "court orders otherwise",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "direct notice",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
    "phrase": "dismissal or compromise",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
-   "phrase": "extend the time",
+   "phrase": "district clerk",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "district courts",
+   "df": 8,
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "error coram",
+   "df": 8,
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "error coram nobis",
+   "df": 8,
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "federal practice",
+   "df": 8,
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "filed after",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "former rule",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "if one",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "interests of the class",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
    "phrase": "l j",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
-   "phrase": "may direct",
+   "phrase": "least days before",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
    "phrase": "nontaxable costs",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "not affect",
+   "df": 8,
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "order under",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "original deadline",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
+  },
+  {
+   "phrase": "party against whom",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "request exclusion",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
-   "phrase": "s c",
+   "phrase": "rule does not",
    "df": 8,
-   "log_odds": 2.7461
+   "log_odds": 2.237
   },
   {
-   "phrase": "set out",
+   "phrase": "rule f",
    "df": 8,
-   "log_odds": 2.7461
-  },
-  {
-   "phrase": "u s c",
-   "df": 8,
-   "log_odds": 2.7461
-  },
-  {
-   "phrase": "action may",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "appeal time",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "appointing class",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "appointing class counsel",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "as a class action",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "as class",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "as well",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "attorney's fees",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "cases in which",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "changes were",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "changes were made",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "class may",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "court may direct",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "determine whether",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "district court may",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "e b",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "easily understood",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "entry of a judgment",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "error coram",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "error coram nobis",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "fair reasonable",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "federal practice",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "federal rules",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "fee motion",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "filed after",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "filed before",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "interim counsel",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "motion under",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "only if",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "posttrial motion",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "proposed amendment",
-   "df": 7,
-   "log_odds": 2.6199
+   "log_odds": 2.237
   },
   {
    "phrase": "rule is amended",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "were made",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "within days after entry",
-   "df": 7,
-   "log_odds": 2.6199
-  },
-  {
-   "phrase": "any party",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "approval under",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "as amended",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "as class counsel",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "begins to run",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "civil docket",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "civil rule d notice",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "class as",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "class certified",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "class members who",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "d notice",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "decision whether",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "district courts",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "do so",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "elect exclusion",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "exclusion from",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "excusable neglect or good",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "expiration of the original",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "fair reasonable and adequate",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "fed r crim",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "fee awards",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "file a notice",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "final judgment",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "independent action",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "neglect or good",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "neglect or good cause",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "putative class",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "r crim",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "reasonable and adequate",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "rule d notice",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "settlement voluntary",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "settlement voluntary dismissal",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "should consider",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "substantive change",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "than days",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "under this rule",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "under this subdivision",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "voluntary dismissal",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "voluntary dismissal or compromise",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "whether to certify",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "writ of error",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "writ of error coram",
-   "df": 6,
-   "log_odds": 2.4758
-  },
-  {
-   "phrase": "court must",
-   "df": 16,
-   "log_odds": 2.3176
-  },
-  {
-   "phrase": "after entry of judgment",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "after the entry",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "after the expiration",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "altered or amended",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "amendment subdivision",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "any class",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "appeal filed after",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "appeal if",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "appeal under",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "appoint class",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "appoint class counsel",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "approve the proposal",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "as well as",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "authorizes the court",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "award of attorney's",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "award of attorney's fees",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "b class action",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "b or b class",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "cases it",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "certify the class",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "class certified under",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "class certified under rule",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "class member",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "class representative",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "class representatives",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "d b",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "document requirement",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "emergency civil",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "emergency civil rule",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "equity rule",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "extension of time",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "filing an appeal",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "former equity",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "former equity rule",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "former subdivision",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "individual class",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "individual members",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "it should",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "judgment must",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "moving to reopen",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "must be filed",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "must determine",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "new subdivision",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "not affect",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "notice must",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "notice was",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "opportunity to request",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "opportunity to request exclusion",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "opt out",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "order granting",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "order under",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "other parties",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "paragraph b",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "paragraph c",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "present rule",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "proposed class",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "represent the interests",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "requires court",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "requires court approval",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "rule does",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "rule e b",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "rule has",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "rule has been",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "rules- amendment subdivision",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "see moore",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "separate document requirement",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "sets out",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "some cases",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "some problems",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "such a motion",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "supreme court",
-   "df": 5,
-   "log_odds": 2.3078
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "than days after",
-   "df": 5,
-   "log_odds": 2.3078
+   "df": 8,
+   "log_odds": 2.237
   },
   {
-   "phrase": "time to file",
-   "df": 5,
-   "log_odds": 2.3078
+   "phrase": "was not",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
-   "phrase": "trigger the day",
-   "df": 5,
-   "log_odds": 2.3078
+   "phrase": "within days after being",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
-   "phrase": "under subdivision b",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "well as",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "whether to approve",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "within the time",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "yale l",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "yale l j",
-   "df": 5,
-   "log_odds": 2.3078
-  },
-  {
-   "phrase": "entry of judgment",
-   "df": 15,
-   "log_odds": 2.2541
+   "phrase": "within days after entry",
+   "df": 8,
+   "log_odds": 2.237
   },
   {
    "phrase": "does not",
-   "df": 44,
-   "log_odds": 2.0346
+   "df": 59,
+   "log_odds": 1.8105
   },
   {
-   "phrase": "court may",
+   "phrase": "must file",
+   "df": 15,
+   "log_odds": 1.7423
+  },
+  {
+   "phrase": "should not",
+   "df": 15,
+   "log_odds": 1.7423
+  },
+  {
+   "phrase": "has been",
    "df": 43,
-   "log_odds": 2.0108
+   "log_odds": 1.6893
+  },
+  {
+   "phrase": "criminal case",
+   "df": 14,
+   "log_odds": 1.675
+  },
+  {
+   "phrase": "court orders",
+   "df": 11,
+   "log_odds": 1.4414
   },
   {
    "phrase": "giving notice",
    "df": 11,
-   "log_odds": 1.9516
+   "log_odds": 1.4414
   },
   {
-   "phrase": "has been",
-   "df": 32,
-   "log_odds": 1.9098
+   "phrase": "must serve",
+   "df": 11,
+   "log_odds": 1.4414
   },
   {
    "phrase": "members who",
    "df": 10,
-   "log_odds": 1.8597
+   "log_odds": 1.3498
+  },
+  {
+   "phrase": "person who",
+   "df": 10,
+   "log_odds": 1.3498
   },
   {
    "phrase": "type of notice",
    "df": 10,
-   "log_odds": 1.8597
+   "log_odds": 1.3498
   },
   {
-   "phrase": "should not",
+   "phrase": "court has",
    "df": 9,
-   "log_odds": 1.7586
+   "log_odds": 1.2492
+  },
+  {
+   "phrase": "its own",
+   "df": 9,
+   "log_odds": 1.2492
+  },
+  {
+   "phrase": "may also",
+   "df": 9,
+   "log_odds": 1.2492
   },
   {
    "phrase": "as part",
    "df": 8,
-   "log_odds": 1.6464
-  },
-  {
-   "phrase": "court has",
-   "df": 8,
-   "log_odds": 1.6464
-  },
-  {
-   "phrase": "united states",
-   "df": 8,
-   "log_odds": 1.6464
-  },
-  {
-   "phrase": "criminal case",
-   "df": 7,
-   "log_odds": 1.5202
-  },
-  {
-   "phrase": "may also",
-   "df": 7,
-   "log_odds": 1.5202
-  },
-  {
-   "phrase": "will not",
-   "df": 7,
-   "log_odds": 1.5202
-  },
-  {
-   "phrase": "any other",
-   "df": 5,
-   "log_odds": 1.2081
-  },
-  {
-   "phrase": "but it",
-   "df": 5,
-   "log_odds": 1.2081
-  },
-  {
-   "phrase": "it applies",
-   "df": 5,
-   "log_odds": 1.2081
+   "log_odds": 1.1373
   },
   {
    "phrase": "judgment is entered",
-   "df": 5,
-   "log_odds": 1.2081
-  },
-  {
-   "phrase": "must provide",
-   "df": 5,
-   "log_odds": 1.2081
-  },
-  {
-   "phrase": "treated as",
-   "df": 5,
-   "log_odds": 1.2081
-  },
-  {
-   "phrase": "civil cases",
-   "df": 7,
-   "log_odds": 1.0083
-  },
-  {
-   "phrase": "civil procedure",
-   "df": 7,
-   "log_odds": 1.0083
-  },
-  {
-   "phrase": "it may",
-   "df": 7,
-   "log_odds": 1.0083
-  },
-  {
-   "phrase": "have been",
-   "df": 15,
-   "log_odds": 0.9505
-  },
-  {
-   "phrase": "there is no",
-   "df": 6,
-   "log_odds": 0.8642
-  },
-  {
-   "phrase": "courts may",
-   "df": 5,
-   "log_odds": 0.6962
-  },
-  {
-   "phrase": "it was",
-   "df": 5,
-   "log_odds": 0.6962
-  },
-  {
-   "phrase": "may not",
-   "df": 7,
-   "log_odds": 0.6707
-  },
-  {
-   "phrase": "even if",
    "df": 8,
-   "log_odds": 0.5445
+   "log_odds": 1.1373
+  },
+  {
+   "phrase": "proof of service",
+   "df": 8,
+   "log_odds": 1.1373
   },
   {
    "phrase": "u s",
-   "df": 8,
-   "log_odds": 0.5445
+   "df": 23,
+   "log_odds": 1.0614
+  },
+  {
+   "phrase": "it may",
+   "df": 12,
+   "log_odds": 1.0135
   },
   {
    "phrase": "civil case",
-   "df": 6,
-   "log_odds": 0.5266
+   "df": 14,
+   "log_odds": 0.8255
+  },
+  {
+   "phrase": "civil procedure",
+   "df": 9,
+   "log_odds": 0.7372
+  },
+  {
+   "phrase": "there is no",
+   "df": 9,
+   "log_odds": 0.7372
+  },
+  {
+   "phrase": "court order",
+   "df": 11,
+   "log_odds": 0.5919
+  },
+  {
+   "phrase": "have been",
+   "df": 17,
+   "log_odds": 0.5612
+  },
+  {
+   "phrase": "may not",
+   "df": 10,
+   "log_odds": 0.5004
+  },
+  {
+   "phrase": "even if",
+   "df": 10,
+   "log_odds": 0.248
+  },
+  {
+   "phrase": "if the court",
+   "df": 9,
+   "log_odds": 0.1473
   },
   {
    "phrase": "courts have",
    "df": 11,
-   "log_odds": 0.3357
-  },
-  {
-   "phrase": "do not",
-   "df": 9,
-   "log_odds": -0.096
+   "log_odds": -0.1746
   },
   {
    "phrase": "more than",
-   "df": 7,
-   "log_odds": -0.222
+   "df": 12,
+   "log_odds": -0.2168
   },
   {
-   "phrase": "information about",
-   "df": 7,
-   "log_odds": -0.5276
+   "phrase": "do not",
+   "df": 12,
+   "log_odds": -0.3292
   }
  ]
 }
