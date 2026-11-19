@@ -1,5 +1,5 @@
 {
- "rows": 1656,
+ "rows": 1662,
  "registers": {
   "agency-notice": {
    "rows": 243,
@@ -10,8 +10,8 @@
    "duplicates_dropped": 3
   },
   "court-rule": {
-   "rows": 668,
-   "duplicates_dropped": 32
+   "rows": 674,
+   "duplicates_dropped": 26
   },
   "opinion": {
    "rows": 249,

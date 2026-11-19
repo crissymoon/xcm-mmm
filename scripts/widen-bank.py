@@ -359,9 +359,19 @@ def rule_text(page: str) -> str:
     segment = page[start:stop if stop > 0 else start + 60000]
     segment = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", segment, flags=re.S)
     segment = re.sub(r"<h1[^>]*id=\"page-title\".*?</h1>", " ", segment, flags=re.S)
-    segment = re.split(r"<h4[^>]*>\s*(?:Notes|Committee Notes|Source)", segment,
-                       maxsplit=1, flags=re.I)[0]
-    return SPACE.sub(" ", htmllib.unescape(re.sub(r"<[^>]+>", " ", segment))).strip()
+    # The commentary heading is h4 on some pages and h2 on others, so the cut
+    # is on the heading's text rather than its level. A rule's own headings
+    # ("Rule 4 Waiver of the Service of Summons") never read Notes.
+    segment = re.split(r"<h[2-6][^>]*>\s*(?:Notes|Committee Notes|Source)\s*</h[2-6]>",
+                       segment, maxsplit=1, flags=re.I)[0]
+    text = SPACE.sub(" ", htmllib.unescape(re.sub(r"<[^>]+>", " ", segment))).strip()
+    # A few pages (Rule 84) carry the commentary as plain text with no heading,
+    # so the text markers are a fallback under the markup cut, not a duplicate.
+    for marker in NOTES:
+        cut = text.find(marker)
+        if cut > 0:
+            return text[:cut].strip()
+    return text
 
 
 # Splitting on `;` is what keeps a rule's run-on clauses apart, but it also
