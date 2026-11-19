@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Collect text for the registers the shipped bank does not hold.
 
-The coverage report says four registers have no rows at all: contracts,
-judicial opinions, regulations and agency notices. A widening effort that
-starts with words would be guessing, because there is nothing to read. This
-collects the text first, from three keyless public sources, and leaves the
-words to a later pass that can be measured against it.
+The pass started where the coverage report pointed: four registers with no
+rows at all (contracts, judicial opinions, regulations and agency notices).
+A widening effort that starts with words would be guessing, because there is
+nothing to read. This collects the text first, from five keyless public
+sources, and leaves the words to a later pass that can be measured against
+it. The fifth source is the one the bank already had: the court-rule register
+exists, but two rules carry most of it, which is its own kind of absence.
 
-Sources and why these three:
+Sources and why these five:
 
 * regulation - eCFR (ecfr.gov/api/versioner/v1). The codified federal rules,
   current, XML, and the register with the densest cross references. The
@@ -32,8 +34,9 @@ a recorded hash, and an extension that can be deleted in one command is
 easier to defend than a bank whose contents drifted.
 
 Usage:
-    python3 scripts/widen-bank.py                        # all three
+    python3 scripts/widen-bank.py                        # every register
     python3 scripts/widen-bank.py --register regulation  # one
+    python3 scripts/widen-bank.py --limit court-rule=700 # one cap, cached
     python3 scripts/widen-bank.py --limit 120 --refresh  # refetch
 """
 
