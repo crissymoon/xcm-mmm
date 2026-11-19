@@ -509,7 +509,11 @@ fn render(brief: &Brief, top: usize) -> String {
             shown += 1;
             section.push_str(&format!("  {shown}. {}\n", one_line(&clause.text)));
             let mut detail: Vec<String> = Vec::new();
-            if !clause.actor.is_empty() {
+            if clause.agentless {
+                // The grammatical subject of a passive rule is what the duty
+                // lands on, not the person who must carry it out.
+                detail.push("no actor named".to_string());
+            } else if !clause.actor.is_empty() {
                 detail.push(format!("who {}", clause.actor));
             }
             if let Some(condition) = &clause.condition {
@@ -522,6 +526,9 @@ fn render(brief: &Brief, top: usize) -> String {
             }
             if !clause.terms.is_empty() {
                 detail.push(format!("see {}", clause.terms.join(", ")));
+            }
+            if !clause.rare.is_empty() {
+                detail.push(format!("rare: {}", clause.rare.join(", ")));
             }
             if !detail.is_empty() {
                 section.push_str(&format!("     {}\n", detail.join(" | ")));
@@ -701,8 +708,122 @@ fn rebuild_manifest(dir: &str) -> Result<Manifest, Box<dyn Error>> {
         };
         row.fnv64 = hex64(fnv1a(&bytes));
     }
+    manifest.counts = derive_counts(dir)?;
     manifest.built_at = crate::dataset::built_at();
     Ok(manifest)
+}
+
+/// The numbers the manifest publishes beside the digests, each one counted
+/// from the bytes on disk.
+///
+/// The block used to be a note: written once by hand, read by nobody, and stale
+/// within a release. It now holds only what this function can measure, and
+/// `check` compares it against a fresh count, so a number that has drifted is a
+/// fault like a wrong digest. Keys that no code can derive are not published at
+/// all: a figure nothing measures is a claim, not a measurement.
+fn derive_counts(dir: &str) -> Result<BTreeMap<String, u64>, Box<dyn Error>> {
+    let legal = Legal::load(dir)?;
+    let mut counts: BTreeMap<String, u64> = BTreeMap::new();
+
+    let terms = legal.lexicon.terms();
+    let avoidable = terms.iter().filter(|term| term.avoidable).count() as u64;
+    counts.insert("terms".to_string(), terms.len() as u64);
+    counts.insert("terms_avoidable".to_string(), avoidable);
+    counts.insert(
+        "terms_necessary".to_string(),
+        terms.len() as u64 - avoidable,
+    );
+    counts.insert(
+        "terms_advisory".to_string(),
+        terms.iter().filter(|term| term.advisory).count() as u64,
+    );
+
+    let rules = legal.rules.rules();
+    counts.insert("rules".to_string(), rules.len() as u64);
+    counts.insert(
+        "rules_applying".to_string(),
+        rules.iter().filter(|rule| rule.applies).count() as u64,
+    );
+    counts.insert(
+        "rules_advisory".to_string(),
+        rules.iter().filter(|rule| !rule.applies).count() as u64,
+    );
+    counts.insert(
+        "rules_clause".to_string(),
+        rules.iter().filter(|rule| rule.kind == "clause").count() as u64,
+    );
+
+    let bank = jsonl(dir, "bank.jsonl")?;
+    counts.insert("bank".to_string(), bank.len() as u64);
+    for (key, axis) in [("bank_legal", "legal"), ("bank_plain", "plain")] {
+        let rows = bank.iter().filter(|row| field(row, "axis") == axis).count() as u64;
+        counts.insert(key.to_string(), rows);
+    }
+    // The court self-help pages are the one bank family the register table
+    // reads as prose written for a lay reader, so the count is kept separately
+    // rather than left to be rediscovered from the source prefix.
+    let self_help = bank
+        .iter()
+        .filter(|row| field(row, "source").starts_with("selfhelp:"))
+        .count() as u64;
+    counts.insert("bank_selfhelp".to_string(), self_help);
+
+    let pairs = jsonl(dir, "pairs.jsonl")?;
+    counts.insert("pairs".to_string(), pairs.len() as u64);
+    for (key, tag) in [
+        ("pairs_editorial", "editorial"),
+        ("pairs_published", "published"),
+    ] {
+        let rows = pairs.iter().filter(|pair| tagged(pair, tag)).count() as u64;
+        counts.insert(key.to_string(), rows);
+    }
+
+    for (key, name) in [
+        ("sources", "sources.json"),
+        ("substitutions", "substitutions.json"),
+        ("detector_features", "detector_features.json"),
+    ] {
+        counts.insert(key.to_string(), json_rows(dir, name)?);
+    }
+    Ok(counts)
+}
+
+/// Read a jsonl file as untyped rows. The counts only need the fields named
+/// below, so a typed mirror of every file would be four structs of ceremony.
+fn jsonl(dir: &str, name: &str) -> Result<Vec<serde_json::Value>, Box<dyn Error>> {
+    let path = format!("{dir}/{name}");
+    let text = fs::read_to_string(&path)?;
+    let mut rows = Vec::new();
+    for (number, line) in text.lines().enumerate() {
+        if line.trim().is_empty() {
+            continue;
+        }
+        let row = serde_json::from_str(line).map_err(|e| format!("{path}:{}: {e}", number + 1))?;
+        rows.push(row);
+    }
+    Ok(rows)
+}
+
+/// How many entries a one-row json file holds, or one when it holds an object.
+fn json_rows(dir: &str, name: &str) -> Result<u64, Box<dyn Error>> {
+    let path = format!("{dir}/{name}");
+    let value: serde_json::Value = serde_json::from_str(&fs::read_to_string(&path)?)?;
+    Ok(match value {
+        serde_json::Value::Array(rows) => rows.len() as u64,
+        _ => 1,
+    })
+}
+
+fn field<'a>(row: &'a serde_json::Value, key: &str) -> &'a str {
+    row.get(key)
+        .and_then(serde_json::Value::as_str)
+        .unwrap_or("")
+}
+
+fn tagged(row: &serde_json::Value, tag: &str) -> bool {
+    row.get("tags")
+        .and_then(serde_json::Value::as_array)
+        .is_some_and(|tags| tags.iter().any(|value| value.as_str() == Some(tag)))
 }
 
 fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
@@ -780,6 +901,33 @@ fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
     ] {
         if !declared.contains(name) && fs::metadata(format!("{dir}/{name}")).is_ok() {
             faults.push(format!("{name} is present but not in the manifest"));
+        }
+    }
+
+    // The counts block is a claim about the files, so it is checked the way the
+    // digests are. A folder that ships no bank or no pairs has nothing to count
+    // against, and is exempt rather than refused.
+    if fs::metadata(format!("{dir}/bank.jsonl")).is_ok()
+        && fs::metadata(format!("{dir}/pairs.jsonl")).is_ok()
+    {
+        let measured = derive_counts(dir)?;
+        for (key, want) in &measured {
+            match manifest.counts.get(key) {
+                Some(have) if have == want => {}
+                Some(have) => faults.push(format!(
+                    "counts.{key}: manifest says {have}, the files hold {want}"
+                )),
+                None => faults.push(format!(
+                    "counts.{key}: the files hold {want}, which the manifest does not publish"
+                )),
+            }
+        }
+        for key in manifest.counts.keys() {
+            if !measured.contains_key(key) {
+                faults.push(format!(
+                    "counts.{key}: the manifest publishes a number nothing measures"
+                ));
+            }
         }
     }
 
@@ -875,4 +1023,37 @@ fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
         println!("fault: {fault}");
     }
     Err(format!("{} faults", faults.len()).into())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The shipped manifest publishes a count for every file, so the shipped
+    /// files must still hold those numbers. A drift here is what `legal check`
+    /// reports as a fault.
+    #[test]
+    fn the_manifest_counts_match_the_shipped_files() {
+        let text = fs::read_to_string(format!("{DIR}/manifest.json")).expect("manifest");
+        let manifest: Manifest = serde_json::from_str(&text).expect("manifest json");
+        let measured = derive_counts(DIR).expect("counted");
+        assert_eq!(measured, manifest.counts, "manifest counts have drifted");
+    }
+
+    /// Each published total is the sum of its parts, so a count that was rolled
+    /// over by a pass that forgot one file shows up here rather than in a card.
+    /// The advisory and self-help rows are subsets, not parts, and are excluded.
+    #[test]
+    fn the_counts_add_up() {
+        let counts = derive_counts(DIR).expect("counted");
+        for (total, parts) in [
+            ("terms", ["terms_avoidable", "terms_necessary"]),
+            ("rules", ["rules_applying", "rules_advisory"]),
+            ("bank", ["bank_legal", "bank_plain"]),
+            ("pairs", ["pairs_editorial", "pairs_published"]),
+        ] {
+            let sum: u64 = parts.iter().map(|part| counts[*part]).sum();
+            assert_eq!(counts[total], sum, "{total} is not the sum of its parts");
+        }
+    }
 }

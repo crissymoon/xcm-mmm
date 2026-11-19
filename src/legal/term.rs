@@ -76,6 +76,23 @@ pub struct Hit {
     pub text: String,
 }
 
+/// How rare in general English a word has to be before a reader is assumed not
+/// to know it.
+///
+/// It lives here rather than in [`super::freq`] because it is a judgment about
+/// readers, not a fact about a corpus, and the corpus is only the probe. The
+/// note travels with the threshold for the same reason every other threshold in
+/// this data carries one: a cut a person cannot argue with is a cut nobody can
+/// check.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Rarity {
+    /// Occurrences per million tokens of general English below which a word is
+    /// reported as one the reader may not have met.
+    pub max_per_million: f64,
+    #[serde(default)]
+    pub note: String,
+}
+
 /// A density band from `settings.json`.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Band {
@@ -113,6 +130,11 @@ pub struct ClauseWords {
     /// Shortenings whose full stop does not end a sentence.
     #[serde(default)]
     pub abbreviations: Vec<String>,
+    /// Irregular past participles. A regular one ends in `ed` and needs no
+    /// list; these do not, and without them "shall be paid" reads as an
+    /// adjectival "shall be liable".
+    #[serde(default)]
+    pub participles: Vec<String>,
     /// Names a contract defines for its own cast, which are not terms of art:
     /// `the Buyer`, `the Agreement`, `the Term`. `legal explain --check` stays
     /// quiet about these, because the glossary rightly carries no row for them.
@@ -135,6 +157,12 @@ pub struct Settings {
     /// The cues `legal explain` sorts a sentence by.
     #[serde(default)]
     pub clauses: ClauseWords,
+    /// The frequency cut the rarity reading is reported at. Absent means the
+    /// instrument can still scan and rewrite; it cannot say which of its own
+    /// terms a general reader has never met, and asking it to is an error rather
+    /// than an empty answer.
+    #[serde(default)]
+    pub rarity: Option<Rarity>,
 }
 
 impl Settings {
@@ -150,6 +178,17 @@ impl Settings {
             .any(|w| w[0].max_per_100 > w[1].max_per_100)
         {
             return Err(format!("{path}: bands are not in ascending order"));
+        }
+        // A rarity cut of zero reports nothing and a negative one reports
+        // everything, and both look like a working reading in the output. The
+        // threshold has to be a real rate.
+        if let Some(rarity) = &settings.rarity {
+            if rarity.max_per_million <= 0.0 || !rarity.max_per_million.is_finite() {
+                return Err(format!(
+                    "{path}: rarity.max_per_million must be above zero, not {}",
+                    rarity.max_per_million
+                ));
+            }
         }
         Ok(settings)
     }
@@ -432,6 +471,7 @@ mod tests {
                 },
             ],
             protect: Vec::new(),
+            rarity: None,
         };
         assert_eq!(settings.band(0.4).name, "plain");
         assert_eq!(settings.band(3.0).name, "dense");

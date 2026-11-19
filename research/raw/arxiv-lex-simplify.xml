@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/lZpaFz2spvW44ptPBfJc55ckH7M</id>
+  <title>arXiv Query: search_query=abs:"lexical simplification" AND abs:"evaluation"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:19Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22lexical+simplification%22+AND+abs:%22evaluation%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>14</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2209.05301v1</id>
+    <title>Lexical Simplification Benchmarks for English, Portuguese, and Spanish</title>
+    <updated>2022-09-12T15:06:26Z</updated>
+    <link href="https://arxiv.org/abs/2209.05301v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.05301v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Even in highly-developed countries, as many as 15-30\% of the population can only understand texts written using a basic vocabulary. Their understanding of everyday texts is limited, which prevents them from taking an active role in society and making informed decisions regarding healthcare, legal representation, or democratic choice. Lexical simplification is a natural language processing task that aims to make text understandable to everyone by replacing complex vocabulary and expressions with simpler ones, while preserving the original meaning. It has attracted considerable attention in the last 20 years, and fully automatic lexical simplification systems have been proposed for various languages. The main obstacle for the progress of the field is the absence of high-quality datasets for building and evaluating lexical simplification systems. We present a new benchmark dataset for lexical simplification in English, Spanish, and (Brazilian) Portuguese, and provide details about data selection and annotation procedures. This is the first dataset that offers a direct comparison of lexical simplification systems for three languages. To showcase the usability of the dataset, we adapt two state-of-the-art lexical simplification systems with differing architectures (neural vs.\ non-neural) to all three languages (English, Spanish, and Brazilian Portuguese) and evaluate their performances on our new dataset. For a fairer comparison, we use several evaluation measures which capture varied aspects of the systems' efficacy, and discuss their strengths and weaknesses. We find a state-of-the-art neural lexical simplification system outperforms a state-of-the-art non-neural lexical simplification system in all three languages. More importantly, we find that the state-of-the-art neural lexical simplification systems perform significantly better for English than for Spanish and Portuguese.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-12T15:06:26Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Sanja Stajner</name>
+    </author>
+    <author>
+      <name>Daniel Ferres</name>
+    </author>
+    <author>
+      <name>Matthew Shardlow</name>
+    </author>
+    <author>
+      <name>Kai North</name>
+    </author>
+    <author>
+      <name>Marcos Zampieri</name>
+    </author>
+    <author>
+      <name>Horacio Saggion</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.07048v1</id>
+    <title>Chinese Lexical Simplification</title>
+    <updated>2020-10-14T12:55:36Z</updated>
+    <link href="https://arxiv.org/abs/2010.07048v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.07048v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Lexical simplification has attracted much attention in many languages, which is the process of replacing complex words in a given sentence with simpler alternatives of equivalent meaning. Although the richness of vocabulary in Chinese makes the text very difficult to read for children and non-native speakers, there is no research work for Chinese lexical simplification (CLS) task. To circumvent difficulties in acquiring annotations, we manually create the first benchmark dataset for CLS, which can be used for evaluating the lexical simplification systems automatically. In order to acquire more thorough comparison, we present five different types of methods as baselines to generate substitute candidates for the complex word that include synonym-based approach, word embedding-based approach, pretrained language model-based approach, sememe-based approach, and a hybrid approach. Finally, we design the experimental evaluation of these baselines and discuss their advantages and disadvantages. To our best knowledge, this is the first study for CLS task.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-14T12:55:36Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Jipeng Qiang</name>
+    </author>
+    <author>
+      <name>Xinyu Lu</name>
+    </author>
+    <author>
+      <name>Yun Li</name>
+    </author>
+    <author>
+      <name>Yunhao Yuan</name>
+    </author>
+    <author>
+      <name>Yang Shi</name>
+    </author>
+    <author>
+      <name>Xindong Wu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1810.05754v1</id>
+    <title>A Word-Complexity Lexicon and A Neural Readability Ranking Model for Lexical Simplification</title>
+    <updated>2018-10-12T23:05:01Z</updated>
+    <link href="https://arxiv.org/abs/1810.05754v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1810.05754v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Current lexical simplification approaches rely heavily on heuristics and corpus level features that do not always align with human judgment. We create a human-rated word-complexity lexicon of 15,000 English words and propose a novel neural readability ranking model with a Gaussian-based feature vectorization layer that utilizes these human ratings to measure the complexity of any given word or phrase. Our model performs better than the state-of-the-art systems for different lexical simplification tasks and evaluation datasets. Additionally, we also produce SimplePPDB++, a lexical resource of over 10 million simplifying paraphrase rules, by applying our model to the Paraphrase Database (PPDB).</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-12T23:05:01Z</published>
+    <arxiv:comment>12 pages; EMNLP 2018</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Mounica Maddela</name>
+    </author>
+    <author>
+      <name>Wei Xu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2302.02900v1</id>
+    <title>Controllable Lexical Simplification for English</title>
+    <updated>2023-02-06T16:09:27Z</updated>
+    <link href="https://arxiv.org/abs/2302.02900v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2302.02900v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Fine-tuning Transformer-based approaches have recently shown exciting results on sentence simplification task. However, so far, no research has applied similar approaches to the Lexical Simplification (LS) task. In this paper, we present ConLS, a Controllable Lexical Simplification system fine-tuned with T5 (a Transformer-based model pre-trained with a BERT-style approach and several other tasks). The evaluation results on three datasets (LexMTurk, BenchLS, and NNSeval) have shown that our model performs comparable to LSBert (the current state-of-the-art) and even outperforms it in some cases. We also conducted a detailed comparison on the effectiveness of control tokens to give a clear view of how each token contributes to the model.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-02-06T16:09:27Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Kim Cheng Sheang</name>
+    </author>
+    <author>
+      <name>Daniel Ferrés</name>
+    </author>
+    <author>
+      <name>Horacio Saggion</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.12898v1</id>
+    <title>JEBS: A Fine-grained Biomedical Lexical Simplification Task</title>
+    <updated>2025-06-15T16:01:20Z</updated>
+    <link href="https://arxiv.org/abs/2506.12898v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.12898v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Online medical literature has made health information more available than ever, however, the barrier of complex medical jargon prevents the general public from understanding it. Though parallel and comparable corpora for Biomedical Text Simplification have been introduced, these conflate the many syntactic and lexical operations involved in simplification. To enable more targeted development and evaluation, we present a fine-grained lexical simplification task and dataset, Jargon Explanations for Biomedical Simplification (JEBS, https://github.com/bill-from-ri/JEBS-data ). The JEBS task involves identifying complex terms, classifying how to replace them, and generating replacement text. The JEBS dataset contains 21,595 replacements for 10,314 terms across 400 biomedical abstracts and their manually simplified versions. Additionally, we provide baseline results for a variety of rule-based and transformer-based systems for the three sub-tasks. The JEBS task, data, and baseline results pave the way for development and rigorous evaluation of systems for replacing or explaining complex biomedical terms.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-15T16:01:20Z</published>
+    <arxiv:comment>13 pages, 2 figures, to be published in Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>William Xia</name>
+    </author>
+    <author>
+      <name>Ishita Unde</name>
+    </author>
+    <author>
+      <name>Brian Ondov</name>
+    </author>
+    <author>
+      <name>Dina Demner-Fushman</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1806.09439v1</id>
+    <title>Prior Attention for Style-aware Sequence-to-Sequence Models</title>
+    <updated>2018-06-25T13:17:24Z</updated>
+    <link href="https://arxiv.org/abs/1806.09439v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1806.09439v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We extend sequence-to-sequence models with the possibility to control the characteristics or style of the generated output, via attention that is generated a priori (before decoding) from a latent code vector. After training an initial attention-based sequence-to-sequence model, we use a variational auto-encoder conditioned on representations of input sequences and a latent code vector space to generate attention matrices. By sampling the code vector from specific regions of this latent space during decoding and imposing prior attention generated from it in the seq2seq model, output can be steered towards having certain attributes. This is demonstrated for the task of sentence simplification, where the latent code vector allows control over output length and lexical simplification, and enables fine-tuning to optimize for different evaluation metrics.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-06-25T13:17:24Z</published>
+    <arxiv:comment>6 pages, 6 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Lucas Sterckx</name>
+    </author>
+    <author>
+      <name>Johannes Deleu</name>
+    </author>
+    <author>
+      <name>Chris Develder</name>
+    </author>
+    <author>
+      <name>Thomas Demeester</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2311.00310v1</id>
+    <title>Unsupervised Lexical Simplification with Context Augmentation</title>
+    <updated>2023-11-01T05:48:05Z</updated>
+    <link href="https://arxiv.org/abs/2311.00310v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2311.00310v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We propose a new unsupervised lexical simplification method that uses only monolingual data and pre-trained language models. Given a target word and its context, our method generates substitutes based on the target context and also additional contexts sampled from monolingual data. We conduct experiments in English, Portuguese, and Spanish on the TSAR-2022 shared task, and show that our model substantially outperforms other unsupervised systems across all languages. We also establish a new state-of-the-art by ensembling our model with GPT-3.5. Lastly, we evaluate our model on the SWORDS lexical substitution data set, achieving a state-of-the-art result.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-11-01T05:48:05Z</published>
+    <arxiv:comment>12 pages; accepted for the Findings of EMNLP 2023</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Takashi Wada</name>
+    </author>
+    <author>
+      <name>Timothy Baldwin</name>
+    </author>
+    <author>
+      <name>Jey Han Lau</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1702.08450v1</id>
+    <title>A Knowledge-Based Approach to Word Sense Disambiguation by distributional selection and semantic features</title>
+    <updated>2017-02-27T13:37:15Z</updated>
+    <link href="https://arxiv.org/abs/1702.08450v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1702.08450v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Word sense disambiguation improves many Natural Language Processing (NLP) applications such as Information Retrieval, Information Extraction, Machine Translation, or Lexical Simplification. Roughly speaking, the aim is to choose for each word in a text its best sense. One of the most popular method estimates local semantic similarity relatedness between two word senses and then extends it to all words from text. The most direct method computes a rough score for every pair of word senses and chooses the lexical chain that has the best score (we can imagine the exponential complexity that returns this comprehensive approach). In this paper, we propose to use a combinatorial optimization metaheuristic for choosing the nearest neighbors obtained by distributional selection around the word to disambiguate. The test and the evaluation of our method concern a corpus written in French by means of the semantic network BabelNet. The obtained accuracy rate is 78 % on all names and verbs chosen for the evaluation.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-02-27T13:37:15Z</published>
+    <arxiv:comment>in French</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>22ème Conférence sur le Traitement Automatique des Langues Naturelles et 17ème Rencontre des Étudiants Chercheurs en Informatique pour le Traitement Automatique des Langues, Jun 2015, CAEN, France. 22ème Conférence sur le Traitement Automatique des Langues Naturelles et 17ème Rencontre des Étudiants Chercheurs en Informatique pour le Traitement Automatique des Langues, pp.13--24, 2015</arxiv:journal_ref>
+    <author>
+      <name>Mokhtar Billami</name>
+      <arxiv:affiliation>LIF</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.09034v2</id>
+    <title>ALEXSIS-PT: A New Resource for Portuguese Lexical Simplification</title>
+    <updated>2024-02-09T15:30:08Z</updated>
+    <link href="https://arxiv.org/abs/2209.09034v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.09034v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Lexical simplification (LS) is the task of automatically replacing complex words for easier ones making texts more accessible to various target populations (e.g. individuals with low literacy, individuals with learning disabilities, second language learners). To train and test models, LS systems usually require corpora that feature complex words in context along with their candidate substitutions. To continue improving the performance of LS systems we introduce ALEXSIS-PT, a novel multi-candidate dataset for Brazilian Portuguese LS containing 9,605 candidate substitutions for 387 complex words. ALEXSIS-PT has been compiled following the ALEXSIS protocol for Spanish opening exciting new avenues for cross-lingual models. ALEXSIS-PT is the first LS multi-candidate dataset that contains Brazilian newspaper articles. We evaluated four models for substitute generation on this dataset, namely mDistilBERT, mBERT, XLM-R, and BERTimbau. BERTimbau achieved the highest performance across all evaluation metrics.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-19T14:10:21Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Kai North</name>
+    </author>
+    <author>
+      <name>Marcos Zampieri</name>
+    </author>
+    <author>
+      <name>Tharindu Ranasinghe</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2204.09292v1</id>
+    <title>Towards Arabic Sentence Simplification via Classification and Generative Approaches</title>
+    <updated>2022-04-20T08:17:33Z</updated>
+    <link href="https://arxiv.org/abs/2204.09292v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2204.09292v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper presents an attempt to build a Modern Standard Arabic (MSA) sentence-level simplification system. We experimented with sentence simplification using two approaches: (i) a classification approach leading to lexical simplification pipelines which use Arabic-BERT, a pre-trained contextualised model, as well as a model of fastText word embeddings; and (ii) a generative approach, a Seq2Seq technique by applying a multilingual Text-to-Text Transfer Transformer mT5. We developed our training corpus by aligning the original and simplified sentences from the internationally acclaimed Arabic novel "Saaq al-Bambuu". We evaluate effectiveness of these methods by comparing the generated simple sentences to the target simple sentences using the BERTScore evaluation metric. The simple sentences produced by the mT5 model achieve P 0.72, R 0.68 and F-1 0.70 via BERTScore, while, combining Arabic-BERT and fastText achieves P 0.97, R 0.97 and F-1 0.97. In addition, we report a manual error analysis for these experiments. \url{https://github.com/Nouran-Khallaf/Lexical_Simplification}</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-04-20T08:17:33Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Nouran Khallaf</name>
+    </author>
+    <author>
+      <name>Serge Sharoff</name>
+    </author>
+  </entry>
+</feed>

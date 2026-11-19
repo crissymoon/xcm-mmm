@@ -1,0 +1,257 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/nwNswm7g3ihlnTW37DkTmyUcVeY</id>
+  <title>arXiv Query: search_query=abs:"legalese"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:29Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22legalese%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>13</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2404.13087v1</id>
+    <title>Demystifying Legalese: An Automated Approach for Summarizing and Analyzing Overlaps in Privacy Policies and Terms of Service</title>
+    <updated>2024-04-17T19:53:59Z</updated>
+    <link href="https://arxiv.org/abs/2404.13087v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.13087v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The complexities of legalese in terms and policy documents can bind individuals to contracts they do not fully comprehend, potentially leading to uninformed data sharing. Our work seeks to alleviate this issue by developing language models that provide automated, accessible summaries and scores for such documents, aiming to enhance user understanding and facilitate informed decisions. We compared transformer-based and conventional models during training on our dataset, and RoBERTa performed better overall with a remarkable 0.74 F1-score. Leveraging our best-performing model, RoBERTa, we highlighted redundancies and potential guideline violations by identifying overlaps in GDPR-required documents, underscoring the necessity for stricter GDPR compliance.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-17T19:53:59Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Shikha Soneji</name>
+    </author>
+    <author>
+      <name>Mitchell Hoesing</name>
+    </author>
+    <author>
+      <name>Sujay Koujalgi</name>
+    </author>
+    <author>
+      <name>Jonathan Dodge</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.00554v1</id>
+    <title>Red-teaming Activation Probes using Prompted LLMs</title>
+    <updated>2025-11-01T13:35:34Z</updated>
+    <link href="https://arxiv.org/abs/2511.00554v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.00554v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Activation probes are attractive monitors for AI systems due to low cost and latency, but their real-world robustness remains underexplored. We ask: What failure modes arise under realistic, black-box adversarial pressure, and how can we surface them with minimal effort? We present a lightweight black-box red-teaming procedure that wraps an off-the-shelf LLM with iterative feedback and in-context learning (ICL), and requires no fine-tuning, gradients, or architectural access. Running a case study with probes for high-stakes interactions, we show that our approach can help discover valuable insights about a SOTA probe. Our analysis uncovers interpretable brittleness patterns (e.g., legalese-induced FPs; bland procedural tone FNs) and reduced but persistent vulnerabilities under scenario-constraint attacks. These results suggest that simple prompted red-teaming scaffolding can anticipate failure patterns before deployment and might yield promising, actionable insights to harden future probes.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-01T13:35:34Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Phil Blandfort</name>
+    </author>
+    <author>
+      <name>Robert Graham</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2211.12752v1</id>
+    <title>Agent-Specific Deontic Modality Detection in Legal Language</title>
+    <updated>2022-11-23T07:32:23Z</updated>
+    <link href="https://arxiv.org/abs/2211.12752v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2211.12752v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal documents are typically long and written in legalese, which makes it particularly difficult for laypeople to understand their rights and duties. While natural language understanding technologies can be valuable in supporting such understanding in the legal domain, the limited availability of datasets annotated for deontic modalities in the legal domain, due to the cost of hiring experts and privacy issues, is a bottleneck. To this end, we introduce, LEXDEMOD, a corpus of English contracts annotated with deontic modality expressed with respect to a contracting party or agent along with the modal triggers. We benchmark this dataset on two tasks: (i) agent-specific multi-label deontic modality classification, and (ii) agent-specific deontic modality and trigger span detection using Transformer-based (Vaswani et al., 2017) language models. Transfer learning experiments show that the linguistic diversity of modal expressions in LEXDEMOD generalizes reasonably from lease to employment and rental agreements. A small case study indicates that a model trained on LEXDEMOD can detect red flags with high recall. We believe our work offers a new research direction for deontic modality detection in the legal domain.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-11-23T07:32:23Z</published>
+    <arxiv:comment>Accepted at EMNLP 2022</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Abhilasha Sancheti</name>
+    </author>
+    <author>
+      <name>Aparna Garimella</name>
+    </author>
+    <author>
+      <name>Balaji Vasan Srinivasan</name>
+    </author>
+    <author>
+      <name>Rachel Rudinger</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.27550v1</id>
+    <title>APPSI-139: A Parallel Corpus of English Application Privacy Policy Summarization and Interpretation</title>
+    <updated>2026-04-30T07:58:24Z</updated>
+    <link href="https://arxiv.org/abs/2604.27550v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.27550v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Privacy policies are essential for users to understand how service providers handle their personal data. However, these documents are often long and complex, as well as filled with technobabble and legalese, causing users to unknowingly accept terms that may even contradict the law. While summarizing and interpreting these privacy policies is crucial, there is a lack of high-quality English parallel corpus optimized for legal clarity and readability. To address this issue, we introduce APPSI-139, a high-quality English privacy policy corpus meticulously annotated by domain experts, specifically designed for summarization and interpretation tasks. The corpus includes 139 English privacy policies, 15,692 rewritten parallel corpora, and 36,351 fine-grained annotation labels across 11 data practice categories. Concurrently, we propose TCSI-pp-V2, a hybrid privacy policy summarization and interpretation framework that employs an alternating training strategy and coordinates multiple expert modules to effectively balance computational efficiency and accuracy. Experimental results show that the hybrid summarization system built on APPSI-139 corpus and the TCSI-pp-V2 framework outperform large language models, such as GPT-4o and LLaMA-3-70B, in terms of readability and reliability. The source code and dataset are available at https://github.com/EnlightenedAI/APPSI-139.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-30T07:58:24Z</published>
+    <arxiv:comment>Accepted to ACL 2026 Main Conference</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Pengyun Zhu</name>
+    </author>
+    <author>
+      <name>Qiheng Sun</name>
+    </author>
+    <author>
+      <name>Long Wen</name>
+    </author>
+    <author>
+      <name>Yanbo Wang</name>
+    </author>
+    <author>
+      <name>Yang Cao</name>
+    </author>
+    <author>
+      <name>Junxu Liu</name>
+    </author>
+    <author>
+      <name>Deyi Xiong</name>
+    </author>
+    <author>
+      <name>Jinfei Liu</name>
+    </author>
+    <author>
+      <name>Zhibo Wang</name>
+    </author>
+    <author>
+      <name>Kui Ren</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2309.00382v2</id>
+    <title>Towards Cross-Provider Analysis of Transparency Information for Data Protection</title>
+    <updated>2023-09-05T09:33:05Z</updated>
+    <link href="https://arxiv.org/abs/2309.00382v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.00382v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Transparency and accountability are indispensable principles for modern data protection, from both, legal and technical viewpoints. Regulations such as the GDPR, therefore, require specific transparency information to be provided including, e.g., purpose specifications, storage periods, or legal bases for personal data processing. However, it has repeatedly been shown that all too often, this information is practically hidden in legalese privacy policies, hindering data subjects from exercising their rights. This paper presents a novel approach to enable large-scale transparency information analysis across service providers, leveraging machine-readable formats and graph data science methods. More specifically, we propose a general approach for building a transparency analysis platform (TAP) that is used to identify data transfers empirically, provide evidence-based analyses of sharing clusters of more than 70 real-world data controllers, or even to simulate network dynamics using synthetic transparency information for large-scale data-sharing scenarios. We provide the general approach for advanced transparency information analysis, an open source architecture and implementation in the form of a queryable analysis platform, and versatile analysis examples. These contributions pave the way for more transparent data processing for data subjects, and evidence-based enforcement processes for data protection authorities. Future work can build upon our contributions to gain more insights into so-far hidden data-sharing practices.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-01T10:36:09Z</published>
+    <arxiv:comment>technical report</arxiv:comment>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Elias Grünewald</name>
+    </author>
+    <author>
+      <name>Johannes M. Halkenhäußer</name>
+    </author>
+    <author>
+      <name>Nicola Leschke</name>
+    </author>
+    <author>
+      <name>Frank Pallas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1810.12379v1</id>
+    <title>Renarration for All</title>
+    <updated>2018-10-29T19:42:41Z</updated>
+    <link href="https://arxiv.org/abs/1810.12379v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1810.12379v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The accessibility of content for all has been a key goal of the Web since its conception. However, true accessibility -- access to relevant content in the global context -- has been elusive for reasons that extend beyond physical accessibility issues. Among them are the spoken languages, literacy levels, expertise, and culture. These issues are highly significant, since information may not reach those who are the most in need of it. For example, the minimum wage laws that are published in legalese on government sites and the low-literate and immigrant populations. While some organizations and volunteers work on bridging such gaps by creating and disseminating alternative versions of such content, Web scale solutions much be developed to take advantage of its distributed dissemination capabilities. This work examines content accessibility from the perspective of inclusiveness. For this purpose, a human in the loop approach for renarrating Web content is proposed, where a renarrator creates an alternative narrative of some Web content with the intent of extending its reach. A renarration relates some Web content with an alternative version by means of transformations like simplification, elaboration, translation, or production of audio and video material. This work presents a model and a basic architecture for supporting renarrations along with various scenarios. We also discuss the potentials of the W3C specification for Web Annotation Data Model towards a more inclusive and decentralized social web.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-29T19:42:41Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <arxiv:journal_ref>IIITB Data Science Communications, vol 1, (2016)</arxiv:journal_ref>
+    <author>
+      <name>T. B. Dinesh</name>
+    </author>
+    <author>
+      <name>S. Uskudarli</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2403.09163v1</id>
+    <title>Caveat Lector: Large Language Models in Legal Practice</title>
+    <updated>2024-03-14T08:19:41Z</updated>
+    <link href="https://arxiv.org/abs/2403.09163v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2403.09163v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The current fascination with large language models, or LLMs, derives from the fact that many users lack the expertise to evaluate the quality of the generated text. LLMs may therefore appear more capable than they actually are. The dangerous combination of fluency and superficial plausibility leads to the temptation to trust the generated text and creates the risk of overreliance. Who would not trust perfect legalese? Relying recent findings in both technical and legal scholarship, this Article counterbalances the overly optimistic predictions as to the role of LLMs in legal practice. Integrating LLMs into legal workstreams without a better comprehension of their limitations, will create inefficiencies if not outright risks. Notwithstanding their unprecedented ability to generate text, LLMs do not understand text. Without the ability to understand meaning, LLMs will remain unable to use language, to acquire knowledge and to perform complex reasoning tasks. Trained to model language on the basis of stochastic word predictions, LLMs cannot distinguish fact from fiction. Their knowledge of the law is limited to word strings memorized in their parameters. It is also incomplete and largely incorrect. LLMs operate at the level of word distributions, not at the level of verified facts. The resulting propensity to hallucinate, to produce statements that are incorrect but appear helpful and relevant, is alarming in high-risk areas like legal services. At present, lawyers should beware of relying on text generated by LLMs.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-03-14T08:19:41Z</published>
+    <arxiv:comment>Vol 19 Rutgers Bus L R 2 2024 (forthcoming)</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Eliza Mik</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2403.08053v1</id>
+    <title>Generating Clarification Questions for Disambiguating Contracts</title>
+    <updated>2024-03-12T19:57:39Z</updated>
+    <link href="https://arxiv.org/abs/2403.08053v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2403.08053v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Enterprises frequently enter into commercial contracts that can serve as vital sources of project-specific requirements. Contractual clauses are obligatory, and the requirements derived from contracts can detail the downstream implementation activities that non-legal stakeholders, including requirement analysts, engineers, and delivery personnel, need to conduct. However, comprehending contracts is cognitively demanding and error-prone for such stakeholders due to the extensive use of Legalese and the inherent complexity of contract language. Furthermore, contracts often contain ambiguously worded clauses to ensure comprehensive coverage. In contrast, non-legal stakeholders require a detailed and unambiguous comprehension of contractual clauses to craft actionable requirements. In this work, we introduce a novel legal NLP task that involves generating clarification questions for contracts. These questions aim to identify contract ambiguities on a document level, thereby assisting non-legal stakeholders in obtaining the necessary details for eliciting requirements. This task is challenged by three core issues: (1) data availability, (2) the length and unstructured nature of contracts, and (3) the complexity of legal text. To address these issues, we propose ConRAP, a retrieval-augmented prompting framework for generating clarification questions to disambiguate contractual text. Experiments conducted on contracts sourced from the publicly available CUAD dataset show that ConRAP with ChatGPT can detect ambiguities with an F2 score of 0.87. 70% of the generated clarification questions are deemed useful by human evaluators.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-03-12T19:57:39Z</published>
+    <arxiv:comment>9 pages, 3 figures, accepted to LREC-COLING 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Anmol Singhal</name>
+    </author>
+    <author>
+      <name>Chirag Jain</name>
+    </author>
+    <author>
+      <name>Preethu Rose Anish</name>
+    </author>
+    <author>
+      <name>Arkajyoti Chakraborty</name>
+    </author>
+    <author>
+      <name>Smita Ghaisas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2409.16140v2</id>
+    <title>Metamorphic Debugging for Accountable Software</title>
+    <updated>2024-10-22T16:14:05Z</updated>
+    <link href="https://arxiv.org/abs/2409.16140v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.16140v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As the laws have become more complicated and enormous, the role of software systems in navigating and understanding these intricacies has become more critical. Given their socio-economic and legally critical implications, ensuring software accountability -- encompassing qualities such as legal compliance, explainability, perceptions of procedural justice, fairness of outcomes, and confidentiality/privacy -- is of paramount social importance. Moreover, software that accurately interprets its requirements, complies with legal standards and upholds social fairness can serve as a surrogate for legal and social norms, enabling policymakers to inquire about the law as seamlessly as a software engineer conducts a test. However, ensuring software accountability faces three key challenges: i) Translating legalese into formal specifications, ii) Lack of a definitive 'truth' for queries (the oracle problem), and iii) Scarcity of trustworthy datasets due to privacy and legal concerns.
+  Drawing from the experiences in debugging U.S. tax preparation software, we propose that these challenges can be tackled by focusing on relational specifications. While the exact output for a given input may be unknown, the relationship between the outputs of two related inputs may be easier to express. This observation resembles i) the legal doctrine of precedent, meaning that similar cases must yield similar rulings; and ii) metamorphic relation (MR) in software engineering that requires a specific relation between software inputs and outputs. We propose metamorphic debugging as the foundation for detecting, explaining, and repairing socio-legal software for these relations. We showcase recent results that leverage metamorphic debugging to detect and explain accountability bugs in tax prep and poverty management software systems.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.PL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-24T14:45:13Z</published>
+    <arxiv:comment>In the 3rd International Workshop on Programming Languages and the Law (ProLaLa'24)</arxiv:comment>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Saeid Tizpaz-Niari</name>
+    </author>
+    <author>
+      <name>Shiva Darian</name>
+    </author>
+    <author>
+      <name>Ashutosh Trivedi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2012.10431v1</id>
+    <title>TILT: A GDPR-Aligned Transparency Information Language and Toolkit for Practical Privacy Engineering</title>
+    <updated>2020-12-18T18:45:04Z</updated>
+    <link href="https://arxiv.org/abs/2012.10431v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.10431v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we present TILT, a transparency information language and toolkit explicitly designed to represent and process transparency information in line with the requirements of the GDPR and allowing for a more automated and adaptive use of such information than established, legalese data protection policies do.
+  We provide a detailed analysis of transparency obligations from the GDPR to identify the expressiveness required for a formal transparency language intended to meet respective legal requirements. In addition, we identify a set of further, non-functional requirements that need to be met to foster practical adoption in real-world (web) information systems engineering. On this basis, we specify our formal language and present a respective, fully implemented toolkit around it. We then evaluate the practical applicability of our language and toolkit and demonstrate the additional prospects it unlocks through two different use cases: a) the inter-organizational analysis of personal data-related practices allowing, for instance, to uncover data sharing networks based on explicitly announced transparency information and b) the presentation of formally represented transparency information to users through novel, more comprehensible, and potentially adaptive user interfaces, heightening data subjects' actual informedness about data-related practices and, thus, their sovereignty.
+  Altogether, our transparency information language and toolkit allow - differently from previous work - to express transparency information in line with actual legal requirements and practices of modern (web) information systems engineering and thereby pave the way for a multitude of novel possibilities to heighten transparency and user sovereignty in practice.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.FL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-18T18:45:04Z</published>
+    <arxiv:comment>Accepted for publication at the ACM Conference on Fairness, Accountability, and Transparency 2021 (ACM FAccT'21). This is a preprint manuscript (authors' own version before final copy-editing)</arxiv:comment>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Elias Grünewald</name>
+    </author>
+    <author>
+      <name>Frank Pallas</name>
+    </author>
+    <arxiv:doi>10.1145/3442188.3445925</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3442188.3445925" title="doi"/>
+  </entry>
+</feed>

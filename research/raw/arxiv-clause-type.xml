@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/AdWpheNX2knoaqUqj5zh/1eWvgE</id>
+  <title>arXiv Query: search_query=abs:"contract" AND abs:"clause" AND abs:"classification"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:25Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22contract%22+AND+(abs:%22clause%22+AND+abs:%22classification%22)&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>13</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2110.15794v1</id>
+    <title>CLAUSEREC: A Clause Recommendation Framework for AI-aided Contract Authoring</title>
+    <updated>2021-10-26T09:20:16Z</updated>
+    <link href="https://arxiv.org/abs/2110.15794v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2110.15794v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Contracts are a common type of legal document that frequent in several day-to-day business workflows. However, there has been very limited NLP research in processing such documents, and even lesser in generating them. These contracts are made up of clauses, and the unique nature of these clauses calls for specific methods to understand and generate such documents. In this paper, we introduce the task of clause recommendation, asa first step to aid and accelerate the author-ing of contract documents. We propose a two-staged pipeline to first predict if a specific clause type is relevant to be added in a contract, and then recommend the top clauses for the given type based on the contract context. We pretrain BERT on an existing library of clauses with two additional tasks and use it for our prediction and recommendation. We experiment with classification methods and similarity-based heuristics for clause relevance prediction, and generation-based methods for clause recommendation, and evaluate the results from various methods on several clause types. We provide analyses on the results, and further outline the advantages and limitations of the various methods for this line of research.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-10-26T09:20:16Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Vinay Aggarwal</name>
+    </author>
+    <author>
+      <name>Aparna Garimella</name>
+    </author>
+    <author>
+      <name>Balaji Vasan Srinivasan</name>
+    </author>
+    <author>
+      <name>Anandhavelu N</name>
+    </author>
+    <author>
+      <name>Rajiv Jain</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2105.06083v1</id>
+    <title>Cross-Domain Contract Element Extraction with a Bi-directional Feedback Clause-Element Relation Network</title>
+    <updated>2021-05-13T05:14:36Z</updated>
+    <link href="https://arxiv.org/abs/2105.06083v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2105.06083v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Contract element extraction (CEE) is the novel task of automatically identifying and extracting legally relevant elements such as contract dates, payments, and legislation references from contracts. Automatic methods for this task view it as a sequence labeling problem and dramatically reduce human labor. However, as contract genres and element types may vary widely, a significant challenge for this sequence labeling task is how to transfer knowledge from one domain to another, i.e., cross-domain CEE. Cross-domain CEE differs from cross-domain named entity recognition (NER) in two important ways. First, contract elements are far more fine-grained than named entities, which hinders the transfer of extractors. Second, the extraction zones for cross-domain CEE are much larger than for cross-domain NER. As a result, the contexts of elements from different domains can be more diverse. We propose a framework, the Bi-directional Feedback cLause-Element relaTion network (Bi-FLEET), for the cross-domain CEE task that addresses the above challenges. Bi-FLEET has three main components: (1) a context encoder, (2) a clause-element relation encoder, and (3) an inference layer. To incorporate invariant knowledge about element and clause types, a clause-element graph is constructed across domains and a hierarchical graph neural network is adopted in the clause-element relation encoder. To reduce the influence of context variations, a multi-task framework with a bi-directional feedback scheme is designed in the inference layer, conducting both clause classification and element extraction. The experimental results over both cross-domain NER and CEE tasks show that Bi-FLEET significantly outperforms state-of-the-art baselines.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-05-13T05:14:36Z</published>
+    <arxiv:comment>Accepted by SIGIR2021</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Zihan Wang</name>
+    </author>
+    <author>
+      <name>Hongye Song</name>
+    </author>
+    <author>
+      <name>Zhaochun Ren</name>
+    </author>
+    <author>
+      <name>Pengjie Ren</name>
+    </author>
+    <author>
+      <name>Zhumin Chen</name>
+    </author>
+    <author>
+      <name>Xiaozhong Liu</name>
+    </author>
+    <author>
+      <name>Hongsong Li</name>
+    </author>
+    <author>
+      <name>Maarten de Rijke</name>
+    </author>
+    <arxiv:doi>10.1145/3404835.3462873</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3404835.3462873" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.14671v1</id>
+    <title>Streamlining Industrial Contract Management with Retrieval-Augmented LLMs</title>
+    <updated>2025-11-18T17:10:57Z</updated>
+    <link href="https://arxiv.org/abs/2511.14671v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.14671v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Contract management involves reviewing and negotiating provisions, individual clauses that define rights, obligations, and terms of agreement. During this process, revisions to provisions are proposed and iteratively refined, some of which may be problematic or unacceptable. Automating this workflow is challenging due to the scarcity of labeled data and the abundance of unstructured legacy contracts. In this paper, we present a modular framework designed to streamline contract management through a retrieval-augmented generation (RAG) pipeline. Our system integrates synthetic data generation, semantic clause retrieval, acceptability classification, and reward-based alignment to flag problematic revisions and generate improved alternatives. Developed and evaluated in collaboration with an industry partner, our system achieves over 80% accuracy in both identifying and optimizing problematic revisions, demonstrating strong performance under real-world, low-resource conditions and offering a practical means of accelerating contract revision workflows.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-18T17:10:57Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Kristi Topollai</name>
+    </author>
+    <author>
+      <name>Tolga Dimlioglu</name>
+    </author>
+    <author>
+      <name>Anna Choromanska</name>
+    </author>
+    <author>
+      <name>Simon Odie</name>
+    </author>
+    <author>
+      <name>Reginald Hui</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.13184v1</id>
+    <title>LAUKIN: A Multi-jurisdictional Common Law Contract Dataset</title>
+    <updated>2026-06-11T10:52:12Z</updated>
+    <link href="https://arxiv.org/abs/2606.13184v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.13184v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multinational companies increasingly require cross-jurisdictional contract review, yet existing legal NLP datasets are largely restricted to a single jurisdiction. We introduce LAUKIN (Legal equivalence dataset of Australia, UK, and INdia), a dataset of clause pairs (AU-UK, UK-IN, IN-AU) labelled for boolean legal equivalence. We develop a novel multi-stage retrieval and reranking pipeline to construct the initial clause pair mapping, with a subset of clause pairs subsequently annotated by legal experts as Equivalent or Not Equivalent. The dataset comprises 14,727 clause pairs from 204 contracts across 8 agreement types, of which 3,000 are manually labelled: 900 train, 600 dev, and 1,500 test. We evaluate 12 models across 4 techniques, achieving a best macro-F1 of 65.11%, establishing LAUKIN as a challenging benchmark. Results reveal that, despite shared legal heritage, drafting conventions diverge significantly across jurisdictions, making cross-jurisdictional equivalence classification non-trivial. LAUKIN also includes 11,727 unlabelled training pairs to support future semi-supervised learning research in legal NLP.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-11T10:52:12Z</published>
+    <arxiv:comment>5 pages, 2 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Amrita Singh</name>
+    </author>
+    <author>
+      <name>Aditya Joshi</name>
+    </author>
+    <author>
+      <name>Jiaojiao Jiang</name>
+    </author>
+    <author>
+      <name>Hye-young Paik</name>
+    </author>
+    <author>
+      <name>May Fong Cheong</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.09990v1</id>
+    <title>A Two-Stage Architecture for NDA Analysis: LLM-based Segmentation and Transformer-based Clause Classification</title>
+    <updated>2026-02-13T15:55:14Z</updated>
+    <link href="https://arxiv.org/abs/2603.09990v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.09990v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In business-to-business relations, it is common to establish NonDisclosure Agreements (NDAs). However, these documents exhibit significant variation in format, structure, and writing style, making manual analysis slow and error-prone. We propose an architecture based on LLMs to automate the segmentation and clauses classification within these contracts. We employed two models: LLaMA-3.1-8B-Instruct for NDA segmentation (clause extraction) and a fine-tuned Legal-Roberta-Large for clause classification. In the segmentation task, we achieved a ROUGE F1 of 0.95 +/- 0.0036; for classification, we obtained a weighted F1 of 0.85, demonstrating the feasibility and precision of the approach.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-13T15:55:14Z</published>
+    <arxiv:comment>14 pages, 2 figures, 3 tables. Published at STIL @ BRACIS 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Simposio Brasileiro de Tecnologia da Informacao e da Linguagem Humana (STIL) 2025</arxiv:journal_ref>
+    <author>
+      <name>Ana Begnini</name>
+    </author>
+    <author>
+      <name>Matheus Vicente</name>
+    </author>
+    <author>
+      <name>Leonardo Souza</name>
+    </author>
+    <arxiv:doi>10.5753/stil.2025.37813</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.5753/stil.2025.37813" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.26019v1</id>
+    <title>Retrieval-Augmented Detection of Potentially Abusive Clauses in Chilean Terms of Service</title>
+    <updated>2026-05-25T16:38:10Z</updated>
+    <link href="https://arxiv.org/abs/2605.26019v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.26019v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Online Terms of Service often function as contracts of adhesion, creating asymmetries that may expose consumers to potentially abusive clauses. In Chile, assessing such clauses is legally challenging because some provisions clearly violate mandatory consumer law, whereas others depend on broader standards such as good faith and contractual imbalance. We present a retrieval-augmented generation framework for the automated detection and classification of potentially abusive clauses in Chilean Terms of Service. Designed for local execution, it combines efficient clause detection, hybrid dense--sparse retrieval, reranking, and prompt augmentation to support medium-sized open-weight language models. We also introduce the Chilean Abusive Terms of Service Extended corpus, comprising 100 contracts and 10,029 annotated clauses in 24 legally grounded categories spanning illegal, dark, and gray clauses. Experiments comparing commercial and open-weight language models, fine-tuned encoders, and traditional baselines show that retrieval-augmented prompting substantially improves performance and enables local models to approach larger cloud-based systems at lower computational and token cost. The study also contributes a refined legal annotation scheme and a practical design for AI-assisted consumer contract review.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-25T16:38:10Z</published>
+    <arxiv:comment>42 pages, 6 figures, 9 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Christoffer Loeffler</name>
+    </author>
+    <author>
+      <name>Tomás Rey Pizarro</name>
+    </author>
+    <author>
+      <name>Daniel Ignacio Miranda Vásquez</name>
+    </author>
+    <author>
+      <name>Andrea Martínez Freile</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.10097v1</id>
+    <title>LegalPro-BERT: Classification of Legal Provisions by fine-tuning BERT Large Language Model</title>
+    <updated>2024-04-15T19:08:48Z</updated>
+    <link href="https://arxiv.org/abs/2404.10097v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.10097v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A contract is a type of legal document commonly used in organizations. Contract review is an integral and repetitive process to avoid business risk and liability. Contract analysis requires the identification and classification of key provisions and paragraphs within an agreement. Identification and validation of contract clauses can be a time-consuming and challenging task demanding the services of trained and expensive lawyers, paralegals or other legal assistants. Classification of legal provisions in contracts using artificial intelligence and natural language processing is complex due to the requirement of domain-specialized legal language for model training and the scarcity of sufficient labeled data in the legal domain. Using general-purpose models is not effective in this context due to the use of specialized legal vocabulary in contracts which may not be recognized by a general model. To address this problem, we propose the use of a pre-trained large language model which is subsequently calibrated on legal taxonomy. We propose LegalPro-BERT, a BERT transformer architecture model that we fine-tune to efficiently handle classification task for legal provisions. We conducted experiments to measure and compare metrics with current benchmark results. We found that LegalPro-BERT outperforms the previous benchmark used for comparison in this research.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-15T19:08:48Z</published>
+    <arxiv:comment>17 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Amit Tewari</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2402.14457v2</id>
+    <title>Annotation and Classification of Relevant Clauses in Terms-and-Conditions Contracts</title>
+    <updated>2024-05-27T09:06:41Z</updated>
+    <link href="https://arxiv.org/abs/2402.14457v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2402.14457v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we propose a new annotation scheme to classify different types of clauses in Terms-and-Conditions contracts with the ultimate goal of supporting legal experts to quickly identify and assess problematic issues in this type of legal documents. To this end, we built a small corpus of Terms-and-Conditions contracts and finalized an annotation scheme of 14 categories, eventually reaching an inter-annotator agreement of 0.92. Then, for 11 of them, we experimented with binary classification tasks using few-shot prompting with a multilingual T5 and two fine-tuned versions of two BERT-based LLMs for Italian. Our experiments showed the feasibility of automatic classification of our categories by reaching accuracies ranging from .79 to .95 on validation tasks.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-02-22T11:24:45Z</published>
+    <arxiv:comment>LREC-COLING 2024. https://aclanthology.org/2024.lrec-main.108</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Pietro Giovanni Bizzaro</name>
+    </author>
+    <author>
+      <name>Elena Della Valentina</name>
+    </author>
+    <author>
+      <name>Maurizio Napolitano</name>
+    </author>
+    <author>
+      <name>Nadia Mana</name>
+    </author>
+    <author>
+      <name>Massimo Zancanaro</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.11207v2</id>
+    <title>Unfair TOS: An Automated Approach using Customized BERT</title>
+    <updated>2024-01-26T05:37:33Z</updated>
+    <link href="https://arxiv.org/abs/2401.11207v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.11207v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Terms of Service (ToS) form an integral part of any agreement as it defines the legal relationship between a service provider and an end-user. Not only do they establish and delineate reciprocal rights and responsibilities, but they also provide users with information on essential aspects of contracts that pertain to the use of digital spaces. These aspects include a wide range of topics, including limitation of liability, data protection, etc. Users tend to accept the ToS without going through it before using any application or service. Such ignorance puts them in a potentially weaker situation in case any action is required. Existing methodologies for the detection or classification of unfair clauses are however obsolete and show modest performance. In this research paper, we present SOTA(State of The Art) results on unfair clause detection from ToS documents based on unprecedented custom BERT Fine-tuning in conjunction with SVC(Support Vector Classifier). The study shows proficient performance with a macro F1-score of 0.922 at unfair clause detection, and superior performance is also shown in the classification of unfair clauses by each tag. Further, a comparative analysis is performed by answering research questions on the Transformer models utilized. In order to further research and experimentation the code and results are made available on https://github.com/batking24/Unfair-TOS-An-Automated-Approach-based-on-Fine-tuning-BERT-in-conjunction-with-ML.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-20T10:42:15Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Bathini Sai Akash</name>
+    </author>
+    <author>
+      <name>Akshara Kupireddy</name>
+    </author>
+    <author>
+      <name>Lalita Bhanu Murthy</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2502.00865v2</id>
+    <title>Predicting potentially abusive clauses in Chilean terms of services with natural language processing</title>
+    <updated>2025-05-05T18:02:07Z</updated>
+    <link href="https://arxiv.org/abs/2502.00865v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.00865v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study addresses the growing concern of information asymmetry in consumer contracts, exacerbated by the proliferation of online services with complex Terms of Service that are rarely even read. Even though research on automatic analysis methods is conducted, the problem is aggravated by the general focus on English-language Machine Learning approaches and on major jurisdictions, such as the European Union. We introduce a new methodology and a substantial dataset addressing this gap. We propose a novel annotation scheme with four categories and a total of 20 classes, and apply it on 50 online Terms of Service used in Chile. Our evaluation of transformer-based models highlights how factors like language- and/or domain-specific pre-training, few-shot sample size, and model architecture affect the detection and classification of potentially abusive clauses. Results show a large variability in performance for the different tasks and models, with the highest macro-F1 scores for the detection task ranging from 79% to 89% and micro-F1 scores up to 96%, while macro-F1 scores for the classification task range from 60% to 70% and micro-F1 scores from 64% to 80%. Notably, this is the first Spanish-language multi-label classification dataset for legal clauses, applying Chilean law and offering a comprehensive evaluation of Spanish-language models in the legal domain. Our work lays the ground for future research in method development for rarely considered legal analysis and potentially leads to practical applications to support consumers in Chile and Latin America as a whole.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-02T18:01:39Z</published>
+    <arxiv:comment>39 pages, 2 figures, 8 tables, accepted for publication</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Christoffer Loeffler</name>
+    </author>
+    <author>
+      <name>Andrea Martínez Freile</name>
+    </author>
+    <author>
+      <name>Tomás Rey Pizarro</name>
+    </author>
+    <arxiv:doi>10.1007/s10506-025-09462-w</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s10506-025-09462-w" title="doi"/>
+  </entry>
+</feed>

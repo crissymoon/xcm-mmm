@@ -233,6 +233,14 @@ pub struct Row {
     /// a quoted holding is not the court's own drafting.
     pub avoidable_hits: usize,
     pub avoidable_per_100: f64,
+    /// Duties and prohibitions the rows set, read by the brief.
+    pub rules: usize,
+    /// Rules whose actor the drafting leaves out: the passive with no agent.
+    pub agentless: usize,
+    /// Words the rows use that general English rarely uses. A second axis on the
+    /// same text: a register can be light on drafting and still hold words no
+    /// reader outside it has met, and the density column cannot show that.
+    pub rare: usize,
     /// Term kinds the glossary fired here, with counts.
     pub kinds: BTreeMap<String, usize>,
     pub verdict: String,
@@ -387,6 +395,14 @@ impl Coverage {
                 row.plain += 1;
             }
             row.words += words(&entry.text);
+            // The actor reading is a second instrument on the same row. It is
+            // read here rather than in a separate pass so the two columns are
+            // always about the same text.
+            if let Ok(brief) = super::brief::Brief::build(legal, &entry.text) {
+                row.rules += brief.counts.duties + brief.counts.prohibitions;
+                row.agentless += brief.counts.agentless;
+                row.rare += brief.counts.rare;
+            }
             let scan = legal.scan(&entry.text);
             if !scan.terms.is_empty() {
                 row.reached += 1;
@@ -539,7 +555,7 @@ impl Coverage {
             self.leak * 100.0
         ));
         lines.push(format!(
-            "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7} {:>7} {:>11}",
+            "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7} {:>7} {:>6} {:>7} {:>5} {:>11}",
             "register",
             "role",
             "rows",
@@ -550,11 +566,14 @@ impl Coverage {
             "hits",
             "per100",
             "av/100",
+            "rules",
+            "noactor",
+            "rare",
             "verdict"
         ));
         for row in &self.rows {
             lines.push(format!(
-                "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7.2} {:>7.2} {:>11}",
+                "{:<14} {:>8} {:>5} {:>5} {:>5} {:>5} {:>7} {:>6} {:>7.2} {:>7.2} {:>6} {:>7} {:>5} {:>11}",
                 row.register,
                 row.role,
                 row.rows,
@@ -565,6 +584,9 @@ impl Coverage {
                 row.hits,
                 row.hits_per_100,
                 row.avoidable_per_100,
+                row.rules,
+                row.agentless,
+                row.rare,
                 row.verdict
             ));
         }
@@ -773,6 +795,22 @@ mod tests {
             assert!(row.rows >= 100, "{register}: {}", row.rows);
             assert_ne!(row.verdict, "absent", "{register}");
         }
+        // Contracts write `hereunder` and `witnesseth` and the plain side does
+        // not, so the rarity column has to separate them. A zero here would mean
+        // the frequency table never reached the audit.
+        let contract = both.rows.iter().find(|r| r.register == "contract").unwrap();
+        let plain = both
+            .rows
+            .iter()
+            .find(|r| r.register == "self-help")
+            .unwrap();
+        let per_thousand = |row: &Row| row.rare as f64 * 1000.0 / row.rows.max(1) as f64;
+        assert!(
+            per_thousand(contract) > per_thousand(plain),
+            "contract {:.0} vs self-help {:.0}",
+            per_thousand(contract),
+            per_thousand(plain)
+        );
     }
 
     #[test]

@@ -17,4 +17,7 @@ echo "== docs"
 python3 scripts/check_docs.py
 cargo doc --no-deps
 
+echo "== frequency table"
+python3 scripts/lex-freq.py --check
+
 echo "all checks passed"

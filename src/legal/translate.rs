@@ -24,9 +24,11 @@ use std::fs;
 
 use serde::Serialize;
 
+use super::cues;
+use super::freq::Freq;
 use super::guard::{Guard, Span};
 use super::rewrite::{Change, Rules};
-use super::term::{Hit, Lexicon, Settings, Term};
+use super::term::{Hit, Lexicon, Rarity, Settings, Term};
 
 /// One term found in a text.
 #[derive(Clone, Debug, Serialize)]
@@ -41,6 +43,10 @@ pub struct TermHit {
     pub span: Span,
     /// True when the term sits inside a quotation or a citation.
     pub in_citation: bool,
+    /// The word in the term that general English rarely uses, when there is
+    /// one, and the rate it was measured at.
+    pub rare: Option<String>,
+    pub rare_per_million: f64,
 }
 
 /// The counts a reading is made of.
@@ -53,6 +59,9 @@ pub struct Stats {
     pub advisory: usize,
     pub necessary: usize,
     pub in_citation: usize,
+    /// Hits whose term contains a word general English rarely uses: the words a
+    /// reader has to stop at, which a count of drafting words alone cannot see.
+    pub rare: usize,
     pub avoidable_per_100: f64,
     pub terms_per_100: f64,
     pub kinds: BTreeMap<String, usize>,
@@ -101,16 +110,38 @@ pub struct Legal {
     pub rules: Rules,
     pub guard: Guard,
     pub settings: Settings,
+    /// How often each word occurs in general English. The probe behind the
+    /// rarity reading, and the only part of the instrument measured off a corpus
+    /// rather than written by hand.
+    pub freq: Freq,
+    /// The clause cues, compiled once. A register audit reads thousands of
+    /// rows, and compiling fifty patterns per row is the difference between a
+    /// second and a minute.
+    cues: Option<cues::Cues>,
 }
 
 impl Legal {
-    /// Load a folder holding `terms.jsonl`, `rewrites.jsonl` and `settings.json`.
+    /// Load a folder holding `terms.jsonl`, `rewrites.jsonl` and
+    /// `settings.json`, plus the frequency table `freq.json` when the folder has
+    /// one.
+    ///
+    /// The table is optional because a folder someone wrote by hand holds a
+    /// glossary and no corpus counts, and refusing to scan it would make the
+    /// instrument unusable for the case it was built for. A table that is there
+    /// and broken is still a refusal: the difference between "not measured" and
+    /// "measured wrongly" is the whole point of the file.
     pub fn load(dir: &str) -> Result<Self, String> {
         let lexicon = Lexicon::load(&format!("{dir}/terms.jsonl"))?;
         let rules = Rules::load(&format!("{dir}/rewrites.jsonl"))?;
         let settings = Settings::load(&format!("{dir}/settings.json"))?;
         let guard = Guard::new(&settings.protect)?;
-        Self::new(lexicon, rules, guard, settings)
+        let path = format!("{dir}/freq.json");
+        let freq = if std::path::Path::new(&path).exists() {
+            Freq::load(&path)?
+        } else {
+            Freq::default()
+        };
+        Self::new(lexicon, rules, guard, settings, freq)
     }
 
     pub fn new(
@@ -118,16 +149,59 @@ impl Legal {
         rules: Rules,
         guard: Guard,
         settings: Settings,
+        freq: Freq,
     ) -> Result<Self, String> {
         if lexicon.is_empty() {
             return Err("the glossary is empty".into());
         }
+        // A glossary can be loaded without clause cues; only a brief needs
+        // them, so a missing cue table is reported when it is asked for rather
+        // than turning every scan into a failure.
+        let cues = cues::Cues::new(&settings.clauses).ok();
         Ok(Self {
             lexicon,
             rules,
             guard,
             settings,
+            freq,
+            cues,
         })
+    }
+
+    /// The clause cues, compiled once at load.
+    pub fn cues(&self) -> Result<&cues::Cues, String> {
+        self.cues.as_ref().ok_or_else(|| {
+            "settings.json declares no clause cues: `clauses.duty` and \
+             `clauses.permission` are required for a brief"
+                .to_string()
+        })
+    }
+
+    /// The frequency cut the rarity reading is reported at. A glossary without
+    /// one can still be scanned and rewritten; what it cannot do is say which of
+    /// its own terms a general reader has never met.
+    pub fn rarity(&self) -> Result<&Rarity, String> {
+        self.settings.rarity.as_ref().ok_or_else(|| {
+            "settings.json declares no rarity cut: `rarity.max_per_million` is \
+             required for a rarity reading"
+                .to_string()
+        })
+    }
+
+    /// The word that makes a glossary row unknown to a general reader. None
+    /// when the folder carries no frequency table: an empty table would report
+    /// every word as unmeasured and every term as rare.
+    pub fn rare_word(&self, term: &Term) -> Option<(String, f64)> {
+        if self.freq.per_million.is_empty() {
+            return None;
+        }
+        let below = self.settings.rarity.as_ref()?.max_per_million;
+        let (word, rate) = self.freq.rarest(&term.term)?;
+        if rate < below {
+            Some((word, rate))
+        } else {
+            None
+        }
     }
 
     /// Read a text for legal English.
@@ -190,6 +264,7 @@ impl Legal {
 
     fn hit(&self, hit: &Hit, text: &str, protected: &[Span]) -> TermHit {
         let term = self.lexicon.term(hit);
+        let rare = self.rare_word(term);
         TermHit {
             id: term.id.clone(),
             term: text[hit.span.start..hit.span.end].to_string(),
@@ -199,18 +274,23 @@ impl Legal {
             advisory: term.advisory,
             span: hit.span,
             in_citation: protected.iter().any(|s| s.intersects(&hit.span)),
+            rare_per_million: rare.as_ref().map(|(_, rate)| *rate).unwrap_or(0.0),
+            rare: rare.map(|(word, _)| word),
         }
     }
 
     fn stats(&self, terms: &[TermHit], words: usize) -> Stats {
         let mut kinds: BTreeMap<String, usize> = BTreeMap::new();
-        let (mut avoidable, mut advisory, mut necessary, mut quoted) = (0, 0, 0, 0);
+        let (mut avoidable, mut advisory, mut necessary, mut quoted, mut rare) = (0, 0, 0, 0, 0);
         for term in terms {
             if term.in_citation {
                 quoted += 1;
                 continue;
             }
             *kinds.entry(term.kind.clone()).or_insert(0) += 1;
+            if term.rare.is_some() {
+                rare += 1;
+            }
             if term.avoidable {
                 avoidable += 1;
                 if term.advisory {
@@ -236,6 +316,7 @@ impl Legal {
             advisory,
             necessary,
             in_citation: quoted,
+            rare,
             avoidable_per_100,
             terms_per_100: per(terms.len()),
             kinds,
@@ -341,6 +422,34 @@ mod tests {
     use crate::legal::rewrite::{Case, Rule};
     use crate::legal::term::{Band, ClauseWords};
 
+    /// A rarity cut and a frequency table just large enough to tell a drafting
+    /// word from an ordinary one, so a test never depends on the shipped corpus.
+    fn rarity() -> Rarity {
+        Rarity {
+            max_per_million: 1.0,
+            note: "a test cut".into(),
+        }
+    }
+
+    fn freq() -> Freq {
+        let mut per_million = std::collections::BTreeMap::new();
+        for (word, rate) in [
+            ("in", 9000.0),
+            ("this", 4000.0),
+            ("document", 400.0),
+            ("under", 600.0),
+            ("herein", 0.4),
+            ("hereunder", 0.0),
+        ] {
+            per_million.insert(word.to_string(), rate);
+        }
+        Freq {
+            source: "a test corpus".into(),
+            tokens: 1_000_000,
+            per_million,
+        }
+    }
+
     fn term(id: &str, word: &str, plain: &str, kind: &str, avoidable: bool) -> Term {
         Term {
             id: id.into(),
@@ -405,9 +514,10 @@ mod tests {
                 },
             ],
             protect: vec![r"§+ ?[0-9.]+".into()],
+            rarity: Some(rarity()),
         };
         let guard = Guard::new(&settings.protect).unwrap();
-        Legal::new(lexicon, rules, guard, settings).unwrap()
+        Legal::new(lexicon, rules, guard, settings, freq()).unwrap()
     }
 
     #[test]
@@ -492,9 +602,10 @@ mod tests {
                 note: String::new(),
             }],
             protect: Vec::new(),
+            rarity: Some(rarity()),
         };
         let guard = Guard::new(&[]).unwrap();
-        let legal = Legal::new(lexicon, rules, guard, settings).unwrap();
+        let legal = Legal::new(lexicon, rules, guard, settings, freq()).unwrap();
         let reading = legal.translate("See supra at 7; res judicata applies.", true);
         assert!(reading.text.contains("supra at 7"), "{}", reading.text);
         assert!(reading
@@ -520,9 +631,10 @@ mod tests {
                 note: String::new(),
             }],
             protect: Vec::new(),
+            rarity: Some(rarity()),
         };
         let guard = Guard::new(&[]).unwrap();
-        let legal = Legal::new(lexicon, rules, guard, settings).unwrap();
+        let legal = Legal::new(lexicon, rules, guard, settings, freq()).unwrap();
         let (orphans, gaps) = legal.coverage();
         assert!(orphans.is_empty());
         assert_eq!(gaps, vec!["thereof".to_string()]);

@@ -1,0 +1,247 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/P7YbiwT8D9LUgG4xvyyxGAQnSn0</id>
+  <title>arXiv Query: search_query=abs:"deontic" AND abs:"extraction"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:24Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22deontic%22+AND+abs:%22extraction%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>10</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1810.09993v1</id>
+    <title>Automated Reasoning in Normative Detachment Structures with Ideal Conditions</title>
+    <updated>2018-10-23T17:52:36Z</updated>
+    <link href="https://arxiv.org/abs/1810.09993v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1810.09993v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Systems of deontic logic suffer either from being too expressive and therefore hard to mechanize, or from being too simple to capture relevant aspects of normative reasoning. In this article we look for a suitable way in between: the automation of a simple logic of normative ideality and sub-ideality that is not affected by many deontic paradoxes and that is expressive enough to capture contrary-to-duty reason- ing. We show that this logic is very useful to reason on normative scenarios from which one can extract a certain kind of argumentative structure, called a Normative Detachment Structure with Ideal Conditions. The theoretical analysis of the logic is accompanied by examples of automated reasoning on a concrete legal text.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-23T17:52:36Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Tomer Libal</name>
+    </author>
+    <author>
+      <name>Matteo Pascucci</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.08899v3</id>
+    <title>Toward Robust Legal Text Formalization into Defeasible Deontic Logic using LLMs</title>
+    <updated>2025-12-31T10:28:14Z</updated>
+    <link href="https://arxiv.org/abs/2506.08899v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.08899v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present a comprehensive approach to the automated formalization of legal texts using large language models (LLMs), targeting their transformation into Defeasible Deontic Logic (DDL). Our method employs a structured pipeline that segments complex normative language into atomic snippets, extracts deontic rules, and evaluates them for syntactic and semantic coherence. We introduce a refined success metric that more precisely captures the completeness of formalizations, and a novel two-stage pipeline with a dedicated refinement step to improve logical consistency and coverage. The evaluation procedure has been strengthened with stricter error assessment, and we provide comparative results across multiple LLM configurations, including newly released models and various prompting and fine-tuning strategies. Experiments on legal norms from the Australian Telecommunications Consumer Protections Code demonstrate that, when guided effectively, LLMs can produce formalizations that align closely with expert-crafted representations, underscoring their potential for scalable legal informatics.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-10T15:25:19Z</published>
+    <arxiv:comment>This version is an extended version with additional results and discussion</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Elias Horner</name>
+    </author>
+    <author>
+      <name>Cristinel Mateis</name>
+    </author>
+    <author>
+      <name>Guido Governatori</name>
+    </author>
+    <author>
+      <name>Agata Ciabattoni</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1607.01485v1</id>
+    <title>Extracting Formal Models from Normative Texts</title>
+    <updated>2016-07-06T06:25:07Z</updated>
+    <link href="https://arxiv.org/abs/1607.01485v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1607.01485v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Normative texts are documents based on the deontic notions of obligation, permission, and prohibition. Our goal is to model such texts using the C-O Diagram formalism, making them amenable to formal analysis, in particular verifying that a text satisfies properties concerning causality of actions and timing constraints. We present an experimental, semi-automatic aid to bridge the gap between a normative text and its formal representation. Our approach uses dependency trees combined with our own rules and heuristics for extracting the relevant components. The resulting tabular data can then be converted into a C-O Diagram.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-07-06T06:25:07Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Natural Language Processing and Information Systems, Lecture Notes in Computer Science, Vol. 9612, Springer, 2016, pp. 403-408</arxiv:journal_ref>
+    <author>
+      <name>John J. Camilleri</name>
+    </author>
+    <author>
+      <name>Normunds Gruzitis</name>
+    </author>
+    <author>
+      <name>Gerardo Schneider</name>
+    </author>
+    <arxiv:doi>10.1007/978-3-319-41754-7_40</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/978-3-319-41754-7_40" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.02607v1</id>
+    <title>Extracting ODRL Policies from Business Process Models: A Graph Traversal Approach to Compliance-by-Extraction</title>
+    <updated>2026-05-10T23:29:22Z</updated>
+    <link href="https://arxiv.org/abs/2608.02607v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.02607v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Organisations maintain large corpora of process models expressed in the Business Process Model and Notation (BPMN), yet the normative content encoded in those models, the obligations, permissions, and prohibitions that govern participant behaviour, remains inaccessible to policy infrastructure. The Open Digital Rights Language (ODRL) is the emerging lingua franca of machine-readable policy, but authoring ODRL at scale is slow, expert-intensive work, and generation by large language models introduces well-documented risks of structural invalidity. We present a pipeline that resolves this gap by extracting ODRL policies automatically from BPMN XML, grounded in the observation that BPMN control flow encodes deontic modalities by construction. The pipeline traverses the BPMN process graph, classifies each task as an odrl:Duty or odrl:Permission via a reachability check, and introduces a novel treatment of intermediate catch events as odrl:Prohibition rules with lifting constraints, capturing waiting semantics that prior approaches have dropped. The result is a compliance-by-extraction approach in which auditable, interoperable ODRL policies are derived directly from the process models organisations already maintain. The implementation and a live demonstration are available at https://github.com/manabcodes/bpmn2odrl and https://bpmn.linkeddata.es/.</summary>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-10T23:29:22Z</published>
+    <arxiv:comment>10 pages, 2 figures, ODRL and beyond: practical applications and challenges for policy-base access and usage control. OPAL 2026, 2nd edition Co-located with the Extended Semantic Web Conference Dubrovnik , Croatia, 10th-11th MAY (half-day), 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.DB"/>
+    <author>
+      <name>Meem Arafat Manab</name>
+    </author>
+    <author>
+      <name>Marinella Quaranta</name>
+    </author>
+    <author>
+      <name>Ilaria Angela Amantea</name>
+    </author>
+    <author>
+      <name>Sheyla Leyva-Sánchez</name>
+    </author>
+    <author>
+      <name>Víctor Rodríguez-Doncel</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.16295v4</id>
+    <title>Patterns in the Transition From Founder-Leadership to Community Governance of Open Source</title>
+    <updated>2026-02-05T04:04:41Z</updated>
+    <link href="https://arxiv.org/abs/2509.16295v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.16295v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Open digital public infrastructure needs community management to ensure accountability, sustainability, and robustness. Yet open-source projects often rely on centralized decision-making, and the determinants of successful community management remain unclear. We analyze 637 GitHub repositories to trace transitions from founder-led to shared governance. Specifically, we document trajectories to community governance by extracting institutional roles, actions, and deontic cues from version-controlled project constitutions GOVERNANCE .md. With a semantic parsing pipeline, we cluster elements into broader role and action types. We find roles and actions grow, and regulation becomes more balanced, reflecting increases in governance scope and differentiation over time. Rather than shifting tone, communities grow by layering and refining responsibilities. As transitions to community management mature, projects increasingly regulate ecosystem-level relationships and add definition to project oversight roles. Overall, this work offers a scalable pipeline for tracking the growth and development of community governance regimes from open-source software's familiar default of founder-ownership.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-19T15:55:08Z</published>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Mobina Noori</name>
+    </author>
+    <author>
+      <name>Mahasweta Chakraborti</name>
+    </author>
+    <author>
+      <name>Amy X Zhang</name>
+    </author>
+    <author>
+      <name>Seth Frey</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1706.04997v1</id>
+    <title>Extracting Formal Models from Normative Texts</title>
+    <updated>2017-06-15T07:24:23Z</updated>
+    <link href="https://arxiv.org/abs/1706.04997v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1706.04997v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We are concerned with the analysis of normative texts - documents based on the deontic notions of obligation, permission, and prohibition. Our goal is to make queries about these notions and verify that a text satisfies certain properties concerning causality of actions and timing constraints. This requires taking the original text and building a representation (model) of it in a formal language, in our case the C-O Diagram formalism. We present an experimental, semi-automatic aid that helps to bridge the gap between a normative text in natural language and its C-O Diagram representation. Our approach consists of using dependency structures obtained from the state-of-the-art Stanford Parser, and applying our own rules and heuristics in order to extract the relevant components. The result is a tabular data structure where each sentence is split into suitable fields, which can then be converted into a C-O Diagram. The process is not fully automatic however, and some post-editing is generally required of the user. We apply our tool and perform experiments on documents from different domains, and report an initial evaluation of the accuracy and feasibility of our approach.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-06-15T07:24:23Z</published>
+    <arxiv:comment>Extended version of conference paper at the 21st International Conference on Applications of Natural Language to Information Systems (NLDB 2016). arXiv admin note: substantial text overlap with arXiv:1607.01485</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>John J. Camilleri</name>
+    </author>
+    <author>
+      <name>Normunds Grūzītis</name>
+    </author>
+    <author>
+      <name>Gerardo Schneider</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.20334v1</id>
+    <title>Structured Four-Stage Legal Translation: From Natural-Language Traffic Rules to PROLOG</title>
+    <updated>2026-09-17T13:05:49Z</updated>
+    <link href="https://arxiv.org/abs/2609.20334v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.20334v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Traffic regulations are written for human interpretation and therefore rely on shared background knowledge and flexible phrasing, which inherently introduce ambiguity, context dependence, and semantic underspecification. These linguistic characteristics conflict with the precision required by computational reasoning engines such as Prolog, which demand explicit logical structure. This study evaluates two baseline translation approaches, Natural Language to Prolog ($NL\rightarrow Prolog$) and Logical English to Prolog ($LE\rightarrow Prolog$), and introduces a new reasoning-guided translation framework called Structured Four-Stage Legal Translation ($S4L\rightarrow Prolog$). The proposed S4L framework performs semantic role extraction, scene completion, logical mapping, and Prolog rule generation within a single guided prompt, enabling direct translation of raw traffic rules into executable logic without human intervention. A benchmark consisting of twenty real-world traffic rules was used to evaluate each approach in terms of syntactic validity, semantic correctness, and logical completeness. $S4L\rightarrow Prolog$ achieves the highest accuracy, correctly formalizing 75 percent of the rules, while $NL\rightarrow Prolog$ reaches 60 percent and $LE\rightarrow Prolog$ reaches 55 percent. Qualitative analysis further shows that S4L captures implicit causal relations, deontic modality, and exception structure more reliably than the baselines. These results demonstrate that structured reasoning prompts can substantially improve the reliability of natural-language-to-logic translation for legal and safety-critical applications.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-17T13:05:49Z</published>
+    <arxiv:comment>In Proceedings of the International Workshop on Translating Natural Legal Language into Formal Representations (NLL2FR 2025)</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>May Myo Zin</name>
+    </author>
+    <author>
+      <name>Wachara Fungwacharakorn</name>
+    </author>
+    <author>
+      <name>Ken Satoh</name>
+    </author>
+    <author>
+      <name>Katsumi Nitta</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2206.12294v1</id>
+    <title>Learning Rhetorical Structure Theory-based descriptions of observed behaviour</title>
+    <updated>2022-06-24T13:47:20Z</updated>
+    <link href="https://arxiv.org/abs/2206.12294v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2206.12294v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In a previous paper, we have proposed a set of concepts, axiom schemata and algorithms that can be used by agents to learn to describe their behaviour, goals, capabilities, and environment. The current paper proposes a new set of concepts, axiom schemata and algorithms that allow the agent to learn new descriptions of an observed behaviour (e.g., perplexing actions), of its actor (e.g., undesired propositions or actions), and of its environment (e.g., incompatible propositions). Each learned description (e.g., a certain action prevents another action from being performed in the future) is represented by a relationship between entities (either propositions or actions) and is learned by the agent, just by observation, using domain-independent axiom schemata and or learning algorithms. The relations used by agents to represent the descriptions they learn were inspired on the Theory of Rhetorical Structure (RST). The main contribution of the paper is the relation family Although, inspired on the RST relation Concession. The accurate definition of the relations of the family Although involves a set of deontic concepts whose definition and corresponding algorithms are presented. The relations of the family Although, once extracted from the agent's observations, express surprise at the observed behaviour and, in certain circumstances, present a justification for it.
+  The paper shows results of the presented proposals in a demonstration scenario, using implemented software.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-06-24T13:47:20Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Luis Botelho</name>
+    </author>
+    <author>
+      <name>Luis Nunes</name>
+    </author>
+    <author>
+      <name>Ricardo Ribeiro</name>
+    </author>
+    <author>
+      <name>Rui J. Lopes</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.23585v1</id>
+    <title>ComplianceNLP: Knowledge-Graph-Augmented RAG for Multi-Framework Regulatory Gap Detection</title>
+    <updated>2026-04-26T07:44:50Z</updated>
+    <link href="https://arxiv.org/abs/2604.23585v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.23585v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Financial institutions must track over 60,000 regulatory events annually, overwhelming manual compliance teams; the industry has paid over USD 300 billion in fines and settlements since the 2008 financial crisis. We present ComplianceNLP, an end-to-end system that automatically monitors regulatory changes, extracts structured obligations, and identifies compliance gaps against institutional policies. The system integrates three components: (1) a knowledge-graph-augmented RAG pipeline grounding generations in a regulatory knowledge graph of 12,847 provisions across SEC, MiFID II, and Basel III; (2) multi-task obligation extraction combining NER, deontic classification, and cross-reference resolution over a shared LEGAL-BERT encoder; and (3) compliance gap analysis that maps obligations to internal policies with severity-aware scoring. On our benchmark, ComplianceNLP achieves 87.7 F1 on gap detection, outperforming GPT-4o+RAG by +3.5 F1, with 94.2% grounding accuracy ($r=0.83$ vs. human judgments) and 83.4 F1 under realistic end-to-end error propagation. Ablations show that knowledge-graph re-ranking contributes the largest marginal gain (+4.6 F1), confirming that structural regulatory knowledge is critical for cross-reference-heavy tasks. Domain-specific knowledge distillation (70B $\to$ 8B) combined with Medusa speculative decoding yields $2.8\times$ inference speedup; regulatory text's low entropy ($H=2.31$ bits vs. $3.87$ general text) produces 91.3% draft-token acceptance rates. In four months of parallel-run deployment processing 9,847 updates at a financial institution, the system achieved 96.0% estimated recall and 90.7% precision, with a $3.1\times$ sustained analyst efficiency gain. We report deployment lessons on trust calibration, GRC integration, and distributional shift monitoring for regulated-domain NLP.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-26T07:44:50Z</published>
+    <arxiv:comment>Accepted at ACL 2026 Industry Track. 19 pages, 15 tables, 1 figure</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Dongxin Guo</name>
+    </author>
+    <author>
+      <name>Jikun Wu</name>
+    </author>
+    <author>
+      <name>Siu Ming Yiu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.06559v1</id>
+    <title>The Algebra of Meaning: Why Machines Need Montague More Than Moore's Law</title>
+    <updated>2025-10-08T01:22:26Z</updated>
+    <link href="https://arxiv.org/abs/2510.06559v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.06559v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Contemporary language models are fluent yet routinely mis-handle the types of meaning their outputs entail. We argue that hallucination, brittle moderation, and opaque compliance outcomes are symptoms of missing type-theoretic semantics rather than data or scale limitations. Building on Montague's view of language as typed, compositional algebra, we recast alignment as a parsing problem: natural-language inputs must be compiled into structures that make explicit their descriptive, normative, and legal dimensions under context.
+  We present Savassan, a neuro-symbolic architecture that compiles utterances into Montague-style logical forms and maps them to typed ontologies extended with deontic operators and jurisdictional contexts. Neural components extract candidate structures from unstructured inputs; symbolic components perform type checking, constraint reasoning, and cross-jurisdiction mapping to produce compliance-aware guidance rather than binary censorship. In cross-border scenarios, the system "parses once" (e.g., defect claim(product x, company y)) and projects the result into multiple legal ontologies (e.g., defamation risk in KR/JP, protected opinion in US, GDPR checks in EU), composing outcomes into a single, explainable decision.
+  This paper contributes: (i) a diagnosis of hallucination as a type error; (ii) a formal Montague-ontology bridge for business/legal reasoning; and (iii) a production-oriented design that embeds typed interfaces across the pipeline. We outline an evaluation plan using legal reasoning benchmarks and synthetic multi-jurisdiction suites. Our position is that trustworthy autonomy requires compositional typing of meaning, enabling systems to reason about what is described, what is prescribed, and what incurs liability within a unified algebra of meaning.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-08T01:22:26Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Cheonkam Jeong</name>
+    </author>
+    <author>
+      <name>Sungdo Kim</name>
+    </author>
+    <author>
+      <name>Jewoo Park</name>
+    </author>
+  </entry>
+</feed>

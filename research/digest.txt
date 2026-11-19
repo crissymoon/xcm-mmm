@@ -1,9 +1,9 @@
-queries: 44
-papers: 225
-by_source: {'openalex': 31, 'arxiv': 69, 'crossref': 125}
-with_abstract: 123
-misses: 1
-missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org/works?search=)']
+queries: 64
+papers: 219
+by_source: {'openalex': 37, 'arxiv': 112, 'crossref': 70}
+with_abstract: 159
+misses: 0
+missed: []
 
 ## bench-bootstrap
 - Bootstrap your own latent: A new approach to self-supervised Learning (2020, arXiv (Cornell University), cited 8692)
@@ -26,33 +26,80 @@ missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org
 ## bench-mcnemar
 - Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms (1998, Neural Computation, cited 3090)
   This article reviews five approximate statistical tests for determining whether one learning algorithm outperforms another on a particular learning task. These test sare compared experimentally to determine their probability of incorrectly detecting a difference when no difference exists (type I error). Two widely used statistical tests are shown to have high probability of type I error in certain situations and shou
+- MISA: Modality-Invariant and -Specific Representations for Multimodal Sentiment Analysis (2020, ACM International Conference on Multimedia (ACM MM), cited 1776)
+  Multimodal Sentiment Analysis is an active area of research that leverages multimodal signals for affective understanding of user-generated videos. The predominant approach, addressing this task, has been to develop sophisticated fusion techniques. However, the heterogeneous nature of the signals creates distributional modality gaps that pose significant challenges. In this paper, we aim to learn effective modality r
+- Smart Devices are Different: Assessing and MitigatingMobile Sensing Heterogeneities for Activity Recognition (2015, ACM Conference on Embedded Networked Sensor Systems (SenSys), cited 965)
+  The widespread presence of motion sensors on users' personal mobile devices has spawned a growing research interest in human activity recognition (HAR). However, when deployed at a large-scale, e.g., on multiple devices, the performance of a HAR system is often significantly lower than in reported research results. This is due to variations in training and test device hardware and their operating system characteristi
 - Combined 5 × 2 cv F Test for Comparing Supervised Classification Learning Algorithms (1999, Neural Computation, cited 331)
   Dietterich (1998) reviews five statistical tests and proposes the 5 × 2 cvt test for determining whether there is a significant difference between the error rates of two classifiers. In our experiments, we noticed that the 5 × 2 cvt test result may vary depending on factors that should not affect the test, and we propose a variant, the combined 5 × 2 cv F test, that combines multiple statistics to get a more robust t
 - Comparing linear discriminant analysis and supervised learning algorithms for binary classification—A method comparison study (2022, Biometrical Journal, cited 54)
   Abstract In psychology, linear discriminant analysis (LDA) is the method of choice for two‐group classification tasks based on questionnaire data. In this study, we present a comparison of LDA with several supervised learning algorithms. In particular, we examine to what extent the predictive performance of LDA relies on the multivariate normality assumption. As nonparametric alternatives, the linear support vector m
-- Comparing Binary Tests And Regression Analysis (2003, The Statistical Evaluation of Medical Tests for Classification and Prediction, cited 15)
-  Abstract Various factors can influence the performance of a medical test. The environment in which it is performed, characteristics of testers, characteristics of test subjects and operating parameters for the test are some such factors. It is important to identify and understand the influence of such factors in order to optimize conditions for using a test.
-- Multivariate Statistical Tests for Comparing Classification Algorithms (2011, Lecture Notes in Computer Science, cited 15)
+
+## citation-parse
+- Automatic Catchphrase Extraction from Legal Case Documents via Scoring using Deep Neural Networks (2018-09-14, arXiv, cited 0)
+  In this paper, we present a method of automatic catchphrase extracting from legal case documents. We utilize deep neural networks for constructing scoring model of our extraction system. We achieve comparable performance with systems using corpus-wide and citation information which we do not use in our system.
+- VerbCL: A Dataset of Verbatim Quotes for Highlight Extraction in Case Law (2021-08-23, arXiv, cited 0)
+  Citing legal opinions is a key part of legal argumentation, an expert task that requires retrieval, extraction and summarization of information from court decisions. The identification of legally salient parts in an opinion for the purpose of citation may be seen as a domain-specific formulation of a highlight extraction or passage retrieval task. As similar tasks in other domains such as web search show significant 
+- CiteCaseLAW: Citation Worthiness Detection in Caselaw for Legal Assistive Writing (2023-05-03, arXiv, cited 0)
+  In legal document writing, one of the key elements is properly citing the case laws and other sources to substantiate claims and arguments. Understanding the legal domain and identifying appropriate citation context or cite-worthy sentences are challenging tasks that demand expensive manual annotation. The presence of jargon, language semantics, and high domain specificity makes legal language complex, making any ass
+- Combining topic modelling and citation network analysis to study case law from the European Court on Human Rights on the right to respect for private and family life (2024-01-19, arXiv, cited 0)
+  As legal case law databases such as HUDOC continue to grow rapidly, it has become essential for legal researchers to find efficient methods to handle such large-scale data sets. Such case law databases usually consist of the textual content of cases together with the citations between them. This paper focuses on case law from the European Court of Human Rights on Article 8 of the European Convention of Human Rights, 
+- Judgement Citation Retrieval using Contextual Similarity (2024-05-28, arXiv, cited 0)
+  Traditionally in the domain of legal research, the retrieval of pertinent citations from intricate case descriptions has demanded manual effort and keyword-based search applications that mandate expertise in understanding legal jargon. Legal case descriptions hold pivotal information for legal professionals and researchers, necessitating more efficient and automated approaches. We propose a methodology that combines 
+
+## clause-type
+- CLAUDETTE: an automated detector of potentially unfair clauses in online terms of service (2019, Artificial Intelligence and Law, cited 369)
+- Cross-Domain Contract Element Extraction with a Bi-directional Feedback Clause-Element Relation Network (2021-05-13, arXiv, cited 0)
+  Contract element extraction (CEE) is the novel task of automatically identifying and extracting legally relevant elements such as contract dates, payments, and legislation references from contracts. Automatic methods for this task view it as a sequence labeling problem and dramatically reduce human labor. However, as contract genres and element types may vary widely, a significant challenge for this sequence labeling
+- CLAUSEREC: A Clause Recommendation Framework for AI-aided Contract Authoring (2021-10-26, arXiv, cited 0)
+  Contracts are a common type of legal document that frequent in several day-to-day business workflows. However, there has been very limited NLP research in processing such documents, and even lesser in generating them. These contracts are made up of clauses, and the unique nature of these clauses calls for specific methods to understand and generate such documents. In this paper, we introduce the task of clause recomm
+- Annotation and Classification of Relevant Clauses in Terms-and-Conditions Contracts (2024-02-22, arXiv, cited 0)
+  In this paper, we propose a new annotation scheme to classify different types of clauses in Terms-and-Conditions contracts with the ultimate goal of supporting legal experts to quickly identify and assess problematic issues in this type of legal documents. To this end, we built a small corpus of Terms-and-Conditions contracts and finalized an annotation scheme of 14 categories, eventually reaching an inter-annotator 
+- LegalPro-BERT: Classification of Legal Provisions by fine-tuning BERT Large Language Model (2024-04-15, arXiv, cited 0)
+  A contract is a type of legal document commonly used in organizations. Contract review is an integral and repetitive process to avoid business risk and liability. Contract analysis requires the identification and classification of key provisions and paragraphs within an agreement. Identification and validation of contract clauses can be a time-consuming and challenging task demanding the services of trained and expen
+
+## complex-word
+- CLaC at SemEval-2016 Task 11: Exploring linguistic and psycho-linguistic Features for Complex Word Identification (2017-09-08, arXiv, cited 0)
+  This paper describes the system deployed by the CLaC-EDLK team to the "SemEval 2016, Complex Word Identification task". The goal of the task is to identify if a given word in a given context is "simple" or "complex". Our system relies on linguistic features and cognitive complexity. We used several supervised models, however the Random Forest model outperformed the others. Overall our best configuration achieved a G-
+- Complex Word Identification: Challenges in Data Annotation and System Performance (2017-10-13, arXiv, cited 0)
+  This paper revisits the problem of complex word identification (CWI) following up the SemEval CWI shared task. We use ensemble classifiers to investigate how well computational methods can discriminate between complex and non-complex words. Furthermore, we analyze the classification performance to understand what makes lexical complexity challenging. Our findings show that most systems performed poorly on the SemEval
+- A Report on the Complex Word Identification Shared Task 2018 (2018-04-24, arXiv, cited 0)
+  We report the findings of the second Complex Word Identification (CWI) shared task organized as part of the BEA workshop co-located with NAACL-HLT'2018. The second CWI shared task featured multilingual and multi-genre datasets divided into four tracks: English monolingual, German monolingual, Spanish monolingual, and a multilingual track with a French test set, and two tasks: binary classification and probabilistic c
+- CompLex: A New Corpus for Lexical Complexity Prediction from Likert Scale Data (2020-03-16, arXiv, cited 0)
+  Predicting which words are considered hard to understand for a given target population is a vital step in many NLP applications such as text simplification. This task is commonly referred to as Complex Word Identification (CWI). With a few exceptions, previous studies have approached the task as a binary classification task in which systems predict a complexity value (complex vs. non-complex) for a set of target word
+- Detecting Multiword Expression Type Helps Lexical Complexity Assessment (2020-05-12, arXiv, cited 0)
+  Multiword expressions (MWEs) represent lexemes that should be treated as single lexical units due to their idiosyncratic nature. Multiple NLP applications have been shown to benefit from MWE identification, however the research on lexical complexity of MWEs is still an under-explored area. In this work, we re-annotate the Complex Word Identification Shared Task 2018 dataset of Yimam et al. (2017), which provides comp
+
+## deontic
+- Expressing and Verifying Business Contracts with Abductive Logic Programming (2008, International Journal of Electronic Commerce, cited 49)
+  SCIFF is a declarative language, based on abductive logic programming, that accommodates forward rules, predicate definitions, and constraints over finite domain variables. Its abductive declarative semantics can be related to that of deontic operators; its operational specification is the sound and complete SCIFF proof procedure, defined as a set of transition rules implemented and integrated into a reasoning and ve
+- Engineering Law-Compliant Requirements: the Nomos Framework (2010, Unitn-eprints PhD (University of Trento), cited 33)
+  In modern societies, both business and private life are deeply pervaded by software and information systems. Using software has extended human capabilities, allowing information to cross physical and ethical barriers. To handle misuse dangers, governments are increasingly laying down new laws and introducing obligations, rights and responsibilities concerned with the use of software. As a consequence, laws are assumi
+- Extracting Formal Models from Normative Texts (2016-07-06, arXiv, cited 0)
+  We are concerned with the analysis of normative texts - documents based on the deontic notions of obligation, permission, and prohibition. Our goal is to make queries about these notions and verify that a text satisfies certain properties concerning causality of actions and timing constraints. This requires taking the original text and building a representation (model) of it in a formal language, in our case the C-O 
+- Automated Reasoning in Normative Detachment Structures with Ideal Conditions (2018-10-23, arXiv, cited 0)
+  Systems of deontic logic suffer either from being too expressive and therefore hard to mechanize, or from being too simple to capture relevant aspects of normative reasoning. In this article we look for a suitable way in between: the automation of a simple logic of normative ideality and sub-ideality that is not affected by many deontic paradoxes and that is expressive enough to capture contrary-to-duty reason- ing. 
+- Toward Robust Legal Text Formalization into Defeasible Deontic Logic using LLMs (2025-06-10, arXiv, cited 0)
+  We present a comprehensive approach to the automated formalization of legal texts using large language models (LLMs), targeting their transformation into Defeasible Deontic Logic (DDL). Our method employs a structured pipeline that segments complex normative language into atomic snippets, extracts deontic rules, and evaluates them for syntactic and semantic coherence. We introduce a refined success metric that more p
 
 ## jso
 - Population size reduction for the differential evolution algorithm (2007, Applied Intelligence, cited 318)
 - Self-adaptive differential evolution algorithm using population size reduction and three strategies (2010, Soft Computing, cited 173)
-- Distance based parameter adaptation for Success-History based Differential Evolution (2018, Swarm and Evolutionary Computation, cited 154)
-- Learning Adaptive Differential Evolution Algorithm From Optimization Experiences by Policy Gradient (2021, IEEE Transactions on Evolutionary Computation, cited 152)
-  Differential evolution is one of the most prestigious population-based stochastic optimization algorithm for black-box problems. The performance of a differential evolution algorithm depends highly on its mutation and crossover strategy and associated control parameters. However, the determination process for the most suitable parameter setting is troublesome and time consuming. Adaptive control parameter methods tha
-- HARD-DE: Hierarchical ARchive Based Mutation Strategy With Depth Information of Evolution for the Enhancement of Differential Evolution on Numerical Optimization (2019, IEEE Access, cited 114)
-  Differential evolution is a famous and effective branch of evolutionary computation, which aims at tackling complex optimization problems. There are two aspects significantly affecting the overall performance of DE variants, one is trial vector generation strategy and the other is the control parameter adaptation scheme. Here in this paper, a new hierarchical archive-based trial vector generation strategy with depth 
+- High-dimensional real-parameter optimization using Self-Adaptive Differential Evolution algorithm with population size reduction (2008, 2008 IEEE Congress on Evolutionary Computation (IEEE World Congress on Computational Intelligence), cited 90)
+- An adaptive differential evolution algorithm with population size reduction strategy for unconstrained optimization problem (2023, Applied Soft Computing, cited 54)
+- Self-adaptive Differential Evolution Algorithm with Population Size Reduction for Single Objective Bound-Constrained Optimization: Algorithm j21 (2021, 2021 IEEE Congress on Evolutionary Computation (CEC), cited 32)
 
 ## legal-bench
 - LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models (2023, arXiv (Cornell University), cited 354)
   The advent of large language models (LLMs) and their adoption by the legal community has given rise to the question: what types of legal reasoning can LLMs perform? To enable greater study of this question, we present LegalBench: a collaboratively constructed legal reasoning benchmark consisting of 162 tasks covering six different types of legal reasoning. LegalBench was built through an interdisciplinary process, in
 - LegalBench-RAG: A Benchmark for Retrieval-Augmented Generation in the Legal Domain (2024, arXiv (Cornell University), cited 251)
   Retrieval-Augmented Generation (RAG) systems are showing promising potential, and are becoming increasingly relevant in AI-powered legal applications. Existing benchmarks, such as LegalBench, assess the generative capabilities of Large Language Models (LLMs) in the legal domain, but there is a critical gap in evaluating the retrieval component of RAG systems. To address this, we introduce LegalBench-RAG, the first be
-- Causalbench: A Multi-Domain Benchmark for Evaluating Causal Reasoning in Large Language Models (2025, , cited 1)
-- Enhancing Thai legal reasoning in large language models using group relative policy optimization (, , cited 0)
-  The application of Large Language Models (LLMs) to Thai legal question answering (QA) presents significant opportunities but faces challenges, particularly with complex legal reasoning, accurate citation, and the high cost of advanced alignment techniques. This thesis addresses these issues through a two-fold contribution. Firstly, it details the development of NitiBench, a comprehensive benchmark specifically design
 - LegalBench: Prototyping a Collaborative Benchmark for Legal Reasoning (2022-09-13, arXiv, cited 0)
   Can foundation models be guided to execute tasks involving legal reasoning? We believe that building a benchmark to answer this question will require sustained collaborative efforts between the computer science and legal communities. To that end, this short paper serves three purposes. First, we describe how IRAC-a framework legal scholars use to distinguish different types of legal reasoning-can guide the constructi
+- LegalBench-BR: A Benchmark for Evaluating Large Language Models on Brazilian Legal Decision Classification (2026-04-20, arXiv, cited 0)
+  We introduce LegalBench-BR, the first public benchmark for evaluating language models on Brazilian legal text classification. The dataset comprises 3,105 appellate proceedings from the Santa Catarina State Court (TJSC), collected via the DataJud API (CNJ) and annotated across five legal areas through LLM-assisted labeling with heuristic validation. On a class-balanced test set, BERTimbau-LoRA, updating only 0.3% of m
+- TW-LegalBench: Measuring Taiwanese Legal Understanding (2026-06-17, arXiv, cited 0)
+  Large language models (LLMs) have shown impressive capabilities across diverse tasks, yet their performance on jurisdiction-specific legal reasoning remains underexplored. We present TW-LegalBench that utilizes Taiwanese legal system's rich official corpus open to the public to fill the gap in evaluating LLMs on Taiwanese law, among common-law benchmarks that focus on English sources and civil-law benchmarks focusing
 
 ## legal-benchmark
 - A Brief Report on LawGPT 1.0: A Virtual Legal Assistant Based on GPT-3 (2023-02-11, arXiv, cited 0)
@@ -69,10 +116,14 @@ missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org
 ## legal-cuad
 - CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review (2021, arXiv (Cornell University), cited 571)
   Many specialized domains remain untouched by deep learning, as large labeled datasets require expensive expert annotators. We address this bottleneck within the legal domain by introducing the Contract Understanding Atticus Dataset (CUAD), a new dataset for legal contract review. CUAD was created with dozens of legal experts from The Atticus Project and consists of over 13,000 annotations. The task is to highlight sa
-- AI Enabled- Information Retrival Engine (AI-IRE) in Legal Services: An Expert-Annotated NLP for Legal Judgements (2023, 2023 Second International Conference on Augmented Intelligence and Sustainable Systems (ICAISS), cited 33)
-- Application of NLP-based models in automated detection of risky contract statements written in complex script system (2025, Expert Systems with Applications, cited 25)
-- MAUD: An Expert-Annotated Legal NLP Dataset for Merger Agreement Understanding (2023, Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, cited 24)
-- COMI-LINGUA: Expert Annotated Large-Scale Dataset for Multitask NLP in Hindi-English Code-Mixing (2025, Findings of the Association for Computational Linguistics: EMNLP 2025, cited 4)
+- A Benchmark for Lease Contract Review (2020-10-20, arXiv, cited 0)
+  Extracting entities and other useful information from legal contracts is an important task whose automation can help legal professionals perform contract reviews more efficiently and reduce relevant risks. In this paper, we tackle the problem of detecting two different types of elements that play an important role in a contract review, namely entities and red flags. The latter are terms or sentences that indicate tha
+- AI-assisted German Employment Contract Review: A Benchmark Dataset (2025-01-27, arXiv, cited 0)
+  Employment contracts are used to agree upon the working conditions between employers and employees all over the world. Understanding and reviewing contracts for void or unfair clauses requires extensive knowledge of the legal system and terminology. Recent advances in Natural Language Processing (NLP) hold promise for assisting in these reviews. However, applying NLP techniques on legal text is particularly difficult
+- Metadata Extraction Leveraging Large Language Models (2025-10-22, arXiv, cited 0)
+  The advent of Large Language Models has revolutionized tasks across domains, including the automation of legal document analysis, a critical component of modern contract management systems. This paper presents a comprehensive implementation of LLM-enhanced metadata extraction for contract review, focusing on the automatic detection and annotation of salient legal clauses. Leveraging both the publicly available Contra
+- LAUKIN: A Multi-jurisdictional Common Law Contract Dataset (2026-06-11, arXiv, cited 0)
+  Multinational companies increasingly require cross-jurisdictional contract review, yet existing legal NLP datasets are largely restricted to a single jurisdiction. We introduce LAUKIN (Legal equivalence dataset of Australia, UK, and INdia), a dataset of clause pairs (AU-UK, UK-IN, IN-AU) labelled for boolean legal equivalence. We develop a novel multi-stage retrieval and reranking pipeline to construct the initial cl
 
 ## legal-lexglue
 - LexGLUE: A Benchmark Dataset for Legal Language Understanding in English (2021, Proceedings of the conference - Association for Computational Linguistics. Meeting, cited 820)
@@ -81,17 +132,40 @@ missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org
   Pre-trained Transformers currently dominate most NLP tasks.They impose, however, limits on the maximum input length (512 subwords in BERT), which are too restrictive in the legal domain.Even sparse-attention models, such as Longformer and BigBird, which increase the maximum input length to 4,096 sub-words, severely truncate texts in three of the six datasets of LexGLUE.Simpler linear classifiers with TF-IDF features 
 - ChatGPT may Pass the Bar Exam soon, but has a Long Way to Go for the LexGLUE benchmark (2023-03-09, arXiv, cited 21)
   Following the hype around OpenAI's ChatGPT conversational agent, the last straw in the recent development of Large Language Models (LLMs) that demonstrate emergent unprecedented zero-shot capabilities, we audit the latest OpenAI's GPT-3.5 model, `gpt-3.5-turbo', the first available ChatGPT model, in the LexGLUE benchmark in a zero-shot fashion providing examples in a templated instruction-following format. The result
-- A Multi-Task Benchmark for Korean Legal Language Understanding and Judgement Prediction (2022, Advances in Neural Information Processing Systems 35, cited 8)
-- Developing a Pragmatic Benchmark for Assessing Korean Legal Language Understanding in Large Language Models (2024, Findings of the Association for Computational Linguistics: EMNLP 2024, cited 6)
+- AI Natural Language Understanding And LexGLUE Benchmarking (2021, SSRN Electronic Journal, cited 0)
+
+## legalese
+- Syntactic complexity in legal translated texts and the use of plain English: a corpus-based study (2023, Humanities and Social Sciences Communications, cited 48)
+  Abstract This study compared the linguistic difficulty of legal translated texts with the syntactic complexity of native English legal writings in order to demonstrate the statistically significant differences between the two big datasets. The study applies features of the syntactic complexity of sentences within legal text translations that translated texts are less complicated than their original counterparts. It p
+- Legalese versus plain language (2012, Amicus Curiae, cited 39)
+  Article looking at developments in legal drafting, considering traditional approaches, reluctance to change, pitfalls of change and the benefits of plain language. Article by Professor Peter Butt (Associate Professor of Law at the university of Sydney and IALS Inns of Court Fellow 2001). Published in Amicus Curiae - Journal of the Institute of Advanced Legal Studies and its Society for Advanced Legal Studies. The Jou
+- Changing with the Times: The Evolution of Plain Language in the Legal Sphere (2015, Revista Alicantina de Estudios Ingleses, cited 36)
+  As is well known, the Plain language movement has been influential in a number of areas of public life over the last few decades. Within the legal sphere it has raised general awareness concerning the need to make legal matters and legal documents more comprehensible and accessible to non-experts, particularly in today’s digitalized world where information is freely available to the general public. In this paper my a
+- Even lawyers do not like legalese (2023, Proceedings of the National Academy of Sciences, cited 36)
+  Across modern civilization, societal norms and rules are established and communicated largely in the form of written laws. Despite their prevalence and importance, legal documents have long been widely acknowledged to be difficult to understand for those who are required to comply with them (i.e., everyone). Why? Across two preregistered experiments, we evaluated five hypotheses for why lawyers write in a complex man
+- Plain English Movement, The The Plain English Movement: Panel Discussion (1981, FLASH - Fordham Law Archive of Scholarship & History (Fordham University), cited 35)
+  One of the dominant events between 1975 and today in United States consumer law was the birth of what has become known as the "plain English movement". For centuries lawyers have been derided for the nature of their prose. A word will not suffice where two or even three can take its place; long sentences are preferable to short ones; Latin, or perhaps medieval French, are preferable to English. The plain English move
+
+## lex-simplify
+- A Knowledge-Based Approach to Word Sense Disambiguation by distributional selection and semantic features (2017-02-27, arXiv, cited 0)
+  Word sense disambiguation improves many Natural Language Processing (NLP) applications such as Information Retrieval, Information Extraction, Machine Translation, or Lexical Simplification. Roughly speaking, the aim is to choose for each word in a text its best sense. One of the most popular method estimates local semantic similarity relatedness between two word senses and then extends it to all words from text. The 
+- A Word-Complexity Lexicon and A Neural Readability Ranking Model for Lexical Simplification (2018-10-12, arXiv, cited 0)
+  Current lexical simplification approaches rely heavily on heuristics and corpus level features that do not always align with human judgment. We create a human-rated word-complexity lexicon of 15,000 English words and propose a novel neural readability ranking model with a Gaussian-based feature vectorization layer that utilizes these human ratings to measure the complexity of any given word or phrase. Our model perfo
+- Chinese Lexical Simplification (2020-10-14, arXiv, cited 0)
+  Lexical simplification has attracted much attention in many languages, which is the process of replacing complex words in a given sentence with simpler alternatives of equivalent meaning. Although the richness of vocabulary in Chinese makes the text very difficult to read for children and non-native speakers, there is no research work for Chinese lexical simplification (CLS) task. To circumvent difficulties in acquir
+- Towards Arabic Sentence Simplification via Classification and Generative Approaches (2022-04-20, arXiv, cited 0)
+  This paper presents an attempt to build a Modern Standard Arabic (MSA) sentence-level simplification system. We experimented with sentence simplification using two approaches: (i) a classification approach leading to lexical simplification pipelines which use Arabic-BERT, a pre-trained contextualised model, as well as a model of fastText word embeddings; and (ii) a generative approach, a Seq2Seq technique by applying
+- Lexical Simplification Benchmarks for English, Portuguese, and Spanish (2022-09-12, arXiv, cited 0)
+  Even in highly-developed countries, as many as 15-30\% of the population can only understand texts written using a basic vocabulary. Their understanding of everyday texts is limited, which prevents them from taking an active role in society and making informed decisions regarding healthcare, legal representation, or democratic choice. Lexical simplification is a natural language processing task that aims to make text
 
 ## lshade
 - Memory, evolutionary operator, and local search based improved Grey Wolf Optimizer with linear population size reduction technique (2023, Knowledge-Based Systems, cited 105)
-- Learning neural network weights using genetic algorithms-improving performance by search-space reduction (1991, [Proceedings] 1991 IEEE International Joint Conference on Neural Networks, cited 20)
 - Network Based Linear Population Size Reduction in SHADE (2016, 2016 International Conference on Intelligent Networking and Collaborative Systems (INCoS), cited 16)
-- Improving Photovoltaic MPPT Performance through PSO Dynamic Swarm Size Reduction (2023, , cited 11)
-  Efficient energy extraction in photovoltaic (PV) systems relies on the effective implementation of Maximum Power Point Tracking (MPPT) methods. Conventional MPPT techniques often suffer from slow convergence speeds and suboptimal tracking performance, particularly under dynamic variation of environmental conditions. Smart optimization algorithms (SOA) using metaheuristic optimization algorithms can avoid this limitat
 - Performance analysis of the optimized equilibrium optimizer algorithm using linear population size reduction in the coherent free-space optical communication system (2025, Optics Express, cited 4)
   Sensor-less adaptive optics (SLAO) systems are extensively employed due to their ability to effectively mitigate the adverse impact of atmospheric turbulence on coherent free-space optical communication (CFSOC) systems. The control algorithm dictates the corrective capabilities of the SLAO system. For this work, we employ the optimized equilibrium optimizer algorithm using linear population size reduction (LOEO) as t
+- L-SHADE with Alternative Population Size Reduction for Unconstrained Continuous Optimization (2020, Anais do XI Computer on the Beach - COTB '20, cited 2)
+  Differential Evolution (DE) is a powerful and versatile algorithmfor numerical optimization, but one of its downsides is its numberof parameters that need to be tuned. Multiple techniques have beenproposed to self-adapt DE’s parameters, with L-SHADE being oneof the most well established in the literature. This work presentsthe A-SHADE algorithm, which modifies the population size reductionschema of L-SHADE, and also 
+- Improving the Performance of QUATRE-EAR Using Linear Population Size Reduction (2021, Smart Innovation, Systems and Technologies, cited 0)
 
 ## many-objective
 - A collaborative decomposition-based evolutionary algorithm integrating normal and penalty-based boundary intersection for many-objective optimization (2022-04-14, arXiv, cited 8)
@@ -142,7 +216,7 @@ missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org
 - MOEA/D-S<sup>3</sup>: MOEA/D using SVM-based Surrogates adjusted to Subproblems for Many objective optimization (2020, 2020 IEEE Congress on Evolutionary Computation (CEC), cited 9)
 - A Decomposition Method Based on Random Objective Division for MOEA/D in Many-Objective Optimization (2020, IEEE Access, cited 4)
 - MOEA/D using constant-distance based neighbors designed for many-objective optimization (2015, 2015 IEEE Congress on Evolutionary Computation (CEC), cited 3)
-- Maritime Dynamic Resource Allocation and Risk Minimization Using Visual Analytics and Elitist Multi-Objective Optimization (2023, Proceedings of the 20th International Conference on Informatics in Control, Automation and Robotics, cited 2)
+- Many-objective power flow optimization problems based on an improved MOEA/D with dynamical resource allocation strategy (2019, 2019 Chinese Automation Congress (CAC), cited 0)
 
 ## moead-weight
 - Chaotic Multiobjective Evolutionary Algorithm Based on Decomposition for Test Task Scheduling Problem (2014, Mathematical Problems in Engineering, cited 9)
@@ -160,21 +234,50 @@ missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org
 - A Cluster-Based Opposition Differential Evolution Algorithm Boosted by a Local Search for ECG Signal Classification (2023-05-04, arXiv, cited 0)
   Electrocardiogram (ECG) signals, which capture the heart's electrical activity, are used to diagnose and monitor cardiac problems. The accurate classification of ECG signals, particularly for distinguishing among various types of arrhythmias and myocardial infarctions, is crucial for the early detection and treatment of heart-related diseases. This paper proposes a novel approach based on an improved differential evo
 
+## plain-language
+- Red Teaming Language Models to Reduce Harms: Methods, Scaling Behaviors, and Lessons Learned (2022, arXiv (Cornell University), cited 1661)
+  We describe our early efforts to red team language models in order to simultaneously discover, measure, and attempt to reduce their potentially harmful outputs. We make three main contributions. First, we investigate scaling behaviors for red teaming across 3 model sizes (2.7B, 13B, and 52B parameters) and 4 model types: a plain language model (LM); an LM prompted to be helpful, honest, and harmless; an LM with rejec
+- LengClaro2023: A Dataset of Administrative Texts in Spanish with Plain Language adaptations (2025-06-06, arXiv, cited 0)
+  In this work, we present LengClaro2023, a dataset of legal-administrative texts in Spanish. Based on the most frequently used procedures from the Spanish Social Security website, we have created for each text two simplified equivalents. The first version follows the recommendations provided by arText claro. The second version incorporates additional recommendations from plain language guidelines to explore further po
+- Senseful Consense: Towards Simplified Cookie Banners using Plain Language (2026-09-09, arXiv, cited 0)
+  While the GDPR and ePrivacy Directive mandate that consent information must be clear and accessible, most modern cookie banners remain obscured by technical jargon, vague phrasing, and frequent content overload or underload. This feasibility study investigates the impact of applying plain language (Einfache Sprache) to cookie banners within the IAB Transparency & Consent Framework (TCF). In our study, we analysed coo
+
+## readability
+- Knowledge-Based Legal Document Assembly (2020-09-14, arXiv, cited 0)
+  This paper proposes a knowledge-based legal document assembly method that uses a machine-readable representation of knowledge of legal professionals. This knowledgebase has two components - the formal knowledge of legal norms represented as a rule-base and the tacit knowledge represented by a document template. A document assembly system is developed as a proof of concept. It collects input data in the form of an int
+- Assessing the Readability of Policy Documents on the Digital Single Market of the European Union (2021-02-23, arXiv, cited 0)
+  Today, literature skills are necessary. Engineering and other technical professions are not an exception from this requirement. Traditionally, technical reading and writing have been framed with a limited scope, containing documentation, specifications, standards, and related text types. Nowadays, however, the scope covers also other text types, including legal, policy, and related documents. Given this motivation, t
+- The Legislative Recipe: Syntax for Machine-Readable Legislation (2021-08-19, arXiv, cited 0)
+  Legal interpretation is a linguistic venture. In judicial opinions, for example, courts are often asked to interpret the text of statutes and legislation. As time has shown, this is not always as easy as it sounds. Matters can hinge on vague or inconsistent language and, under the surface, human biases can impact the decision-making of judges. This raises an important question: what if there was a method of extractin
+- The Use of Readability Metrics in Legal Text: A Systematic Literature Review (2024-11-14, arXiv, cited 0)
+  Understanding the text in legal documents can be challenging due to their complex structure and the inclusion of domain-specific jargon. Laws and regulations are often crafted in such a manner that engagement with them requires formal training, potentially leading to vastly different interpretations of the same texts. Linguistic complexity is an important contributor to the difficulties experienced by readers. Simpli
+
 ## restart
 - Distributed Individuals for Multiple Peaks: A Novel Differential Evolution for Multimodal Optimization Problems (2019, IEEE Transactions on Evolutionary Computation, cited 146)
   Locating more peaks and refining the solution accuracy on the found peaks are two challenging issues in solving multimodal optimization problems (MMOPs). To deal with these two challenges, a distributed individuals differential evolution (DIDE) algorithm is proposed in this article based on a distributed individuals for multiple peaks (DIMP) framework and two novel mechanisms. First, the DIMP framework provides suffi
 - An Inflationary Differential Evolution Algorithm for Space Trajectory Optimization (2011, IEEE Transactions on Evolutionary Computation, cited 121)
   In this paper, we define a discrete dynamical system that governs the evolution of a population of agents. From the dynamical system, a variant of differential evolution (DE) is derived. It is then demonstrated that, under some assumptions on the differential mutation strategy and on the local structure of the objective function, the proposed dynamical system has fixed points toward which it converges with probabilit
-- MSC-CMA-ES: Structure-Aware Restarts for CMA-ES via Cyclic Nearest-Better Basin Discovery (2026-06-14, arXiv, cited 0)
-  CMA-ES behaves, per restart, primarily as a local optimizer; multimodal search relies on restart strategies such as IPOP and BIPOP, which draw every restart uniformly and reuse no information from previous evaluations. Multi-Start Clustering CMA-ES (MSC-CMA-ES) makes restarts structure-aware: in alternating cycles, a Sobol pre-sample is partitioned into approximate basins of attraction by nearest-better clustering, r
 
 ## shade
-- Differential Evolution Algorithm With Strategy Adaptation for Global Numerical Optimization (2009, IEEE Transactions on Evolutionary Computation, cited 3298)
 - Improving the search performance of SHADE using linear population size reduction (2014, IEEE Congress on Evolutionary Computation (CEC), cited 1961)
   SHADE is an adaptive DE which incorporates success-history based parameter adaptation and one of the state-of-the-art DE algorithms. This paper proposes L-SHADE, which further extends SHADE with Linear Population Size Reduction (LPSR), which continually decreases the population size according to a linear function. We evaluated the performance of L-SHADE on CEC2014 benchmarks and compared its search performance with s
-- Differential evolution algorithm with ensemble of populations for global numerical optimization (2009, OPSEARCH, cited 31)
-- A differential covariance matrix adaptation evolutionary algorithm for global optimization (2011, 2011 IEEE Symposium on Differential Evolution (SDE), cited 9)
 - A hybrid iterated local search algorithm with adaptive perturbation mechanism by success-history based parameter adaptation for differential evolution (SHADE) (2019, Engineering Optimization, cited 9)
+- RDEx-SOP: Exploitation-Biased Reconstructed Differential Evolution for Fixed-Budget Bound-Constrained Single-Objective Optimization (2026-03-28, arXiv, cited 0)
+  Bound-constrained single-objective numerical optimisation remains a key benchmark for assessing the robustness and efficiency of evolutionary algorithms. This report documents RDEx-SOP, an exploitation-biased success-history differential evolution variant used in the IEEE CEC 2025 numerical optimisation competition (C06 special session). RDEx-SOP combines success-history parameter adaptation, an exploitation-biased h
+- RDEx-CSOP: Feasibility-Aware Reconstructed Differential Evolution with Adaptive epsilon-Constraint Ranking (2026-03-28, arXiv, cited 0)
+  Constrained single-objective numerical optimisation requires both feasibility maintenance and strong objective-value convergence under limited evaluation budgets. This report documents RDEx-CSOP, a constrained differential evolution variant used in the IEEE CEC 2025 numerical optimisation competition (C06 special session). RDEx-CSOP combines success-history parameter adaptation with an exploitation-biased hybrid sear
+
+## simplify-metric
+- CUT: Controllable Unsupervised Text Simplification (2020-12-03, arXiv, cited 0)
+  In this paper, we focus on the challenge of learning controllable text simplifications in unsupervised settings. While this problem has been previously discussed for supervised learning algorithms, the literature on the analogies in unsupervised methods is scarse. We propose two unsupervised mechanisms for controlling the output complexity of the generated texts, namely, back translation with control tokens (a learni
+- Keep it Simple: Unsupervised Simplification of Multi-Paragraph Text (2021-07-07, arXiv, cited 0)
+  This work presents Keep it Simple (KiS), a new approach to unsupervised text simplification which learns to balance a reward across three properties: fluency, salience and simplicity. We train the model with a novel algorithm to optimize the reward (k-SCST), in which the model proposes several candidate simplifications, computes each candidate's reward, and encourages candidates that outperform the mean reward. Final
+- Document-Level Text Simplification: Dataset, Criteria and Baseline (2021-10-11, arXiv, cited 0)
+  Text simplification is a valuable technique. However, current research is limited to sentence simplification. In this paper, we define and investigate a new task of document-level text simplification, which aims to simplify a document consisting of multiple sentences. Based on Wikipedia dumps, we first construct a large-scale dataset named D-Wikipedia and perform analysis and human evaluation on it to show that the d
+- Unsupervised Sentence Simplification via Dependency Parsing (2022-06-10, arXiv, cited 0)
+  Text simplification is the task of rewriting a text so that it is readable and easily understood. In this paper, we propose a simple yet novel unsupervised sentence simplification system that harnesses parsing structures together with sentence embeddings to produce linguistically effective simplifications. This means our model is capable of introducing substantial modifications to simplify a sentence while maintainin
+- SimpLex: a lexical text simplification architecture (2023-04-14, arXiv, cited 0)
+  Text simplification (TS) is the process of generating easy-to-understand sentences from a given sentence or piece of text. The aim of TS is to reduce both the lexical (which refers to vocabulary complexity and meaning) and syntactic (which refers to the sentence structure) complexity of a given text or sentence without the loss of meaning or nuance. In this paper, we present \textsc{SimpLex}, a novel simplification a
 
 ## survey
 - Differential Evolution: A Survey of the State-of-the-Art (2011, IEEE Transactions on Evolutionary Computation, cited 4836)
@@ -182,3 +285,15 @@ missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org
 - Enhanced versions of differential evolution: state-of-the-art survey (2014, International Journal of Computing Science and Mathematics, cited 19)
 - A brief survey of differential evolution on Graphic Processing Units (2013, 2013 IEEE Symposium on Differential Evolution (SDE), cited 5)
 - An Introductory Survey on Differential Evolution in Electrical and Electronic Engineering (2009, Differential Evolution, cited 2)
+
+## term-extract
+- SemRe-Rank: Improving Automatic Term Extraction By Incorporating Semantic Relatedness With Personalised PageRank (2017-11-09, arXiv, cited 0)
+  Automatic Term Extraction deals with the extraction of terminology from a domain specific corpus, and has long been an established research area in data and knowledge acquisition. ATE remains a challenging task as it is known that there is no existing ATE methods that can consistently outperform others in any domain. This work adopts a refreshed perspective to this problem: instead of searching for such a 'one-size-f
+- What if we had no Wikipedia? Domain-independent Term Extraction from a Large News Corpus (2020-09-17, arXiv, cited 0)
+  One of the most impressive human endeavors of the past two decades is the collection and categorization of human knowledge in the free and accessible format that is Wikipedia. In this work we ask what makes a term worthy of entering this edifice of knowledge, and having a page of its own in Wikipedia? To what extent is this a natural product of on-going human discourse and discussion rather than an idiosyncratic choi
+- Unsupervised Technical Domain Terms Extraction using Term Extractor (2021-01-22, arXiv, cited 0)
+  Terminology extraction, also known as term extraction, is a subtask of information extraction. The goal of terminology extraction is to extract relevant words or phrases from a given corpus automatically. This paper focuses on the unsupervised automated domain term extraction method that considers chunking, preprocessing, and ranking domain-specific terms using relevance and cohesion functions for ICON 2020 shared ta
+- Ensembling Transformers for Cross-domain Automatic Term Extraction (2022-12-12, arXiv, cited 0)
+  Automatic term extraction plays an essential role in domain language understanding and several natural language processing downstream tasks. In this paper, we propose a comparative study on the predictive power of Transformers-based pretrained language models toward term extraction in a multi-language cross-domain setting. Besides evaluating the ability of monolingual models to extract single- and multi-word terms, w
+- CoastTerm: a Corpus for Multidisciplinary Term Extraction in Coastal Scientific Literature (2024-06-13, arXiv, cited 0)
+  The growing impact of climate change on coastal areas, particularly active but fragile regions, necessitates collaboration among diverse stakeholders and disciplines to formulate effective environmental protection policies. We introduce a novel specialized corpus comprising 2,491 sentences from 410 scientific abstracts concerning coastal areas, for the Automatic Term Extraction (ATE) and Classification (ATC) tasks. I

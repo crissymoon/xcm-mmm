@@ -1,0 +1,219 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/73AUZ6xU+J59WEHA2rbAnMJ5on4</id>
+  <title>arXiv Query: search_query=abs:"text simplification" AND abs:"SARI"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:21Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22text+simplification%22+AND+abs:%22SARI%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>19</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2304.07002v1</id>
+    <title>SimpLex: a lexical text simplification architecture</title>
+    <updated>2023-04-14T08:52:31Z</updated>
+    <link href="https://arxiv.org/abs/2304.07002v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2304.07002v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Text simplification (TS) is the process of generating easy-to-understand sentences from a given sentence or piece of text. The aim of TS is to reduce both the lexical (which refers to vocabulary complexity and meaning) and syntactic (which refers to the sentence structure) complexity of a given text or sentence without the loss of meaning or nuance. In this paper, we present \textsc{SimpLex}, a novel simplification architecture for generating simplified English sentences. To generate a simplified sentence, the proposed architecture uses either word embeddings (i.e., Word2Vec) and perplexity, or sentence transformers (i.e., BERT, RoBERTa, and GPT2) and cosine similarity. The solution is incorporated into a user-friendly and simple-to-use software. We evaluate our system using two metrics, i.e., SARI, and Perplexity Decrease. Experimentally, we observe that the transformer models outperform the other models in terms of the SARI score. However, in terms of Perplexity, the Word-Embeddings-based models achieve the biggest decrease. Thus, the main contributions of this paper are: (1) We propose a new Word Embedding and Transformer based algorithm for text simplification; (2) We design \textsc{SimpLex} -- a modular novel text simplification system -- that can provide a baseline for further research; and (3) We perform an in-depth analysis of our solution and compare our results with two state-of-the-art models, i.e., LightLS [19] and NTS-w2v [44]. We also make the code publicly available online.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-04-14T08:52:31Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Neural Computing and Applications, 35(8):6265-6280, 2023</arxiv:journal_ref>
+    <author>
+      <name>Ciprian-Octavian Truică</name>
+    </author>
+    <author>
+      <name>Andrei-Ionut Stan</name>
+    </author>
+    <author>
+      <name>Elena-Simona Apostol</name>
+    </author>
+    <arxiv:doi>10.1007/s00521-022-07905-y</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s00521-022-07905-y" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2107.03444v1</id>
+    <title>Keep it Simple: Unsupervised Simplification of Multi-Paragraph Text</title>
+    <updated>2021-07-07T19:12:44Z</updated>
+    <link href="https://arxiv.org/abs/2107.03444v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2107.03444v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This work presents Keep it Simple (KiS), a new approach to unsupervised text simplification which learns to balance a reward across three properties: fluency, salience and simplicity. We train the model with a novel algorithm to optimize the reward (k-SCST), in which the model proposes several candidate simplifications, computes each candidate's reward, and encourages candidates that outperform the mean reward. Finally, we propose a realistic text comprehension task as an evaluation method for text simplification. When tested on the English news domain, the KiS model outperforms strong supervised baselines by more than 4 SARI points, and can help people complete a comprehension task an average of 18% faster while retaining accuracy, when compared to the original text. Code available: https://github.com/tingofurro/keep_it_simple</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-07-07T19:12:44Z</published>
+    <arxiv:comment>Accepted at ACL-IJCNLP 2021, 14 pages, 7 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Association for Computational Linguistics (2021)</arxiv:journal_ref>
+    <author>
+      <name>Philippe Laban</name>
+    </author>
+    <author>
+      <name>Tobias Schnabel</name>
+    </author>
+    <author>
+      <name>Paul Bennett</name>
+    </author>
+    <author>
+      <name>Marti A. Hearst</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2110.05071v1</id>
+    <title>Document-Level Text Simplification: Dataset, Criteria and Baseline</title>
+    <updated>2021-10-11T08:15:31Z</updated>
+    <link href="https://arxiv.org/abs/2110.05071v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2110.05071v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Text simplification is a valuable technique. However, current research is limited to sentence simplification. In this paper, we define and investigate a new task of document-level text simplification, which aims to simplify a document consisting of multiple sentences. Based on Wikipedia dumps, we first construct a large-scale dataset named D-Wikipedia and perform analysis and human evaluation on it to show that the dataset is reliable. Then, we propose a new automatic evaluation metric called D-SARI that is more suitable for the document-level simplification task. Finally, we select several representative models as baseline models for this task and perform automatic evaluation and human evaluation. We analyze the results and point out the shortcomings of the baseline models.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-10-11T08:15:31Z</published>
+    <arxiv:comment>17 pages, 1 figure, accepted by EMNLP 2021</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Renliang Sun</name>
+    </author>
+    <author>
+      <name>Hanqi Jin</name>
+    </author>
+    <author>
+      <name>Xiaojun Wan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2307.14632v1</id>
+    <title>Metric-Based In-context Learning: A Case Study in Text Simplification</title>
+    <updated>2023-07-27T05:45:35Z</updated>
+    <link href="https://arxiv.org/abs/2307.14632v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2307.14632v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In-context learning (ICL) for large language models has proven to be a powerful approach for many natural language processing tasks. However, determining the best method to select examples for ICL is nontrivial as the results can vary greatly depending on the quality, quantity, and order of examples used. In this paper, we conduct a case study on text simplification (TS) to investigate how to select the best and most robust examples for ICL. We propose Metric-Based in-context Learning (MBL) method that utilizes commonly used TS metrics such as SARI, compression ratio, and BERT-Precision for selection. Through an extensive set of experiments with various-sized GPT models on standard TS benchmarks such as TurkCorpus and ASSET, we show that examples selected by the top SARI scores perform the best on larger models such as GPT-175B, while the compression ratio generally performs better on smaller models such as GPT-13B and GPT-6.7B. Furthermore, we demonstrate that MBL is generally robust to example orderings and out-of-domain test sets, and outperforms strong baselines and state-of-the-art finetuned language models. Finally, we show that the behaviour of large GPT models can be implicitly controlled by the chosen metric. Our research provides a new framework for selecting examples in ICL, and demonstrates its effectiveness in text simplification tasks, breaking new ground for more accurate and efficient NLG systems.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-07-27T05:45:35Z</published>
+    <arxiv:comment>Accepted to INLG</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Subha Vadlamannati</name>
+    </author>
+    <author>
+      <name>Gözde Gül Şahin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.10801v1</id>
+    <title>Toward Human-Centered Readability Evaluation</title>
+    <updated>2025-10-12T20:38:32Z</updated>
+    <link href="https://arxiv.org/abs/2510.10801v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.10801v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Text simplification is essential for making public health information accessible to diverse populations, including those with limited health literacy. However, commonly used evaluation metrics in Natural Language Processing (NLP), such as BLEU, FKGL, and SARI, mainly capture surface-level features and fail to account for human-centered qualities like clarity, trustworthiness, tone, cultural relevance, and actionability. This limitation is particularly critical in high-stakes health contexts, where communication must be not only simple but also usable, respectful, and trustworthy. To address this gap, we propose the Human-Centered Readability Score (HCRS), a five-dimensional evaluation framework grounded in Human-Computer Interaction (HCI) and health communication research. HCRS integrates automatic measures with structured human feedback to capture the relational and contextual aspects of readability. We outline the framework, discuss its integration into participatory evaluation workflows, and present a protocol for empirical validation. This work aims to advance the evaluation of health text simplification beyond surface metrics, enabling NLP systems that align more closely with diverse users' needs, expectations, and lived experiences.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-12T20:38:32Z</published>
+    <arxiv:comment>Accepted to the 4th Workshop on Bridging Human-Computer Interaction and NLP (HCI+NLP) at EMNLP 2025, Suzhou, China</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Bahar İlgen</name>
+    </author>
+    <author>
+      <name>Georges Hattab</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2206.12261v1</id>
+    <title>Unsupervised Sentence Simplification via Dependency Parsing</title>
+    <updated>2022-06-10T07:55:25Z</updated>
+    <link href="https://arxiv.org/abs/2206.12261v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2206.12261v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Text simplification is the task of rewriting a text so that it is readable and easily understood. In this paper, we propose a simple yet novel unsupervised sentence simplification system that harnesses parsing structures together with sentence embeddings to produce linguistically effective simplifications. This means our model is capable of introducing substantial modifications to simplify a sentence while maintaining its original semantics and adequate fluency. We establish the unsupervised state-of-the-art at 39.13 SARI on TurkCorpus set and perform competitively against supervised baselines on various quality metrics. Furthermore, we demonstrate our framework's extensibility to other languages via a proof-of-concept on Vietnamese data. Code for reproduction is published at \url{https://github.com/isVy08/USDP}.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-06-10T07:55:25Z</published>
+    <arxiv:comment>8 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Vy Vo</name>
+    </author>
+    <author>
+      <name>Weiqing Wang</name>
+    </author>
+    <author>
+      <name>Wray Buntine</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.03278v1</id>
+    <title>Evaluating Document Simplification: On the Importance of Separately Assessing Simplicity and Meaning Preservation</title>
+    <updated>2024-04-04T08:04:24Z</updated>
+    <link href="https://arxiv.org/abs/2404.03278v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.03278v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Text simplification intends to make a text easier to read while preserving its core meaning. Intuitively and as shown in previous works, these two dimensions (simplification and meaning preservation) are often-times inversely correlated. An overly conservative text will fail to simplify sufficiently, whereas extreme simplification will degrade meaning preservation. Yet, popular evaluation metrics either aggregate meaning preservation and simplification into a single score (SARI, LENS), or target meaning preservation alone (BERTScore, QuestEval). Moreover, these metrics usually require a set of references and most previous work has only focused on sentence-level simplification. In this paper, we focus on the evaluation of document-level text simplification and compare existing models using distinct metrics for meaning preservation and simplification. We leverage existing metrics from similar tasks and introduce a reference-less metric variant for simplicity, showing that models are mostly biased towards either simplification or meaning preservation, seldom performing well on both dimensions. Making use of the fact that the metrics we use are all reference-less, we also investigate the performance of existing models when applied to unseen data (where reference simplifications are unavailable).</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-04T08:04:24Z</published>
+    <arxiv:comment>Accepted to READI Workshop 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Liam Cripwell</name>
+    </author>
+    <author>
+      <name>Joël Legrand</name>
+    </author>
+    <author>
+      <name>Claire Gardent</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.22212v2</id>
+    <title>DETECT: Determining Ease and Textual Clarity of German Text Simplifications</title>
+    <updated>2026-03-06T16:06:13Z</updated>
+    <link href="https://arxiv.org/abs/2510.22212v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.22212v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Current evaluation of German automatic text simplification (ATS) relies on general-purpose metrics such as SARI, BLEU, and BERTScore, which insufficiently capture simplification quality in terms of simplicity, meaning preservation, and fluency. While specialized metrics like LENS have been developed for English, corresponding efforts for German have lagged behind due to the absence of human-annotated corpora. To close this gap, we introduce DETECT, the first German-specific metric that holistically evaluates ATS quality across all three dimensions of simplicity, meaning preservation, and fluency, and is trained entirely on synthetic large language model (LLM) responses. Our approach adapts the LENS framework to German and extends it with (i) a pipeline for generating synthetic quality scores via LLMs, enabling dataset creation without human annotation, and (ii) an LLM-based refinement step for aligning grading criteria with simplification requirements. To the best of our knowledge, we also construct the largest German human evaluation dataset for text simplification to validate our metric directly. Experimental results show that DETECT achieves substantially higher correlations with human judgments than widely used ATS metrics, with particularly strong gains in meaning preservation and fluency. Beyond ATS, our findings highlight both the potential and the limitations of LLMs for automatic evaluation and provide transferable guidelines for general language accessibility tasks.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-25T08:20:18Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Maria Korobeynikova</name>
+    </author>
+    <author>
+      <name>Alessia Battisti</name>
+    </author>
+    <author>
+      <name>Lukas Fischer</name>
+    </author>
+    <author>
+      <name>Yingqiang Gao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2012.01936v1</id>
+    <title>CUT: Controllable Unsupervised Text Simplification</title>
+    <updated>2020-12-03T14:14:30Z</updated>
+    <link href="https://arxiv.org/abs/2012.01936v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.01936v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we focus on the challenge of learning controllable text simplifications in unsupervised settings. While this problem has been previously discussed for supervised learning algorithms, the literature on the analogies in unsupervised methods is scarse. We propose two unsupervised mechanisms for controlling the output complexity of the generated texts, namely, back translation with control tokens (a learning-based approach) and simplicity-aware beam search (decoding-based approach). We show that by nudging a back-translation algorithm to understand the relative simplicity of a text in comparison to its noisy translation, the algorithm self-supervises itself to produce the output of the desired complexity. This approach achieves competitive performance on well-established benchmarks: SARI score of 46.88% and FKGL of 3.65% on the Newsela dataset.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-03T14:14:30Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Oleg Kariuk</name>
+    </author>
+    <author>
+      <name>Dima Karamshuk</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.09632v1</id>
+    <title>SciGisPy: a Novel Metric for Biomedical Text Simplification via Gist Inference Score</title>
+    <updated>2024-10-12T19:53:56Z</updated>
+    <link href="https://arxiv.org/abs/2410.09632v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.09632v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Biomedical literature is often written in highly specialized language, posing significant comprehension challenges for non-experts. Automatic text simplification (ATS) offers a solution by making such texts more accessible while preserving critical information. However, evaluating ATS for biomedical texts is still challenging due to the limitations of existing evaluation metrics. General-domain metrics like SARI, BLEU, and ROUGE focus on surface-level text features, and readability metrics like FKGL and ARI fail to account for domain-specific terminology or assess how well the simplified text conveys core meanings (gist). To address this, we introduce SciGisPy, a novel evaluation metric inspired by Gist Inference Score (GIS) from Fuzzy-Trace Theory (FTT). SciGisPy measures how well a simplified text facilitates the formation of abstract inferences (gist) necessary for comprehension, especially in the biomedical domain. We revise GIS for this purpose by introducing domain-specific enhancements, including semantic chunking, Information Content (IC) theory, and specialized embeddings, while removing unsuitable indexes. Our experimental evaluation on the Cochrane biomedical text simplification dataset demonstrates that SciGisPy outperforms the original GIS formulation, with a significant increase in correctly identified simplified texts (84% versus 44.8%). The results and a thorough ablation study confirm that SciGisPy better captures the essential meaning of biomedical content, outperforming existing approaches.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-12T19:53:56Z</published>
+    <arxiv:comment>Accepted by he Third Workshop on Text Simplification, Accessibility and Readability</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Chen Lyu</name>
+    </author>
+    <author>
+      <name>Gabriele Pergola</name>
+    </author>
+  </entry>
+</feed>

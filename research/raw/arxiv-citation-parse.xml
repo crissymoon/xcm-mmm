@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/b94BZF0V0bvszNWvOgVcgfZEEek</id>
+  <title>arXiv Query: search_query=abs:"citation" AND abs:"extraction" AND abs:"legal"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:26Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22citation%22+AND+(abs:%22extraction%22+AND+abs:%22legal%22)&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>32</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2108.10120v1</id>
+    <title>VerbCL: A Dataset of Verbatim Quotes for Highlight Extraction in Case Law</title>
+    <updated>2021-08-23T12:41:41Z</updated>
+    <link href="https://arxiv.org/abs/2108.10120v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2108.10120v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Citing legal opinions is a key part of legal argumentation, an expert task that requires retrieval, extraction and summarization of information from court decisions. The identification of legally salient parts in an opinion for the purpose of citation may be seen as a domain-specific formulation of a highlight extraction or passage retrieval task. As similar tasks in other domains such as web search show significant attention and improvement, progress in the legal domain is hindered by the lack of resources for training and evaluation.
+  This paper presents a new dataset that consists of the citation graph of court opinions, which cite previously published court opinions in support of their arguments. In particular, we focus on the verbatim quotes, i.e., where the text of the original opinion is directly reused.
+  With this approach, we explain the relative importance of different text spans of a court opinion by showcasing their usage in citations, and measuring their contribution to the relations between opinions in the citation graph.
+  We release VerbCL, a large-scale dataset derived from CourtListener and introduce the task of highlight extraction as a single-document summarization task based on the citation graph establishing the first baseline results for this task on the VerbCL dataset.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-08-23T12:41:41Z</published>
+    <arxiv:comment>CIKM 2021, Resource Track</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Julien Rossi</name>
+    </author>
+    <author>
+      <name>Svitlana Vakulenko</name>
+    </author>
+    <author>
+      <name>Evangelos Kanoulas</name>
+    </author>
+    <arxiv:doi>10.1145/3459637.3482021</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3459637.3482021" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2305.03508v1</id>
+    <title>CiteCaseLAW: Citation Worthiness Detection in Caselaw for Legal Assistive Writing</title>
+    <updated>2023-05-03T04:20:56Z</updated>
+    <link href="https://arxiv.org/abs/2305.03508v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2305.03508v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In legal document writing, one of the key elements is properly citing the case laws and other sources to substantiate claims and arguments. Understanding the legal domain and identifying appropriate citation context or cite-worthy sentences are challenging tasks that demand expensive manual annotation. The presence of jargon, language semantics, and high domain specificity makes legal language complex, making any associated legal task hard for automation. The current work focuses on the problem of citation-worthiness identification. It is designed as the initial step in today's citation recommendation systems to lighten the burden of extracting an adequate set of citation contexts. To accomplish this, we introduce a labeled dataset of 178M sentences for citation-worthiness detection in the legal domain from the Caselaw Access Project (CAP). The performance of various deep learning models was examined on this novel dataset. The domain-specific pre-trained model tends to outperform other models, with an 88% F1-score for the citation-worthiness detection task.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-05-03T04:20:56Z</published>
+    <arxiv:comment>A dataset for Legal domain</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Mann Khatri</name>
+    </author>
+    <author>
+      <name>Pritish Wadhwa</name>
+    </author>
+    <author>
+      <name>Gitansh Satija</name>
+    </author>
+    <author>
+      <name>Reshma Sheik</name>
+    </author>
+    <author>
+      <name>Yaman Kumar</name>
+    </author>
+    <author>
+      <name>Rajiv Ratn Shah</name>
+    </author>
+    <author>
+      <name>Ponnurangam Kumaraguru</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.21057v1</id>
+    <title>SG-LegalCite: A Principle-Augmented Benchmark for Legal Citation Retrieval in Singapore Law</title>
+    <updated>2026-05-20T11:43:27Z</updated>
+    <link href="https://arxiv.org/abs/2605.21057v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.21057v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal citation in common-law systems depends not only on factual similarity, but also on the legal principle for which a precedent is invoked. However, existing benchmarks for legal citation retrieval use case facts, citation context, or full judgments as inputs, where the governing legal principle is often missing or only implicitly expressed and entangled with broader context. As a result, models may retrieve precedents that are factually similar yet doctrinally irrelevant. This limitation is particularly consequential in Singapore, where the legal system has evolved independently: only domestic precedents are binding, while foreign authorities serve merely as persuasive references. Thus, we propose a new retrieval paradigm that ranks cited cases based on queries integrating case facts and explicit legal principles, inspired by real-world legal reasoning workflows. To support this paradigm, we introduce SG-LegalCite, a dataset of 100,890 case-principle pairs extracted from 8,523 Singapore Supreme Court judgments spanning from 2000 to 2025. Experiments across 11 baselines demonstrate the effectiveness of our principle-augmented retrieval paradigm, showing that explicit legal principles provide strong discriminative signals for legal citation retrieval.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-20T11:43:27Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Shannon Lee Yueh Ern</name>
+    </author>
+    <author>
+      <name>Kaidong Feng</name>
+    </author>
+    <author>
+      <name>Yingpeng Du</name>
+    </author>
+    <author>
+      <name>Chloe Lee En Jia</name>
+    </author>
+    <author>
+      <name>Zhu Sun</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.15362v1</id>
+    <title>Automatic Construction of a Legal Citation Graph from 100 Million Ukrainian Court Decisions: Large-Scale Extraction, Topological Analysis, and Ontology-Driven Clustering</title>
+    <updated>2026-05-14T19:42:20Z</updated>
+    <link href="https://arxiv.org/abs/2605.15362v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.15362v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Half a billion citation edges extracted from 100.7 million Ukrainian court decisions reveal that judicial citation structure encodes legal domain boundaries without supervision and predicts future legislative importance with near-perfect accuracy. We construct the first large-scale citation graph from the complete EDRSR registry (99.5 million full texts, 1.1 TB), extracting 502 million citation links across six types via regex on commodity hardware in approximately 5 hours, with precision of 1.00 on a 200-decision validation sample (95% Wilson CI: [0.982, 1.000]).
+  Three principal findings emerge. (1) The degree distribution follows a power law (alpha = 1.57 +/- 0.008), placing the Ukrainian court network near the EU Court of Justice and below the US Supreme Court, with hub articles cited by millions of decisions. (2) Louvain community detection on the co-citation projection recovers legal domain boundaries (civil, criminal, administrative, commercial) with modularity Q = 0.44-0.55 and temporal stability (NMI = 0.83-0.86 across periods), constituting an automatically constructed legal ontology grounded in judicial practice. (3) Citation features predict top-1000 articles with AUC = 0.9984, substantially outperforming a naive frequency baseline (P@1000 = 0.655); temporal dynamics detect legislative regime changes as phase transitions and the 2022 invasion as a citation entropy spike (H: 11.02 -&gt; 13.49) with emergent wartime legislation nodes.
+  The citation-derived ontology is operationalized as the domain layer of a workflow memory system for LLM-assisted legal analysis, connecting to the ontology-controlled paradigm. The extraction pipeline, analysis code, and aggregated statistics are released as open data.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-14T19:42:20Z</published>
+    <arxiv:comment>15 pages, 7 figures, 2 tables, 21 references</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Volodymyr Ovcharov</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.03325v1</id>
+    <title>From Judgments to Issues: Structured Extraction of Legal Reasoning with Citation-Hallucination Control</title>
+    <updated>2026-07-03T13:41:08Z</updated>
+    <link href="https://arxiv.org/abs/2607.03325v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.03325v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present an automated pipeline that decomposes Italian tax-court judgments into individual legal issues and extracts, for each issue, a structured XML representation grounded in the IRAC framework and the legal syllogism. The pipeline targets a corpus of approximately $330{,}000$ first- and second-instance decisions of the Italian tax courts and is built around a capable yet cost-efficient general-purpose model (DeepSeek V3), a choice driven by the need to process several hundred thousand documents at a sustainable cost. To address the well-documented unreliability of large language models on legal citations, we couple the extraction step with an automatic hallucination-detection filter that compares the references produced by the model with those identified in the judgment text by a dedicated parser (Linkoln), normalised to standard identifiers (URN-NIR, ECLI, CELEX). We validate the pipeline on $50$ judgments annotated by two PhDs in tax law, computing inter-annotator agreement and LLM-vs-expert agreement on both issue extraction and legal citations, together with a stand-alone evaluation of the hallucination filter. To the best of our knowledge, this is the first issue-level, expert-validated structured extraction pipeline with hallucination control for Italian tax-court decisions, and it provides a concrete starting point for downstream applications such as issue-level retrieval, citation-network analysis, and the construction of large-scale datasets of legal reasoning.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-03T13:41:08Z</published>
+    <arxiv:comment>33 pages, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Giovanni Piccioli</name>
+    </author>
+    <author>
+      <name>Alessia Fidelangeli</name>
+    </author>
+    <author>
+      <name>Piera Santin</name>
+    </author>
+    <author>
+      <name>Pierpaolo Vivo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.01609v2</id>
+    <title>Judgement Citation Retrieval using Contextual Similarity</title>
+    <updated>2024-08-15T06:11:27Z</updated>
+    <link href="https://arxiv.org/abs/2406.01609v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.01609v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Traditionally in the domain of legal research, the retrieval of pertinent citations from intricate case descriptions has demanded manual effort and keyword-based search applications that mandate expertise in understanding legal jargon. Legal case descriptions hold pivotal information for legal professionals and researchers, necessitating more efficient and automated approaches. We propose a methodology that combines natural language processing (NLP) and machine learning techniques to enhance the organization and utilization of legal case descriptions. This approach revolves around the creation of textual embeddings with the help of state-of-art embedding models. Our methodology addresses two primary objectives: unsupervised clustering and supervised citation retrieval, both designed to automate the citation extraction process. Although the proposed methodology can be used for any dataset, we employed the Supreme Court of The United States (SCOTUS) dataset, yielding remarkable results. Our methodology achieved an impressive accuracy rate of 90.9%. By automating labor-intensive processes, we pave the way for a more efficient, time-saving, and accessible landscape in legal research, benefiting legal professionals, academics, and researchers.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-05-28T04:22:28Z</published>
+    <arxiv:comment>14 pages, 16 images</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Akshat Mohan Dasula</name>
+    </author>
+    <author>
+      <name>Hrushitha Tigulla</name>
+    </author>
+    <author>
+      <name>Preethika Bhukya</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1809.05219v1</id>
+    <title>Automatic Catchphrase Extraction from Legal Case Documents via Scoring using Deep Neural Networks</title>
+    <updated>2018-09-14T01:48:46Z</updated>
+    <link href="https://arxiv.org/abs/1809.05219v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1809.05219v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we present a method of automatic catchphrase extracting from legal case documents. We utilize deep neural networks for constructing scoring model of our extraction system. We achieve comparable performance with systems using corpus-wide and citation information which we do not use in our system.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-09-14T01:48:46Z</published>
+    <arxiv:comment>MIning and REasoning with Legal text, MIREL 2018</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Vu Tran</name>
+    </author>
+    <author>
+      <name>Minh Le Nguyen</name>
+    </author>
+    <author>
+      <name>Ken Satoh</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.31338v1</id>
+    <title>Bundesrecht: An Open Library and Corpus for German Statutory Reference Processing</title>
+    <updated>2026-05-29T14:18:16Z</updated>
+    <link href="https://arxiv.org/abs/2605.31338v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.31338v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Statutory references are central to legal language understanding, but are difficult to process automatically, as they appear in compact and variable surface forms, may combine multiple targets, use special abbreviations, and often point to lower-level units. Existing tools for German focus either on parsing references from legal documents or accessing statutory text once citations are explicit. This paper introduces bundesrecht, an open resource for German statutory reference processing, consisting of a software library and a structured corpus of German federal law. The library parses, normalizes, and resolves German statutory references, mapping raw citation strings to structured objects, expanding compact references into canonical forms, and linking them to statutory provisions. The accompanying dataset preserves the internal hierarchy of statutes from laws to fine-granular subclauses. We evaluate the parser and normalizer on 2,944 annotated German legal references using strict exact-match and micro information extraction metrics. We further evaluate canonical reference deduplication and show that normalized references group real citation surface variants far more reliably than string matching. bundesrecht is the first open resource that covers German statutory reference processing as an end-to-end pipeline, from raw citation string to resolved statutory provision, and is available on PyPI.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-29T14:18:16Z</published>
+    <arxiv:comment>10 pages, 1 figure. Preprint</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Harshil Darji</name>
+    </author>
+    <author>
+      <name>Martin Heckelmann</name>
+    </author>
+    <author>
+      <name>Christina Kratsch</name>
+    </author>
+    <author>
+      <name>Gerard de Melo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.02621v1</id>
+    <title>Knowing the Form, Not the Function: Automatically Auditing Answer--Authority Decoupling in Legal Benchmarks</title>
+    <updated>2026-07-03T07:18:53Z</updated>
+    <link href="https://arxiv.org/abs/2608.02621v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.02621v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal benchmarks typically score final answers even when models also state legal authority. We test whether answer correctness can serve as a proxy for authority grounding. Under ordinary reasoning prompts that did not request statutory citations, four LLMs spontaneously produced authority markers across 238 Taiwan bar-examination items. Because each item has a verified governing provision, we automatically audit answer correctness and authority grounding jointly. The two dimensions dissociate in both directions. In criminal law, 24.0--42.4\% of valid responses were answer-correct but missed the gold authority, while 15.2--21.7\% were answer-incorrect but cited it. A separate statutory-retrieval probe and a permissive citation-abstention intervention further show that answer and citation behavior can move separately at the output level. Because this mismatch arises without adversarial or inconsistency-inducing prompting, answer-only scoring treats naturally occurring gold-authority misses as complete benchmark successes. Because statutory authority is structurally extractable and externally verifiable, the failure can be measured automatically. A preliminary PRC civil-law extension also observes citation-unrequested authority marking, motivating a full cross-jurisdictional joint audit. We therefore propose joint answer--authority evaluation for statute-grounded legal benchmarks.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-03T07:18:53Z</published>
+    <arxiv:comment>9 pages, 11 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Hsien-Jyh Liao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.16429v1</id>
+    <title>Combining topic modelling and citation network analysis to study case law from the European Court on Human Rights on the right to respect for private and family life</title>
+    <updated>2024-01-19T14:30:35Z</updated>
+    <link href="https://arxiv.org/abs/2401.16429v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.16429v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As legal case law databases such as HUDOC continue to grow rapidly, it has become essential for legal researchers to find efficient methods to handle such large-scale data sets. Such case law databases usually consist of the textual content of cases together with the citations between them. This paper focuses on case law from the European Court of Human Rights on Article 8 of the European Convention of Human Rights, the right to respect private and family life, home and correspondence. In this study, we demonstrate and compare the potential of topic modelling and citation network to find and organize case law on Article 8 based on their general themes and citation patterns, respectively. Additionally, we explore whether combining these two techniques leads to better results compared to the application of only one of the methods. We evaluate the effectiveness of the combined method on a unique manually collected and annotated dataset of Aricle 8 case law on evictions. The results of our experiments show that our combined (text and citation-based) approach provides the best results in finding and grouping case law, providing scholars with an effective way to extract and analyse relevant cases on a specific issue.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-19T14:30:35Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>M. Mohammadi</name>
+    </author>
+    <author>
+      <name>L. M. Bruijn</name>
+    </author>
+    <author>
+      <name>M. Wieling</name>
+    </author>
+    <author>
+      <name>M. Vols</name>
+    </author>
+  </entry>
+</feed>

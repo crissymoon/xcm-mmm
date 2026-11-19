@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/pfgYQVAfdm2yIdifHrKNP4i+Cuo</id>
+  <title>arXiv Query: search_query=abs:"term extraction" AND abs:"domain" AND abs:"corpus"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:28Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22term+extraction%22+AND+(abs:%22domain%22+AND+abs:%22corpus%22)&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>11</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2101.09015v1</id>
+    <title>Unsupervised Technical Domain Terms Extraction using Term Extractor</title>
+    <updated>2021-01-22T09:24:09Z</updated>
+    <link href="https://arxiv.org/abs/2101.09015v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2101.09015v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Terminology extraction, also known as term extraction, is a subtask of information extraction. The goal of terminology extraction is to extract relevant words or phrases from a given corpus automatically. This paper focuses on the unsupervised automated domain term extraction method that considers chunking, preprocessing, and ranking domain-specific terms using relevance and cohesion functions for ICON 2020 shared task 2: TermTraction.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-01-22T09:24:09Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Suman Dowlagar</name>
+    </author>
+    <author>
+      <name>Radhika Mamidi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2212.05696v1</id>
+    <title>Ensembling Transformers for Cross-domain Automatic Term Extraction</title>
+    <updated>2022-12-12T04:20:11Z</updated>
+    <link href="https://arxiv.org/abs/2212.05696v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2212.05696v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automatic term extraction plays an essential role in domain language understanding and several natural language processing downstream tasks. In this paper, we propose a comparative study on the predictive power of Transformers-based pretrained language models toward term extraction in a multi-language cross-domain setting. Besides evaluating the ability of monolingual models to extract single- and multi-word terms, we also experiment with ensembles of mono- and multilingual models by conducting the intersection or union on the term output sets of different language models. Our experiments have been conducted on the ACTER corpus covering four specialized domains (Corruption, Wind energy, Equitation, and Heart failure) and three languages (English, French, and Dutch), and on the RSDO5 Slovenian corpus covering four additional domains (Biomechanics, Chemistry, Veterinary, and Linguistics). The results show that the strategy of employing monolingual models outperforms the state-of-the-art approaches from the related work leveraging multilingual models, regarding all the languages except Dutch and French if the term extraction task excludes the extraction of named entity terms. Furthermore, by combining the outputs of the two best performing models, we achieve significant improvements.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-12-12T04:20:11Z</published>
+    <arxiv:comment>11 pages including references, 3 figures, 2 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>International Conference on Asian Digital Libraries (ICADL 2022)</arxiv:journal_ref>
+    <author>
+      <name>Hanh Thi Hong Tran</name>
+    </author>
+    <author>
+      <name>Matej Martinc</name>
+    </author>
+    <author>
+      <name>Andraz Pelicon</name>
+    </author>
+    <author>
+      <name>Antoine Doucet</name>
+    </author>
+    <author>
+      <name>Senja Pollak</name>
+    </author>
+    <arxiv:doi>10.1007/978-3-031-21756-2_7</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/978-3-031-21756-2_7" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2502.17278v1</id>
+    <title>Extracting domain-specific terms using contextual word embeddings</title>
+    <updated>2025-02-24T16:06:35Z</updated>
+    <link href="https://arxiv.org/abs/2502.17278v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.17278v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automated terminology extraction refers to the task of extracting meaningful terms from domain-specific texts. This paper proposes a novel machine learning approach to terminology extraction, which combines features from traditional term extraction systems with novel contextual features derived from contextual word embeddings. Instead of using a predefined list of part-of-speech patterns, we first analyse a new term-annotated corpus RSDO5 for the Slovenian language and devise a set of rules for term candidate selection and then generate statistical, linguistic and context-based features. We use a support-vector machine algorithm to train a classification model, evaluate it on the four domains (biomechanics, linguistics, chemistry, veterinary) of the RSDO5 corpus and compare the results with state-of-art term extraction approaches for the Slovenian language. Our approach provides significant improvements in terms of F1 score over the previous state-of-the-art, which proves that contextual word embeddings are valuable for improving term extraction.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-24T16:06:35Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Andraž Repar</name>
+    </author>
+    <author>
+      <name>Nada Lavrač</name>
+    </author>
+    <author>
+      <name>Senja Pollak</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.09128v1</id>
+    <title>CoastTerm: a Corpus for Multidisciplinary Term Extraction in Coastal Scientific Literature</title>
+    <updated>2024-06-13T14:01:08Z</updated>
+    <link href="https://arxiv.org/abs/2406.09128v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.09128v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The growing impact of climate change on coastal areas, particularly active but fragile regions, necessitates collaboration among diverse stakeholders and disciplines to formulate effective environmental protection policies. We introduce a novel specialized corpus comprising 2,491 sentences from 410 scientific abstracts concerning coastal areas, for the Automatic Term Extraction (ATE) and Classification (ATC) tasks. Inspired by the ARDI framework, focused on the identification of Actors, Resources, Dynamics and Interactions, we automatically extract domain terms and their distinct roles in the functioning of coastal systems by leveraging monolingual and multilingual transformer models. The evaluation demonstrates consistent results, achieving an F1 score of approximately 80\% for automated term extraction and F1 of 70\% for extracting terms and their labels. These findings are promising and signify an initial step towards the development of a specialized Knowledge Base dedicated to coastal areas.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-13T14:01:08Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Julien Delaunay</name>
+    </author>
+    <author>
+      <name>Hanh Thi Hong Tran</name>
+    </author>
+    <author>
+      <name>Carlos-Emiliano González-Gallardo</name>
+    </author>
+    <author>
+      <name>Georgeta Bordea</name>
+    </author>
+    <author>
+      <name>Mathilde Ducos</name>
+    </author>
+    <author>
+      <name>Nicolas Sidere</name>
+    </author>
+    <author>
+      <name>Antoine Doucet</name>
+    </author>
+    <author>
+      <name>Senja Pollak</name>
+    </author>
+    <author>
+      <name>Olivier De Viron</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/cs/0609058v1</id>
+    <title>The JRC-Acquis: A multilingual aligned parallel corpus with 20+ languages</title>
+    <updated>2006-09-12T07:10:15Z</updated>
+    <link href="https://arxiv.org/abs/cs/0609058v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/cs/0609058v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  We present a new, unique and freely available parallel corpus containing European Union (EU) documents of mostly legal nature. It is available in all 20 official EUanguages, with additional documents being available in the languages of the EU candidate countries. The corpus consists of almost 8,000 documents per language, with an average size of nearly 9 million words per language. Pair-wise paragraph alignment information produced by two different aligners (Vanilla and HunAlign) is available for all 190+ language pair combinations. Most texts have been manually classified according to the EUROVOC subject domains so that the collection can also be used to train and test multi-label classification algorithms and keyword-assignment software. The corpus is encoded in XML, according to the Text Encoding Initiative Guidelines. Due to the large number of parallel texts in many languages, the JRC-Acquis is particularly suitable to carry out all types of cross-language research, as well as to test and benchmark text analysis software across different languages (for instance for alignment, sentence splitting and term extraction).</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2006-09-12T07:10:15Z</published>
+    <arxiv:comment>A multilingual textual resource with meta-data freely available for download at http://langtech.jrc.it/JRC-Acquis.html</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Proceedings of the 5th International Conference on Language Resources and Evaluation (LREC'2006), pp. 2142-2147. Genoa, Italy, 24-26 May 2006</arxiv:journal_ref>
+    <author>
+      <name>Ralf Steinberger</name>
+    </author>
+    <author>
+      <name>Bruno Pouliquen</name>
+    </author>
+    <author>
+      <name>Anna Widiger</name>
+    </author>
+    <author>
+      <name>Camelia Ignat</name>
+    </author>
+    <author>
+      <name>Tomaz Erjavec</name>
+    </author>
+    <author>
+      <name>Dan Tufis</name>
+    </author>
+    <author>
+      <name>Daniel Varga</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2208.13830v1</id>
+    <title>Extracting Mathematical Concepts from Text</title>
+    <updated>2022-08-29T18:45:05Z</updated>
+    <link href="https://arxiv.org/abs/2208.13830v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2208.13830v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We investigate different systems for extracting mathematical entities from English texts in the mathematical field of category theory as a first step for constructing a mathematical knowledge graph. We consider four different term extractors and compare their results. This small experiment showcases some of the issues with the construction and evaluation of terms extracted from noisy domain text. We also make available two open corpora in research mathematics, in particular in category theory: a small corpus of 755 abstracts from the journal TAC (3188 sentences), and a larger corpus from the nLab community wiki (15,000 sentences).</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-08-29T18:45:05Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Jacob Collard</name>
+    </author>
+    <author>
+      <name>Valeria de Paiva</name>
+    </author>
+    <author>
+      <name>Brendan Fong</name>
+    </author>
+    <author>
+      <name>Eswaran Subrahmanian</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2009.08240v1</id>
+    <title>What if we had no Wikipedia? Domain-independent Term Extraction from a Large News Corpus</title>
+    <updated>2020-09-17T12:45:46Z</updated>
+    <link href="https://arxiv.org/abs/2009.08240v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2009.08240v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>One of the most impressive human endeavors of the past two decades is the collection and categorization of human knowledge in the free and accessible format that is Wikipedia. In this work we ask what makes a term worthy of entering this edifice of knowledge, and having a page of its own in Wikipedia? To what extent is this a natural product of on-going human discourse and discussion rather than an idiosyncratic choice of Wikipedia editors? Specifically, we aim to identify such "wiki-worthy" terms in a massive news corpus, and see if this can be done with no, or minimal, dependency on actual Wikipedia entries. We suggest a five-step pipeline for doing so, providing baseline results for all five, and the relevant datasets for benchmarking them. Our work sheds new light on the domain-specific Automatic Term Extraction problem, with the problem at hand being a domain-independent variant of it.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-09-17T12:45:46Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Yonatan Bilu</name>
+    </author>
+    <author>
+      <name>Shai Gretz</name>
+    </author>
+    <author>
+      <name>Edo Cohen</name>
+    </author>
+    <author>
+      <name>Noam Slonim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.06838v1</id>
+    <title>Crossing Domains without Labels: Distant Supervision for Term Extraction</title>
+    <updated>2025-10-08T10:02:40Z</updated>
+    <link href="https://arxiv.org/abs/2510.06838v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.06838v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automatic Term Extraction (ATE) is a critical component in downstream NLP tasks such as document tagging, ontology construction and patent analysis. Current state-of-the-art methods require expensive human annotation and struggle with domain transfer, limiting their practical deployment. This highlights the need for more robust, scalable solutions and realistic evaluation settings. To address this, we introduce a comprehensive benchmark spanning seven diverse domains, enabling performance evaluation at both the document- and corpus-levels. Furthermore, we propose a robust LLM-based model that outperforms both supervised cross-domain encoder models and few-shot learning baselines and performs competitively with its GPT-4o teacher on this benchmark. The first step of our approach is generating psuedo-labels with this black-box LLM on general and scientific domains to ensure generalizability. Building on this data, we fine-tune the first LLMs for ATE. To further enhance document-level consistency, oftentimes needed for downstream tasks, we introduce lightweight post-hoc heuristics. Our approach exceeds previous approaches on 5/7 domains with an average improvement of 10 percentage points. We release our dataset and fine-tuned models to support future research in this area.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-08T10:02:40Z</published>
+    <arxiv:comment>Accepted at EMNLP Industry Track 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Elena Senger</name>
+    </author>
+    <author>
+      <name>Yuri Campbell</name>
+    </author>
+    <author>
+      <name>Rob van der Goot</name>
+    </author>
+    <author>
+      <name>Barbara Plank</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2305.16343v1</id>
+    <title>A Distributed Automatic Domain-Specific Multi-Word Term Recognition Architecture using Spark Ecosystem</title>
+    <updated>2023-05-24T10:05:59Z</updated>
+    <link href="https://arxiv.org/abs/2305.16343v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2305.16343v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automatic Term Recognition is used to extract domain-specific terms that belong to a given domain. In order to be accurate, these corpus and language-dependent methods require large volumes of textual data that need to be processed to extract candidate terms that are afterward scored according to a given metric. To improve text preprocessing and candidate terms extraction and scoring, we propose a distributed Spark-based architecture to automatically extract domain-specific terms. The main contributions are as follows: (1) propose a novel distributed automatic domain-specific multi-word term recognition architecture built on top of the Spark ecosystem; (2) perform an in-depth analysis of our architecture in terms of accuracy and scalability; (3) design an easy-to-integrate Python implementation that enables the use of Big Data processing in fields such as Computational Linguistics and Natural Language Processing. We prove empirically the feasibility of our architecture by performing experiments on two real-world datasets.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-05-24T10:05:59Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Ciprian-Octavian Truică</name>
+    </author>
+    <author>
+      <name>Neculai-Ovidiu Istrate</name>
+    </author>
+    <author>
+      <name>Elena-Simona Apostol</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1711.03373v3</id>
+    <title>SemRe-Rank: Improving Automatic Term Extraction By Incorporating Semantic Relatedness With Personalised PageRank</title>
+    <updated>2018-03-28T20:52:19Z</updated>
+    <link href="https://arxiv.org/abs/1711.03373v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1711.03373v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automatic Term Extraction deals with the extraction of terminology from a domain specific corpus, and has long been an established research area in data and knowledge acquisition. ATE remains a challenging task as it is known that there is no existing ATE methods that can consistently outperform others in any domain. This work adopts a refreshed perspective to this problem: instead of searching for such a 'one-size-fit-all' solution that may never exist, we propose to develop generic methods to 'enhance' existing ATE methods. We introduce SemRe-Rank, the first method based on this principle, to incorporate semantic relatedness - an often overlooked venue - into an existing ATE method to further improve its performance. SemRe-Rank incorporates word embeddings into a personalised PageRank process to compute 'semantic importance' scores for candidate terms from a graph of semantically related words (nodes), which are then used to revise the scores of candidate terms computed by a base ATE algorithm. Extensively evaluated with 13 state-of-the-art base ATE methods on four datasets of diverse nature, it is shown to have achieved widespread improvement over all base methods and across all datasets, with up to 15 percentage points when measured by the Precision in the top ranked K candidate terms (the average for a set of K's), or up to 28 percentage points in F1 measured at a K that equals to the expected real terms in the candidates (F1 in short). Compared to an alternative approach built on the well-known TextRank algorithm, SemRe-Rank can potentially outperform by up to 8 points in Precision at top K, or up to 17 points in F1.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-11-09T13:39:21Z</published>
+    <arxiv:comment>Accepted by ACM TKDD. This is a pre-print</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Ziqi Zhang</name>
+    </author>
+    <author>
+      <name>Jie Gao</name>
+    </author>
+    <author>
+      <name>Fabio Ciravegna</name>
+    </author>
+  </entry>
+</feed>

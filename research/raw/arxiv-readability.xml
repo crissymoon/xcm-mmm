@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/NGS8gJwv3rhMkoGSr3u4Fn4Zh0Y</id>
+  <title>arXiv Query: search_query=abs:"readability" AND abs:"legal"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:22Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22readability%22+AND+abs:%22legal%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>58</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2411.09497v1</id>
+    <title>The Use of Readability Metrics in Legal Text: A Systematic Literature Review</title>
+    <updated>2024-11-14T15:04:17Z</updated>
+    <link href="https://arxiv.org/abs/2411.09497v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2411.09497v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding the text in legal documents can be challenging due to their complex structure and the inclusion of domain-specific jargon. Laws and regulations are often crafted in such a manner that engagement with them requires formal training, potentially leading to vastly different interpretations of the same texts. Linguistic complexity is an important contributor to the difficulties experienced by readers. Simplifying texts could enhance comprehension across a broader audience, not just among trained professionals. Various metrics have been developed to measure document readability. Therefore, we adopted a systematic review approach to examine the linguistic and readability metrics currently employed for legal and regulatory texts. A total of 3566 initial papers were screened, with 34 relevant studies found and further assessed. Our primary objective was to identify which current metrics were applied for evaluating readability within the legal field. Sixteen different metrics were identified, with the Flesch-Kincaid Grade Level being the most frequently used method. The majority of studies (73.5%) were found in the domain of "informed consent forms". From the analysis, it is clear that not all legal domains are well represented in terms of readability metrics and that there is a further need to develop more consensus on which metrics should be applied for legal documents.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-11-14T15:04:17Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Yu Han</name>
+    </author>
+    <author>
+      <name>Aaron Ceross</name>
+    </author>
+    <author>
+      <name>Jeroen H. M. Bergmann</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2108.08678v1</id>
+    <title>The Legislative Recipe: Syntax for Machine-Readable Legislation</title>
+    <updated>2021-08-19T13:40:35Z</updated>
+    <link href="https://arxiv.org/abs/2108.08678v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2108.08678v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal interpretation is a linguistic venture. In judicial opinions, for example, courts are often asked to interpret the text of statutes and legislation. As time has shown, this is not always as easy as it sounds. Matters can hinge on vague or inconsistent language and, under the surface, human biases can impact the decision-making of judges. This raises an important question: what if there was a method of extracting the meaning of statutes consistently? That is, what if it were possible to use machines to encode legislation in a mathematically precise form that would permit clearer responses to legal questions? This article attempts to unpack the notion of machine-readability, providing an overview of both its historical and recent developments. The paper will reflect on logic syntax and symbolic language to assess the capacity and limits of representing legal knowledge. In doing so, the paper seeks to move beyond existing literature to discuss the implications of various approaches to machine-readable legislation. Importantly, this study hopes to highlight the challenges encountered in this burgeoning ecosystem of machine-readable legislation against existing human-readable counterparts.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-08-19T13:40:35Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Megan Ma</name>
+    </author>
+    <author>
+      <name>Bryan Wilson</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2102.11625v2</id>
+    <title>Assessing the Readability of Policy Documents on the Digital Single Market of the European Union</title>
+    <updated>2021-09-15T13:33:10Z</updated>
+    <link href="https://arxiv.org/abs/2102.11625v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2102.11625v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Today, literature skills are necessary. Engineering and other technical professions are not an exception from this requirement. Traditionally, technical reading and writing have been framed with a limited scope, containing documentation, specifications, standards, and related text types. Nowadays, however, the scope covers also other text types, including legal, policy, and related documents. Given this motivation, this paper evaluates the readability of 201 legislations and related policy documents in the European Union (EU). The digital single market (DSM) provides the context. Five classical readability indices provide the methods; these are quantitative measures of a text's readability. The empirical results indicate that (i) generally a Ph.D. level education is required to comprehend the DSM laws and policy documents. Although (ii) the results vary across the five indices used, (iii) readability has slightly improved over time.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-02-23T11:01:11Z</published>
+    <arxiv:comment>Proceedings of the Eighth International Conference on eDemocracy &amp; eGovernment (ICEDEG 2021), Quito (online), IEEE, pp. 205-209</arxiv:comment>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Jukka Ruohonen</name>
+    </author>
+    <arxiv:doi>10.1109/ICEDEG52154.2021.9530996</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ICEDEG52154.2021.9530996" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.16270v1</id>
+    <title>From Benchmarking to Reasoning: A Dual-Aspect, Large-Scale Evaluation of LLMs on Vietnamese Legal Text</title>
+    <updated>2026-04-17T17:28:23Z</updated>
+    <link href="https://arxiv.org/abs/2604.16270v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.16270v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The complexity of Vietnam's legal texts presents a significant barrier to public access to justice. While Large Language Models offer a promising solution for legal text simplification, evaluating their true capabilities requires a multifaceted approach that goes beyond surface-level metrics. This paper introduces a comprehensive dual-aspect evaluation framework to address this need. First, we establish a performance benchmark for four state-of-the-art large language models (GPT-4o, Claude 3 Opus, Gemini 1.5 Pro, and Grok-1) across three key dimensions: Accuracy, Readability, and Consistency. Second, to understand the "why" behind these performance scores, we conduct a large-scale error analysis on a curated dataset of 60 complex Vietnamese legal articles, using a novel, expert-validated error typology. Our results reveal a crucial trade-off: models like Grok-1 excel in Readability and Consistency but compromise on fine-grained legal Accuracy, while models like Claude 3 Opus achieve high Accuracy scores that mask a significant number of subtle but critical reasoning errors. The error analysis pinpoints \textit{Incorrect Example} and \textit{Misinterpretation} as the most prevalent failures, confirming that the primary challenge for current LLMs is not summarization but controlled, accurate legal reasoning. By integrating a quantitative benchmark with a qualitative deep dive, our work provides a holistic and actionable assessment of LLMs for legal applications.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-17T17:28:23Z</published>
+    <arxiv:comment>7 pages, 2 figures. Accepted at the FISU Joint Conference on Artificial Intelligence (FJCAI 2026), Vietnam</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Van-Truong Le</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2501.01743v3</id>
+    <title>Automating Legal Interpretation with LLMs: Retrieval, Generation, and Evaluation</title>
+    <updated>2025-05-31T13:48:07Z</updated>
+    <link href="https://arxiv.org/abs/2501.01743v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2501.01743v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Interpreting the law is always essential for the law to adapt to the ever-changing society. It is a critical and challenging task even for legal practitioners, as it requires meticulous and professional annotations and summarizations by legal experts, which are admittedly time-consuming and expensive to collect at scale. To alleviate the burden on legal experts, we propose a method for automated legal interpretation. Specifically, by emulating doctrinal legal research, we introduce a novel framework, ATRIE, to address Legal Concept Interpretation, a typical task in legal interpretation. ATRIE utilizes large language models (LLMs) to AuTomatically Retrieve concept-related information, Interpret legal concepts, and Evaluate generated interpretations, eliminating dependence on legal experts. ATRIE comprises a legal concept interpreter and a legal concept interpretation evaluator. The interpreter uses LLMs to retrieve relevant information from previous cases and interpret legal concepts. The evaluator uses performance changes on Legal Concept Entailment, a downstream task we propose, as a proxy of interpretation quality. Automated and multifaceted human evaluations indicate that the quality of our interpretations is comparable to those written by legal experts, with superior comprehensiveness and readability. Although there remains a slight gap in accuracy, it can already assist legal practitioners in improving the efficiency of legal interpretation.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-01-03T10:11:38Z</published>
+    <arxiv:comment>ACL 2025 Main Conference</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Kangcheng Luo</name>
+    </author>
+    <author>
+      <name>Quzhe Huang</name>
+    </author>
+    <author>
+      <name>Cong Jiang</name>
+    </author>
+    <author>
+      <name>Yansong Feng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1711.06128v2</id>
+    <title>Enabling Reasoning with LegalRuleML</title>
+    <updated>2018-04-07T05:15:32Z</updated>
+    <link href="https://arxiv.org/abs/1711.06128v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1711.06128v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In order to automate verification process, regulatory rules written in natural language need to be translated into a format that machines can understand. However, none of the existing formalisms can fully represent the elements that appear in legal norms. For instance, most of these formalisms do not provide features to capture the behavior of deontic effects, which is an important aspect in automated compliance checking. This paper presents an approach for transforming legal norms represented using LegalRuleML to a variant of Modal Defeasible Logic (and vice versa) such that a legal statement represented using LegalRuleML can be transformed into a machine-readable format that can be understood and reasoned about depending upon the client's preferences.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-11-11T05:00:58Z</published>
+    <arxiv:comment>25 pages. Under consideration for publication in Theory and Practice of Logic Programming (TPLP)</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Ho-Pun Lam</name>
+    </author>
+    <author>
+      <name>Mustafa Hashmi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2009.06611v1</id>
+    <title>Knowledge-Based Legal Document Assembly</title>
+    <updated>2020-09-14T17:51:52Z</updated>
+    <link href="https://arxiv.org/abs/2009.06611v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2009.06611v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper proposes a knowledge-based legal document assembly method that uses a machine-readable representation of knowledge of legal professionals. This knowledgebase has two components - the formal knowledge of legal norms represented as a rule-base and the tacit knowledge represented by a document template. A document assembly system is developed as a proof of concept. It collects input data in the form of an interactive interview, performs legal reasoning over input data, and generates the output document. The system also creates an argument graph as an explanation of the reasoning process providing the user with an interpretation of how the input data and the rule-base influence the content of the output document. The system also semantically marks up data in the output document, facilitating its further processing and providing support to the interoperability of information systems in the legal domain.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-09-14T17:51:52Z</published>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Marko Marković</name>
+    </author>
+    <author>
+      <name>Stevan Gostojić</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.17340v1</id>
+    <title>Capturing Legal Reasoning Paths from Facts to Law in Court Judgments using Knowledge Graphs</title>
+    <updated>2025-08-24T12:51:40Z</updated>
+    <link href="https://arxiv.org/abs/2508.17340v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.17340v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Court judgments reveal how legal rules have been interpreted and applied to facts, providing a foundation for understanding structured legal reasoning. However, existing automated approaches for capturing legal reasoning, including large language models, often fail to identify the relevant legal context, do not accurately trace how facts relate to legal norms, and may misrepresent the layered structure of judicial reasoning. These limitations hinder the ability to capture how courts apply the law to facts in practice. In this paper, we address these challenges by constructing a legal knowledge graph from 648 Japanese administrative court decisions. Our method extracts components of legal reasoning using prompt-based large language models, normalizes references to legal provisions, and links facts, norms, and legal applications through an ontology of legal inference. The resulting graph captures the full structure of legal reasoning as it appears in real court decisions, making implicit reasoning explicit and machine-readable. We evaluate our system using expert annotated data, and find that it achieves more accurate retrieval of relevant legal provisions from facts than large language model baselines and retrieval-augmented methods.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-24T12:51:40Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Proc. 13th Int. Conf. on Knowledge Capture (K-CAP 2025), ACM, Dayton, Ohio, USA, Dec 2025</arxiv:journal_ref>
+    <author>
+      <name>Ryoma Kondo</name>
+    </author>
+    <author>
+      <name>Riona Matsuoka</name>
+    </author>
+    <author>
+      <name>Takahiro Yoshida</name>
+    </author>
+    <author>
+      <name>Kazuyuki Yamasawa</name>
+    </author>
+    <author>
+      <name>Ryohei Hisano</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2206.10233v1</id>
+    <title>COREQQA -- A COmpliance REQuirements Understanding using Question Answering Tool</title>
+    <updated>2022-06-21T10:09:23Z</updated>
+    <link href="https://arxiv.org/abs/2206.10233v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2206.10233v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We introduce COREQQA, a tool for assisting requirements engineers in acquiring a better understanding of compliance requirements by means of automated Question Answering. Extracting compliance-related requirements by manually navigating through a legal document is both time-consuming and error-prone. COREQQA enables requirements engineers to pose questions in natural language about a compliance-related topic given some legal document, e.g., asking about data breach. The tool then automatically navigates through the legal document and returns to the requirements engineer a list of text passages containing the possible answers to the input question. For better readability, the tool also highlights the likely answers in these passages. The engineer can then use this output for specifying compliance requirements. COREQQA is developed using advanced large-scale language models from BERT's family. COREQQA has been evaluated on four legal documents. The results of this evaluation are briefly presented in the paper. The tool is publicly available on Zenodo (DOI: 10.5281/zenodo.6653514).</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-06-21T10:09:23Z</published>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Sallam Abualhaija</name>
+    </author>
+    <author>
+      <name>Chetan Arora</name>
+    </author>
+    <author>
+      <name>Lionel Briand</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2305.12203v1</id>
+    <title>Proceedings of the International Workshop on Methodologies for Translating Legal Norms into Formal Representations (LN2FR 2022) in association with 35th International Conference on Legal Knowledge and Information Systems (JURIX 2022)</title>
+    <updated>2023-05-20T14:41:06Z</updated>
+    <link href="https://arxiv.org/abs/2305.12203v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2305.12203v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This volume contains the papers presented at LN2FR 2022: The International Workshop on Methodologies for Translating Legal Norms into Formal Representations, held on December 14, 2022 in association with 35th International Conference on Legal Knowledge and Information Systems (JURIX 2022). Using symbolic logic or similar methods of knowledge representation to formalise legal norms is one of the most traditional goals of legal informatics as a scientific discipline. More than mere theoretical value, this approach is also connected to promising real-world applications involving, e.g., the observance of legal norms by highly automated machines or even the (partial) automatisation of legal reasoning, leading to new automated legal services. Albeit the long research tradition on the use of logic to formalise legal norms, many challenges involved in the development of an adequate methodology for the formalisation of concrete legal regulations remain unsolved. This includes not only the choice of a sufficiently expressive formal language or model, but also the concrete way through which a legal text formulated in natural language is to be translated into the formal representation. The workshop LN2FR seeked to explore the various challenges connected with the task of using formal languages and models to represent legal norms in a machine-readable manner.</summary>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-05-20T14:41:06Z</published>
+    <arxiv:primary_category term="cs.LO"/>
+    <author>
+      <name>Georg Borges</name>
+      <arxiv:affiliation>eds.</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Ken Satoh</name>
+      <arxiv:affiliation>eds.</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Erich Schweighofer</name>
+      <arxiv:affiliation>eds.</arxiv:affiliation>
+    </author>
+  </entry>
+</feed>

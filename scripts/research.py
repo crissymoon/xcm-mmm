@@ -61,6 +61,19 @@ ARXIV_QUERIES: tuple[tuple[str, str], ...] = (
     ("legal-lexglue", 'ti:"LexGLUE"'),
     ("legal-cuad", 'abs:"contract review" AND abs:"dataset" AND abs:"legal"'),
     ("legal-benchmark", 'abs:"legal" AND abs:"benchmark" AND abs:"language model"'),
+    #: Advanced improvements to the legal front end. Each label names the
+    #: mechanism a commit would change, so an empty group means the question
+    #: is unread rather than answered.
+    ("lex-simplify", 'abs:"lexical simplification" AND abs:"evaluation"'),
+    ("complex-word", 'abs:"complex word identification"'),
+    ("simplify-metric", 'abs:"text simplification" AND abs:"SARI"'),
+    ("readability", 'abs:"readability" AND abs:"legal"'),
+    ("deontic", 'abs:"deontic" AND abs:"extraction"'),
+    ("clause-type", 'abs:"contract" AND abs:"clause" AND abs:"classification"'),
+    ("citation-parse", 'abs:"citation" AND abs:"extraction" AND abs:"legal"'),
+    ("term-extract", 'abs:"term extraction" AND abs:"domain" AND abs:"corpus"'),
+    ("legalese", 'abs:"legalese"'),
+    ("plain-language", 'abs:"plain language" AND abs:"legal"'),
 )
 
 CROSSREF_QUERIES: tuple[tuple[str, str], ...] = (
@@ -116,7 +129,59 @@ OPENALEX_QUERIES: tuple[tuple[str, str, str], ...] = (
      r"(?i)bootstrap"),
     ("bench-mcnemar", "McNemar test comparing classifiers significance",
      r"(?i)mcnemar|significan"),
+    ("lex-simplify", "lexical simplification benchmark complex word substitution",
+     r"(?i)lexical simplification|complex word"),
+    ("complex-word", "complex word identification annotation dataset",
+     r"(?i)complex word"),
+    ("simplify-metric", "text simplification evaluation SARI metric",
+     r"(?i)simplification|sari"),
+    ("readability", "readability legal text assessment formula",
+     r"(?i)readab"),
+    ("deontic", "deontic modality legal rule extraction obligation permission",
+     r"(?i)deontic|obligation"),
+    ("clause-type", "contract clause classification legal text segmentation",
+     r"(?i)clause"),
+    ("citation-parse", "legal citation extraction parsing reference",
+     r"(?i)citation"),
+    ("term-extract", "domain term extraction corpus statistical terminology",
+     r"(?i)term extraction|terminolog"),
+    ("legalese", "legalese plain english legal writing simplification",
+     r"(?i)legalese|plain (english|language)"),
+    ("plain-language", "plain language legal documents comprehension",
+     r"(?i)plain (language|english)"),
 )
+
+#: Both arXiv and Crossref take a free-text query and answer loosely. `abs:"text simplification" AND abs:"SARI"`
+#: still returns papers on image synthesis, because the parser matches the
+#: token anywhere and the AND is advisory. Every arXiv label therefore carries
+#: the words its title and abstract must contain, as OpenAlex does, and a row
+#: that fails the test is dropped before it can be counted under the label.
+MUST: dict[str, str] = {
+    "shade": r"(?i)shade|success.?histor",
+    "lshade": r"(?i)l-?shade|linear population size reduction",
+    "jso": r"(?i)\bjso\b|population size reduction",
+    "restart": r"(?i)differential evolution",
+    "opposition": r"(?i)differential evolution",
+    "moead": r"(?i)moea/d",
+    "moead-de": r"(?i)moea/d",
+    "moead-resource": r"(?i)moea/d",
+    "moead-pbi": r"(?i)moea/d|boundary intersection",
+    "many-objective": r"(?i)many-objective",
+    "legal-bench": r"(?i)legalbench",
+    "legal-lexglue": r"(?i)lexglue",
+    "legal-cuad": r"(?i)\bcuad\b|contract review",
+    "legal-benchmark": r"(?i)legal",
+    "lex-simplify": r"(?i)lexical simplification",
+    "complex-word": r"(?i)complex word",
+    "simplify-metric": r"(?i)simplif",
+    "readability": r"(?i)readab",
+    "deontic": r"(?i)deontic|obligation|permission|prohibition",
+    "clause-type": r"(?i)clause",
+    "citation-parse": r"(?i)citation",
+    "term-extract": r"(?i)term extraction|terminolog",
+    "legalese": r"(?i)legalese|plain (english|language)",
+    "plain-language": r"(?i)plain (language|english)",
+}
 
 ATOM = "{http://www.w3.org/2005/Atom}"
 
@@ -313,7 +378,10 @@ def pull(rows: int = 10, wide: int = 40) -> dict:
             def work(label=label, query=query):
                 body = get(ARXIV.format(query=urllib.parse.quote(query), rows=rows),
                            f"arxiv-{label}.xml")
+                must = MUST.get(label)
                 for row in parse_arxiv(body):
+                    if must and not re.search(must, row["title"] + " " + row["abstract"][:400]):
+                        continue
                     row["query"] = label
                     absorb(found, row)
             attempt(misses, "arxiv", label, work)
@@ -323,12 +391,23 @@ def pull(rows: int = 10, wide: int = 40) -> dict:
             def work(label=label, query=query):
                 body = get(CROSSREF.format(query=urllib.parse.quote(query), rows=rows),
                            f"crossref-{label}.json")
+                must = MUST.get(label)
                 for row in parse_crossref(body):
+                    if must and not re.search(must, row["title"] + " " + row["abstract"][:400]):
+                        continue
                     row["query"] = label
                     absorb(found, row)
             attempt(misses, "crossref", label, work)
 
-    papers = list(found.values())
+    # The must-regexes are applied once more over what the three sources
+    # returned. OpenAlex honours its filter per query, but a cached group is
+    # merged by title, so a row kept under one label can arrive under another
+    # and has to be judged against the label it lands in.
+    papers = [
+        row for row in found.values()
+        if not MUST.get(row["query"])
+        or re.search(MUST[row["query"]], row["title"] + " " + row["abstract"][:400])
+    ]
     papers.sort(key=lambda row: (row["query"], -row["citations"], row["date"]))
     readings = {
         "queries": len(OPENALEX_QUERIES) + len(ARXIV_QUERIES) + len(CROSSREF_QUERIES),

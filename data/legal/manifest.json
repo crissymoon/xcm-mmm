@@ -1,7 +1,7 @@
 {
   "name": "marketlab-legal-language",
   "version": 1,
-  "built_at": "2026-11-19T03:11:00Z",
+  "built_at": "2026-11-19T05:04:09Z",
   "files": [
     {
       "name": "bank.jsonl",
@@ -14,6 +14,12 @@
       "rows": 1,
       "bytes": 19769,
       "fnv64": "5508ba3238501a59"
+    },
+    {
+      "name": "freq.json",
+      "rows": 1,
+      "bytes": 10718,
+      "fnv64": "c64ec6fa0dac1672"
     },
     {
       "name": "pairs.jsonl",
@@ -30,8 +36,8 @@
     {
       "name": "settings.json",
       "rows": 1,
-      "bytes": 3325,
-      "fnv64": "eb753d10ec4db471"
+      "bytes": 4090,
+      "fnv64": "0e7f2ba3cbef3fb5"
     },
     {
       "name": "sources.json",
@@ -53,23 +59,23 @@
     }
   ],
   "counts": {
-    "advisory": 2,
-    "applying": 108,
-    "avoidable": 104,
     "bank": 2324,
     "bank_legal": 1402,
     "bank_plain": 922,
     "bank_selfhelp": 396,
     "detector_features": 30,
-    "necessary": 67,
     "pairs": 71,
     "pairs_editorial": 28,
     "pairs_published": 43,
-    "rules": 110,
+    "rules": 118,
+    "rules_advisory": 2,
+    "rules_applying": 116,
     "rules_clause": 6,
-    "rules_published": 17,
-    "sources": 115,
+    "sources": 183,
     "substitutions": 119,
-    "terms": 171
+    "terms": 184,
+    "terms_advisory": 2,
+    "terms_avoidable": 112,
+    "terms_necessary": 72
   }
 }

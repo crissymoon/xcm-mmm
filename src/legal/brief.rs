@@ -21,7 +21,8 @@
 //! Every word this module classifies is declared in `settings.json` under
 //! `clauses`, so a cue can be added or removed without a build.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
+use std::sync::OnceLock;
 
 use regex::Regex;
 use serde::Serialize;
@@ -74,6 +75,9 @@ pub struct Clause {
     pub original: String,
     /// Who carries the verb, as the document names them.
     pub actor: String,
+    /// A duty or prohibition written in the passive with no agent: the reader
+    /// learns what happens, not who must do it.
+    pub agentless: bool,
     /// The cue that decided the kind, as it appears.
     pub cue: String,
     /// The condition that limits the clause, when there is one.
@@ -82,6 +86,10 @@ pub struct Clause {
     pub deadlines: Vec<String>,
     /// Glossary ids used in the sentence that the definition list carries.
     pub terms: Vec<String>,
+    /// Words in this sentence that general English rarely uses, in the order
+    /// they appear. A clause can be light on drafting and still stop a reader
+    /// twice.
+    pub rare: Vec<String>,
     /// A short all-capitals line, such as `2. FEES.` or `LICENSE GRANT.`
     pub heading: bool,
     pub span: Span,
@@ -114,6 +122,11 @@ pub struct Counts {
     pub statements: usize,
     /// Clauses of any kind that carry a condition.
     pub limited: usize,
+    /// Duties and prohibitions whose actor the text leaves out.
+    pub agentless: usize,
+    /// Words the text uses that general English does not. Counted per
+    /// occurrence, because a reader stops at each one.
+    pub rare: usize,
     pub definitions: usize,
 }
 
@@ -139,7 +152,7 @@ pub struct Brief {
 impl Brief {
     /// Read a text for what it requires, permits and forbids.
     pub fn build(legal: &Legal, text: &str) -> Result<Self, String> {
-        let cues = Cues::new(&legal.settings.clauses)?;
+        let cues = legal.cues()?;
         let protected = legal.guard.spans(text);
         let hits = legal.lexicon.find(text);
         let spans = sentences(text, &protected, &cues.abbreviations);
@@ -149,8 +162,8 @@ impl Brief {
             // One sentence can carry two rules: "..., and the Licensee shall be
             // liable" is a duty after a permission, and reporting the sentence
             // under one verb would lose the other.
-            for part in split(text, span, &cues, &protected) {
-                clauses.push(read_clause(legal, &cues, text, part, &hits, &protected));
+            for part in split(text, span, cues, &protected) {
+                clauses.push(read_clause(legal, cues, text, part, &hits, &protected));
             }
         }
 
@@ -159,7 +172,7 @@ impl Brief {
         let counts = count(&clauses, definitions.len());
         let scan = legal.scan(text);
         let summary = summarise(&counts, scan.words);
-        let warnings = warn(&counts, &definitions, &gaps, scan.words);
+        let warnings = warn(legal, &counts, &definitions, &gaps, scan.words);
 
         Ok(Self {
             words: scan.words,
@@ -279,6 +292,13 @@ fn read_clause(
         kind = Kind::Prohibition;
     }
 
+    let agentless = is_agentless(
+        kind,
+        &original,
+        operative.as_ref().map(|(_, at, _)| *at),
+        &cues.participles,
+    );
+
     // A prohibition carried by its subject needs the permission modal: the rule
     // table turns "shall" into "must", which would print "No person must
     // assign". "No person may assign" is the same rule in the same order, so the
@@ -346,6 +366,7 @@ fn read_clause(
     // Only a term the definition list will carry is worth a cross reference: a
     // replaced word has no entry to point at.
     let mut terms: Vec<String> = Vec::new();
+    let mut rare: Vec<String> = Vec::new();
     for hit in hits {
         if hit.span.start < span.start || hit.span.end > span.end {
             continue;
@@ -354,6 +375,11 @@ fn read_clause(
             continue;
         }
         let term = legal.lexicon.term(hit);
+        if let Some((word, _)) = legal.rare_word(term) {
+            if !rare.contains(&word) {
+                rare.push(word);
+            }
+        }
         if term.avoidable || !term.explain {
             continue;
         }
@@ -378,13 +404,60 @@ fn read_clause(
         text: text_out,
         original,
         actor,
+        agentless,
         cue: operative.map(|(_, _, cue)| cue).unwrap_or_default(),
         condition,
         deadlines,
         terms,
+        rare,
         heading,
         span,
     }
+}
+
+/// Whether a duty or prohibition has left its actor out.
+///
+/// "The notice shall be filed with the court" says what happens to the notice
+/// and never says who files it. The verb after the cue is passive and no agent
+/// phrase follows, so the reader has no one to hand the task to. This is the
+/// fault plain-language guidance names first, and the brief counts it apart
+/// from the duties it can attribute.
+fn is_agentless(kind: Kind, text: &str, cue: Option<Span>, participles: &BTreeSet<String>) -> bool {
+    if !matches!(kind, Kind::Duty | Kind::Prohibition) {
+        return false;
+    }
+    let Some(cue) = cue else {
+        return false;
+    };
+    let tail = text[cue.end..].trim_start();
+    passive(tail, participles) && !agent().is_match(tail)
+}
+
+/// The passive shape a duty takes when its actor is dropped: `be` followed by a
+/// participle. A regular participle ends in `ed`; an irregular one is declared
+/// in `settings.json`, because "be liable" and "be open" are adjectives and
+/// must not be read as passives.
+fn passive(tail: &str, participles: &BTreeSet<String>) -> bool {
+    let mut words = tail.split_whitespace().map(|word| {
+        word.trim_matches(|c: char| !c.is_alphanumeric())
+            .to_lowercase()
+    });
+    if words.next().as_deref() != Some("be") {
+        return false;
+    }
+    let Some(verb) = words.next() else {
+        return false;
+    };
+    verb.ends_with("ed") || participles.contains(&verb)
+}
+
+/// Whether an agent phrase follows the verb: "filed by the clerk".
+fn agent() -> &'static Regex {
+    static BY: OnceLock<Regex> = OnceLock::new();
+    BY.get_or_init(|| {
+        Regex::new(r"(?i)\bby\s+(?:the|a|an|its|their|his|her|such|any|each|every)\b")
+            .expect("the agent phrase")
+    })
 }
 
 /// Whether a span begins partway through a sentence, which is how a clause cut
@@ -621,6 +694,10 @@ fn count(clauses: &[Clause], definitions: usize) -> Counts {
         if clause.condition.is_some() {
             counts.limited += 1;
         }
+        if clause.agentless {
+            counts.agentless += 1;
+        }
+        counts.rare += clause.rare.len();
     }
     counts
 }
@@ -654,6 +731,17 @@ fn summarise(counts: &Counts, words: usize) -> String {
             plural(counts.limited, "clause is", "clauses are")
         ));
     }
+    if counts.agentless > 0 {
+        text.push_str(&format!(
+            " {} written in the passive with no actor, so {} who must act.",
+            plural(counts.agentless, "rule is", "rules are"),
+            if counts.agentless == 1 {
+                "it does not say"
+            } else {
+                "they do not say"
+            }
+        ));
+    }
     if counts.statements > 0 {
         text.push_str(&format!(
             " {} {} a statement rather than a rule.",
@@ -663,6 +751,17 @@ fn summarise(counts: &Counts, words: usize) -> String {
             } else {
                 "make"
             }
+        ));
+    }
+    if counts.rare > 0 {
+        let (word, clause) = if counts.rare == 1 {
+            ("word", "clause")
+        } else {
+            ("words", "clauses")
+        };
+        text.push_str(&format!(
+            " It uses {} {word} general English rarely uses, flagged against the {clause} below.",
+            counts.rare
         ));
     }
     match counts.definitions {
@@ -675,12 +774,23 @@ fn summarise(counts: &Counts, words: usize) -> String {
 }
 
 fn warn(
+    legal: &Legal,
     counts: &Counts,
     definitions: &[Definition],
     gaps: &[super::gaps::Gap],
     words: usize,
 ) -> Vec<String> {
     let mut out = Vec::new();
+    // A folder written by hand holds a glossary and no corpus counts. The brief
+    // can still be built, and saying what it could not measure is the point of
+    // this list.
+    if legal.freq.per_million.is_empty() {
+        out.push(
+            "no frequency table beside the glossary, so no word is reported as one a general \
+             reader has not met"
+                .to_string(),
+        );
+    }
     if !gaps.is_empty() {
         let names = gaps
             .iter()
@@ -700,6 +810,13 @@ fn warn(
                   with in this text as written"
                 .to_string(),
         );
+    }
+    let rules = counts.duties + counts.prohibitions;
+    if rules > 0 && counts.agentless * 2 >= rules {
+        out.push(format!(
+            "{} of {} rules name no actor: a reader cannot tell who must act",
+            counts.agentless, rules
+        ));
     }
     if words >= 20 && definitions.is_empty() {
         out.push("no glossary term was found, so the definitions section is empty".to_string());
@@ -764,6 +881,50 @@ mod tests {
         assert_eq!(clause.deadlines.len(), 1);
         assert!(clause.deadlines[0].starts_with("within thirty (30) days"));
         assert_eq!(b.counts.duties, 1);
+    }
+
+    #[test]
+    fn a_passive_duty_with_no_agent_is_counted_apart() {
+        let b = brief(
+            "The notice shall be filed with the court at least nine days before the hearing.",
+        );
+        assert_eq!(b.clauses[0].kind, Kind::Duty);
+        assert!(b.clauses[0].agentless);
+        assert_eq!(b.counts.agentless, 1);
+        assert!(b.summary.contains("passive with no actor"));
+    }
+
+    #[test]
+    fn a_passive_duty_that_names_its_agent_is_not_agentless() {
+        let b = brief("The report must be submitted by the Borrower within thirty days.");
+        assert_eq!(b.clauses[0].kind, Kind::Duty);
+        assert!(!b.clauses[0].agentless);
+        assert_eq!(b.counts.agentless, 0);
+    }
+
+    #[test]
+    fn an_active_duty_and_an_adjectival_duty_are_not_agentless() {
+        let b =
+            brief("The Buyer shall pay the price. The Software shall be available at all times.");
+        assert_eq!(b.counts.duties, 2);
+        assert_eq!(b.counts.agentless, 0);
+    }
+
+    #[test]
+    fn an_irregular_participle_is_read_as_a_passive() {
+        let b = brief("The fee shall be paid on the closing date.");
+        assert!(b.clauses[0].agentless, "{:?}", b.clauses[0]);
+        let adjectival = brief("The Software shall be open to inspection.");
+        assert!(!adjectival.clauses[0].agentless);
+    }
+
+    #[test]
+    fn a_majority_of_agentless_rules_is_a_warning() {
+        let b = brief(
+            "The notice shall be filed with the court. The fee shall be paid on time. The Buyer shall sign.",
+        );
+        assert_eq!(b.counts.agentless, 2);
+        assert!(b.warnings.iter().any(|w| w.contains("name no actor")));
     }
 
     #[test]
@@ -887,5 +1048,41 @@ mod tests {
         let b = brief("The Borrower shall repay the loan.");
         assert!(b.disclaimer.contains("Research project"));
         assert!(b.disclaimer.contains("not legal advice"));
+    }
+
+    #[test]
+    fn a_clause_carries_the_word_a_general_reader_has_not_met() {
+        let b = brief("The fee shall be paid hereunder within thirty days.");
+        assert_eq!(b.clauses[0].rare, vec!["hereunder".to_string()]);
+        assert_eq!(b.counts.rare, 1);
+        assert!(
+            b.summary.contains("general English rarely uses"),
+            "{}",
+            b.summary
+        );
+    }
+
+    #[test]
+    fn ordinary_words_are_not_reported_as_rare() {
+        let b = brief("The Buyer shall pay the price under the contract within thirty days.");
+        assert!(b.clauses[0].rare.is_empty(), "{:?}", b.clauses[0].rare);
+        assert!(!b.summary.contains("rarely uses"), "{}", b.summary);
+    }
+
+    #[test]
+    fn a_rare_word_is_named_once_per_clause() {
+        let b = brief("The rent hereunder and the fee hereunder shall be paid.");
+        assert_eq!(b.clauses[0].rare, vec!["hereunder".to_string()]);
+    }
+
+    #[test]
+    fn one_agentless_rule_is_reported_in_the_singular() {
+        let b = brief("The notice shall be filed with the court.");
+        assert_eq!(b.counts.agentless, 1);
+        assert!(
+            b.summary.contains("it does not say who must act"),
+            "{}",
+            b.summary
+        );
     }
 }

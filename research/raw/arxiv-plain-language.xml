@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/MNsXtQC/XKmxdS61XkDLrDJMdEI</id>
+  <title>arXiv Query: search_query=abs:"plain language" AND abs:"legal"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:30Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22plain+language%22+AND+abs:%22legal%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>12</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.10271v1</id>
+    <title>Senseful Consense: Towards Simplified Cookie Banners using Plain Language</title>
+    <updated>2026-09-09T14:54:50Z</updated>
+    <link href="https://arxiv.org/abs/2609.10271v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.10271v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While the GDPR and ePrivacy Directive mandate that consent information must be clear and accessible, most modern cookie banners remain obscured by technical jargon, vague phrasing, and frequent content overload or underload. This feasibility study investigates the impact of applying plain language (Einfache Sprache) to cookie banners within the IAB Transparency &amp; Consent Framework (TCF). In our study, we analysed cookie banner texts from 200 websites, using AI-based mapping to categorise extracted content into standardised processing purposes. By substituting complex legal terms with simplified descriptions, we successfully demonstrated that the comprehension barrier can be lowered from a college-graduate level to a 7th-grade level. However, the effectiveness of plain language is inherently constrained by the informativeness of the original content; it cannot compensate for banners that omit legally required details. We conclude that while plain language is a vital tool for digital accessibility, it must be paired with standardised implementation guidelines to ensure that cookie banners are both readable and informative.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-09T14:54:50Z</published>
+    <arxiv:comment>14 pages, 3 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Minela Bećirović</name>
+    </author>
+    <author>
+      <name>Ha Dao</name>
+    </author>
+    <author>
+      <name>Mannat Kaur</name>
+    </author>
+    <author>
+      <name>Martin Johns</name>
+    </author>
+    <author>
+      <name>Alexandra Dirksen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.20222v1</id>
+    <title>Ambiguity is the last thing you need</title>
+    <updated>2024-10-26T16:35:45Z</updated>
+    <link href="https://arxiv.org/abs/2410.20222v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.20222v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Clear legal language forms the backbone of a contract for numerous reasons. Disputes often arise between contract parties where ambiguous language has been used and parties often disagree on the meaning or effect of the words. Unambiguous language can also be important where there is an imbalance of bargaining strength between the parties, for instance where a business is contracting with a consumer, where the law actually requires plain language to be used. Thus, plain language minimises misinterpretation and prevents future litigation. Contracts become ambiguous when the language used is vague, imprecise, or open to multiple interpretations and this is due to the vast number of synonyms in the English Language which creates differences in interpretation between the meaning of the language. Ambiguity has always formed a prevalent issue in case-law, with a large percentage of cases based on ambiguous language. Thus, from an outside perspective the legal sector should look forward to ways of reducing this.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-26T16:35:45Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Emily Chivers</name>
+    </author>
+    <author>
+      <name>Shawn Curran</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.08605v3</id>
+    <title>Mina: A Multilingual LLM-Powered Legal Assistant Agent for Bangladesh for Empowering Access to Justice</title>
+    <updated>2026-04-09T14:39:20Z</updated>
+    <link href="https://arxiv.org/abs/2511.08605v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.08605v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Bangladesh's low-income population faces major barriers to affordable legal advice due to complex legal language, procedural opacity, and high costs. Existing AI legal assistants lack Bengali-language support and jurisdiction-specific adaptation, limiting their effectiveness. To address this, we developed Mina, a multilingual LLM-based legal assistant tailored for the Bangladeshi context. It employs multilingual embeddings and a RAG-based chain-of-tools framework for retrieval, reasoning, translation, and document generation, delivering context-aware legal drafts, citations, and plain-language explanations via an interactive chat interface. Evaluated by law faculty from leading Bangladeshi universities across all stages of the 2022 and 2023 Bangladesh Bar Council Exams, Mina scored 75-80% in Preliminary MCQs, Written, and simulated Viva Voce exams, matching or surpassing average human performance and demonstrating clarity, contextual understanding, and sound legal reasoning. Even under a conservative upper bound, Mina operates at just 0.12-0.61% of typical legal consultation costs in Bangladesh, yielding a 99.4-99.9\% cost reduction relative to human-provided services. These results confirm its potential as a low-cost, multilingual AI assistant that automates key legal tasks and scales access to justice, offering a real-world case study on building domain-specific, low-resource systems and addressing challenges of multilingual adaptation, efficiency, and sustainable public-service AI deployment.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-04T20:43:28Z</published>
+    <arxiv:comment>Accepted to ACL 2026 Findings</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Azmine Toushik Wasi</name>
+    </author>
+    <author>
+      <name>Wahid Faisal</name>
+    </author>
+    <author>
+      <name>Mst Rafia Islam</name>
+    </author>
+    <author>
+      <name>Md Rizwan Parvez</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.12332v2</id>
+    <title>TermSight: Making Service Contracts Approachable</title>
+    <updated>2026-02-01T18:43:37Z</updated>
+    <link href="https://arxiv.org/abs/2506.12332v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.12332v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal contracts govern much of our society, but their specialized language is difficult for non-experts to read. While AI has enabled simplification of complex language, legal contracts pose unique challenges because of their connection to readers' values, ambiguity, and legally binding nature. Based on a formative study (N=20) using Terms of Service (ToS) as example contracts to study challenges in contract reading, we developed TermSight, an intelligent reading interface to probe the opportunities and challenges of designing augmentations for legal text. TermSight guides readers to relevant clauses with color-coded plain-language snippets of information and contextualizes ambiguous language with definitions and hypothetical scenarios. Importantly, TermSight's features always foreground the original, legally-binding contract text (e.g., linking to associated clauses). Our within-subjects study (N=20) demonstrated the opportunities of TermSight in making ToS significantly easier to read and navigate while revealing the challenges of augmenting service contracts such as ToS.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-14T03:53:42Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Ziheng Huang</name>
+    </author>
+    <author>
+      <name>Tal August</name>
+    </author>
+    <author>
+      <name>Hari Sundaram</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.05927v1</id>
+    <title>LengClaro2023: A Dataset of Administrative Texts in Spanish with Plain Language adaptations</title>
+    <updated>2025-06-06T09:52:52Z</updated>
+    <link href="https://arxiv.org/abs/2506.05927v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.05927v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this work, we present LengClaro2023, a dataset of legal-administrative texts in Spanish. Based on the most frequently used procedures from the Spanish Social Security website, we have created for each text two simplified equivalents. The first version follows the recommendations provided by arText claro. The second version incorporates additional recommendations from plain language guidelines to explore further potential improvements in the system. The linguistic resource created in this work can be used for evaluating automatic text simplification (ATS) systems in Spanish.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-06T09:52:52Z</published>
+    <arxiv:comment>In this report, we present a part of the master thesis written by Belén Agüera Marco in order to obtain the B.S. Language Analysis and Processing at the University of the Basque Country (UPV/EHU), supervised by Itziar Gonzalez-Dios</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Belén Agüera-Marco</name>
+    </author>
+    <author>
+      <name>Itziar Gonzalez-Dios</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.04448v1</id>
+    <title>From Regulation to Requirements: An Automated Requirement Derivation and Explanation Pipeline</title>
+    <updated>2026-07-05T18:21:36Z</updated>
+    <link href="https://arxiv.org/abs/2607.04448v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.04448v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Ensuring software compliance with regulations such as the General Data Protection Regulation (GDPR) and the Artificial Intelligence Act (EU AI Act) poses a significant challenge, as requirements engineers must translate complex legal text into actionable software requirements - a process that remains largely manual and error-prone in practice. We present an automated regulation-to-requirements pipeline that identifies requirement-bearing clauses in regulatory documents and derives system-agnostic software requirements, accompanied by plain-language explanations, traceable to their legal sources. We evaluate the pipeline on the full clause sets of the GDPR (398 clauses) and the EU AI Act (574 clauses). For requirement-bearing clause identification, the approach achieves macro-averaged F1 scores of 0.82 and 0.78, respectively, outperforming a SetFit-based baseline. Human evaluation shows high completeness (4.60 and 4.45) and correctness (3.74 and 3.54) of derived requirements, while explanation clarity scores are near-ceiling (4.92 and 4.94) on a 1-5 scale. We implement the approach in Reg2Req, a publicly released tool that further supports requirement classification, use case seeding, cross-reference analysis, definition indexing, and a traceability matrix to operationalize regulatory compliance in practice. A user study with 25 practitioners shows that the plain-language explanations significantly improve comprehension of derived requirements and confidence in acting on them (p &lt; 0.001), and that all participants would use Reg2Req as a starting point for deriving software requirements from a regulation.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-05T18:21:36Z</published>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Pavithra PM Nair</name>
+    </author>
+    <author>
+      <name>Preethu Rose Anish</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.00272v1</id>
+    <title>On Wednesdays, We Ask Questions: Optimizing "Active Listening" in Automated Legal Triage and Referral</title>
+    <updated>2026-05-29T19:07:11Z</updated>
+    <link href="https://arxiv.org/abs/2606.00272v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.00272v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The FETCH classifier generates follow-up questions to help refine the best match for the applicant's legal problem, using a low-cost ensemble of LLMs. In this paper, we describe an expert attorney and LLM-assisted evaluation of the follow-up question approach in FETCH and show that while low-cost LLMs perform well at classification tasks, generating high-quality plain-language questions in this setting appears to require a more sophisticated and higher-cost model. Through discussion with legal intake workers, we propose a rubric for the evaluation of legal intake classification questions, and we find that prompt engineering alone is not enough to improve question quality for intake purposes. We also find that LLM-as-judge and human ratings diverge. We demonstrate that with the addition of a single high-cost model, GPT-5, the classifier can elicit relevant information from applicants for legal help, and that the questions lead to more accurate performance at classification tasks. We also find uneven fact elicitation across different categories, including domestic violence, at odds with family law screening protocols, suggesting the value of including dedicated screening panels for certain areas of law.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-29T19:07:11Z</published>
+    <arxiv:comment>Working paper submitted as accepted to AIDA2J workshop at International Conference for AI and Law in Singapore, June 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Quinten Steenhuis</name>
+    </author>
+    <author>
+      <name>Jacqueline Harvey</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2301.10095v2</id>
+    <title>Large Language Models as Fiduciaries: A Case Study Toward Robustly Communicating With Artificial Intelligence Through Legal Standards</title>
+    <updated>2023-01-30T18:25:18Z</updated>
+    <link href="https://arxiv.org/abs/2301.10095v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2301.10095v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Artificial Intelligence (AI) is taking on increasingly autonomous roles, e.g., browsing the web as a research assistant and managing money. But specifying goals and restrictions for AI behavior is difficult. Similar to how parties to a legal contract cannot foresee every potential "if-then" contingency of their future relationship, we cannot specify desired AI behavior for all circumstances. Legal standards facilitate robust communication of inherently vague and underspecified goals. Instructions (in the case of language models, "prompts") that employ legal standards will allow AI agents to develop shared understandings of the spirit of a directive that generalize expectations regarding acceptable actions to take in unspecified states of the world. Standards have built-in context that is lacking from other goal specification languages, such as plain language and programming languages. Through an empirical study on thousands of evaluation labels we constructed from U.S. court opinions, we demonstrate that large language models (LLMs) are beginning to exhibit an "understanding" of one of the most relevant legal standards for AI agents: fiduciary obligations. Performance comparisons across models suggest that, as LLMs continue to exhibit improved core capabilities, their legal standards understanding will also continue to improve. OpenAI's latest LLM has 78% accuracy on our data, their previous release has 73% accuracy, and a model from their 2020 GPT-3 paper has 27% accuracy (worse than random). Our research is an initial step toward a framework for evaluating AI understanding of legal standards more broadly, and for conducting reinforcement learning with legal feedback (RLLF).</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-01-24T16:03:20Z</published>
+    <arxiv:comment>arXiv admin note: substantial text overlap with arXiv:2209.13020</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>John J. Nay</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.07190v1</id>
+    <title>Rule-Based Moral Principles for Explaining Uncertainty in Natural Language Generation</title>
+    <updated>2025-09-08T20:14:03Z</updated>
+    <link href="https://arxiv.org/abs/2509.07190v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.07190v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) are increasingly used in high-stakes settings, where explaining uncertainty is both technical and ethical. Probabilistic methods are often opaque and misaligned with expectations of transparency. We propose a framework based on rule-based moral principles for handling uncertainty in LLM-generated text. Using insights from moral psychology and virtue ethics, we define rules such as precaution, deference, and responsibility to guide responses under epistemic or aleatoric uncertainty. These rules are encoded in a lightweight Prolog engine, where uncertainty levels (low, medium, high) trigger aligned system actions with plain-language rationales. Scenario-based simulations benchmark rule coverage, fairness, and trust calibration. Use cases in clinical and legal domains illustrate how moral reasoning can improve trust and interpretability. Our approach offers a transparent, lightweight alternative to probabilistic models for socially responsible natural language generation.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-08T20:14:03Z</published>
+    <arxiv:comment>This paper was accepted for presentation at the 35th IEEE International Conference on Collaborative Advances in Software and Computing. Conference website:https://conf.researchr.org/home/cascon-2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Zahra Atf</name>
+    </author>
+    <author>
+      <name>Peter R Lewis</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.24908v1</id>
+    <title>BOE-XSUM: Extreme Summarization in Clear Language of Spanish Legal Decrees and Notifications</title>
+    <updated>2025-09-29T15:15:17Z</updated>
+    <link href="https://arxiv.org/abs/2509.24908v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.24908v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The ability to summarize long documents succinctly is increasingly important in daily life due to information overload, yet there is a notable lack of such summaries for Spanish documents in general, and in the legal domain in particular. In this work, we present BOE-XSUM, a curated dataset comprising 3,648 concise, plain-language summaries of documents sourced from Spain's ``Boletín Oficial del Estado'' (BOE), the State Official Gazette. Each entry in the dataset includes a short summary, the original text, and its document type label. We evaluate the performance of medium-sized large language models (LLMs) fine-tuned on BOE-XSUM, comparing them to general-purpose generative models in a zero-shot setting. Results show that fine-tuned models significantly outperform their non-specialized counterparts. Notably, the best-performing model -- BERTIN GPT-J 6B (32-bit precision) -- achieves a 24\% performance gain over the top zero-shot model, DeepSeek-R1 (accuracies of 41.6\% vs.\ 33.5\%).</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-29T15:15:17Z</published>
+    <arxiv:comment>Published in SEPLN 2025. 20 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Andrés Fernández García</name>
+    </author>
+    <author>
+      <name>Javier de la Rosa</name>
+    </author>
+    <author>
+      <name>Julio Gonzalo</name>
+    </author>
+    <author>
+      <name>Roser Morante</name>
+    </author>
+    <author>
+      <name>Enrique Amigó</name>
+    </author>
+    <author>
+      <name>Alejandro Benito-Santos</name>
+    </author>
+    <author>
+      <name>Jorge Carrillo-de-Albornoz</name>
+    </author>
+    <author>
+      <name>Víctor Fresno</name>
+    </author>
+    <author>
+      <name>Adrian Ghajari</name>
+    </author>
+    <author>
+      <name>Guillermo Marco</name>
+    </author>
+    <author>
+      <name>Laura Plaza</name>
+    </author>
+    <author>
+      <name>Eva Sánchez Salido</name>
+    </author>
+  </entry>
+</feed>

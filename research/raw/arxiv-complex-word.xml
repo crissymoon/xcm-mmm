@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ueQG8VfS+VKhpEGevNa7Eq8PL1o</id>
+  <title>arXiv Query: search_query=abs:"complex word identification"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T04:16:20Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22complex+word+identification%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>16</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2205.07283v1</id>
+    <title>Domain Adaptation in Multilingual and Multi-Domain Monolingual Settings for Complex Word Identification</title>
+    <updated>2022-05-15T13:21:02Z</updated>
+    <link href="https://arxiv.org/abs/2205.07283v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2205.07283v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Complex word identification (CWI) is a cornerstone process towards proper text simplification. CWI is highly dependent on context, whereas its difficulty is augmented by the scarcity of available datasets which vary greatly in terms of domains and languages. As such, it becomes increasingly more difficult to develop a robust model that generalizes across a wide array of input examples. In this paper, we propose a novel training technique for the CWI task based on domain adaptation to improve the target character and context representations. This technique addresses the problem of working with multiple domains, inasmuch as it creates a way of smoothing the differences between the explored datasets. Moreover, we also propose a similar auxiliary task, namely text simplification, that can be used to complement lexical complexity prediction. Our model obtains a boost of up to 2.42% in terms of Pearson Correlation Coefficients in contrast to vanilla training techniques, when considering the CompLex from the Lexical Complexity Prediction 2021 dataset. At the same time, we obtain an increase of 3% in Pearson scores, while considering a cross-lingual setup relying on the Complex Word Identification 2018 dataset. In addition, our model yields state-of-the-art results in terms of Mean Absolute Error.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-05-15T13:21:02Z</published>
+    <arxiv:comment>9 pages, 1 figure, Accepted at ACL 2022 main conference (Long Paper)</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>George-Eduard Zaharia</name>
+    </author>
+    <author>
+      <name>Răzvan-Alexandru Smădu</name>
+    </author>
+    <author>
+      <name>Dumitru-Clementin Cercel</name>
+    </author>
+    <author>
+      <name>Mihai Dascalu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1710.04989v1</id>
+    <title>Complex Word Identification: Challenges in Data Annotation and System Performance</title>
+    <updated>2017-10-13T16:24:23Z</updated>
+    <link href="https://arxiv.org/abs/1710.04989v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1710.04989v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper revisits the problem of complex word identification (CWI) following up the SemEval CWI shared task. We use ensemble classifiers to investigate how well computational methods can discriminate between complex and non-complex words. Furthermore, we analyze the classification performance to understand what makes lexical complexity challenging. Our findings show that most systems performed poorly on the SemEval CWI dataset, and one of the reasons for that is the way in which human annotation was performed.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-10-13T16:24:23Z</published>
+    <arxiv:comment>Proceedings of the 4th Workshop on NLP Techniques for Educational Applications (NLPTEA 2017)</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Marcos Zampieri</name>
+    </author>
+    <author>
+      <name>Shervin Malmasi</name>
+    </author>
+    <author>
+      <name>Gustavo Paetzold</name>
+    </author>
+    <author>
+      <name>Lucia Specia</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1709.02843v1</id>
+    <title>CLaC at SemEval-2016 Task 11: Exploring linguistic and psycho-linguistic Features for Complex Word Identification</title>
+    <updated>2017-09-08T19:34:02Z</updated>
+    <link href="https://arxiv.org/abs/1709.02843v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1709.02843v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper describes the system deployed by the CLaC-EDLK team to the "SemEval 2016, Complex Word Identification task". The goal of the task is to identify if a given word in a given context is "simple" or "complex". Our system relies on linguistic features and cognitive complexity. We used several supervised models, however the Random Forest model outperformed the others. Overall our best configuration achieved a G-score of 68.8% in the task, ranking our system 21 out of 45.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-09-08T19:34:02Z</published>
+    <arxiv:comment>In Proceedings of the International Workshop on Semantic Evaluation (SemEval-2016), a workshop of the 15th Annual Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (NAACL-2016) pp 982-985. June 16-17, San Diego, California</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Elnaz Davoodi</name>
+    </author>
+    <author>
+      <name>Leila Kosseim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1804.09132v1</id>
+    <title>A Report on the Complex Word Identification Shared Task 2018</title>
+    <updated>2018-04-24T16:49:30Z</updated>
+    <link href="https://arxiv.org/abs/1804.09132v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1804.09132v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We report the findings of the second Complex Word Identification (CWI) shared task organized as part of the BEA workshop co-located with NAACL-HLT'2018. The second CWI shared task featured multilingual and multi-genre datasets divided into four tracks: English monolingual, German monolingual, Spanish monolingual, and a multilingual track with a French test set, and two tasks: binary classification and probabilistic classification. A total of 12 teams submitted their results in different task/track combinations and 11 of them wrote system description papers that are referred to in this report and appear in the BEA workshop proceedings.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-04-24T16:49:30Z</published>
+    <arxiv:comment>Second CWI Shared Task co-located with the BEA Workshop 2018 at NAACL-HLT in New Orleans, USA</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Seid Muhie Yimam</name>
+    </author>
+    <author>
+      <name>Chris Biemann</name>
+    </author>
+    <author>
+      <name>Shervin Malmasi</name>
+    </author>
+    <author>
+      <name>Gustavo H. Paetzold</name>
+    </author>
+    <author>
+      <name>Lucia Specia</name>
+    </author>
+    <author>
+      <name>Sanja Štajner</name>
+    </author>
+    <author>
+      <name>Anaïs Tack</name>
+    </author>
+    <author>
+      <name>Marcos Zampieri</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2205.02564v1</id>
+    <title>One Size Does Not Fit All: The Case for Personalised Word Complexity Models</title>
+    <updated>2022-05-05T10:53:31Z</updated>
+    <link href="https://arxiv.org/abs/2205.02564v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2205.02564v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Complex Word Identification (CWI) aims to detect words within a text that a reader may find difficult to understand. It has been shown that CWI systems can improve text simplification, readability prediction and vocabulary acquisition modelling. However, the difficulty of a word is a highly idiosyncratic notion that depends on a reader's first language, proficiency and reading experience. In this paper, we show that personal models are best when predicting word complexity for individual readers. We use a novel active learning framework that allows models to be tailored to individuals and release a dataset of complexity annotations and models as a benchmark for further research.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-05-05T10:53:31Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Sian Gooding</name>
+    </author>
+    <author>
+      <name>Manuel Tragut</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2308.07556v1</id>
+    <title>A User-Centered Evaluation of Spanish Text Simplification</title>
+    <updated>2023-08-15T03:49:59Z</updated>
+    <link href="https://arxiv.org/abs/2308.07556v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2308.07556v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present an evaluation of text simplification (TS) in Spanish for a production system, by means of two corpora focused in both complex-sentence and complex-word identification. We compare the most prevalent Spanish-specific readability scores with neural networks, and show that the latter are consistently better at predicting user preferences regarding TS. As part of our analysis, we find that multilingual models underperform against equivalent Spanish-only models on the same task, yet all models focus too often on spurious statistical features, such as sentence length. We release the corpora in our evaluation to the broader community with the hopes of pushing forward the state-of-the-art in Spanish natural language processing.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-08-15T03:49:59Z</published>
+    <arxiv:comment>Data at https://github.com/microsoft/BrevE-CLaro</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Adrian de Wynter</name>
+    </author>
+    <author>
+      <name>Anthony Hevia</name>
+    </author>
+    <author>
+      <name>Si-Qing Chen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2005.05692v1</id>
+    <title>Detecting Multiword Expression Type Helps Lexical Complexity Assessment</title>
+    <updated>2020-05-12T11:25:07Z</updated>
+    <link href="https://arxiv.org/abs/2005.05692v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2005.05692v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multiword expressions (MWEs) represent lexemes that should be treated as single lexical units due to their idiosyncratic nature. Multiple NLP applications have been shown to benefit from MWE identification, however the research on lexical complexity of MWEs is still an under-explored area. In this work, we re-annotate the Complex Word Identification Shared Task 2018 dataset of Yimam et al. (2017), which provides complexity scores for a range of lexemes, with the types of MWEs. We release the MWE-annotated dataset with this paper, and we believe this dataset represents a valuable resource for the text simplification community. In addition, we investigate which types of expressions are most problematic for native and non-native readers. Finally, we show that a lexical complexity assessment system benefits from the information about MWE types.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-05-12T11:25:07Z</published>
+    <arxiv:comment>Accepted for publication at LREC 2020</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Ekaterina Kochmar</name>
+    </author>
+    <author>
+      <name>Sian Gooding</name>
+    </author>
+    <author>
+      <name>Matthew Shardlow</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2112.15471v2</id>
+    <title>A Survey on Using Gaze Behaviour for Natural Language Processing</title>
+    <updated>2022-01-03T12:58:53Z</updated>
+    <link href="https://arxiv.org/abs/2112.15471v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2112.15471v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Gaze behaviour has been used as a way to gather cognitive information for a number of years. In this paper, we discuss the use of gaze behaviour in solving different tasks in natural language processing (NLP) without having to record it at test time. This is because the collection of gaze behaviour is a costly task, both in terms of time and money. Hence, in this paper, we focus on research done to alleviate the need for recording gaze behaviour at run time. We also mention different eye tracking corpora in multiple languages, which are currently available and can be used in natural language processing. We conclude our paper by discussing applications in a domain - education - and how learning gaze behaviour can help in solving the tasks of complex word identification and automatic essay grading.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-12-21T15:52:56Z</published>
+    <arxiv:comment>Published at IJCAI-PRICAI 2020; Full Link: https://www.ijcai.org/proceedings/2020/683; The sole copyright holder is IJCAI (International Joint Conferences on Artificial Intelligence), all rights reserved</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Sandeep Mathias</name>
+    </author>
+    <author>
+      <name>Diptesh Kanojia</name>
+    </author>
+    <author>
+      <name>Abhijit Mishra</name>
+    </author>
+    <author>
+      <name>Pushpak Bhattacharyya</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2003.07008v3</id>
+    <title>CompLex: A New Corpus for Lexical Complexity Prediction from Likert Scale Data</title>
+    <updated>2020-06-11T16:42:55Z</updated>
+    <link href="https://arxiv.org/abs/2003.07008v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2003.07008v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Predicting which words are considered hard to understand for a given target population is a vital step in many NLP applications such as text simplification. This task is commonly referred to as Complex Word Identification (CWI). With a few exceptions, previous studies have approached the task as a binary classification task in which systems predict a complexity value (complex vs. non-complex) for a set of target words in a text. This choice is motivated by the fact that all CWI datasets compiled so far have been annotated using a binary annotation scheme. Our paper addresses this limitation by presenting the first English dataset for continuous lexical complexity prediction. We use a 5-point Likert scale scheme to annotate complex words in texts from three sources/domains: the Bible, Europarl, and biomedical texts. This resulted in a corpus of 9,476 sentences each annotated by around 7 annotators.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-03-16T03:54:22Z</published>
+    <arxiv:comment>Proceedings of the 1st Workshop on Tools and Resources to Empower People with REAding DIfficulties (READI). pp. 57-62</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Matthew Shardlow</name>
+    </author>
+    <author>
+      <name>Michael Cooper</name>
+    </author>
+    <author>
+      <name>Marcos Zampieri</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.18567v1</id>
+    <title>Difficult for Whom? A Study of Japanese Lexical Complexity</title>
+    <updated>2024-10-24T09:18:53Z</updated>
+    <link href="https://arxiv.org/abs/2410.18567v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.18567v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The tasks of lexical complexity prediction (LCP) and complex word identification (CWI) commonly presuppose that difficult to understand words are shared by the target population. Meanwhile, personalization methods have also been proposed to adapt models to individual needs. We verify that a recent Japanese LCP dataset is representative of its target population by partially replicating the annotation. By another reannotation we show that native Chinese speakers perceive the complexity differently due to Sino-Japanese vocabulary. To explore the possibilities of personalization, we compare competitive baselines trained on the group mean ratings and individual ratings in terms of performance for an individual. We show that the model trained on a group mean performs similarly to an individual model in the CWI task, while achieving good LCP performance for an individual is difficult. We also experiment with adapting a finetuned BERT model, which results only in marginal improvements across all settings.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-24T09:18:53Z</published>
+    <arxiv:comment>Accepted to TSAR 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>published in Proceedings of the Third Workshop on Text Simplification, Accessibility and Readability (TSAR 2024) https://aclanthology.org/2024.tsar-1.8/</arxiv:journal_ref>
+    <author>
+      <name>Adam Nohejl</name>
+    </author>
+    <author>
+      <name>Akio Hayakawa</name>
+    </author>
+    <author>
+      <name>Yusuke Ide</name>
+    </author>
+    <author>
+      <name>Taro Watanabe</name>
+    </author>
+  </entry>
+</feed>

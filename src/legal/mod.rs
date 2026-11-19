@@ -19,8 +19,9 @@
 //! `legal scan` reads a document and names every term with its offsets.
 //! `legal translate` rewrites it and glosses the terms of art it must keep.
 //! `legal terms` lists the glossary. `legal check` recomputes the folder's
-//! digests and its coverage, so an edited row is a disagreement rather than a
-//! quiet change.
+//! digests, its published counts and its coverage, so an edited row is a
+//! disagreement rather than a quiet change, and a count the manifest publishes
+//! is one the files still hold.
 //!
 //! Two commands score the instrument rather than run it. `legal bench` scores
 //! the rewrite on `pairs.jsonl`, a legal passage beside the plain passage that
@@ -41,6 +42,7 @@ pub mod bench;
 pub mod brief;
 pub mod cli;
 mod cues;
+pub mod freq;
 pub mod gaps;
 pub mod guard;
 pub mod registers;
@@ -52,9 +54,10 @@ pub use bench::{Case, Mcnemar, Pair, Report, Slice};
 pub use brief::{Brief, Clause, Definition, Kind};
 pub use cli::{LegalArgs, LegalCommand};
 pub use cues::Cues;
+pub use freq::Freq;
 pub use gaps::Gap;
 pub use guard::{Guard, Span};
 pub use registers::{Coverage, Register, Row};
 pub use rewrite::{Change, Rule, Rules};
-pub use term::{Band, ClauseWords, Hit, Lexicon, Settings, Term};
+pub use term::{Band, ClauseWords, Hit, Lexicon, Rarity, Settings, Term};
 pub use translate::{Gloss, Legal, Reading, Scan, Stats, TermHit};

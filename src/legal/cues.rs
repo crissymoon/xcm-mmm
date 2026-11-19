@@ -25,6 +25,8 @@ pub struct Cues {
     pub(crate) negation: Vec<Regex>,
     pub(crate) statement: Vec<Regex>,
     pub(crate) abbreviations: BTreeSet<String>,
+    /// Irregular past participles, lower cased.
+    pub(crate) participles: BTreeSet<String>,
 }
 
 impl Cues {
@@ -49,6 +51,7 @@ impl Cues {
                 .iter()
                 .map(|a| a.trim_end_matches('.').to_string())
                 .collect(),
+            participles: words.participles.iter().map(|p| p.to_lowercase()).collect(),
         })
     }
 
