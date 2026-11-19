@@ -1,0 +1,564 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 3625345,
+    "items": [
+      {
+        "DOI": "10.2139/ssrn.3936759",
+        "title": [
+          "LexGLUE: A Benchmark Dataset for Legal Language Understanding in English"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021
+            ]
+          ]
+        },
+        "container-title": [
+          "SSRN Electronic Journal"
+        ],
+        "is-referenced-by-count": 88,
+        "author": [
+          {
+            "given": "Ilias",
+            "family": "Chalkidis",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Abhik",
+            "family": "Jana",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Dirk",
+            "family": "Hartung",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Michael James",
+            "family": "Bommarito",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ion",
+            "family": "Androutsopoulos",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Daniel Martin",
+            "family": "Katz",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Nikolaos",
+            "family": "Aletras",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/v1/2022.acl-long.297",
+        "title": [
+          "LexGLUE: A Benchmark Dataset for Legal Language Understanding in English"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)"
+        ],
+        "is-referenced-by-count": 209,
+        "author": [
+          {
+            "given": "Ilias",
+            "family": "Chalkidis",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Abhik",
+            "family": "Jana",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Dirk",
+            "family": "Hartung",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Michael",
+            "family": "Bommarito",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ion",
+            "family": "Androutsopoulos",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Daniel",
+            "family": "Katz",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Nikolaos",
+            "family": "Aletras",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2139/ssrn.3969476",
+        "title": [
+          "AI Natural Language Understanding And LexGLUE Benchmarking"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021
+            ]
+          ]
+        },
+        "container-title": [
+          "SSRN Electronic Journal"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Lance",
+            "family": "Eliot",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2139/ssrn.4385460",
+        "title": [
+          "ChatGPT May Pass the Bar Exam Soon, but Has a Long Way to Go for the LexGLUE Benchmark"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        },
+        "is-referenced-by-count": 21,
+        "abstract": "<jats:p>Following the hype around OpenAI's ChatGPT conversational agent, the last straw in the recent development of Large Language Models (LLMs) that demonstrate emergent unprecedented zero-shot capabilities, we audit the latest OpenAI's GPT-3.5 model, 'gpt-3.5-turbo', the first available ChatGPT model, in the LexGLUE benchmark in a zero-shot fashion providing examples in a templated instruction-following format. The results indicate that ChatGPT achieves an average micro-F1 score of 49.0% across LexGLUE tasks, surpassing the baseline guessing rates. Notably, the model performs exceptionally well in some datasets, achieving micro-F1 scores of 62.8% and 70.1% in the ECtHR B and LEDGAR datasets, respectively. The code base and model predictions are available at https://github.com/coastalcph/zeroshot_lexglue.</jats:p>",
+        "author": [
+          {
+            "given": "Ilias",
+            "family": "Chalkidis",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.52202/068431-2358",
+        "title": [
+          "A Multi-Task Benchmark for Korean Legal Language Understanding and Judgement Prediction"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        },
+        "container-title": [
+          "Advances in Neural Information Processing Systems 35"
+        ],
+        "is-referenced-by-count": 8,
+        "author": [
+          {
+            "given": "Wonseok",
+            "family": "Hwang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Dongjun",
+            "family": "Lee",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Kyoungyeon",
+            "family": "Cho",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Hanuhl",
+            "family": "Lee",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Minjoon",
+            "family": "Seo",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/v1/2024.findings-emnlp.319",
+        "title": [
+          "Developing a Pragmatic Benchmark for Assessing Korean Legal Language Understanding in Large Language Models"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024
+            ]
+          ]
+        },
+        "container-title": [
+          "Findings of the Association for Computational Linguistics: EMNLP 2024"
+        ],
+        "is-referenced-by-count": 6,
+        "author": [
+          {
+            "given": "Yeeun",
+            "family": "Kim",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Youngrok",
+            "family": "Choi",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Eunkyung",
+            "family": "Choi",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "JinHwan",
+            "family": "Choi",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Hai Jin",
+            "family": "Park",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Wonseok",
+            "family": "Hwang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1021/acs.jcim.6c00286.s001",
+        "title": [
+          "RxnBench: A Multimodal Benchmark for Evaluating Large Language Models on Chemical Reaction Understanding from the Scientific Literature"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              null
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0
+      },
+      {
+        "DOI": "10.5715/jnlp.32.983",
+        "title": [
+          "Research Process for JMMMU: A Japanese Massive Multi-discipline Multimodal Understanding Benchmark",
+          "JMMMU: A Japanese Massive Multi-discipline Multimodal Understanding Benchmark \u306e\u7814\u7a76\u904e\u7a0b"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": [
+          "Journal of Natural Language Processing"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Atsuyuki",
+            "family": "Miyai",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "The University of Tokyo"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/2026.nllp-1.43",
+        "title": [
+          "NELSR: A Nepali Legal Benchmark for Case-to-Statute Retrieval"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the Natural Legal Language Processing Workshop 2026"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Anjan",
+            "family": "Parajuli",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Darshan",
+            "family": "Kunwar",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.4324/9781315741840-17",
+        "title": [
+          "Drafting legal documents: language and structure"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2015,
+              3,
+              2
+            ]
+          ]
+        },
+        "container-title": [
+          "Legal English"
+        ],
+        "is-referenced-by-count": 0
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

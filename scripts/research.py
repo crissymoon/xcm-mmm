@@ -55,6 +55,12 @@ ARXIV_QUERIES: tuple[tuple[str, str], ...] = (
     ("moead-resource", 'abs:"MOEA/D" AND abs:"resource allocation"'),
     ("moead-pbi", 'abs:"MOEA/D" AND abs:"penalty-based boundary intersection"'),
     ("many-objective", 'abs:"many-objective" AND abs:"decomposition"'),
+    #: The legal front end is scored by the same rule as the optimizer: a claim
+    #: about legal English cites a benchmark whose abstract this script read.
+    ("legal-bench", 'ti:"LegalBench"'),
+    ("legal-lexglue", 'ti:"LexGLUE"'),
+    ("legal-cuad", 'abs:"contract review" AND abs:"dataset" AND abs:"legal"'),
+    ("legal-benchmark", 'abs:"legal" AND abs:"benchmark" AND abs:"language model"'),
 )
 
 CROSSREF_QUERIES: tuple[tuple[str, str], ...] = (
@@ -66,6 +72,12 @@ CROSSREF_QUERIES: tuple[tuple[str, str], ...] = (
     ("moead-resource", "MOEA/D with dynamic resource allocation for many-objective optimization"),
     ("moead-pbi", "adaptive penalty based boundary intersection decomposition multi-objective"),
     ("survey", "differential evolution a survey of the state-of-the-art"),
+    ("legal-bench", "LegalBench a collaboratively built benchmark for measuring legal reasoning in large language models"),
+    ("legal-lexglue", "LexGLUE a benchmark for legal language understanding in English"),
+    ("legal-cuad", "CUAD an expert-annotated NLP dataset for legal contract review"),
+    ("bench-calibration", "on calibration of modern neural networks"),
+    ("bench-bootstrap", "bootstrap methods for standard errors confidence intervals and other measures of statistical accuracy"),
+    ("bench-mcnemar", "approximate statistical tests for comparing supervised classification learning algorithms"),
 )
 
 #: OpenAlex relevance drift is real: an unguarded search for "jSO" returns
@@ -92,6 +104,18 @@ OPENALEX_QUERIES: tuple[tuple[str, str, str], ...] = (
      r"(?i)moea/d|weight vector"),
     ("many-objective", "many-objective evolutionary algorithm decomposition",
      r"(?i)many-objective|decomposition"),
+    ("legal-bench", "LegalBench legal reasoning benchmark tasks",
+     r"(?i)legalbench|legal reasoning"),
+    ("legal-lexglue", "LexGLUE legal language understanding benchmark",
+     r"(?i)lexglue"),
+    ("legal-cuad", "CUAD contract review dataset",
+     r"(?i)cuad|contract review"),
+    ("bench-calibration", "calibration of neural networks expected calibration error",
+     r"(?i)calibrat"),
+    ("bench-bootstrap", "bootstrap confidence intervals evaluation metrics",
+     r"(?i)bootstrap"),
+    ("bench-mcnemar", "McNemar test comparing classifiers significance",
+     r"(?i)mcnemar|significan"),
 )
 
 ATOM = "{http://www.w3.org/2005/Atom}"
@@ -120,15 +144,43 @@ def get(url: str, name: str, timeout: int = 40) -> str:
             return handle.read()
     body = scrape(url)
     if not body.strip().startswith(("{", "<")):
-        request = urllib.request.Request(url, headers={"User-Agent": "xcm-mmm/0.1"})
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            body = response.read().decode("utf-8", "replace")
+        body = fetch(url, timeout)
     if not body.strip().startswith(("{", "<")):
         raise RuntimeError(f"no usable answer from {url}")
     with open(path, "w", encoding="utf-8") as handle:
         handle.write(body)
     time.sleep(0.6)
     return body
+
+
+def fetch(url: str, timeout: int = 40, tries: int = 4) -> str:
+    """One GET with bounded backoff.
+
+    OpenAlex answers a burst of query strings with 429, and the whole corpus
+    used to be lost to one of them. A 429 is a wait, not an answer, so it is
+    retried with the server's own Retry-After when one is given, and the wait
+    doubles so a busy host is left alone rather than hammered.
+    """
+    request = urllib.request.Request(url, headers={"User-Agent": "xcm-mmm/0.1"})
+    wait = 2.0
+    last: Exception | None = None
+    for _ in range(tries):
+        try:
+            with urllib.request.urlopen(request, timeout=timeout) as response:
+                return response.read().decode("utf-8", "replace")
+        except urllib.error.HTTPError as error:
+            last = error
+            if error.code not in (429, 500, 502, 503, 504):
+                raise
+            told = error.headers.get("Retry-After") if error.headers else None
+            pause = float(told) if told and told.strip().isdigit() else wait
+            time.sleep(min(pause, 30.0))
+            wait = min(wait * 2, 30.0)
+        except urllib.error.URLError as error:
+            last = error
+            time.sleep(min(wait, 30.0))
+            wait = min(wait * 2, 30.0)
+    raise RuntimeError(f"no usable answer from {url}: {last}")
 
 
 def clean(text: str | None) -> str:
@@ -219,27 +271,63 @@ def key(row: dict) -> str:
     return re.sub(r"[^a-z0-9]", "", row["title"].lower())[:80]
 
 
+def sources() -> set[str]:
+    """Which back ends this run may ask. A parked host is one environment
+    variable away from being left alone, and `RESEARCH_SOURCES=arxiv` keeps a
+    pull cheap when only the arXiv rows are wanted."""
+    told = os.environ.get("RESEARCH_SOURCES", "openalex,arxiv,crossref")
+    return {name.strip().lower() for name in told.split(",") if name.strip()}
+
+
+def attempt(misses: list[str], source: str, label: str, work) -> None:
+    """Run one query. A host that refuses is recorded, not fatal.
+
+    Losing the whole corpus to one 429 is how a digest ends up with no legal
+    benchmarks in it and nobody noticing, so a miss is named in the readings
+    beside the counts.
+    """
+    try:
+        work()
+    except Exception as error:  # a parked host must not lose the other queries
+        misses.append(f"{source}:{label} ({str(error)[:60]})")
+
+
 def pull(rows: int = 10, wide: int = 40) -> dict:
     found: dict[str, dict] = {}
-    for label, query, must in OPENALEX_QUERIES:
-        body = get(OPENALEX.format(query=urllib.parse.quote(query), rows=wide),
-                   f"openalex-{label}.json")
-        for row in parse_openalex(body):
-            if re.search(must, row["title"] + " " + row["abstract"][:400]):
-                row["query"] = label
-                absorb(found, row)
-    for label, query in ARXIV_QUERIES:
-        body = get(ARXIV.format(query=urllib.parse.quote(query), rows=rows),
-                   f"arxiv-{label}.xml")
-        for row in parse_arxiv(body):
-            row["query"] = label
-            absorb(found, row)
-    for label, query in CROSSREF_QUERIES:
-        body = get(CROSSREF.format(query=urllib.parse.quote(query), rows=rows),
-                   f"crossref-{label}.json")
-        for row in parse_crossref(body):
-            row["query"] = label
-            absorb(found, row)
+    misses: list[str] = []
+    wanted = sources()
+
+    if "openalex" in wanted:
+        for label, query, must in OPENALEX_QUERIES:
+            def work(label=label, query=query, must=must):
+                body = get(OPENALEX.format(query=urllib.parse.quote(query), rows=wide),
+                           f"openalex-{label}.json")
+                for row in parse_openalex(body):
+                    if re.search(must, row["title"] + " " + row["abstract"][:400]):
+                        row["query"] = label
+                        absorb(found, row)
+            attempt(misses, "openalex", label, work)
+
+    if "arxiv" in wanted:
+        for label, query in ARXIV_QUERIES:
+            def work(label=label, query=query):
+                body = get(ARXIV.format(query=urllib.parse.quote(query), rows=rows),
+                           f"arxiv-{label}.xml")
+                for row in parse_arxiv(body):
+                    row["query"] = label
+                    absorb(found, row)
+            attempt(misses, "arxiv", label, work)
+
+    if "crossref" in wanted:
+        for label, query in CROSSREF_QUERIES:
+            def work(label=label, query=query):
+                body = get(CROSSREF.format(query=urllib.parse.quote(query), rows=rows),
+                           f"crossref-{label}.json")
+                for row in parse_crossref(body):
+                    row["query"] = label
+                    absorb(found, row)
+            attempt(misses, "crossref", label, work)
+
     papers = list(found.values())
     papers.sort(key=lambda row: (row["query"], -row["citations"], row["date"]))
     readings = {
@@ -248,6 +336,8 @@ def pull(rows: int = 10, wide: int = 40) -> dict:
         "by_source": {s: sum(1 for r in papers if r["source"] == s)
                       for s in ("openalex", "arxiv", "crossref")},
         "with_abstract": sum(1 for r in papers if len(r["abstract"]) > 200),
+        "misses": len(misses),
+        "missed": misses[:8],
     }
     os.makedirs(OUT, exist_ok=True)
     with open(CORPUS, "w", encoding="utf-8") as handle:

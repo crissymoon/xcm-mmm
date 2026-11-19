@@ -1,0 +1,287 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/yOx4/7NTeFJsFRUiC4J4BhW73aI</id>
+  <title>arXiv Query: search_query=abs:"legal" AND abs:"benchmark" AND abs:"language model"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T01:54:54Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22legal%22+AND+(abs:%22benchmark%22+AND+abs:%22language+model%22)&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>463</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2609.39189v1</id>
+    <title>ViLegalExpert: A Large-Scale Benchmark for Vietnamese Legal Retrieval and Question Answering from Real-World Consultations</title>
+    <updated>2026-09-30T07:43:15Z</updated>
+    <link href="https://arxiv.org/abs/2609.39189v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.39189v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Trustworthy Legal AI requires systems that can answer legal questions while grounding their responses in authoritative sources. However, existing Vietnamese legal benchmarks provide limited coverage of real-world legal consultations. We introduce \textbf{ViLegalExpert}, a large-scale benchmark constructed from authentic citizen--lawyer consultations, containing over \textbf{172K} questions across \textbf{34 legal domains}, together with professional answers and expert-verified legal evidence. ViLegalExpert supports legal information retrieval, extractive QA, and abstractive QA. Experiments with representative retrieval methods and language models reveal substantial challenges in evidence retrieval and grounded answer generation. While pretrained models perform strongly on QA, hybrid retrieval achieves the best retrieval performance. These results demonstrate the difficulty of mapping naturally expressed legal questions to authoritative provisions and establish ViLegalExpert as a challenging benchmark for reliable Vietnamese Legal AI.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-30T07:43:15Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Dat Tien Nguyen</name>
+    </author>
+    <author>
+      <name>Nghia Hieu Nguyen</name>
+    </author>
+    <author>
+      <name>Anh Thi-Hoang Nguyen</name>
+    </author>
+    <author>
+      <name>Dung Ha Nguyen</name>
+    </author>
+    <author>
+      <name>Kiet Van Nguyen</name>
+    </author>
+    <author>
+      <name>Ngan Luu-Thuy Nguyen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.17602v2</id>
+    <title>LexChain: Modeling Legal Reasoning Chains for Chinese Tort Case Analysis</title>
+    <updated>2025-12-21T14:45:13Z</updated>
+    <link href="https://arxiv.org/abs/2510.17602v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.17602v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal reasoning is a fundamental component of legal analysis and decision-making. Existing computational approaches to legal reasoning predominantly rely on generic reasoning frameworks such as syllogism, which do not comprehensively examine the nuanced process of legal reasoning. Moreover, current research has largely focused on criminal cases, with insufficient modeling for civil cases. In this work, we present a novel framework to explicitly model legal reasoning in the analysis of Chinese tort-related civil cases. We first operationalize the legal reasoning process in tort analysis into the three-module LexChain framework, with each module consisting of multiple finer-grained sub-steps. Informed by the LexChain framework, we introduce the task of tort legal reasoning and construct an evaluation benchmark to systematically assess the critical steps within analytical reasoning chains for tort analysis. Leveraging this benchmark, we evaluate existing large language models for their legal reasoning ability in civil tort contexts. Our results indicate that current models still fall short in accurately handling crucial elements of tort legal reasoning. Furthermore, we introduce several baseline approaches that explicitly incorporate LexChain-style reasoning through prompting or post-training. The proposed baselines achieve significant improvements in tort-related legal reasoning and generalize well to related legal analysis tasks, demonstrating the value of explicitly modeling legal reasoning chains to enhance the reasoning capabilities of language models.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-20T14:50:58Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Huiyuan Xie</name>
+    </author>
+    <author>
+      <name>Chenyang Li</name>
+    </author>
+    <author>
+      <name>Huining Zhu</name>
+    </author>
+    <author>
+      <name>Chubin Zhang</name>
+    </author>
+    <author>
+      <name>Yuxiao Ye</name>
+    </author>
+    <author>
+      <name>Zhenghao Liu</name>
+    </author>
+    <author>
+      <name>Zhiyuan Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2502.06882v1</id>
+    <title>Multi-Agent Simulator Drives Language Models for Legal Intensive Interaction</title>
+    <updated>2025-02-08T15:05:24Z</updated>
+    <link href="https://arxiv.org/abs/2502.06882v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.06882v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large Language Models (LLMs) have significantly advanced legal intelligence, but the scarcity of scenario data impedes the progress toward interactive legal scenarios. This paper introduces a Multi-agent Legal Simulation Driver (MASER) to scalably generate synthetic data by simulating interactive legal scenarios. Leveraging real-legal case sources, MASER ensures the consistency of legal attributes between participants and introduces a supervisory mechanism to align participants' characters and behaviors as well as addressing distractions. A Multi-stage Interactive Legal Evaluation (MILE) benchmark is further constructed to evaluate LLMs' performance in dynamic legal scenarios. Extensive experiments confirm the effectiveness of our framework.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-08T15:05:24Z</published>
+    <arxiv:comment>Accepted by NAACL 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Shengbin Yue</name>
+    </author>
+    <author>
+      <name>Ting Huang</name>
+    </author>
+    <author>
+      <name>Zheng Jia</name>
+    </author>
+    <author>
+      <name>Siyuan Wang</name>
+    </author>
+    <author>
+      <name>Shujun Liu</name>
+    </author>
+    <author>
+      <name>Yun Song</name>
+    </author>
+    <author>
+      <name>Xuanjing Huang</name>
+    </author>
+    <author>
+      <name>Zhongyu Wei</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.18158v1</id>
+    <title>The Measurement Gap in the Automation of EU Law: Benchmarking Doctrinal Legal Reasoning under the EU AI Act</title>
+    <updated>2026-06-16T16:57:12Z</updated>
+    <link href="https://arxiv.org/abs/2606.18158v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.18158v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models now produce legal text of at least median quality, yet no existing benchmark can evaluate whether they perform doctrinal legal reasoning, which forms the interpretive core of legal work, rather than the ancillary, paralegal tasks that most current legal-AI evaluations measure. This measurement gap is not only methodological but legal: the EU AI Act makes "appropriate accuracy" a binding requirement for high-risk AI used in the judicial domain, yet that requirement cannot acquire operational content without the very doctrinal-reasoning benchmark the field lacks.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-16T16:57:12Z</published>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Michèle Finck</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.19760v1</id>
+    <title>Learning Interpretable Legal Case Retrieval via Knowledge-Guided Case Reformulation</title>
+    <updated>2024-06-28T08:59:45Z</updated>
+    <link href="https://arxiv.org/abs/2406.19760v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.19760v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Legal case retrieval for sourcing similar cases is critical in upholding judicial fairness. Different from general web search, legal case retrieval involves processing lengthy, complex, and highly specialized legal documents. Existing methods in this domain often overlook the incorporation of legal expert knowledge, which is crucial for accurately understanding and modeling legal cases, leading to unsatisfactory retrieval performance. This paper introduces KELLER, a legal knowledge-guided case reformulation approach based on large language models (LLMs) for effective and interpretable legal case retrieval. By incorporating professional legal knowledge about crimes and law articles, we enable large language models to accurately reformulate the original legal case into concise sub-facts of crimes, which contain the essential information of the case. Extensive experiments on two legal case retrieval benchmarks demonstrate superior retrieval performance and robustness on complex legal case queries of KELLER over existing methods.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-28T08:59:45Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Chenlong Deng</name>
+    </author>
+    <author>
+      <name>Kelong Mao</name>
+    </author>
+    <author>
+      <name>Zhicheng Dou</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.14554v7</id>
+    <title>Benchmarking Vietnamese Legal Knowledge of Large Language Models</title>
+    <updated>2026-10-27T08:03:33Z</updated>
+    <link href="https://arxiv.org/abs/2512.14554v7" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.14554v7" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rapid advancement of large language models (LLMs) has enabled new possibilities for applying artificial intelligence within the legal domain. Nonetheless, the complexity, hierarchical organization, and frequent revisions of Vietnamese legislation pose considerable challenges for evaluating how well these models interpret and utilize legal knowledge. To address this gap, the Vietnamese Legal Benchmark (VLegal-Bench) is introduced, the first comprehensive benchmark designed to systematically assess LLMs on Vietnamese legal tasks. Informed by Bloom's cognitive taxonomy, VLegal-Bench encompasses multiple levels of legal understanding through tasks designed to reflect practical usage scenarios. The benchmark comprises 10,450 samples generated through a rigorous annotation pipeline, where legal experts label and cross-validate each instance using our annotation system to ensure every sample is grounded in authoritative legal documents and mirrors real-world legal assistant workflows, including general legal questions and answers, retrieval-augmented generation, multi-step reasoning, and scenario-based problem solving tailored to Vietnamese law. By providing a standardized, transparent, and cognitively informed evaluation framework, VLegal-Bench establishes a solid foundation for assessing LLM performance in Vietnamese legal contexts and supports the development of more reliable, interpretable, and ethically aligned AI-assisted legal systems. To facilitate access and reproducibility, we provide a public landing page for this benchmark at https://vilegalbench.cmcai.vn/.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-16T16:28:32Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Nguyen Tien Dong</name>
+    </author>
+    <author>
+      <name>Minh-Anh Nguyen</name>
+    </author>
+    <author>
+      <name>Thanh Dat Hoang</name>
+    </author>
+    <author>
+      <name>Nguyen Tuan Ngoc</name>
+    </author>
+    <author>
+      <name>Dao Xuan Quang Minh</name>
+    </author>
+    <author>
+      <name>Phan Phi Hai</name>
+    </author>
+    <author>
+      <name>Nguyen Thi Ngoc Anh</name>
+    </author>
+    <author>
+      <name>Binh Vu</name>
+    </author>
+    <author>
+      <name>Dung D. Le</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.06619v3</id>
+    <title>BriefMe: A Legal NLP Benchmark for Assisting with Legal Briefs</title>
+    <updated>2025-06-19T06:35:29Z</updated>
+    <link href="https://arxiv.org/abs/2506.06619v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.06619v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A core part of legal work that has been under-explored in Legal NLP is the writing and editing of legal briefs. This requires not only a thorough understanding of the law of a jurisdiction, from judgments to statutes, but also the ability to make new arguments to try to expand the law in a new direction and make novel and creative arguments that are persuasive to judges. To capture and evaluate these legal skills in language models, we introduce BRIEFME, a new dataset focused on legal briefs. It contains three tasks for language models to assist legal professionals in writing briefs: argument summarization, argument completion, and case retrieval. In this work, we describe the creation of these tasks, analyze them, and show how current models perform. We see that today's large language models (LLMs) are already quite good at the summarization and guided completion tasks, even beating human-generated headings. Yet, they perform poorly on other tasks in our benchmark: realistic argument completion and retrieving relevant legal cases. We hope this dataset encourages more development in Legal NLP in ways that will specifically aid people in performing legal work.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-07T01:33:44Z</published>
+    <arxiv:comment>ACL Findings 2025; 10 pages main, 5 pages references, 37 pages appendix</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Jesse Woo</name>
+    </author>
+    <author>
+      <name>Fateme Hashemi Chaleshtori</name>
+    </author>
+    <author>
+      <name>Ana Marasović</name>
+    </author>
+    <author>
+      <name>Kenneth Marino</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2302.05729v2</id>
+    <title>A Brief Report on LawGPT 1.0: A Virtual Legal Assistant Based on GPT-3</title>
+    <updated>2023-02-14T06:26:42Z</updated>
+    <link href="https://arxiv.org/abs/2302.05729v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2302.05729v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>LawGPT 1.0 is a virtual legal assistant built on the state-of-the-art language model GPT-3, fine-tuned for the legal domain. The system is designed to provide legal assistance to users in a conversational manner, helping them with tasks such as answering legal questions, generating legal documents, and providing legal advice. In this paper, we provide a brief overview of LawGPT 1.0, its architecture, and its performance on a set of legal benchmark tasks. Please note that the detailed information about the model is protected by a non-disclosure agreement (NDA) and cannot be disclosed in this report.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-02-11T15:50:20Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Ha-Thanh Nguyen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.03970v1</id>
+    <title>A Reasoning-Focused Legal Retrieval Benchmark</title>
+    <updated>2025-05-06T20:44:03Z</updated>
+    <link href="https://arxiv.org/abs/2505.03970v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.03970v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As the legal community increasingly examines the use of large language models (LLMs) for various legal applications, legal AI developers have turned to retrieval-augmented LLMs ("RAG" systems) to improve system performance and robustness. An obstacle to the development of specialized RAG systems is the lack of realistic legal RAG benchmarks which capture the complexity of both legal retrieval and downstream legal question-answering. To address this, we introduce two novel legal RAG benchmarks: Bar Exam QA and Housing Statute QA. Our tasks correspond to real-world legal research tasks, and were produced through annotation processes which resemble legal research. We describe the construction of these benchmarks and the performance of existing retriever pipelines. Our results suggest that legal RAG remains a challenging application, thus motivating future research.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-06T20:44:03Z</published>
+    <arxiv:comment>CS&amp;Law 2025. For data, see https://reglab.github.io/legal-rag-benchmarks/</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Lucia Zheng</name>
+    </author>
+    <author>
+      <name>Neel Guha</name>
+    </author>
+    <author>
+      <name>Javokhir Arifov</name>
+    </author>
+    <author>
+      <name>Sarah Zhang</name>
+    </author>
+    <author>
+      <name>Michal Skreta</name>
+    </author>
+    <author>
+      <name>Christopher D. Manning</name>
+    </author>
+    <author>
+      <name>Peter Henderson</name>
+    </author>
+    <author>
+      <name>Daniel E. Ho</name>
+    </author>
+    <arxiv:doi>10.1145/3709025.3712219</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3709025.3712219" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.00116v1</id>
+    <title>ViLegalNLI: Natural Language Inference for Vietnamese Legal Texts</title>
+    <updated>2026-04-30T18:16:14Z</updated>
+    <link href="https://arxiv.org/abs/2605.00116v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.00116v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this article, we introduce ViLegalNLI, the first large-scale Vietnamese Natural Language Inference (NLI) dataset specifically constructed for the legal domain. The dataset consists of 42,012 premise-hypothesis pairs derived from official statutory documents and annotated with binary inference labels (Entailment and Non-entailment). It covers multiple legal domains and reflects realistic legal reasoning scenarios characterized by structured logic, conditional clauses, and domain-specific terminology. To construct ViLegalNLI, we propose a semi-automatic data generation framework that integrates large language models for controlled hypothesis generation and systematic quality validation procedures. The framework incorporates artifact mitigation strategies and cross-model validation to improve annotation reliability and ensure legal consistency. The resulting dataset captures diverse reasoning patterns, including paraphrasing, logical implication, and legally invalid inferences, thereby providing a comprehensive benchmark for Vietnamese legal inference tasks. We conduct extensive experiments on the ViLegalNLI using multilingual models, Vietnamese-specific pretrained language models, and instruction-tuned large language models. The results show that few-shot LLM configurations consistently achieve superior performance, while performance is significantly influenced by hypothesis length, lexical overlap, and reasoning complexity. Cross-domain evaluations further reveal the challenges of generalizing legal inference across distinct legal fields. Overall, ViLegalNLI establishes a foundational benchmark for Vietnamese legal NLI and supports future research in legal reasoning, statutory text understanding, and the development of reliable AI systems for legal analysis and decision support. The dataset is publicly available for research purposes.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-30T18:16:14Z</published>
+    <arxiv:comment>33 pages, 17 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Nhung Thi-Hong Duong</name>
+    </author>
+    <author>
+      <name>Mai Ngoc Ho</name>
+    </author>
+    <author>
+      <name>Tin Van Huynh</name>
+    </author>
+    <author>
+      <name>Kiet Van Nguyen</name>
+    </author>
+  </entry>
+</feed>

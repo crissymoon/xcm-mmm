@@ -1,15 +1,396 @@
 {
  "readings": {
-  "queries": 28,
-  "papers": 146,
+  "queries": 44,
+  "papers": 225,
   "by_source": {
-   "openalex": 23,
-   "arxiv": 49,
-   "crossref": 74
+   "openalex": 31,
+   "arxiv": 69,
+   "crossref": 125
   },
-  "with_abstract": 78
+  "with_abstract": 123,
+  "misses": 1,
+  "missed": [
+   "openalex:bench-mcnemar (no usable answer from https://api.openalex.org/works?search=)"
+  ]
  },
  "papers": [
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.48550/arxiv.2006.07733",
+   "title": "Bootstrap your own latent: A new approach to self-supervised Learning",
+   "date": "2020",
+   "venue": "arXiv (Cornell University)",
+   "citations": 8692,
+   "authors": [],
+   "abstract": "We introduce Bootstrap Your Own Latent (BYOL), a new approach to self-supervised image representation learning. BYOL relies on two neural networks, referred to as online and target networks, that interact and learn from each other. From an augmented view of an image, we train the online network to predict the target network representation of the same image under a different augmented view. At the same time, we update the target network with a slow-moving average of the online network. While state-of-the art methods rely on negative pairs, BYOL achieves a new state of the art without them. BYOL reaches $74.3\\%$ top-1 classification accuracy on ImageNet using a linear evaluation with a ResNet-50 architecture and $79.6\\%$ with a larger ResNet. We show that BYOL performs on par or better than the current state of the art on both transfer and semi-supervised benchmarks. Our implementation and pretrained models are given on GitHub.",
+   "query": "bench-bootstrap"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1214/ss/1177013815",
+   "title": "Bootstrap Methods for Standard Errors, Confidence Intervals, and Other Measures of Statistical Accuracy",
+   "date": "1986",
+   "venue": "Statistical Science",
+   "citations": 3760,
+   "authors": [
+    "B. Efron",
+    "R. Tibshirani"
+   ],
+   "abstract": "This is a review of bootstrap methods, concentrating on basic ideas and applications rather than theoretical considerations. It begins with an exposition of the bootstrap estimate of standard error for one-sample situations. Several examples, some involving quite complicated statistical procedures, are given. The bootstrap is then extended to other measures of statistical accuracy such as bias and prediction error, and to complicated data structures such as time series, censored data, and regression models. Several more examples are presented illustrating these ideas. The last third of the paper deals mainly with bootstrap confidence intervals.",
+   "query": "bench-bootstrap"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1037//1082-989x.6.4.402",
+   "title": "Random assignment of available cases: Bootstrap standard errors and confidence intervals.",
+   "date": "2001",
+   "venue": "Psychological Methods",
+   "citations": 6,
+   "authors": [
+    "Clifford E. Lunneborg"
+   ],
+   "abstract": "",
+   "query": "bench-bootstrap"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/s10260-020-00555-1",
+   "title": "Bootstrap confidence intervals for correlation between continuous repeated measures",
+   "date": "2021",
+   "venue": "Statistical Methods &amp; Applications",
+   "citations": 2,
+   "authors": [
+    "",
+    "Guogen Shan",
+    "Hua Zhang",
+    "Jim Barbour"
+   ],
+   "abstract": "",
+   "query": "bench-bootstrap"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1891/9780826198259.0006",
+   "title": "Standard Errors, Confidence Intervals, and the Power of Statistical Tests",
+   "date": "",
+   "venue": "Statistics for Advanced Practice Nurses and Health Professionals",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "bench-bootstrap"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.3724/sp.j.1041.2022.00703",
+   "title": "Standard errors and confidence intervals for cognitive diagnostic models: Parallel bootstrap methods",
+   "date": "2022",
+   "venue": "Acta Psychologica Sinica",
+   "citations": 0,
+   "authors": [
+    "Yanlou LIU"
+   ],
+   "abstract": "",
+   "query": "bench-bootstrap"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1201/9781003326410-7",
+   "title": "Standard errors, confidence intervals, and tests of hypotheses",
+   "date": "2026",
+   "venue": "Statistical Methods and Applications Using Quantiles",
+   "citations": 0,
+   "authors": [
+    "Marco Geraci"
+   ],
+   "abstract": "",
+   "query": "bench-bootstrap"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.48550/arxiv.1706.04599",
+   "title": "On Calibration of Modern Neural Networks",
+   "date": "2017",
+   "venue": "arXiv (Cornell University)",
+   "citations": 13528,
+   "authors": [],
+   "abstract": "Confidence calibration -- the problem of predicting probability estimates representative of the true correctness likelihood -- is important for classification models in many applications. We discover that modern neural networks, unlike those from a decade ago, are poorly calibrated. Through extensive experiments, we observe that depth, width, weight decay, and Batch Normalization are important factors influencing calibration. We evaluate the performance of various post-processing calibration methods on state-of-the-art architectures with image and document classification datasets. Our analysis and experiments not only offer insights into neural network learning, but also provide a simple and straightforward recipe for practical settings: on most datasets, temperature scaling -- a single-parameter variant of Platt Scaling -- is surprisingly effective at calibrating predictions.",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.1111/1467-9868.00294",
+   "title": "Bayesian Calibration of Computer Models",
+   "date": "2001",
+   "venue": "Journal of the Royal Statistical Society Series B (Statistical Methodology)",
+   "citations": 5146,
+   "authors": [],
+   "abstract": "Summary We consider prediction and uncertainty analysis for systems which are approximated using complex mathematical models. Such models, implemented as computer codes, are often generic in the sense that by a suitable choice of some of the model's input parameters the code can be used to predict the behaviour of the system in a variety of specific applications. However, in any specific application the values of necessary parameters may be unknown. In this case, physical observations of the system in the specific context are used to learn about the unknown parameters. The process of fitting the model to the observed data by adjusting the parameters is known as calibration. Calibration is typically effected by ad hoc fitting, and after calibration the model is used, with the fitted input values, to predict the future behaviour of the system. We present a Bayesian calibration technique which improves on this traditional approach in two respects. First, the predictions allow for all sources of uncertainty, including the remaining uncertainty over the fitted parameters. Second, they attempt to correct for any inadequacy of the model which is revealed by a discrepancy between the observed data and the model predictions from even the best-fitting parameter values. The method is illustrated by using data from a nuclear radiation release at Tomsk, and from a more complex simulated nuclear accident exercise.",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/ijcnn.1999.833509",
+   "title": "Application of neural networks for stereo-camera calibration",
+   "date": "",
+   "venue": "IJCNN'99. International Joint Conference on Neural Networks. Proceedings (Cat. No.99CH36339)",
+   "citations": 12,
+   "authors": [
+    "Yongtae Do"
+   ],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1049/cp:19970730",
+   "title": "Validation of neural networks in automotive engine calibration",
+   "date": "1997",
+   "venue": "Fifth International Conference on Artificial Neural Networks",
+   "citations": 11,
+   "authors": [
+    "D. Lowe"
+   ],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.neunet.2024.106457",
+   "title": "Advancing neural network calibration: The role of gradient decay in large-margin Softmax optimization",
+   "date": "2024",
+   "venue": "Neural Networks",
+   "citations": 10,
+   "authors": [
+    "Siyuan Zhang",
+    "Linbo Xie"
+   ],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.neunet.2025.107510",
+   "title": "Semi-supervised segmentation on medical images with pseudo label calibration and neural process",
+   "date": "2025",
+   "venue": "Neural Networks",
+   "citations": 3,
+   "authors": [
+    "Tianlun Zhang",
+    "Yuxuan Luo",
+    "Xizhao Wang",
+    "Sam Kwong"
+   ],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.neunet.2025.108172",
+   "title": "Newton\u2013Puiseux analysis for interpretability and calibration of complex-valued neural networks",
+   "date": "2026",
+   "venue": "Neural Networks",
+   "citations": 2,
+   "authors": [
+    "Piotr Migus"
+   ],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/ijcnn.1989.118324",
+   "title": "Sensor calibration using artificial neural networks",
+   "date": "1989",
+   "venue": "International Joint Conference on Neural Networks",
+   "citations": 1,
+   "authors": [
+    "Masory",
+    "Aguirre"
+   ],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.3995626",
+   "title": "Artificial Neural Networks for SABR Model Calibration &amp;amp; Hedging",
+   "date": "2022",
+   "venue": "",
+   "citations": 1,
+   "authors": [
+    "Hugues Thorin"
+   ],
+   "abstract": "SABR model is a reference in financial industry to price fixed income derivatives, thanks to its ability to capture the volatility smile. The goal of this thesis is to develop a technique based on SABR model which captures all non-linearities, be more robust, gives tradable parameters instantaneously and gives also instantaneously robust hedging parameters.",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1021/acs.analchem.0c01863.s001",
+   "title": "Sensitivity for Multivariate Calibration Based on Multilayer Perceptron Artificial Neural Networks",
+   "date": "",
+   "venue": "",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.11606/d.3.2019.tde-27052022-101649",
+   "title": "Automatic calibration of traffic microsimulations with artificial neural networks.",
+   "date": "",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Rodrigo Fran\u00e7a Daguano"
+   ],
+   "abstract": "",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.3798513",
+   "title": "FX Volatility Calibration Using Artificial Neural Networks",
+   "date": "2021",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Alex Winter"
+   ],
+   "abstract": "Recent years have witnessed a surge of interest in the application of artificial neural networks (ANNs) to the calibration of financial models. In this dissertation we explore two distinct but complementary applications of ANNs to the calibration of FX volatility models. We first consider Heston\u2019s stochastic volatility model, and demonstrate how the calibration map from quoted implied volatilities to model parameters can be effectively learned using an ANN. Once the supervised training step has been performed, the trained net can be used to perform calibrations at speeds orders of magnitude faster than more conventional optimization-based approaches.&lt;br&gt;&lt;br&gt;We next turn our attention to a local-stochastic variant of the Heston model, in which the pure stochastic model is augmented with a local component \u2014 the leverage function \u2014 enabling exact re-pricing of the input calibration set. There exists an extensive literature concerned with the calibration of these local-stochastic volatility (LSV) models. We explore the possibility of approximating the leverage function using a series of ANNs. The nets are trained in an unsupervised learning routine which seeks to minimize the discrepancy between market and model option prices. The latter are computed via Monte Carlo, and variance reduction techniques prove crucial in bringing calibration times down to reasonable levels. In numerical tests we were unable to achieve calibration speeds comparable to those of alternative ",
+   "query": "bench-calibration"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1162/089976698300017197",
+   "title": "Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms",
+   "date": "1998",
+   "venue": "Neural Computation",
+   "citations": 3090,
+   "authors": [
+    "Thomas G. Dietterich"
+   ],
+   "abstract": "This article reviews five approximate statistical tests for determining whether one learning algorithm outperforms another on a particular learning task. These test sare compared experimentally to determine their probability of incorrectly detecting a difference when no difference exists (type I error). Two widely used statistical tests are shown to have high probability of type I error in certain situations and should never be used: a test for the difference of two proportions and a paired-differences t test based on taking several random train-test splits. A third test, a paired-differences t test based on 10-fold cross-validation, exhibits somewhat elevated probability of type I error. A fourth test, McNemar's test, is shown to have low type I error. The fifth test is a new test, 5 \u00d7 2 cv, based on five iterations of twofold cross-validation. Experiments show that this test also has acceptable type I error. The article also measures the power (ability to detect algorithm differences when they do exist) of these tests. The cross-validated t test is the most powerful. The 5\u00d72 cv test is shown to be slightly more powerful than McNemar's test. The choice of the best test is determined by the computational cost of running the learning algorithm. For algorithms that can be executed only once, Mc-Nemar's test is the only test with acceptable type I error. For algorithms that can be executed 10 times, the 5 \u00d7 2 cv test is recommended, because it is slightly more powerful and becau",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1162/089976699300016007",
+   "title": "Combined 5 \u00d7 2 cv F Test for Comparing Supervised Classification Learning Algorithms",
+   "date": "1999",
+   "venue": "Neural Computation",
+   "citations": 331,
+   "authors": [
+    "Ethem Alpaydm"
+   ],
+   "abstract": "Dietterich (1998) reviews five statistical tests and proposes the 5 \u00d7 2 cvt test for determining whether there is a significant difference between the error rates of two classifiers. In our experiments, we noticed that the 5 \u00d7 2 cvt test result may vary depending on factors that should not affect the test, and we propose a variant, the combined 5 \u00d7 2 cv F test, that combines multiple statistics to get a more robust test. Simulation results show that this combined version of the test has lower type I error and higher power than 5 \u00d7 2 cv proper.",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1002/bimj.202200098",
+   "title": "Comparing linear discriminant analysis and supervised learning algorithms for binary classification\u2014A method comparison study",
+   "date": "2022",
+   "venue": "Biometrical Journal",
+   "citations": 54,
+   "authors": [
+    "Ricarda Graf",
+    "Marina Zeldovich",
+    "Sarah Friedrich"
+   ],
+   "abstract": "Abstract In psychology, linear discriminant analysis (LDA) is the method of choice for two\u2010group classification tasks based on questionnaire data. In this study, we present a comparison of LDA with several supervised learning algorithms. In particular, we examine to what extent the predictive performance of LDA relies on the multivariate normality assumption. As nonparametric alternatives, the linear support vector machine (SVM), classification and regression tree (CART), random forest (RF), probabilistic neural network (PNN), and the ensemble k conditional nearest neighbor (E k CNN) algorithms are applied. Predictive performance is determined using measures of overall performance, discrimination, and calibration, and is compared in two reference data sets as well as in a simulation study. The reference data are Likert\u2010type data, and comprise 5 and 10 predictor variables, respectively. Simulations are based on the reference data and are done for a balanced and an unbalanced scenario in each case. In order to compare the algorithms' performance, data are simulated from multivariate distributions with differing degrees of nonnormality. Results differ depending on the specific performance measure. The main finding is that LDA is always outperformed by RF in the bimodal data with respect to overall performance. Discriminative ability of the RF algorithm is often higher compared to LDA, but its model calibration is usually worse. Still LDA mostly ranges second in cases it is outpe",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1093/oso/9780198509844.003.0003",
+   "title": "Comparing Binary Tests And Regression Analysis",
+   "date": "2003",
+   "venue": "The Statistical Evaluation of Medical Tests for Classification and Prediction",
+   "citations": 15,
+   "authors": [
+    "Margaret Sullivan Pepe"
+   ],
+   "abstract": "Abstract Various factors can influence the performance of a medical test. The environment in which it is performed, characteristics of testers, characteristics of test subjects and operating parameters for the test are some such factors. It is important to identify and understand the influence of such factors in order to optimize conditions for using a test.",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/978-3-642-25566-3_1",
+   "title": "Multivariate Statistical Tests for Comparing Classification Algorithms",
+   "date": "2011",
+   "venue": "Lecture Notes in Computer Science",
+   "citations": 15,
+   "authors": [
+    "Olcay Taner Y\u0131ld\u0131z",
+    "\u00d6zlem Aslan",
+    "Ethem Alpayd\u0131n"
+   ],
+   "abstract": "",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.24017/science.2021.1.8",
+   "title": "Utilizing Statistical Tests for Comparing Machine Learning Algorithms",
+   "date": "2021",
+   "venue": "Kurdistan Journal of Applied Research",
+   "citations": 7,
+   "authors": [
+    "Hozan Khalid Hamarashid"
+   ],
+   "abstract": "The mean result of machine learning models is determined by utilizing k-fold cross-validation. The algorithm with the best average performance should surpass those with the poorest. But what if the difference in average outcomes is the consequence of a statistical anomaly? To conduct whether or not the mean result differences between two algorithms is genuine then statistical hypothesis test is utilized. Using statistical hypothesis testing, this study will demonstrate how to compare machine learning algorithms. The output of several machine learning algorithms or simulation pipelines is compared during model selection. The model that performs the best based on your performance measure becomes the last model, which can be utilized to make predictions on new data. With classification and regression prediction models it can be conducted by utilizing traditional machine learning and deep learning methods. The difficulty is to identify whether or not the difference between two models is accurate.",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.30534/ijeter/2022/081062022",
+   "title": "Comparing Supervised Machine Learning Algorithms on Classification Efficiency of multiclass classifications problem",
+   "date": "2022",
+   "venue": "International Journal of Emerging Trends in Engineering Research",
+   "citations": 2,
+   "authors": [],
+   "abstract": "Multi-class classification is a fascinating field to study. However, evaluating the classification performance of classifiers is difficult. Class indices such as accuracy, precision, recall, and F-measure, Kappa and area under the curve of receiver operating characteristics (AUC), can be used to evaluate classification performance. These indices describe the classification results achieved on each modelled class. Several measures have been introduced in the literature to deal with this assessment, the most commonly used being accuracy. In general these metrics were proposed to address binary classification tasks, whereas multiclass classification is the more difficult and currently active research area in machine learning (ML). In this paper, we intended to compare classification performance of nine supervised machine learning algorithms based on three learner types: statistical learner, rule-based learner and neural-base learner by considering accuracy, precision, recall and F-measure and ROC area achieved on four different datasets from UCI machine repository. Among these, Random forest has been the best performance in both 10 fold cross validation and percentage split with overall average accuracy of predictive power of 92.20% and 91.76% respectively, with less variability, whereas Na\u00efve Bayes has the worst also in both 10 fold cross validation and percentage split by average correct classification performance of 79.18% and 76.92% respectively, and also with higher variabi",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1007/3-540-49607-6_3",
+   "title": "Supervised Classification Using Genetic Algorithms",
+   "date": "",
+   "venue": "Natural Computing Series",
+   "citations": 0,
+   "authors": [
+    "Sanghamitra Bandyopadhyay",
+    "Sankar K. Pal"
+   ],
+   "abstract": "",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1214/lnms/1199996416",
+   "title": "Chapter 2: Comparing posterior distributions to Gibbs priors",
+   "date": "2007",
+   "venue": "Institute of Mathematical Statistics Lecture Notes - Monograph Series",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "bench-mcnemar"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.annepidem.2025.07.038",
+   "title": "From equations to algorithms: comparing statistical and supervised machine learning models to predict the rate of influenza incidence in Arizona",
+   "date": "2025",
+   "venue": "Annals of Epidemiology",
+   "citations": 0,
+   "authors": [
+    "Demelash Areda"
+   ],
+   "abstract": "",
+   "query": "bench-mcnemar"
+  },
   {
    "source": "crossref",
    "id": "doi:10.1007/s10489-007-0091-x",
@@ -244,6 +625,727 @@
    ],
    "abstract": "Robustness across heterogeneous optimization regimes remains a central challenge in bound-constrained continuous optimization. In practice, users often prefer optimizers that remain reliable across different dimensionalities, landscape structures, and evaluation budgets. Yet many Differential Evolution (DE) variants that perform strongly in one regime degrade substantially when transferred to others. To address this issue, we propose the Adaptive Restart--Refine Differential Evolution (ARRDE) algorithm, a DE variant designed explicitly for cross-regime robustness. ARRDE combines an adaptive restart--refine strategy, a nonlinear population-size reduction schedule that depends on problem dimensionality, and a budget-aware population-initialization rule for restricted-budget settings. Because robustness cannot be established credibly from a narrow experimental setting, we evaluate ARRDE on five benchmark suites: CEC2011, CEC2017, CEC2019, CEC2020, and CEC2022. These suites span markedly different dimensions, landscape characteristics, and evaluation budgets, making this, to the best of our knowledge, one of the most comprehensive robustness-oriented evaluations reported for a proposed DE variant in this context. Since their official performance metrics emphasize different aspects and are not directly comparable, we additionally introduce a bounded accuracy-based scoring metric derived from relative error for cross-suite robustness assessment. Using both the official suite-specific metrics and the proposed unified metric, ARRDE demonstrates consistently strong performance and one of the most stable aggregate profiles across the five suites. These results support ARRDE as a competitive DE variant for robust optimization across heterogeneous benchmark regimes.",
    "query": "jso"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.48550/arxiv.2308.11462",
+   "title": "LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models",
+   "date": "2023",
+   "venue": "arXiv (Cornell University)",
+   "citations": 354,
+   "authors": [
+    "Neel Guha",
+    "Julian Nyarko",
+    "Daniel E. Ho",
+    "Christopher R\u00e9"
+   ],
+   "abstract": "The advent of large language models (LLMs) and their adoption by the legal community has given rise to the question: what types of legal reasoning can LLMs perform? To enable greater study of this question, we present LegalBench: a collaboratively constructed legal reasoning benchmark consisting of 162 tasks covering six different types of legal reasoning. LegalBench was built through an interdisciplinary process, in which we collected tasks designed and hand-crafted by legal professionals. Because these subject matter experts took a leading role in construction, tasks either measure legal reasoning capabilities that are practically useful, or measure reasoning skills that lawyers find interesting. To enable cross-disciplinary conversations about LLMs in the law, we additionally show how popular legal frameworks for describing legal reasoning -- which distinguish between its many forms -- correspond to LegalBench tasks, thus giving lawyers and LLM developers a common vocabulary. This paper describes LegalBench, presents an empirical evaluation of 20 open-source and commercial LLMs, and illustrates the types of research explorations LegalBench enables.",
+   "query": "legal-bench"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.48550/arxiv.2408.10343",
+   "title": "LegalBench-RAG: A Benchmark for Retrieval-Augmented Generation in the Legal Domain",
+   "date": "2024",
+   "venue": "arXiv (Cornell University)",
+   "citations": 251,
+   "authors": [
+    "Nicholas Pipitone",
+    "Ghita Houir Alami"
+   ],
+   "abstract": "Retrieval-Augmented Generation (RAG) systems are showing promising potential, and are becoming increasingly relevant in AI-powered legal applications. Existing benchmarks, such as LegalBench, assess the generative capabilities of Large Language Models (LLMs) in the legal domain, but there is a critical gap in evaluating the retrieval component of RAG systems. To address this, we introduce LegalBench-RAG, the first benchmark specifically designed to evaluate the retrieval step of RAG pipelines within the legal space. LegalBench-RAG emphasizes precise retrieval by focusing on extracting minimal, highly relevant text segments from legal documents. These highly relevant snippets are preferred over retrieving document IDs, or large sequences of imprecise chunks, both of which can exceed context window limitations. Long context windows cost more to process, induce higher latency, and lead LLMs to forget or hallucinate information. Additionally, precise results allow LLMs to generate citations for the end user. The LegalBench-RAG benchmark is constructed by retracing the context used in LegalBench queries back to their original locations within the legal corpus, resulting in a dataset of 6,858 query-answer pairs over a corpus of over 79M characters, entirely human-annotated by legal experts. We also introduce LegalBench-RAG-mini, a lightweight version for rapid iteration and experimentation. By providing a dedicated benchmark for legal retrieval, LegalBench-RAG serves as a critical tool for companies and researchers focused on enhancing the accuracy and performance of RAG systems in the legal domain. The LegalBench-RAG dataset is publicly available at https://github.com/zeroentropy-cc/legalbenchrag.",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.5336635",
+   "title": "Causalbench: A Multi-Domain Benchmark for Evaluating Causal Reasoning in Large Language Models",
+   "date": "2025",
+   "venue": "",
+   "citations": 1,
+   "authors": [
+    "Miao Zhang",
+    "Haoyue Han",
+    "Yiqing Shen"
+   ],
+   "abstract": "",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.58837/chula.the.2025.1111",
+   "title": "Enhancing Thai legal reasoning in large language models using group relative policy optimization",
+   "date": "",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Pawitsapak Akarajaradwong"
+   ],
+   "abstract": "The application of Large Language Models (LLMs) to Thai legal question answering (QA) presents significant opportunities but faces challenges, particularly with complex legal reasoning, accurate citation, and the high cost of advanced alignment techniques. This thesis addresses these issues through a two-fold contribution. Firstly, it details the development of NitiBench, a comprehensive benchmark specifically designed for Thai legal QA. NitiBench, comprising the NitiBench-CCL and NitiBench-Tax datasets, was instrumental in identifying critical performance gaps in existing Retrieval-Augmented Generation (RAG) systems, particularly in areas of citation accuracy and handling complex legal queries, even when perfect contextual information was provided. This highlighted a key bottleneck in the LLM's inherent reasoning capabilities. Building upon these findings, the second major contribution of this thesis is the introduction and evaluation of our proposed approach to improve LLMs for Thai legal Question Answering. We propose using Group-Relative Policy Optimization (GRPO) combined with efficient reward proxies. Our method leverages BGE-M3 embeddings for cost-effective answer quality rewarding using semantic similarity score, which significantly reducing computational costs compared to traditional LLM-based judges. Experiments conducted on NitiBench demonstrate that our approach achieves substantial improvements, including up to 90\\% gains in citation F1-score and a 31\\% increase ",
+   "query": "legal-bench"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2209.06120v1",
+   "title": "LegalBench: Prototyping a Collaborative Benchmark for Legal Reasoning",
+   "date": "2022-09-13",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Neel Guha",
+    "Daniel E. Ho",
+    "Julian Nyarko",
+    "Christopher R\u00e9"
+   ],
+   "abstract": "Can foundation models be guided to execute tasks involving legal reasoning? We believe that building a benchmark to answer this question will require sustained collaborative efforts between the computer science and legal communities. To that end, this short paper serves three purposes. First, we describe how IRAC-a framework legal scholars use to distinguish different types of legal reasoning-can guide the construction of a Foundation Model oriented benchmark. Second, we present a seed set of 44 tasks built according to this framework. We discuss initial findings, and highlight directions for new tasks. Finally-inspired by the Open Science movement-we make a call for the legal and computer science communities to join our efforts by contributing new tasks. This work is ongoing, and our progress can be tracked here: https://github.com/HazyResearch/legalbench.",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.26434/chemrxiv-2025-hjtsn",
+   "title": "A Comprehensive Benchmark and Hierarchical Reasoning Prompting for Large Language Models in Engineering Problem Solving Evaluation",
+   "date": "2025",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Apiradee Boonmee",
+    "Kritdanai Vongchai"
+   ],
+   "abstract": "Recent progress in language models has shown great potential, yet their performance in highly specialized engineering fields\u2014requiring strict precision, logical rigor, and nuanced design reasoning\u2014remains insufficiently explored. This work presents EngiBench, a comprehensive evaluation framework designed to systematically assess model capabilities in engineering knowledge, computation, reasoning, and judgment across diverse sub-domains. To improve reliability and interpretability, we propose a Hierarchical Reasoning Prompting (HRP) strategy that mirrors the structured thinking process of human engineers, involving problem decomposition, knowledge application, analytical reasoning, and validation. We further construct EngiBench-QA, a curated dataset of expert-annotated question\u2013answer pairs, along with EngiBench-Mini for human expert comparison. Experimental results show that HRP notably enhances model accuracy and consistency, surpassing conventional prompting and achieving strong alignment with expert-level reasoning. Nonetheless, challenges persist in open-ended design, complex simulation, and managing overconfidence.",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21203/rs.3.rs-8251575/v1",
+   "title": "SCALER: A Procedurally Generated, Leakage-Resistant Benchmark for Evaluating Multi-Step Reasoning in Large Language Models",
+   "date": "2025",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Amirali Ghajari"
+   ],
+   "abstract": "Abstract The evaluation of multi-step reasoning capabilities in Large Language Models (LLMs) faces three fundamental challenges that threaten the validity of current benchmarking paradigms: pervasive benchmark contamination through training data leakage, ceiling effects that eliminate discriminative power on static test sets, and the absence of principled methods to systematically characterize how reasoning accuracy degrades with task complexity. We introduce SCALER (Systematic Complexity Assessment for Language-based Evaluation of Reasoning), a comprehensive theoretical framework and practical system for procedurally generating reasoning tasks with precisely controlled and mathematically grounded difficulty parameters. Our framework leverages established computational libraries including SymPy for symbolic computation and NetworkX for graph-theoretic operations to produce problems across six diverse reasoning domains: arithmetic chains, symbolic algebra, graph traversal, logical deduction, constraint satisfaction, and compositional reasoning. Each generated instance comes with mathematically verified solutions and complete ground-truth reasoning traces derived from the generation process itself. We formalize task difficulty through a multi-dimensional complexity metric $\\complexity(\\task)$ that decomposes reasoning demands into interpretable components: reasoning depth (chain length), branching factor (search space size), working memory load (cognitive state requirements), a",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.6803400",
+   "title": "EconBench: Rethinking Evaluation for Economic Reasoning in Large Language Models beyond Benchmark Saturation",
+   "date": "2026",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Justin Yan"
+   ],
+   "abstract": "&lt;p&gt;Existing benchmarks for evaluating large language model (LLM) performance on economics and finance tasks suffer from a fundamental measurement problem: they conflate surface fluency with structural economic reasoning, rewarding models that retrieve and recombine memorized content over those that genuinely reason about scarcity, incentives, and equilibrium. As LLMs increasingly saturate these benchmarks\u2014with frontier models exceeding 85% on FLARE, FinQA, and related datasets\u2014the field lacks tools to distinguish genuine economic understanding from sophisticated pattern matching. We introduce EconBench, a hierarchically structured evaluation framework comprising 4,200 expert-curated items spanning five reasoning strata: definitional recall, conceptual application, multi-step causal inference, equilibrium analysis under uncertainty, and institutional-context-dependent reasoning. Items are constructed to resist memorization through (a) novel scenario framing that preserves causal structure while altering surface features, (b) deliberate inclusion of plausible distractor reasoning chains, and (c) adversarial perturbation of standard textbook formulations. We evaluate fourteen frontier and open-weight LLMs and find systematic performance stratification: all models perform competitively at Strata 1\u20132 (definitional and applied), but diverge sharply at Strata 3\u20135, with the best model (GPT-4o) achieving only 51.3% at Stratum 5 compared to an expert economist baseline of 84.7%. ",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.6445098",
+   "title": "THERMOQA: A Three-Tier Benchmark for Evaluating Thermodynamic Reasoning in Large Language Models",
+   "date": "2026",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Kemal Duzkar"
+   ],
+   "abstract": "We present THERMOQA, a benchmark of 293 open-ended engineering thermodynamics problems in three tiers: property lookups (110 Q), component analysis (101 Q), and full cycle analysis (82 Q). Ground truth is computed programmatically from CoolProp 7.2.0, covering water, R-134a, and variablec p air. Six frontier LLMs are evaluated across three independent runs each. The composite leaderboard is led by Claude Opus 4.6 (94.1%), GPT-5.4 (93.1%), and Gemini 3.1 Pro (92.5%). Cross-tier degradation ranges from 2.8 pp (Opus) to 32.5 pp (MiniMax), confirming that property memorization does not imply thermodynamic reasoning. Supercritical water, R-134a refrigerant, and combined-cycle gas turbine analysis serve as natural discriminators with 40-60 pp performance spreads. Multi-run \u03c3 ranges from \u00b10.1% to \u00b12.5%, quantifying reasoning consistency as a distinct evaluation axis. Dataset and code are open-source at https://huggingface.co/datasets/olivenet/thermoqa.",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21203/rs.3.rs-9181514/v1",
+   "title": "CausalReasonBench: A Comprehensive Benchmark for Evaluating Causal Reasoning Capabilities of Large Language Models",
+   "date": "2026",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Ahmed Cherif"
+   ],
+   "abstract": "Abstract Causal reasoning\u2014the ability to identify cause-effect relationships, predictdownstream effects, construct counterfactuals, and trace causal chains\u2014is a fundamental requirement for trustworthy AI systems deployed in expert domains.Despite the remarkable performance of large language models (LLMs) on awide range of natural language understanding tasks, their capacity for rigorouscausal reasoning remains poorly understood and insufficiently benchmarked. Weintroduce CausalReasonBench, a comprehensive benchmark evaluating LLMson four causal reasoning task types across four real-world domains (physical,social, biological, technological) at three difficulty levels, yielding 384 controlledevaluation instances per model. We propose three automatic metrics: CausalIdentification Rate (CIR), Causal Logic Precision (CLP), and CounterfactualCoherence Ratio (CCR), combined into the Composite Assessment of Reasoning (CAR). Extensive experiments with three open LLMs under four promptingstrategies reveal that: (i) Socratic prompting outperforms chain-of-thought oncounterfactual tasks by +0.09 CAR; (ii) biological and social domains exhibitthe largest performance gaps across models, indicating domain-specific knowledge deficiencies; (iii) adversarial scenarios expose systematic over-attributionof causality in all models, with correlation-as-causation error rates exceeding40%. We provide detailed analyses of sub-question quality, error taxonomies, anddomain-specific failure modes. Causa",
+   "query": "legal-bench"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.6641752",
+   "title": "Structural Simulation Benchmark for Reasoning Large Language Models: Accuracy, Reliability, and Failure Modes",
+   "date": "2026",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Mingyu Wang",
+    "Jiaji Wang"
+   ],
+   "abstract": "Large language models (LLMs), particularly reasoning-oriented models optimized for long-horizon and multi-step inference, are increasingly used to assist programming and scientific research. However, their reliability in structural engineering computations\u2014where validity is highly sensitive to implementation details\u2014remains insufficiently quantified. This study evaluates four recent reasoning-oriented LLMs (Claude Sonnet 4.5, DeepSeekV3.2, GPT5, and Grok 4 Fastreasoning) under a unified API-based setup with default parameters and proposes a novel evaluation framework tailored for structural simulation. Five problems are designed to cover linear elasticity problems, forced vibration of a Timoshenko beam, and frame analysis. Solution strategies are constrained for comparability, and all generated codes are executed in a fixed Python environment with results verified against ABAQUS simulations or analytical solutions. The framework explicitly probes the importance of boundary conditions, selection of modeling assumptions, and implementation robustness. Common failure modes include incorrect treatment of traction-free boundaries, local-to-global transformation errors due to inconsistent local-axis definitions, and numerical instability induced by the choices of ways to impose boundary conditions. Overall reliability shows GPT\u20105 is best model among those models tested. These findings suggest that verification-oriented workflows and automated consistency checks are essential for th",
+   "query": "legal-bench"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2604.18878v1",
+   "title": "LegalBench-BR: A Benchmark for Evaluating Large Language Models on Brazilian Legal Decision Classification",
+   "date": "2026-04-20",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Pedro Barbosa de Carvalho Neto"
+   ],
+   "abstract": "We introduce LegalBench-BR, the first public benchmark for evaluating language models on Brazilian legal text classification. The dataset comprises 3,105 appellate proceedings from the Santa Catarina State Court (TJSC), collected via the DataJud API (CNJ) and annotated across five legal areas through LLM-assisted labeling with heuristic validation. On a class-balanced test set, BERTimbau-LoRA, updating only 0.3% of model parameters, achieves 87.6% accuracy and 0.87 macro-F1 (+22pp over Claude 3.5 Haiku, +28pp over GPT-4o mini). The gap is most striking on administrativo (administrative law): GPT-4o mini scores F1 = 0.00 and Claude 3.5 Haiku scores F1 = 0.08 on this class, while the fine-tuned model reaches F1 = 0.91. Both commercial LLMs exhibit a systematic bias toward civel (civil law), absorbing ambiguous classes rather than discriminating them, a failure mode that domain-adapted fine-tuning eliminates. These results demonstrate that general-purpose LLMs cannot substitute for domain-adapted models in Brazilian legal classification, even when the task is a simple 5-class problem, and that LoRA fine-tuning on a consumer GPU closes the gap at zero marginal inference cost. We release the full dataset, model, and pipeline to enable reproducible research in Portuguese legal NLP.",
+   "query": "legal-bench"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.18699v2",
+   "title": "TW-LegalBench: Measuring Taiwanese Legal Understanding",
+   "date": "2026-06-17",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Fei-Yueh Chen",
+    "Chun Huang Lin",
+    "Chan Wei Hsu",
+    "Kuan Hsuan Yeh"
+   ],
+   "abstract": "Large language models (LLMs) have shown impressive capabilities across diverse tasks, yet their performance on jurisdiction-specific legal reasoning remains underexplored. We present TW-LegalBench that utilizes Taiwanese legal system's rich official corpus open to the public to fill the gap in evaluating LLMs on Taiwanese law, among common-law benchmarks that focus on English sources and civil-law benchmarks focusing on sources of Simplified Chinese. TW-LegalBench comprises three task types: (1) over 16,000 multiple-choice questions (MCQs) across five years of official examinations in 18 professional domains; (2) 117 open-ended essay questions (OEQs) from examinations for legal professionals with official scoring rubrics; and (3) more than 14,000 legal judgment prediction (LJP) instances covering hundreds of crime categories. We evaluate 13 LLMs using accuracy for MCQs, a decomposed LLM-as-Judge framework based on the scoring rubric points for OEQs, and metrics for sentencing accuracy and statute citation for LJP. Our results reveal that top-performing models exceed the passing threshold for qualified lawyers (passing rate: 11%) but fall short of that for judges and prosecutors (passing rate: 1~2%). For LJP, while models demonstrate reasonable verdict type accuracy and sentence prediction capability, they struggle to cite exact legal articles. These findings highlight that reliable legal text generation remains challenging for LLMs, even though their performance on qualification examinations approaches human level.",
+   "query": "legal-bench"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2302.05729v2",
+   "title": "A Brief Report on LawGPT 1.0: A Virtual Legal Assistant Based on GPT-3",
+   "date": "2023-02-11",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Ha-Thanh Nguyen"
+   ],
+   "abstract": "LawGPT 1.0 is a virtual legal assistant built on the state-of-the-art language model GPT-3, fine-tuned for the legal domain. The system is designed to provide legal assistance to users in a conversational manner, helping them with tasks such as answering legal questions, generating legal documents, and providing legal advice. In this paper, we provide a brief overview of LawGPT 1.0, its architecture, and its performance on a set of legal benchmark tasks. Please note that the detailed information about the model is protected by a non-disclosure agreement (NDA) and cannot be disclosed in this report.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2406.19760v1",
+   "title": "Learning Interpretable Legal Case Retrieval via Knowledge-Guided Case Reformulation",
+   "date": "2024-06-28",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Chenlong Deng",
+    "Kelong Mao",
+    "Zhicheng Dou"
+   ],
+   "abstract": "Legal case retrieval for sourcing similar cases is critical in upholding judicial fairness. Different from general web search, legal case retrieval involves processing lengthy, complex, and highly specialized legal documents. Existing methods in this domain often overlook the incorporation of legal expert knowledge, which is crucial for accurately understanding and modeling legal cases, leading to unsatisfactory retrieval performance. This paper introduces KELLER, a legal knowledge-guided case reformulation approach based on large language models (LLMs) for effective and interpretable legal case retrieval. By incorporating professional legal knowledge about crimes and law articles, we enable large language models to accurately reformulate the original legal case into concise sub-facts of crimes, which contain the essential information of the case. Extensive experiments on two legal case retrieval benchmarks demonstrate superior retrieval performance and robustness on complex legal case queries of KELLER over existing methods.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2502.06882v1",
+   "title": "Multi-Agent Simulator Drives Language Models for Legal Intensive Interaction",
+   "date": "2025-02-08",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Shengbin Yue",
+    "Ting Huang",
+    "Zheng Jia",
+    "Siyuan Wang"
+   ],
+   "abstract": "Large Language Models (LLMs) have significantly advanced legal intelligence, but the scarcity of scenario data impedes the progress toward interactive legal scenarios. This paper introduces a Multi-agent Legal Simulation Driver (MASER) to scalably generate synthetic data by simulating interactive legal scenarios. Leveraging real-legal case sources, MASER ensures the consistency of legal attributes between participants and introduces a supervisory mechanism to align participants' characters and behaviors as well as addressing distractions. A Multi-stage Interactive Legal Evaluation (MILE) benchmark is further constructed to evaluate LLMs' performance in dynamic legal scenarios. Extensive experiments confirm the effectiveness of our framework.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2505.03970v1",
+   "title": "A Reasoning-Focused Legal Retrieval Benchmark",
+   "date": "2025-05-06",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Lucia Zheng",
+    "Neel Guha",
+    "Javokhir Arifov",
+    "Sarah Zhang"
+   ],
+   "abstract": "As the legal community increasingly examines the use of large language models (LLMs) for various legal applications, legal AI developers have turned to retrieval-augmented LLMs (\"RAG\" systems) to improve system performance and robustness. An obstacle to the development of specialized RAG systems is the lack of realistic legal RAG benchmarks which capture the complexity of both legal retrieval and downstream legal question-answering. To address this, we introduce two novel legal RAG benchmarks: Bar Exam QA and Housing Statute QA. Our tasks correspond to real-world legal research tasks, and were produced through annotation processes which resemble legal research. We describe the construction of these benchmarks and the performance of existing retriever pipelines. Our results suggest that legal RAG remains a challenging application, thus motivating future research.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2506.06619v3",
+   "title": "BriefMe: A Legal NLP Benchmark for Assisting with Legal Briefs",
+   "date": "2025-06-07",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Jesse Woo",
+    "Fateme Hashemi Chaleshtori",
+    "Ana Marasovi\u0107",
+    "Kenneth Marino"
+   ],
+   "abstract": "A core part of legal work that has been under-explored in Legal NLP is the writing and editing of legal briefs. This requires not only a thorough understanding of the law of a jurisdiction, from judgments to statutes, but also the ability to make new arguments to try to expand the law in a new direction and make novel and creative arguments that are persuasive to judges. To capture and evaluate these legal skills in language models, we introduce BRIEFME, a new dataset focused on legal briefs. It contains three tasks for language models to assist legal professionals in writing briefs: argument summarization, argument completion, and case retrieval. In this work, we describe the creation of these tasks, analyze them, and show how current models perform. We see that today's large language models (LLMs) are already quite good at the summarization and guided completion tasks, even beating human-generated headings. Yet, they perform poorly on other tasks in our benchmark: realistic argument completion and retrieving relevant legal cases. We hope this dataset encourages more development in Legal NLP in ways that will specifically aid people in performing legal work.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2510.17602v2",
+   "title": "LexChain: Modeling Legal Reasoning Chains for Chinese Tort Case Analysis",
+   "date": "2025-10-20",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Huiyuan Xie",
+    "Chenyang Li",
+    "Huining Zhu",
+    "Chubin Zhang"
+   ],
+   "abstract": "Legal reasoning is a fundamental component of legal analysis and decision-making. Existing computational approaches to legal reasoning predominantly rely on generic reasoning frameworks such as syllogism, which do not comprehensively examine the nuanced process of legal reasoning. Moreover, current research has largely focused on criminal cases, with insufficient modeling for civil cases. In this work, we present a novel framework to explicitly model legal reasoning in the analysis of Chinese tort-related civil cases. We first operationalize the legal reasoning process in tort analysis into the three-module LexChain framework, with each module consisting of multiple finer-grained sub-steps. Informed by the LexChain framework, we introduce the task of tort legal reasoning and construct an evaluation benchmark to systematically assess the critical steps within analytical reasoning chains for tort analysis. Leveraging this benchmark, we evaluate existing large language models for their legal reasoning ability in civil tort contexts. Our results indicate that current models still fall short in accurately handling crucial elements of tort legal reasoning. Furthermore, we introduce several baseline approaches that explicitly incorporate LexChain-style reasoning through prompting or post-training. The proposed baselines achieve significant improvements in tort-related legal reasoning and generalize well to related legal analysis tasks, demonstrating the value of explicitly modeling legal reasoning chains to enhance the reasoning capabilities of language models.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2512.14554v7",
+   "title": "Benchmarking Vietnamese Legal Knowledge of Large Language Models",
+   "date": "2025-12-16",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Nguyen Tien Dong",
+    "Minh-Anh Nguyen",
+    "Thanh Dat Hoang",
+    "Nguyen Tuan Ngoc"
+   ],
+   "abstract": "The rapid advancement of large language models (LLMs) has enabled new possibilities for applying artificial intelligence within the legal domain. Nonetheless, the complexity, hierarchical organization, and frequent revisions of Vietnamese legislation pose considerable challenges for evaluating how well these models interpret and utilize legal knowledge. To address this gap, the Vietnamese Legal Benchmark (VLegal-Bench) is introduced, the first comprehensive benchmark designed to systematically assess LLMs on Vietnamese legal tasks. Informed by Bloom's cognitive taxonomy, VLegal-Bench encompasses multiple levels of legal understanding through tasks designed to reflect practical usage scenarios. The benchmark comprises 10,450 samples generated through a rigorous annotation pipeline, where legal experts label and cross-validate each instance using our annotation system to ensure every sample is grounded in authoritative legal documents and mirrors real-world legal assistant workflows, including general legal questions and answers, retrieval-augmented generation, multi-step reasoning, and scenario-based problem solving tailored to Vietnamese law. By providing a standardized, transparent, and cognitively informed evaluation framework, VLegal-Bench establishes a solid foundation for assessing LLM performance in Vietnamese legal contexts and supports the development of more reliable, interpretable, and ethically aligned AI-assisted legal systems. To facilitate access and reproducibility, we provide a public landing page for this benchmark at https://vilegalbench.cmcai.vn/.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2605.00116v1",
+   "title": "ViLegalNLI: Natural Language Inference for Vietnamese Legal Texts",
+   "date": "2026-04-30",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Nhung Thi-Hong Duong",
+    "Mai Ngoc Ho",
+    "Tin Van Huynh",
+    "Kiet Van Nguyen"
+   ],
+   "abstract": "In this article, we introduce ViLegalNLI, the first large-scale Vietnamese Natural Language Inference (NLI) dataset specifically constructed for the legal domain. The dataset consists of 42,012 premise-hypothesis pairs derived from official statutory documents and annotated with binary inference labels (Entailment and Non-entailment). It covers multiple legal domains and reflects realistic legal reasoning scenarios characterized by structured logic, conditional clauses, and domain-specific terminology. To construct ViLegalNLI, we propose a semi-automatic data generation framework that integrates large language models for controlled hypothesis generation and systematic quality validation procedures. The framework incorporates artifact mitigation strategies and cross-model validation to improve annotation reliability and ensure legal consistency. The resulting dataset captures diverse reasoning patterns, including paraphrasing, logical implication, and legally invalid inferences, thereby providing a comprehensive benchmark for Vietnamese legal inference tasks. We conduct extensive experiments on the ViLegalNLI using multilingual models, Vietnamese-specific pretrained language models, and instruction-tuned large language models. The results show that few-shot LLM configurations consistently achieve superior performance, while performance is significantly influenced by hypothesis length, lexical overlap, and reasoning complexity. Cross-domain evaluations further reveal the challenges of generalizing legal inference across distinct legal fields. Overall, ViLegalNLI establishes a foundational benchmark for Vietnamese legal NLI and supports future research in legal reasoning, statutory text understanding, and the development of reliable AI systems for legal analysis and decision support. The dataset is publicly available for research purposes.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.18158v1",
+   "title": "The Measurement Gap in the Automation of EU Law: Benchmarking Doctrinal Legal Reasoning under the EU AI Act",
+   "date": "2026-06-16",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Mich\u00e8le Finck"
+   ],
+   "abstract": "Large language models now produce legal text of at least median quality, yet no existing benchmark can evaluate whether they perform doctrinal legal reasoning, which forms the interpretive core of legal work, rather than the ancillary, paralegal tasks that most current legal-AI evaluations measure. This measurement gap is not only methodological but legal: the EU AI Act makes \"appropriate accuracy\" a binding requirement for high-risk AI used in the judicial domain, yet that requirement cannot acquire operational content without the very doctrinal-reasoning benchmark the field lacks.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2609.39189v1",
+   "title": "ViLegalExpert: A Large-Scale Benchmark for Vietnamese Legal Retrieval and Question Answering from Real-World Consultations",
+   "date": "2026-09-30",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Dat Tien Nguyen",
+    "Nghia Hieu Nguyen",
+    "Anh Thi-Hoang Nguyen",
+    "Dung Ha Nguyen"
+   ],
+   "abstract": "Trustworthy Legal AI requires systems that can answer legal questions while grounding their responses in authoritative sources. However, existing Vietnamese legal benchmarks provide limited coverage of real-world legal consultations. We introduce \\textbf{ViLegalExpert}, a large-scale benchmark constructed from authentic citizen--lawyer consultations, containing over \\textbf{172K} questions across \\textbf{34 legal domains}, together with professional answers and expert-verified legal evidence. ViLegalExpert supports legal information retrieval, extractive QA, and abstractive QA. Experiments with representative retrieval methods and language models reveal substantial challenges in evidence retrieval and grounded answer generation. While pretrained models perform strongly on QA, hybrid retrieval achieves the best retrieval performance. These results demonstrate the difficulty of mapping naturally expressed legal questions to authoritative provisions and establish ViLegalExpert as a challenging benchmark for reliable Vietnamese Legal AI.",
+   "query": "legal-benchmark"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.48550/arxiv.2103.06268",
+   "title": "CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review",
+   "date": "2021",
+   "venue": "arXiv (Cornell University)",
+   "citations": 571,
+   "authors": [
+    "Dan Hendrycks",
+    "Collin Burns",
+    "Anya Chen",
+    "Spencer Ball"
+   ],
+   "abstract": "Many specialized domains remain untouched by deep learning, as large labeled datasets require expensive expert annotators. We address this bottleneck within the legal domain by introducing the Contract Understanding Atticus Dataset (CUAD), a new dataset for legal contract review. CUAD was created with dozens of legal experts from The Atticus Project and consists of over 13,000 annotations. The task is to highlight salient portions of a contract that are important for a human to review. We find that Transformer models have nascent performance, but that this performance is strongly influenced by model design and training dataset size. Despite these promising results, there is still substantial room for improvement. As one of the only large, specialized NLP benchmarks annotated by experts, CUAD can serve as a challenging research benchmark for the broader NLP community.",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1109/icaiss58487.2023.10250733",
+   "title": "AI Enabled- Information Retrival Engine (AI-IRE) in Legal Services: An Expert-Annotated NLP for Legal Judgements",
+   "date": "2023",
+   "venue": "2023 Second International Conference on Augmented Intelligence and Sustainable Systems (ICAISS)",
+   "citations": 33,
+   "authors": [
+    "Kishan Kanhaiya",
+    "Naveen",
+    "Arpit Kumar Sharma",
+    "Kamlesh Gautam"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1016/j.eswa.2024.125296",
+   "title": "Application of NLP-based models in automated detection of risky contract statements written in complex script system",
+   "date": "2025",
+   "venue": "Expert Systems with Applications",
+   "citations": 25,
+   "authors": [
+    "Mohammad Hossein Kazemi",
+    "Amin Alvanchi"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.18653/v1/2023.emnlp-main.1019",
+   "title": "MAUD: An Expert-Annotated Legal NLP Dataset for Merger Agreement Understanding",
+   "date": "2023",
+   "venue": "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
+   "citations": 24,
+   "authors": [
+    "Steven Wang",
+    "Antoine Scardigli",
+    "Leonard Tang",
+    "Wei Chen"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.18653/v1/2025.findings-emnlp.422",
+   "title": "COMI-LINGUA: Expert Annotated Large-Scale Dataset for Multitask NLP in Hindi-English Code-Mixing",
+   "date": "2025",
+   "venue": "Findings of the Association for Computational Linguistics: EMNLP 2025",
+   "citations": 4,
+   "authors": [
+    "Rajvee Sheth",
+    "Himanshu Beniwal",
+    "Mayank Singh"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.18653/v1/2025.acl-long.1206",
+   "title": "ACORD: An Expert-Annotated Retrieval Dataset for Legal Contract Drafting",
+   "date": "2025",
+   "venue": "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+   "citations": 4,
+   "authors": [
+    "Steven H Wang",
+    "Maksim Zubkov",
+    "Kexin Fan",
+    "Sarah Harrell"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.18653/v1/2025.justnlp-main.4",
+   "title": "LeCNet: A Legal Citation Network Benchmark Dataset",
+   "date": "2025",
+   "venue": "Proceedings of the 1st Workshop on NLP for Empowering Justice (JUST-NLP 2025)",
+   "citations": 1,
+   "authors": [
+    "Pooja Harde",
+    "Bhavya Jain",
+    "Sarika Jain"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1163/9789004642096_032",
+   "title": "IATA Cargo Air Waybill \u2013 Conditions of Contract",
+   "date": "1988",
+   "venue": "The Warsaw Convention Annotated",
+   "citations": 0,
+   "authors": [
+    "Lawrence B. Goldhirsch"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1163/9789004642096_031",
+   "title": "IATA Passenger Ticket Notices and Conditions of Contract",
+   "date": "1988",
+   "venue": "The Warsaw Convention Annotated",
+   "citations": 0,
+   "authors": [
+    "Lawrence B. Goldhirsch"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2010.10386v1",
+   "title": "A Benchmark for Lease Contract Review",
+   "date": "2020-10-20",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Spyretta Leivaditi",
+    "Julien Rossi",
+    "Evangelos Kanoulas"
+   ],
+   "abstract": "Extracting entities and other useful information from legal contracts is an important task whose automation can help legal professionals perform contract reviews more efficiently and reduce relevant risks. In this paper, we tackle the problem of detecting two different types of elements that play an important role in a contract review, namely entities and red flags. The latter are terms or sentences that indicate that there is some danger or other potentially problematic situation for one or more of the signing parties. We focus on supporting the review of lease agreements, a contract type that has received little attention in the legal information extraction literature, and we define the types of entities and red flags needed for that task. We release a new benchmark dataset of 179 lease agreement documents that we have manually annotated with the entities and red flags they contain, and which can be used to train and test relevant extraction algorithms. Finally, we release a new language model, called ALeaseBERT, pre-trained on this dataset and fine-tuned for the detection of the aforementioned elements, providing a baseline for further research",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2012.08150v1",
+   "title": "Learning to Check Contract Inconsistencies",
+   "date": "2020-12-15",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Shuo Zhang",
+    "Junzhou Zhao",
+    "Pinghui Wang",
+    "Nuo Xu"
+   ],
+   "abstract": "Contract consistency is important in ensuring the legal validity of the contract. In many scenarios, a contract is written by filling the blanks in a precompiled form. Due to carelessness, two blanks that should be filled with the same (or different)content may be incorrectly filled with different (or same) content. This will result in the issue of contract inconsistencies, which may severely impair the legal validity of the contract. Traditional methods to address this issue mainly rely on manual contract review, which is labor-intensive and costly. In this work, we formulate a novel Contract Inconsistency Checking (CIC) problem, and design an end-to-end framework, called Pair-wise Blank Resolution (PBR), to solve the CIC problem with high accuracy. Our PBR model contains a novel BlankCoder to address the challenge of modeling meaningless blanks. BlankCoder adopts a two-stage attention mechanism that adequately associates a meaningless blank with its relevant descriptions while avoiding the incorporation of irrelevant context words. Experiments conducted on real-world datasets show the promising performance of our method with a balanced accuracy of 94.05% and an F1 score of 90.90% in the CIC problem.",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.18653/v1/2023.vardial-1.3",
+   "title": "Murreviikko - A Dialectologically Annotated and Normalized Dataset of Finnish Tweets",
+   "date": "2023",
+   "venue": "Tenth Workshop on NLP for Similar Languages, Varieties and Dialects (VarDial 2023)",
+   "citations": 0,
+   "authors": [
+    "Olli Kuparinen"
+   ],
+   "abstract": "",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2501.17194v1",
+   "title": "AI-assisted German Employment Contract Review: A Benchmark Dataset",
+   "date": "2025-01-27",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Oliver Wardas",
+    "Florian Matthes"
+   ],
+   "abstract": "Employment contracts are used to agree upon the working conditions between employers and employees all over the world. Understanding and reviewing contracts for void or unfair clauses requires extensive knowledge of the legal system and terminology. Recent advances in Natural Language Processing (NLP) hold promise for assisting in these reviews. However, applying NLP techniques on legal text is particularly difficult due to the scarcity of expert-annotated datasets. To address this issue and as a starting point for our effort in assisting lawyers with contract reviews using NLP, we release an anonymized and annotated benchmark dataset for legality and fairness review of German employment contract clauses, alongside with baseline model evaluations.",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2510.19334v1",
+   "title": "Metadata Extraction Leveraging Large Language Models",
+   "date": "2025-10-22",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Cuize Han",
+    "Sesh Jalagam"
+   ],
+   "abstract": "The advent of Large Language Models has revolutionized tasks across domains, including the automation of legal document analysis, a critical component of modern contract management systems. This paper presents a comprehensive implementation of LLM-enhanced metadata extraction for contract review, focusing on the automatic detection and annotation of salient legal clauses. Leveraging both the publicly available Contract Understanding Atticus Dataset (CUAD) and proprietary contract datasets, our work demonstrates the integration of advanced LLM methodologies with practical applications. We identify three pivotal elements for optimizing metadata extraction: robust text conversion, strategic chunk selection, and advanced LLM-specific techniques, including Chain of Thought (CoT) prompting and structured tool calling. The results from our experiments highlight the substantial improvements in clause identification accuracy and efficiency. Our approach shows promise in reducing the time and cost associated with contract review while maintaining high accuracy in legal clause identification. The results suggest that carefully optimized LLM systems could serve as valuable tools for legal professionals, potentially increasing access to efficient contract review services for organizations of all sizes.",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.21203/rs.3.rs-8950363/v1",
+   "title": "TRNEWS-2025: A Large-Scale, Manually Annotated Turkish News Dataset for Text Classification and NLP Research",
+   "date": "2026",
+   "venue": "",
+   "citations": 0,
+   "authors": [
+    "Sengul Bayrak"
+   ],
+   "abstract": "Abstract This study presents TRNEWS-2025, a labeled Turkish news dataset created for use in Turkish Natural Language Processing (NLP) and machine learning research. The TRNEWS-2025 dataset comprises news articles gathered from various Turkish online news sites and media portals up to the year 2025. It has been manually labeled under nine different categories: Magazine, Politics, Sports, Arts-Culture, Health, Finance-Economy, Science-Technology, Tourism, and Environment. The dataset aims to reflect real-world news language due to its diverse range of topics and up-to-date content.To evaluate the usability and distinctiveness of the dataset, experimental analyses were performed using BERT, a modern transformer-based model, and BiLSTM+GloVe, a classic deep learning architecture. The results show that the TRNEWS-2025 dataset can be used effectively with both model paradigms. The TRNEWS-2025 dataset aims to provide a reliable and up-to-date source dataset that can be utilized in various research areas, including Turkish text classification, topic identification, explainable artificial intelligence studies, and language model evaluations. The original contribution of a Turkish dataset, such as TRNEWS-2025, significantly provides up-to-date, comprehensive, and nine-class news data.",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2606.13184v1",
+   "title": "LAUKIN: A Multi-jurisdictional Common Law Contract Dataset",
+   "date": "2026-06-11",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Amrita Singh",
+    "Aditya Joshi",
+    "Jiaojiao Jiang",
+    "Hye-young Paik"
+   ],
+   "abstract": "Multinational companies increasingly require cross-jurisdictional contract review, yet existing legal NLP datasets are largely restricted to a single jurisdiction. We introduce LAUKIN (Legal equivalence dataset of Australia, UK, and INdia), a dataset of clause pairs (AU-UK, UK-IN, IN-AU) labelled for boolean legal equivalence. We develop a novel multi-stage retrieval and reranking pipeline to construct the initial clause pair mapping, with a subset of clause pairs subsequently annotated by legal experts as Equivalent or Not Equivalent. The dataset comprises 14,727 clause pairs from 204 contracts across 8 agreement types, of which 3,000 are manually labelled: 900 train, 600 dev, and 1,500 test. We evaluate 12 models across 4 techniques, achieving a best macro-F1 of 65.11%, establishing LAUKIN as a challenging benchmark. Results reveal that, despite shared legal heritage, drafting conventions diverge significantly across jurisdictions, making cross-jurisdictional equivalence classification non-trivial. LAUKIN also includes 11,727 unlabelled training pairs to support future semi-supervised learning research in legal NLP.",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2611.17834v1",
+   "title": "PaperCritic: Training AI Reviewers to Assess the Soundness of Papers",
+   "date": "2026-11-13",
+   "venue": "arXiv",
+   "citations": 0,
+   "authors": [
+    "Hyun Ryu",
+    "Ji Yong Cho",
+    "Eunho Yang",
+    "Moontae Lee"
+   ],
+   "abstract": "As AI conference submissions grow rapidly, AI reviewers are being considered as an alternative. However, simply imitating human reviewing is problematic because reviewing serves multiple purposes, including evaluating papers' soundness, interestingness, and clarity, the last two of which are subjective. In this work, we focus solely on evaluating soundness, the most important and objective criterion, and define the learning objective as jointly maximizing (1) precision, based on the soundness and substantiveness of review points, and (2) recall, the coverage of high-quality reference review points. Under this problem formulation, we construct a quality-labeled review point dataset, PaperSound-23K, using 1K ICLR submissions and 23K human-written and LLM-generated review points. Using this dataset, we train an AI reviewer model, PaperCritic, through reinforcement learning with the F1 score of precision and recall as the reward. Our experiments show that PaperCritic outperforms frontier models and models trained with other AI reviewer training methods on an in-domain test set. Surprisingly, learning to review ICLR submissions also transfers to reviewing Nature-family papers and even to out-of-domain reviewing tasks (e.g., code review, legal contract review, and feedback on story writing).",
+   "query": "legal-cuad"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.18653/v1/2022.acl-long.297",
+   "title": "LexGLUE: A Benchmark Dataset for Legal Language Understanding in English",
+   "date": "2021",
+   "venue": "Proceedings of the conference - Association for Computational Linguistics. Meeting",
+   "citations": 820,
+   "authors": [
+    "Ilias Chalkidis",
+    "Abhik Jana",
+    "Dirk Hartung",
+    "Michael Bommarito"
+   ],
+   "abstract": "Laws and their interpretations, legal arguments and agreements\\ are typically expressed in writing, leading to the production of vast corpora of legal text. Their analysis, which is at the center of legal practice, becomes increasingly elaborate as these collections grow in size. Natural language understanding (NLU) technologies can be a valuable tool to support legal practitioners in these endeavors. Their usefulness, however, largely depends on whether current state-of-the-art models can generalize across various tasks in the legal domain. To answer this currently open question, we introduce the Legal General Language Understanding Evaluation (LexGLUE) benchmark, a collection of datasets for evaluating model performance across a diverse set of legal NLU tasks in a standardized way. We also provide an evaluation and analysis of several generic and legal-oriented models demonstrating that the latter consistently offer performance improvements across multiple tasks.",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "openalex",
+   "id": "https://doi.org/10.18653/v1/2022.nllp-1.11",
+   "title": "Processing Long Legal Documents with Pre-trained Transformers: Modding LegalBERT and Longformer",
+   "date": "2022",
+   "venue": "Natural Legal Language Processing Workshop (NLLP)",
+   "citations": 86,
+   "authors": [],
+   "abstract": "Pre-trained Transformers currently dominate most NLP tasks.They impose, however, limits on the maximum input length (512 subwords in BERT), which are too restrictive in the legal domain.Even sparse-attention models, such as Longformer and BigBird, which increase the maximum input length to 4,096 sub-words, severely truncate texts in three of the six datasets of LexGLUE.Simpler linear classifiers with TF-IDF features can handle texts of any length, require far less resources to train and deploy, but are usually outperformed by pre-trained Transformers.We explore two directions to cope with long legal texts: (i) modifying a Longformer warm-started from LegalBERT to handle even longer texts (up to 8,192 sub-words), and (ii) modifying Legal-BERT to use TF-IDF representations.The first approach is the best in terms of performance, surpassing a hierarchical version of LegalBERT, which was the previous state of the art in LexGLUE.The second approach leads to computationally more efficient models at the expense of lower performance, but the resulting models still outperform overall a linear SVM with TF-IDF features in long legal document classification.",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "arxiv",
+   "id": "http://arxiv.org/abs/2304.12202v1",
+   "title": "ChatGPT may Pass the Bar Exam soon, but has a Long Way to Go for the LexGLUE benchmark",
+   "date": "2023-03-09",
+   "venue": "arXiv",
+   "citations": 21,
+   "authors": [
+    "Ilias Chalkidis"
+   ],
+   "abstract": "Following the hype around OpenAI's ChatGPT conversational agent, the last straw in the recent development of Large Language Models (LLMs) that demonstrate emergent unprecedented zero-shot capabilities, we audit the latest OpenAI's GPT-3.5 model, `gpt-3.5-turbo', the first available ChatGPT model, in the LexGLUE benchmark in a zero-shot fashion providing examples in a templated instruction-following format. The results indicate that ChatGPT achieves an average micro-F1 score of 47.6% across LexGLUE tasks, surpassing the baseline guessing rates. Notably, the model performs exceptionally well in some datasets, achieving micro-F1 scores of 62.8% and 70.2% in the ECtHR B and LEDGAR datasets, respectively. The code base and model predictions are available for review on https://github.com/coastalcph/zeroshot_lexglue.",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.52202/068431-2358",
+   "title": "A Multi-Task Benchmark for Korean Legal Language Understanding and Judgement Prediction",
+   "date": "2022",
+   "venue": "Advances in Neural Information Processing Systems 35",
+   "citations": 8,
+   "authors": [
+    "Wonseok Hwang",
+    "Dongjun Lee",
+    "Kyoungyeon Cho",
+    "Hanuhl Lee"
+   ],
+   "abstract": "",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.18653/v1/2024.findings-emnlp.319",
+   "title": "Developing a Pragmatic Benchmark for Assessing Korean Legal Language Understanding in Large Language Models",
+   "date": "2024",
+   "venue": "Findings of the Association for Computational Linguistics: EMNLP 2024",
+   "citations": 6,
+   "authors": [
+    "Yeeun Kim",
+    "Youngrok Choi",
+    "Eunkyung Choi",
+    "JinHwan Choi"
+   ],
+   "abstract": "",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.1021/acs.jcim.6c00286.s001",
+   "title": "RxnBench: A Multimodal Benchmark for Evaluating Large Language Models on Chemical Reaction Understanding from the Scientific Literature",
+   "date": "",
+   "venue": "",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.4324/9781315741840-17",
+   "title": "Drafting legal documents: language and structure",
+   "date": "2015",
+   "venue": "Legal English",
+   "citations": 0,
+   "authors": [],
+   "abstract": "",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.2139/ssrn.3969476",
+   "title": "AI Natural Language Understanding And LexGLUE Benchmarking",
+   "date": "2021",
+   "venue": "SSRN Electronic Journal",
+   "citations": 0,
+   "authors": [
+    "Lance Eliot"
+   ],
+   "abstract": "",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.5715/jnlp.32.983",
+   "title": "Research Process for JMMMU: A Japanese Massive Multi-discipline Multimodal Understanding Benchmark",
+   "date": "2025",
+   "venue": "Journal of Natural Language Processing",
+   "citations": 0,
+   "authors": [
+    "Atsuyuki Miyai"
+   ],
+   "abstract": "",
+   "query": "legal-lexglue"
+  },
+  {
+   "source": "crossref",
+   "id": "doi:10.18653/2026.nllp-1.43",
+   "title": "NELSR: A Nepali Legal Benchmark for Case-to-Statute Retrieval",
+   "date": "2026",
+   "venue": "Proceedings of the Natural Legal Language Processing Workshop 2026",
+   "citations": 0,
+   "authors": [
+    "Anjan Parajuli",
+    "Darshan Kunwar"
+   ],
+   "abstract": "",
+   "query": "legal-lexglue"
   },
   {
    "source": "crossref",

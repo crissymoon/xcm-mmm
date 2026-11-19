@@ -1,0 +1,388 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 107147,
+    "items": [
+      {
+        "DOI": "10.1214/ss/1177013815",
+        "title": [
+          "Bootstrap Methods for Standard Errors, Confidence Intervals, and Other Measures of Statistical Accuracy"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1986,
+              2,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Statistical Science"
+        ],
+        "is-referenced-by-count": 3760,
+        "abstract": "<jats:p>This is a review of bootstrap methods, concentrating on basic ideas and applications rather than theoretical considerations. It begins with an exposition of the bootstrap estimate of standard error for one-sample situations. Several examples, some involving quite complicated statistical procedures, are given. The bootstrap is then extended to other measures of statistical accuracy such as bias and prediction error, and to complicated data structures such as time series, censored data, and regression models. Several more examples are presented illustrating these ideas. The last third of the paper deals mainly with bootstrap confidence intervals.</jats:p>",
+        "author": [
+          {
+            "given": "B.",
+            "family": "Efron",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "R.",
+            "family": "Tibshirani",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1214/ss/1177013816",
+        "title": [
+          "[Bootstrap Methods for Standard Errors, Confidence Intervals, and Other Measures of Statistical Accuracy]: Comment"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1986,
+              2,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Statistical Science"
+        ],
+        "is-referenced-by-count": 18,
+        "author": [
+          {
+            "given": "J. A.",
+            "family": "Hartigan",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1214/ss/1177013817",
+        "title": [
+          "[Bootstrap Methods for Standard Errors, Confidence Intervals, and Other Measures of Statistical Accuracy]: Rejoinder"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1986,
+              2,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Statistical Science"
+        ],
+        "is-referenced-by-count": 94,
+        "author": [
+          {
+            "given": "B.",
+            "family": "Efron",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "R.",
+            "family": "Tibshirani",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1037//1082-989x.6.4.402",
+        "title": [
+          "Random assignment of available cases: Bootstrap standard errors and confidence intervals."
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2001
+            ]
+          ]
+        },
+        "container-title": [
+          "Psychological Methods"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Clifford E.",
+            "family": "Lunneborg",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1037//1082-989x.6.4.402-412",
+        "title": [
+          "Random assignment of available cases: Bootstrap standard errors and confidence intervals."
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2001
+            ]
+          ]
+        },
+        "container-title": [
+          "Psychological Methods"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Clifford E.",
+            "family": "Lunneborg",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1037/1082-989x.6.4.402",
+        "title": [
+          "Random assignment of available cases: Bootstrap standard errors and confidence intervals."
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2001
+            ]
+          ]
+        },
+        "container-title": [
+          "Psychological Methods"
+        ],
+        "is-referenced-by-count": 6,
+        "author": [
+          {
+            "given": "Clifford E.",
+            "family": "Lunneborg",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1201/9781003326410-7",
+        "title": [
+          "Standard errors, confidence intervals, and tests of hypotheses"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              9,
+              25
+            ]
+          ]
+        },
+        "container-title": [
+          "Statistical Methods and Applications Using Quantiles"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-6311-8685",
+            "authenticated-orcid": false,
+            "given": "Marco",
+            "family": "Geraci",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.3724/sp.j.1041.2022.00703",
+        "title": [
+          "Standard errors and confidence intervals for cognitive diagnostic models: Parallel bootstrap methods"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022,
+              6,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Acta Psychologica Sinica"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Yanlou",
+            "family": "LIU",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/s10260-020-00555-1",
+        "title": [
+          "Bootstrap confidence intervals for correlation between continuous repeated measures"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              1,
+              21
+            ]
+          ]
+        },
+        "container-title": [
+          "Statistical Methods &amp; Applications"
+        ],
+        "is-referenced-by-count": 2,
+        "author": [
+          {
+            "name": "for the Alzheimer\u2019s Disease Neuroimaging Initiative",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0001-8690-6599",
+            "authenticated-orcid": false,
+            "given": "Guogen",
+            "family": "Shan",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Hua",
+            "family": "Zhang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Jim",
+            "family": "Barbour",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1891/9780826198259.0006",
+        "title": [
+          "Standard Errors, Confidence Intervals, and the Power of Statistical Tests"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              null
+            ]
+          ]
+        },
+        "container-title": [
+          "Statistics for Advanced Practice Nurses and Health Professionals"
+        ],
+        "is-referenced-by-count": 0
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

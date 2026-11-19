@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/5T3RXb8a+7AVsSXPj3JPQoOpRAY</id>
+  <title>arXiv Query: search_query=abs:"contract review" AND abs:"dataset" AND abs:"legal"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T01:54:52Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=abs:%22contract+review%22+AND+(abs:%22dataset%22+AND+abs:%22legal%22)&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>7</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2510.19334v1</id>
+    <title>Metadata Extraction Leveraging Large Language Models</title>
+    <updated>2025-10-22T07:56:36Z</updated>
+    <link href="https://arxiv.org/abs/2510.19334v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.19334v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The advent of Large Language Models has revolutionized tasks across domains, including the automation of legal document analysis, a critical component of modern contract management systems. This paper presents a comprehensive implementation of LLM-enhanced metadata extraction for contract review, focusing on the automatic detection and annotation of salient legal clauses. Leveraging both the publicly available Contract Understanding Atticus Dataset (CUAD) and proprietary contract datasets, our work demonstrates the integration of advanced LLM methodologies with practical applications. We identify three pivotal elements for optimizing metadata extraction: robust text conversion, strategic chunk selection, and advanced LLM-specific techniques, including Chain of Thought (CoT) prompting and structured tool calling. The results from our experiments highlight the substantial improvements in clause identification accuracy and efficiency. Our approach shows promise in reducing the time and cost associated with contract review while maintaining high accuracy in legal clause identification. The results suggest that carefully optimized LLM systems could serve as valuable tools for legal professionals, potentially increasing access to efficient contract review services for organizations of all sizes.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-22T07:56:36Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Cuize Han</name>
+    </author>
+    <author>
+      <name>Sesh Jalagam</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.13184v1</id>
+    <title>LAUKIN: A Multi-jurisdictional Common Law Contract Dataset</title>
+    <updated>2026-06-11T10:52:12Z</updated>
+    <link href="https://arxiv.org/abs/2606.13184v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.13184v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multinational companies increasingly require cross-jurisdictional contract review, yet existing legal NLP datasets are largely restricted to a single jurisdiction. We introduce LAUKIN (Legal equivalence dataset of Australia, UK, and INdia), a dataset of clause pairs (AU-UK, UK-IN, IN-AU) labelled for boolean legal equivalence. We develop a novel multi-stage retrieval and reranking pipeline to construct the initial clause pair mapping, with a subset of clause pairs subsequently annotated by legal experts as Equivalent or Not Equivalent. The dataset comprises 14,727 clause pairs from 204 contracts across 8 agreement types, of which 3,000 are manually labelled: 900 train, 600 dev, and 1,500 test. We evaluate 12 models across 4 techniques, achieving a best macro-F1 of 65.11%, establishing LAUKIN as a challenging benchmark. Results reveal that, despite shared legal heritage, drafting conventions diverge significantly across jurisdictions, making cross-jurisdictional equivalence classification non-trivial. LAUKIN also includes 11,727 unlabelled training pairs to support future semi-supervised learning research in legal NLP.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-11T10:52:12Z</published>
+    <arxiv:comment>5 pages, 2 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Amrita Singh</name>
+    </author>
+    <author>
+      <name>Aditya Joshi</name>
+    </author>
+    <author>
+      <name>Jiaojiao Jiang</name>
+    </author>
+    <author>
+      <name>Hye-young Paik</name>
+    </author>
+    <author>
+      <name>May Fong Cheong</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2103.06268v2</id>
+    <title>CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review</title>
+    <updated>2021-11-08T21:23:22Z</updated>
+    <link href="https://arxiv.org/abs/2103.06268v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2103.06268v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Many specialized domains remain untouched by deep learning, as large labeled datasets require expensive expert annotators. We address this bottleneck within the legal domain by introducing the Contract Understanding Atticus Dataset (CUAD), a new dataset for legal contract review. CUAD was created with dozens of legal experts from The Atticus Project and consists of over 13,000 annotations. The task is to highlight salient portions of a contract that are important for a human to review. We find that Transformer models have nascent performance, but that this performance is strongly influenced by model design and training dataset size. Despite these promising results, there is still substantial room for improvement. As one of the only large, specialized NLP benchmarks annotated by experts, CUAD can serve as a challenging research benchmark for the broader NLP community.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-03-10T18:59:34Z</published>
+    <arxiv:comment>NeurIPS 2021. Code and the CUAD dataset are available at https://github.com/TheAtticusProject/cuad/</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Dan Hendrycks</name>
+    </author>
+    <author>
+      <name>Collin Burns</name>
+    </author>
+    <author>
+      <name>Anya Chen</name>
+    </author>
+    <author>
+      <name>Spencer Ball</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.10386v1</id>
+    <title>A Benchmark for Lease Contract Review</title>
+    <updated>2020-10-20T15:50:50Z</updated>
+    <link href="https://arxiv.org/abs/2010.10386v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.10386v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Extracting entities and other useful information from legal contracts is an important task whose automation can help legal professionals perform contract reviews more efficiently and reduce relevant risks. In this paper, we tackle the problem of detecting two different types of elements that play an important role in a contract review, namely entities and red flags. The latter are terms or sentences that indicate that there is some danger or other potentially problematic situation for one or more of the signing parties. We focus on supporting the review of lease agreements, a contract type that has received little attention in the legal information extraction literature, and we define the types of entities and red flags needed for that task. We release a new benchmark dataset of 179 lease agreement documents that we have manually annotated with the entities and red flags they contain, and which can be used to train and test relevant extraction algorithms. Finally, we release a new language model, called ALeaseBERT, pre-trained on this dataset and fine-tuned for the detection of the aforementioned elements, providing a baseline for further research</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-20T15:50:50Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Spyretta Leivaditi</name>
+    </author>
+    <author>
+      <name>Julien Rossi</name>
+    </author>
+    <author>
+      <name>Evangelos Kanoulas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2501.17194v1</id>
+    <title>AI-assisted German Employment Contract Review: A Benchmark Dataset</title>
+    <updated>2025-01-27T14:48:09Z</updated>
+    <link href="https://arxiv.org/abs/2501.17194v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2501.17194v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Employment contracts are used to agree upon the working conditions between employers and employees all over the world. Understanding and reviewing contracts for void or unfair clauses requires extensive knowledge of the legal system and terminology. Recent advances in Natural Language Processing (NLP) hold promise for assisting in these reviews. However, applying NLP techniques on legal text is particularly difficult due to the scarcity of expert-annotated datasets. To address this issue and as a starting point for our effort in assisting lawyers with contract reviews using NLP, we release an anonymized and annotated benchmark dataset for legality and fairness review of German employment contract clauses, alongside with baseline model evaluations.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-01-27T14:48:09Z</published>
+    <arxiv:comment>Dataset available on GitHub</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Jusletter IT, April 2025, pp. 443-451</arxiv:journal_ref>
+    <author>
+      <name>Oliver Wardas</name>
+    </author>
+    <author>
+      <name>Florian Matthes</name>
+    </author>
+    <arxiv:doi>10.38023/a3788d39-3278-4ae5-b5b7-c73b01e6a6f2</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.38023/a3788d39-3278-4ae5-b5b7-c73b01e6a6f2" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2012.08150v1</id>
+    <title>Learning to Check Contract Inconsistencies</title>
+    <updated>2020-12-15T08:43:07Z</updated>
+    <link href="https://arxiv.org/abs/2012.08150v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.08150v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Contract consistency is important in ensuring the legal validity of the contract. In many scenarios, a contract is written by filling the blanks in a precompiled form. Due to carelessness, two blanks that should be filled with the same (or different)content may be incorrectly filled with different (or same) content. This will result in the issue of contract inconsistencies, which may severely impair the legal validity of the contract. Traditional methods to address this issue mainly rely on manual contract review, which is labor-intensive and costly. In this work, we formulate a novel Contract Inconsistency Checking (CIC) problem, and design an end-to-end framework, called Pair-wise Blank Resolution (PBR), to solve the CIC problem with high accuracy. Our PBR model contains a novel BlankCoder to address the challenge of modeling meaningless blanks. BlankCoder adopts a two-stage attention mechanism that adequately associates a meaningless blank with its relevant descriptions while avoiding the incorporation of irrelevant context words. Experiments conducted on real-world datasets show the promising performance of our method with a balanced accuracy of 94.05% and an F1 score of 90.90% in the CIC problem.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-15T08:43:07Z</published>
+    <arxiv:comment>Accepted by AAAI 2021</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Shuo Zhang</name>
+    </author>
+    <author>
+      <name>Junzhou Zhao</name>
+    </author>
+    <author>
+      <name>Pinghui Wang</name>
+    </author>
+    <author>
+      <name>Nuo Xu</name>
+    </author>
+    <author>
+      <name>Yang Yang</name>
+    </author>
+    <author>
+      <name>Yiting Liu</name>
+    </author>
+    <author>
+      <name>Yi Huang</name>
+    </author>
+    <author>
+      <name>Junlan Feng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2611.17834v1</id>
+    <title>PaperCritic: Training AI Reviewers to Assess the Soundness of Papers</title>
+    <updated>2026-11-13T07:14:57Z</updated>
+    <link href="https://arxiv.org/abs/2611.17834v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2611.17834v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As AI conference submissions grow rapidly, AI reviewers are being considered as an alternative. However, simply imitating human reviewing is problematic because reviewing serves multiple purposes, including evaluating papers' soundness, interestingness, and clarity, the last two of which are subjective. In this work, we focus solely on evaluating soundness, the most important and objective criterion, and define the learning objective as jointly maximizing (1) precision, based on the soundness and substantiveness of review points, and (2) recall, the coverage of high-quality reference review points. Under this problem formulation, we construct a quality-labeled review point dataset, PaperSound-23K, using 1K ICLR submissions and 23K human-written and LLM-generated review points. Using this dataset, we train an AI reviewer model, PaperCritic, through reinforcement learning with the F1 score of precision and recall as the reward. Our experiments show that PaperCritic outperforms frontier models and models trained with other AI reviewer training methods on an in-domain test set. Surprisingly, learning to review ICLR submissions also transfers to reviewing Nature-family papers and even to out-of-domain reviewing tasks (e.g., code review, legal contract review, and feedback on story writing).</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-11-13T07:14:57Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Hyun Ryu</name>
+    </author>
+    <author>
+      <name>Ji Yong Cho</name>
+    </author>
+    <author>
+      <name>Eunho Yang</name>
+    </author>
+    <author>
+      <name>Moontae Lee</name>
+    </author>
+    <author>
+      <name>June Yong Yang</name>
+    </author>
+    <author>
+      <name>Sean Welleck</name>
+    </author>
+    <author>
+      <name>Carolyn Rose</name>
+    </author>
+  </entry>
+</feed>

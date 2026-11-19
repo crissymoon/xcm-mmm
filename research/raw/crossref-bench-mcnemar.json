@@ -1,0 +1,409 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 4504683,
+    "items": [
+      {
+        "DOI": "10.1162/089976698300017197",
+        "title": [
+          "Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1998,
+              10,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Neural Computation"
+        ],
+        "is-referenced-by-count": 3090,
+        "abstract": "<jats:p>This article reviews five approximate statistical tests for determining whether one learning algorithm outperforms another on a particular learning task. These test sare compared experimentally to determine their probability of incorrectly detecting a difference when no difference exists (type I error). Two widely used statistical tests are shown to have high probability of type I error in certain situations and should never be used: a test for the difference of two proportions and a paired-differences t test based on taking several random train-test splits. A third test, a paired-differences t test based on 10-fold cross-validation, exhibits somewhat elevated probability of type I error. A fourth test, McNemar's test, is shown to have low type I error. The fifth test is a new test, 5 \u00d7 2 cv, based on five iterations of twofold cross-validation. Experiments show that this test also has acceptable type I error. The article also measures the power (ability to detect algorithm differences when they do exist) of these tests. The cross-validated t test is the most powerful. The 5\u00d72 cv test is shown to be slightly more powerful than McNemar's test. The choice of the best test is determined by the computational cost of running the learning algorithm. For algorithms that can be executed only once, Mc-Nemar's test is the only test with acceptable type I error. For algorithms that can be executed 10 times, the 5 \u00d7 2 cv test is recommended, because it is slightly more powerful and because it directly measures variation due to the choice of training set.</jats:p>",
+        "author": [
+          {
+            "given": "Thomas G.",
+            "family": "Dietterich",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science, Oregon State University, Corvallis, OR 97331, U.S.A."
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/978-3-642-25566-3_1",
+        "title": [
+          "Multivariate Statistical Tests for Comparing Classification Algorithms"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2011
+            ]
+          ]
+        },
+        "container-title": [
+          "Lecture Notes in Computer Science",
+          "Learning and Intelligent Optimization"
+        ],
+        "is-referenced-by-count": 15,
+        "author": [
+          {
+            "given": "Olcay Taner",
+            "family": "Y\u0131ld\u0131z",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "\u00d6zlem",
+            "family": "Aslan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ethem",
+            "family": "Alpayd\u0131n",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.24017/science.2021.1.8",
+        "title": [
+          "Utilizing Statistical Tests for Comparing Machine Learning Algorithms"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021,
+              7,
+              7
+            ]
+          ]
+        },
+        "container-title": [
+          "Kurdistan Journal of Applied Research"
+        ],
+        "is-referenced-by-count": 7,
+        "abstract": "<jats:p>The mean result of machine learning models is determined by utilizing k-fold cross-validation. The algorithm with the best average performance should surpass those with the poorest. But what if the difference in average outcomes is the consequence of a statistical anomaly? To conduct whether or not the mean result differences between two algorithms is genuine then statistical hypothesis test is utilized. Using statistical hypothesis testing, this study will demonstrate how to compare machine learning algorithms. The output of several machine learning algorithms or simulation pipelines is compared during model selection. The model that performs the best based on your performance measure becomes the last model, which can be utilized to make predictions on new data. With classification and regression prediction models it can be conducted by utilizing traditional machine learning and deep learning methods. The difficulty is to identify whether or not the difference between two models is accurate.</jats:p>",
+        "author": [
+          {
+            "given": "Hozan Khalid",
+            "family": "Hamarashid",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.30534/ijeter/2022/081062022",
+        "title": [
+          "Comparing Supervised Machine Learning Algorithms on Classification Efficiency of multiclass classifications problem"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022,
+              6,
+              9
+            ]
+          ]
+        },
+        "container-title": [
+          "International Journal of Emerging Trends in Engineering Research"
+        ],
+        "is-referenced-by-count": 2,
+        "abstract": "<jats:p>Multi-class classification is a fascinating field to study. However, evaluating the classification performance of classifiers is difficult. Class indices such as accuracy, precision, recall, and F-measure, Kappa and area under the curve of receiver operating characteristics (AUC), can be used to evaluate classification performance. These indices describe the classification results achieved on each modelled class. Several measures have been introduced in the literature to deal with this assessment, the most commonly used being accuracy. In general these metrics were proposed to address binary classification tasks, whereas multiclass classification is the more difficult and currently active research area in machine learning (ML). In this paper, we intended to compare classification performance of nine supervised machine learning algorithms based on three learner types: statistical learner, rule-based learner and neural-base learner by considering accuracy, precision, recall and F-measure and ROC area achieved on four different datasets from UCI machine repository. Among these, Random forest has been the best performance in both 10 fold cross validation and percentage split with overall average accuracy of predictive power of 92.20% and 91.76% respectively, with less variability, whereas Na\u00efve Bayes has the worst also in both 10 fold cross validation and percentage split by average correct classification performance of 79.18% and 76.92% respectively, and also with higher variability next to Decision Table.</jats:p>"
+      },
+      {
+        "DOI": "10.1162/089976699300016007",
+        "title": [
+          "Combined 5 \u00d7 2 cv F Test for Comparing Supervised Classification Learning Algorithms"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1999,
+              11,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Neural Computation"
+        ],
+        "is-referenced-by-count": 331,
+        "abstract": "<jats:p>Dietterich (1998) reviews five statistical tests and proposes the 5 \u00d7 2 cvt test for determining whether there is a significant difference between the error rates of two classifiers. In our experiments, we noticed that the 5 \u00d7 2 cvt test result may vary depending on factors that should not affect the test, and we propose a variant, the combined 5 \u00d7 2 cv F test, that combines multiple statistics to get a more robust test. Simulation results show that this combined version of the test has lower type I error and higher power than 5 \u00d7 2 cv proper.</jats:p>",
+        "author": [
+          {
+            "given": "Ethem",
+            "family": "Alpaydm",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "IDIAP, CP 592 CH-1920 Martigny, Switzerland and Department of Computer Engineering, Bo\u01e7azi\u00e7i University, TR-80815 Istanbul, Turkey"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1007/3-540-49607-6_3",
+        "title": [
+          "Supervised Classification Using Genetic Algorithms"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              null
+            ]
+          ]
+        },
+        "container-title": [
+          "Natural Computing Series",
+          "Classification and Learning Using Genetic Algorithms"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Sanghamitra",
+            "family": "Bandyopadhyay",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sankar K.",
+            "family": "Pal",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1214/lnms/1199996416",
+        "title": [
+          "Chapter 2: Comparing posterior distributions to Gibbs priors"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2007
+            ]
+          ]
+        },
+        "container-title": [
+          "Institute of Mathematical Statistics Lecture Notes - Monograph Series",
+          "Pac-Bayesian Supervised Classification"
+        ],
+        "is-referenced-by-count": 0
+      },
+      {
+        "DOI": "10.1093/oso/9780198509844.003.0003",
+        "title": [
+          "Comparing Binary Tests And Regression Analysis"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2003,
+              3,
+              13
+            ]
+          ]
+        },
+        "container-title": [
+          "The Statistical Evaluation of Medical Tests for Classification and Prediction"
+        ],
+        "is-referenced-by-count": 15,
+        "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>Various factors can influence the performance of a medical test. The environment in which it is performed, characteristics of testers, characteristics of test subjects and operating parameters for the test are some such factors. It is important to identify and understand the influence of such factors in order to optimize conditions for using a test.</jats:p>",
+        "author": [
+          {
+            "given": "Margaret Sullivan",
+            "family": "Pepe",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1002/bimj.202200098",
+        "title": [
+          "Comparing linear discriminant analysis and supervised learning algorithms for binary classification\u2014A method comparison study"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022,
+              12,
+              18
+            ]
+          ]
+        },
+        "container-title": [
+          "Biometrical Journal"
+        ],
+        "is-referenced-by-count": 54,
+        "abstract": "<jats:title>Abstract</jats:title><jats:p>In psychology, linear discriminant analysis (LDA) is the method of choice for two\u2010group classification tasks based on questionnaire data. In this study, we present a comparison of LDA with several supervised learning algorithms. In particular, we examine to what extent the predictive performance of LDA relies on the multivariate normality assumption. As nonparametric alternatives, the linear support vector machine (SVM), classification and regression tree (CART), random forest (RF), probabilistic neural network (PNN), and the ensemble <jats:italic>k</jats:italic> conditional nearest neighbor (E<jats:italic>k</jats:italic>CNN) algorithms are applied. Predictive performance is determined using measures of overall performance, discrimination, and calibration, and is compared in two reference data sets as well as in a simulation study. The reference data are Likert\u2010type data, and comprise 5 and 10 predictor variables, respectively. Simulations are based on the reference data and are done for a balanced and an unbalanced scenario in each case. In order to compare the algorithms' performance, data are simulated from multivariate distributions with differing degrees of nonnormality. Results differ depending on the specific performance measure. The main finding is that LDA is always outperformed by RF in the bimodal data with respect to overall performance. Discriminative ability of the RF algorithm is often higher compared to LDA, but its model calibration is usually worse. Still LDA mostly ranges second in cases it is outperformed by another algorithm, or the differences are only marginal. In consequence, we still recommend LDA for this type of\u00a0application.</jats:p>",
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-0149-479X",
+            "authenticated-orcid": false,
+            "given": "Ricarda",
+            "family": "Graf",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Department of Mathematics University of Augsburg Germany"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Marina",
+            "family": "Zeldovich",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Institute of Medical Psychology and Medical Sociology University Medical Center G\u00f6ttingen G\u00f6ttingen Germany"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0003-0291-4378",
+            "authenticated-orcid": false,
+            "given": "Sarah",
+            "family": "Friedrich",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Department of Mathematics University of Augsburg Germany"
+              },
+              {
+                "name": "Centre for Advanced Analytics and Predictive Sciences (CAAPS) University of Augsburg Augsburg Germany"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.annepidem.2025.07.038",
+        "title": [
+          "From equations to algorithms: comparing statistical and supervised machine learning models to predict the rate of influenza incidence in Arizona"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              9
+            ]
+          ]
+        },
+        "container-title": [
+          "Annals of Epidemiology"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-0185-9947",
+            "authenticated-orcid": false,
+            "given": "Demelash",
+            "family": "Areda",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

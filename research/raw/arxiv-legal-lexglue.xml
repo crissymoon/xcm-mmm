@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/ZDIIQeoCgZ8CXylx2hsyJ/MtrwM</id>
+  <title>arXiv Query: search_query=ti:"LexGLUE"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T01:54:49Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=ti:%22LexGLUE%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>2</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2110.00976v4</id>
+    <title>LexGLUE: A Benchmark Dataset for Legal Language Understanding in English</title>
+    <updated>2022-11-08T12:14:57Z</updated>
+    <link href="https://arxiv.org/abs/2110.00976v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2110.00976v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Laws and their interpretations, legal arguments and agreements\ are typically expressed in writing, leading to the production of vast corpora of legal text. Their analysis, which is at the center of legal practice, becomes increasingly elaborate as these collections grow in size. Natural language understanding (NLU) technologies can be a valuable tool to support legal practitioners in these endeavors. Their usefulness, however, largely depends on whether current state-of-the-art models can generalize across various tasks in the legal domain. To answer this currently open question, we introduce the Legal General Language Understanding Evaluation (LexGLUE) benchmark, a collection of datasets for evaluating model performance across a diverse set of legal NLU tasks in a standardized way. We also provide an evaluation and analysis of several generic and legal-oriented models demonstrating that the latter consistently offer performance improvements across multiple tasks.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-10-03T10:50:51Z</published>
+    <arxiv:comment>9 pages, long paper at ACL 2022 proceedings. LexGLUE benchmark is available at: https://huggingface.co/datasets/lex_glue. Code is available at: https://github.com/coastalcph/lex-glue. Update TFIDF-SVM scores in the last version</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Ilias Chalkidis</name>
+    </author>
+    <author>
+      <name>Abhik Jana</name>
+    </author>
+    <author>
+      <name>Dirk Hartung</name>
+    </author>
+    <author>
+      <name>Michael Bommarito</name>
+    </author>
+    <author>
+      <name>Ion Androutsopoulos</name>
+    </author>
+    <author>
+      <name>Daniel Martin Katz</name>
+    </author>
+    <author>
+      <name>Nikolaos Aletras</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2304.12202v1</id>
+    <title>ChatGPT may Pass the Bar Exam soon, but has a Long Way to Go for the LexGLUE benchmark</title>
+    <updated>2023-03-09T16:42:29Z</updated>
+    <link href="https://arxiv.org/abs/2304.12202v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2304.12202v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Following the hype around OpenAI's ChatGPT conversational agent, the last straw in the recent development of Large Language Models (LLMs) that demonstrate emergent unprecedented zero-shot capabilities, we audit the latest OpenAI's GPT-3.5 model, `gpt-3.5-turbo', the first available ChatGPT model, in the LexGLUE benchmark in a zero-shot fashion providing examples in a templated instruction-following format. The results indicate that ChatGPT achieves an average micro-F1 score of 47.6% across LexGLUE tasks, surpassing the baseline guessing rates. Notably, the model performs exceptionally well in some datasets, achieving micro-F1 scores of 62.8% and 70.2% in the ECtHR B and LEDGAR datasets, respectively. The code base and model predictions are available for review on https://github.com/coastalcph/zeroshot_lexglue.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-03-09T16:42:29Z</published>
+    <arxiv:comment>Working paper</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Ilias Chalkidis</name>
+    </author>
+  </entry>
+</feed>

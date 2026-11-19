@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/JhmVUqWx3d2SybiCECkpQGpf+wY</id>
+  <title>arXiv Query: search_query=ti:"LegalBench"&amp;id_list=&amp;start=0&amp;max_results=10</title>
+  <updated>2026-11-19T01:54:46Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=ti:%22LegalBench%22&amp;start=0&amp;max_results=10&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>10</opensearch:itemsPerPage>
+  <opensearch:totalResults>5</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2606.18699v2</id>
+    <title>TW-LegalBench: Measuring Taiwanese Legal Understanding</title>
+    <updated>2026-08-25T08:20:57Z</updated>
+    <link href="https://arxiv.org/abs/2606.18699v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.18699v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) have shown impressive capabilities across diverse tasks, yet their performance on jurisdiction-specific legal reasoning remains underexplored. We present TW-LegalBench that utilizes Taiwanese legal system's rich official corpus open to the public to fill the gap in evaluating LLMs on Taiwanese law, among common-law benchmarks that focus on English sources and civil-law benchmarks focusing on sources of Simplified Chinese. TW-LegalBench comprises three task types: (1) over 16,000 multiple-choice questions (MCQs) across five years of official examinations in 18 professional domains; (2) 117 open-ended essay questions (OEQs) from examinations for legal professionals with official scoring rubrics; and (3) more than 14,000 legal judgment prediction (LJP) instances covering hundreds of crime categories. We evaluate 13 LLMs using accuracy for MCQs, a decomposed LLM-as-Judge framework based on the scoring rubric points for OEQs, and metrics for sentencing accuracy and statute citation for LJP. Our results reveal that top-performing models exceed the passing threshold for qualified lawyers (passing rate: 11%) but fall short of that for judges and prosecutors (passing rate: 1~2%). For LJP, while models demonstrate reasonable verdict type accuracy and sentence prediction capability, they struggle to cite exact legal articles. These findings highlight that reliable legal text generation remains challenging for LLMs, even though their performance on qualification examinations approaches human level.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-17T05:25:21Z</published>
+    <arxiv:comment>10 pages, 2 figures, To appear in ICAIL 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Fei-Yueh Chen</name>
+    </author>
+    <author>
+      <name>Chun Huang Lin</name>
+    </author>
+    <author>
+      <name>Chan Wei Hsu</name>
+    </author>
+    <author>
+      <name>Kuan Hsuan Yeh</name>
+    </author>
+    <author>
+      <name>Zih-Ching Chen</name>
+    </author>
+    <author>
+      <name>Kuan-Ming Chen</name>
+    </author>
+    <author>
+      <name>Patrick Chung-Chia Huang</name>
+    </author>
+    <arxiv:doi>10.1145/3836937.3836950</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3836937.3836950" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.06120v1</id>
+    <title>LegalBench: Prototyping a Collaborative Benchmark for Legal Reasoning</title>
+    <updated>2022-09-13T16:11:54Z</updated>
+    <link href="https://arxiv.org/abs/2209.06120v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.06120v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Can foundation models be guided to execute tasks involving legal reasoning? We believe that building a benchmark to answer this question will require sustained collaborative efforts between the computer science and legal communities. To that end, this short paper serves three purposes. First, we describe how IRAC-a framework legal scholars use to distinguish different types of legal reasoning-can guide the construction of a Foundation Model oriented benchmark. Second, we present a seed set of 44 tasks built according to this framework. We discuss initial findings, and highlight directions for new tasks. Finally-inspired by the Open Science movement-we make a call for the legal and computer science communities to join our efforts by contributing new tasks. This work is ongoing, and our progress can be tracked here: https://github.com/HazyResearch/legalbench.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-13T16:11:54Z</published>
+    <arxiv:comment>13 pages, 7 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Neel Guha</name>
+    </author>
+    <author>
+      <name>Daniel E. Ho</name>
+    </author>
+    <author>
+      <name>Julian Nyarko</name>
+    </author>
+    <author>
+      <name>Christopher Ré</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2408.10343v1</id>
+    <title>LegalBench-RAG: A Benchmark for Retrieval-Augmented Generation in the Legal Domain</title>
+    <updated>2024-08-19T18:30:18Z</updated>
+    <link href="https://arxiv.org/abs/2408.10343v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2408.10343v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Retrieval-Augmented Generation (RAG) systems are showing promising potential, and are becoming increasingly relevant in AI-powered legal applications. Existing benchmarks, such as LegalBench, assess the generative capabilities of Large Language Models (LLMs) in the legal domain, but there is a critical gap in evaluating the retrieval component of RAG systems. To address this, we introduce LegalBench-RAG, the first benchmark specifically designed to evaluate the retrieval step of RAG pipelines within the legal space. LegalBench-RAG emphasizes precise retrieval by focusing on extracting minimal, highly relevant text segments from legal documents. These highly relevant snippets are preferred over retrieving document IDs, or large sequences of imprecise chunks, both of which can exceed context window limitations. Long context windows cost more to process, induce higher latency, and lead LLMs to forget or hallucinate information. Additionally, precise results allow LLMs to generate citations for the end user. The LegalBench-RAG benchmark is constructed by retracing the context used in LegalBench queries back to their original locations within the legal corpus, resulting in a dataset of 6,858 query-answer pairs over a corpus of over 79M characters, entirely human-annotated by legal experts. We also introduce LegalBench-RAG-mini, a lightweight version for rapid iteration and experimentation. By providing a dedicated benchmark for legal retrieval, LegalBench-RAG serves as a critical tool for companies and researchers focused on enhancing the accuracy and performance of RAG systems in the legal domain. The LegalBench-RAG dataset is publicly available at https://github.com/zeroentropy-cc/legalbenchrag.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-08-19T18:30:18Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Nicholas Pipitone</name>
+    </author>
+    <author>
+      <name>Ghita Houir Alami</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.18878v1</id>
+    <title>LegalBench-BR: A Benchmark for Evaluating Large Language Models on Brazilian Legal Decision Classification</title>
+    <updated>2026-04-20T22:00:02Z</updated>
+    <link href="https://arxiv.org/abs/2604.18878v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.18878v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We introduce LegalBench-BR, the first public benchmark for evaluating language models on Brazilian legal text classification. The dataset comprises 3,105 appellate proceedings from the Santa Catarina State Court (TJSC), collected via the DataJud API (CNJ) and annotated across five legal areas through LLM-assisted labeling with heuristic validation. On a class-balanced test set, BERTimbau-LoRA, updating only 0.3% of model parameters, achieves 87.6% accuracy and 0.87 macro-F1 (+22pp over Claude 3.5 Haiku, +28pp over GPT-4o mini). The gap is most striking on administrativo (administrative law): GPT-4o mini scores F1 = 0.00 and Claude 3.5 Haiku scores F1 = 0.08 on this class, while the fine-tuned model reaches F1 = 0.91. Both commercial LLMs exhibit a systematic bias toward civel (civil law), absorbing ambiguous classes rather than discriminating them, a failure mode that domain-adapted fine-tuning eliminates. These results demonstrate that general-purpose LLMs cannot substitute for domain-adapted models in Brazilian legal classification, even when the task is a simple 5-class problem, and that LoRA fine-tuning on a consumer GPU closes the gap at zero marginal inference cost. We release the full dataset, model, and pipeline to enable reproducible research in Portuguese legal NLP.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-20T22:00:02Z</published>
+    <arxiv:comment>8 pages, 1 figure. Preprint. First public benchmark for Brazilian legal text classification. Dataset and model available on Hugging Face</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Pedro Barbosa de Carvalho Neto</name>
+    </author>
+    <arxiv:doi>10.5281/zenodo.19298367</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.5281/zenodo.19298367" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2308.11462v1</id>
+    <title>LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models</title>
+    <updated>2023-08-20T22:08:03Z</updated>
+    <link href="https://arxiv.org/abs/2308.11462v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2308.11462v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The advent of large language models (LLMs) and their adoption by the legal community has given rise to the question: what types of legal reasoning can LLMs perform? To enable greater study of this question, we present LegalBench: a collaboratively constructed legal reasoning benchmark consisting of 162 tasks covering six different types of legal reasoning. LegalBench was built through an interdisciplinary process, in which we collected tasks designed and hand-crafted by legal professionals. Because these subject matter experts took a leading role in construction, tasks either measure legal reasoning capabilities that are practically useful, or measure reasoning skills that lawyers find interesting. To enable cross-disciplinary conversations about LLMs in the law, we additionally show how popular legal frameworks for describing legal reasoning -- which distinguish between its many forms -- correspond to LegalBench tasks, thus giving lawyers and LLM developers a common vocabulary. This paper describes LegalBench, presents an empirical evaluation of 20 open-source and commercial LLMs, and illustrates the types of research explorations LegalBench enables.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-08-20T22:08:03Z</published>
+    <arxiv:comment>143 pages, 79 tables, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Neel Guha</name>
+    </author>
+    <author>
+      <name>Julian Nyarko</name>
+    </author>
+    <author>
+      <name>Daniel E. Ho</name>
+    </author>
+    <author>
+      <name>Christopher Ré</name>
+    </author>
+    <author>
+      <name>Adam Chilton</name>
+    </author>
+    <author>
+      <name>Aditya Narayana</name>
+    </author>
+    <author>
+      <name>Alex Chohlas-Wood</name>
+    </author>
+    <author>
+      <name>Austin Peters</name>
+    </author>
+    <author>
+      <name>Brandon Waldon</name>
+    </author>
+    <author>
+      <name>Daniel N. Rockmore</name>
+    </author>
+    <author>
+      <name>Diego Zambrano</name>
+    </author>
+    <author>
+      <name>Dmitry Talisman</name>
+    </author>
+    <author>
+      <name>Enam Hoque</name>
+    </author>
+    <author>
+      <name>Faiz Surani</name>
+    </author>
+    <author>
+      <name>Frank Fagan</name>
+    </author>
+    <author>
+      <name>Galit Sarfaty</name>
+    </author>
+    <author>
+      <name>Gregory M. Dickinson</name>
+    </author>
+    <author>
+      <name>Haggai Porat</name>
+    </author>
+    <author>
+      <name>Jason Hegland</name>
+    </author>
+    <author>
+      <name>Jessica Wu</name>
+    </author>
+    <author>
+      <name>Joe Nudell</name>
+    </author>
+    <author>
+      <name>Joel Niklaus</name>
+    </author>
+    <author>
+      <name>John Nay</name>
+    </author>
+    <author>
+      <name>Jonathan H. Choi</name>
+    </author>
+    <author>
+      <name>Kevin Tobia</name>
+    </author>
+    <author>
+      <name>Margaret Hagan</name>
+    </author>
+    <author>
+      <name>Megan Ma</name>
+    </author>
+    <author>
+      <name>Michael Livermore</name>
+    </author>
+    <author>
+      <name>Nikon Rasumov-Rahe</name>
+    </author>
+    <author>
+      <name>Nils Holzenberger</name>
+    </author>
+    <author>
+      <name>Noam Kolt</name>
+    </author>
+    <author>
+      <name>Peter Henderson</name>
+    </author>
+    <author>
+      <name>Sean Rehaag</name>
+    </author>
+    <author>
+      <name>Sharad Goel</name>
+    </author>
+    <author>
+      <name>Shang Gao</name>
+    </author>
+    <author>
+      <name>Spencer Williams</name>
+    </author>
+    <author>
+      <name>Sunny Gandhi</name>
+    </author>
+    <author>
+      <name>Tom Zur</name>
+    </author>
+    <author>
+      <name>Varun Iyer</name>
+    </author>
+    <author>
+      <name>Zehua Li</name>
+    </author>
+  </entry>
+</feed>

@@ -1,0 +1,372 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 3263715,
+    "items": [
+      {
+        "DOI": "10.1016/j.neunet.2025.108172",
+        "title": [
+          "Newton\u2013Puiseux analysis for interpretability and calibration of complex-valued neural networks"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              3
+            ]
+          ]
+        },
+        "container-title": [
+          "Neural Networks"
+        ],
+        "is-referenced-by-count": 2,
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0000-0002-8399-7509",
+            "authenticated-orcid": false,
+            "given": "Piotr",
+            "family": "Migus",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/ijcnn.1989.118324",
+        "title": [
+          "Sensor calibration using artificial neural networks"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1989
+            ]
+          ]
+        },
+        "container-title": [
+          "International Joint Conference on Neural Networks"
+        ],
+        "is-referenced-by-count": 1,
+        "author": [
+          {
+            "family": "Masory",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "family": "Aguirre",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1049/cp:19970730",
+        "title": [
+          "Validation of neural networks in automotive engine calibration"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1997
+            ]
+          ]
+        },
+        "container-title": [
+          "Fifth International Conference on Artificial Neural Networks"
+        ],
+        "is-referenced-by-count": 11,
+        "author": [
+          {
+            "given": "D.",
+            "family": "Lowe",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2139/ssrn.3798513",
+        "title": [
+          "FX Volatility Calibration Using Artificial Neural Networks"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2021
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "abstract": "<jats:p>Recent years have witnessed a surge of interest in the application of artificial neural networks (ANNs) to the calibration of financial models. In this dissertation we explore two distinct but complementary applications of ANNs to the calibration of FX volatility models. We first consider Heston\u2019s stochastic volatility model, and demonstrate how the calibration map from quoted implied volatilities to model parameters can be effectively learned using an ANN. Once the supervised training step has been performed, the trained net can be used to perform calibrations at speeds orders of magnitude faster than more conventional optimization-based approaches.&lt;br&gt;&lt;br&gt;We next turn our attention to a local-stochastic variant of the Heston model, in which the pure stochastic model is augmented with a local component \u2014 the leverage function \u2014 enabling exact re-pricing of the input calibration set. There exists an extensive literature concerned with the calibration of these local-stochastic volatility (LSV) models. We explore the possibility of approximating the leverage function using a series of ANNs. The nets are trained in an unsupervised learning routine which seeks to minimize the discrepancy between market and model option prices. The latter are computed via Monte Carlo, and variance reduction techniques prove crucial in bringing calibration times down to reasonable levels. In numerical tests we were unable to achieve calibration speeds comparable to those of alternative existing approaches, although the application of ANNs to the calibration of LSV models has several interesting features which make it worth consideration.</jats:p>",
+        "author": [
+          {
+            "given": "Alex",
+            "family": "Winter",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1021/acs.analchem.0c01863.s001",
+        "title": [
+          "Sensitivity for Multivariate Calibration Based on Multilayer Perceptron Artificial Neural Networks"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              null
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0
+      },
+      {
+        "DOI": "10.11606/d.3.2019.tde-27052022-101649",
+        "title": [
+          "Automatic calibration of traffic microsimulations with artificial neural networks."
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              null
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Rodrigo Fran\u00e7a",
+            "family": "Daguano",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.neunet.2024.106457",
+        "title": [
+          "Advancing neural network calibration: The role of gradient decay in large-margin Softmax optimization"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2024,
+              10
+            ]
+          ]
+        },
+        "container-title": [
+          "Neural Networks"
+        ],
+        "is-referenced-by-count": 10,
+        "author": [
+          {
+            "given": "Siyuan",
+            "family": "Zhang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-9029-7236",
+            "authenticated-orcid": false,
+            "given": "Linbo",
+            "family": "Xie",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/ijcnn.1999.833509",
+        "title": [
+          "Application of neural networks for stereo-camera calibration"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              null
+            ]
+          ]
+        },
+        "container-title": [
+          "IJCNN'99. International Joint Conference on Neural Networks. Proceedings (Cat. No.99CH36339)"
+        ],
+        "is-referenced-by-count": 12,
+        "author": [
+          {
+            "family": "Yongtae Do",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.2139/ssrn.3995626",
+        "title": [
+          "Artificial Neural Networks for SABR Model Calibration &amp;amp; Hedging"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2022
+            ]
+          ]
+        },
+        "is-referenced-by-count": 1,
+        "abstract": "<jats:p>SABR model is a reference in financial industry to price fixed income derivatives, thanks to its ability to capture the volatility smile. The goal of this thesis is to develop a technique based on  SABR model which captures all non-linearities, be more robust, gives tradable parameters instantaneously and gives also instantaneously robust hedging parameters.</jats:p>",
+        "author": [
+          {
+            "given": "Hugues",
+            "family": "Thorin",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.neunet.2025.107510",
+        "title": [
+          "Semi-supervised segmentation on medical images with pseudo label calibration and neural process"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              9
+            ]
+          ]
+        },
+        "container-title": [
+          "Neural Networks"
+        ],
+        "is-referenced-by-count": 3,
+        "author": [
+          {
+            "given": "Tianlun",
+            "family": "Zhang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0003-1003-2252",
+            "authenticated-orcid": false,
+            "given": "Yuxuan",
+            "family": "Luo",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0001-6036-4728",
+            "authenticated-orcid": false,
+            "given": "Xizhao",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0001-7484-7261",
+            "authenticated-orcid": false,
+            "given": "Sam",
+            "family": "Kwong",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

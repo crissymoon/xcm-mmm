@@ -1,0 +1,654 @@
+{
+  "status": "ok",
+  "message-type": "work-list",
+  "message-version": "1.0.0",
+  "message": {
+    "facets": {},
+    "total-results": 8967113,
+    "items": [
+      {
+        "DOI": "10.21203/rs.3.rs-8950363/v1",
+        "title": [
+          "TRNEWS-2025: A Large-Scale, Manually Annotated Turkish News Dataset for Text Classification and NLP Research"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2026,
+              6,
+              29
+            ]
+          ]
+        },
+        "is-referenced-by-count": 0,
+        "abstract": "<title>Abstract</title>\n                <p>This study presents TRNEWS-2025, a labeled Turkish news dataset created for use in Turkish Natural Language Processing (NLP) and machine learning research. The TRNEWS-2025 dataset comprises news articles gathered from various Turkish online news sites and media portals up to the year 2025. It has been manually labeled under nine different categories: Magazine, Politics, Sports, Arts-Culture, Health, Finance-Economy, Science-Technology, Tourism, and Environment. The dataset aims to reflect real-world news language due to its diverse range of topics and up-to-date content.To evaluate the usability and distinctiveness of the dataset, experimental analyses were performed using BERT, a modern transformer-based model, and BiLSTM+GloVe, a classic deep learning architecture. The results show that the TRNEWS-2025 dataset can be used effectively with both model paradigms. The TRNEWS-2025 dataset aims to provide a reliable and up-to-date source dataset that can be utilized in various research areas, including Turkish text classification, topic identification, explainable artificial intelligence studies, and language model evaluations. The original contribution of a Turkish dataset, such as TRNEWS-2025, significantly provides up-to-date, comprehensive, and nine-class news data.</p>",
+        "author": [
+          {
+            "given": "Sengul",
+            "family": "Bayrak",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/v1/2023.emnlp-main.1019",
+        "title": [
+          "MAUD: An Expert-Annotated Legal NLP Dataset for Merger Agreement Understanding"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing"
+        ],
+        "is-referenced-by-count": 24,
+        "author": [
+          {
+            "given": "Steven",
+            "family": "Wang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Antoine",
+            "family": "Scardigli",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Leonard",
+            "family": "Tang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Wei",
+            "family": "Chen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Dmitry",
+            "family": "Levkin",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Anya",
+            "family": "Chen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Spencer",
+            "family": "Ball",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Thomas",
+            "family": "Woodside",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Oliver",
+            "family": "Zhang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Dan",
+            "family": "Hendrycks",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/v1/2025.findings-emnlp.422",
+        "title": [
+          "COMI-LINGUA: Expert Annotated Large-Scale Dataset for Multitask NLP in Hindi-English Code-Mixing"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": [
+          "Findings of the Association for Computational Linguistics: EMNLP 2025"
+        ],
+        "is-referenced-by-count": 4,
+        "author": [
+          {
+            "given": "Rajvee",
+            "family": "Sheth",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Himanshu",
+            "family": "Beniwal",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mayank",
+            "family": "Singh",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/v1/2025.acl-long.1206",
+        "title": [
+          "ACORD: An Expert-Annotated Retrieval Dataset for Legal Contract Drafting"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)"
+        ],
+        "is-referenced-by-count": 4,
+        "author": [
+          {
+            "given": "Steven H",
+            "family": "Wang",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Maksim",
+            "family": "Zubkov",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Kexin",
+            "family": "Fan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sarah",
+            "family": "Harrell",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Yuyang",
+            "family": "Sun",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Wei",
+            "family": "Chen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Andreas",
+            "family": "Plesner",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Roger",
+            "family": "Wattenhofer",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1109/icaiss58487.2023.10250733",
+        "title": [
+          "AI Enabled- Information Retrival Engine (AI-IRE) in Legal Services: An Expert-Annotated NLP for Legal Judgements"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023,
+              8,
+              23
+            ]
+          ]
+        },
+        "container-title": [
+          "2023 Second International Conference on Augmented Intelligence and Sustainable Systems (ICAISS)"
+        ],
+        "is-referenced-by-count": 33,
+        "author": [
+          {
+            "given": "Kishan",
+            "family": "Kanhaiya",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Netaji Subhas University of Technology,Delhi,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "family": "Naveen",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "National Institute of Technology,Kurukshetra,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Arpit Kumar",
+            "family": "Sharma",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Manipal University,Department of Computer and Communcation Engineering,Jaipur,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Kamlesh",
+            "family": "Gautam",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Poornima College of Engineering,Department of Advance Computing,Jaipur,Rajasthan,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Pramod Singh",
+            "family": "Rathore",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Manipal University,Department of Computer and Communcation Engineering,Jaipur,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/v1/2025.justnlp-main.4",
+        "title": [
+          "LeCNet: A Legal Citation Network Benchmark Dataset"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025
+            ]
+          ]
+        },
+        "container-title": [
+          "Proceedings of the 1st Workshop on NLP for Empowering Justice (JUST-NLP 2025)"
+        ],
+        "is-referenced-by-count": 1,
+        "author": [
+          {
+            "given": "Pooja",
+            "family": "Harde",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Bhavya",
+            "family": "Jain",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sarika",
+            "family": "Jain",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.18653/v1/2023.vardial-1.3",
+        "title": [
+          "Murreviikko - A Dialectologically Annotated and Normalized Dataset of Finnish Tweets"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2023
+            ]
+          ]
+        },
+        "container-title": [
+          "Tenth Workshop on NLP for Similar Languages, Varieties and Dialects (VarDial 2023)"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Olli",
+            "family": "Kuparinen",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1163/9789004642096_032",
+        "title": [
+          "IATA Cargo Air Waybill \u2013 Conditions of Contract"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1988,
+              1,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "The Warsaw Convention Annotated"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Lawrence B.",
+            "family": "Goldhirsch",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1163/9789004642096_031",
+        "title": [
+          "IATA Passenger Ticket Notices and Conditions of Contract"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              1988,
+              1,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "The Warsaw Convention Annotated"
+        ],
+        "is-referenced-by-count": 0,
+        "author": [
+          {
+            "given": "Lawrence B.",
+            "family": "Goldhirsch",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "DOI": "10.1016/j.eswa.2024.125296",
+        "title": [
+          "Application of NLP-based models in automated detection of risky contract statements written in complex script system"
+        ],
+        "issued": {
+          "date-parts": [
+            [
+              2025,
+              1
+            ]
+          ]
+        },
+        "container-title": [
+          "Expert Systems with Applications"
+        ],
+        "is-referenced-by-count": 25,
+        "author": [
+          {
+            "given": "Mohammad Hossein",
+            "family": "Kazemi",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "ORCID": "https://orcid.org/0000-0002-7498-348X",
+            "authenticated-orcid": false,
+            "given": "Amin",
+            "family": "Alvanchi",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items-per-page": 10,
+    "query": {
+      "start-index": 0,
+      "search-terms": null
+    }
+  }
+}

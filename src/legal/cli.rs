@@ -15,7 +15,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::text::hash::{fnv1a, hex64};
 
+use super::bench;
 use super::brief::{Brief, Kind};
+use super::registers;
 use super::term::Settings;
 use super::translate::Legal;
 
@@ -45,6 +47,42 @@ pub enum LegalCommand {
     Explain(ExplainArgs),
     /// Recompute the folder's digests and coverage.
     Check(CheckArgs),
+    /// Score the rewrite on the shipped legal and plain pairs.
+    Bench(BenchArgs),
+    /// Split the bank by register and report where the glossary is blind.
+    Coverage(CoverageArgs),
+}
+
+#[derive(Args)]
+pub struct BenchArgs {
+    /// The pairs to score. Defaults to `pairs.jsonl` in the instrument folder.
+    #[arg(long, value_name = "PATH")]
+    pairs: Option<String>,
+    /// Seed for the bootstrap, so two runs report the same interval.
+    #[arg(long, default_value_t = 7, value_name = "N")]
+    seed: u64,
+    /// Bootstrap resamples for the mean delta. Zero reports point estimates.
+    #[arg(long, default_value_t = 2000, value_name = "N")]
+    resamples: usize,
+    /// Write the report here as JSON, for a chart or a diff between runs.
+    #[arg(long, value_name = "PATH")]
+    out: Option<String>,
+    /// Exit non-zero when the share of pairs that improve is below this.
+    #[arg(long, value_name = "RATE")]
+    fail_under: Option<f64>,
+    /// Print the report as JSON.
+    #[arg(long)]
+    json: bool,
+}
+
+#[derive(Args)]
+pub struct CoverageArgs {
+    /// The sentence bank to split. Defaults to `bank.jsonl` in the folder.
+    #[arg(long, value_name = "PATH")]
+    bank: Option<String>,
+    /// Print the audit as JSON.
+    #[arg(long)]
+    json: bool,
 }
 
 /// Where the text comes from.
@@ -179,7 +217,54 @@ pub fn run(args: LegalArgs) -> Result<(), Box<dyn Error>> {
         LegalCommand::Translate(job) => translate(&dir, &job),
         LegalCommand::Explain(job) => explain(&dir, &job),
         LegalCommand::Check(check) => verify(&dir, &check),
+        LegalCommand::Bench(bench) => score_pairs(&dir, &bench),
+        LegalCommand::Coverage(coverage) => registers(&dir, &coverage),
     }
+}
+
+fn score_pairs(dir: &str, args: &BenchArgs) -> Result<(), Box<dyn Error>> {
+    let legal = Legal::load(dir)?;
+    let path = args
+        .pairs
+        .clone()
+        .unwrap_or_else(|| format!("{dir}/pairs.jsonl"));
+    let pairs = bench::read_pairs(&path)?;
+    let report = bench::score(&legal, &pairs, args.seed, args.resamples);
+
+    if let Some(out) = &args.out {
+        let text = serde_json::to_string_pretty(&report)?;
+        fs::write(out, format!("{text}\n"))?;
+    }
+    if args.json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    } else {
+        println!("{}", report.render());
+    }
+    if let Some(floor) = args.fail_under {
+        if report.all.rate < floor {
+            return Err(format!(
+                "{} of {} pairs improved, below the {floor} floor",
+                report.all.won, report.all.cases
+            )
+            .into());
+        }
+    }
+    Ok(())
+}
+
+fn registers(dir: &str, args: &CoverageArgs) -> Result<(), Box<dyn Error>> {
+    let legal = Legal::load(dir)?;
+    let path = args
+        .bank
+        .clone()
+        .unwrap_or_else(|| format!("{dir}/bank.jsonl"));
+    let coverage = registers::Coverage::audit(&legal, &path)?;
+    if args.json {
+        println!("{}", serde_json::to_string_pretty(&coverage)?);
+    } else {
+        println!("{}", coverage.render());
+    }
+    Ok(())
 }
 
 fn terms(dir: &str, args: &TermsArgs) -> Result<(), Box<dyn Error>> {
@@ -715,6 +800,20 @@ fn verify(dir: &str, args: &CheckArgs) -> Result<(), Box<dyn Error>> {
     }
 
     let audit = audit(&legal, &format!("{dir}/bank.jsonl"))?;
+    let bank = format!("{dir}/bank.jsonl");
+    let split = if fs::metadata(&bank).is_ok() {
+        Some(registers::Coverage::audit(&legal, &bank)?)
+    } else {
+        None
+    };
+    let gaps = split.as_ref().map(|split| split.gaps()).unwrap_or_default();
+    if !gaps.is_empty() {
+        warnings.push(format!(
+            "{} target registers are absent, thin or blind, so nothing is claimed there: {}",
+            gaps.len(),
+            gaps.join(", ")
+        ));
+    }
 
     if args.verbose || !faults.is_empty() {
         println!(

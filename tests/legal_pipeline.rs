@@ -10,6 +10,8 @@
 //! 3. A citation and a quotation are left exactly as they were.
 //! 4. The JSON reading is well formed and carries the band, the offsets and the
 //!    rules that produced the edit.
+//! 5. The register audit names the registers the bank cannot speak to, and the
+//!    pair benchmark reports a rate with its interval and a floor that fails.
 
 use std::fs;
 use std::path::PathBuf;
@@ -191,4 +193,137 @@ fn terms_can_be_listed_by_kind() {
     assert!(text.contains("inter-alia"), "{text}");
     assert!(text.contains("mutatis-mutandis"), "{text}");
     assert!(!text.contains("hereunder"), "{text}");
+}
+
+#[test]
+fn the_register_audit_names_the_registers_the_bank_cannot_speak_to() {
+    let dir = data();
+    let out = run(&["legal", "coverage", "--dir", dir.to_str().unwrap()]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let text = stdout(&out);
+    // The four registers the bank does hold are reported with a verdict, and
+    // the ones it does not are named rather than left out of the table.
+    for register in [
+        "court-rule",
+        "statute",
+        "self-help",
+        "ad-copy",
+        "contract",
+        "opinion",
+    ] {
+        assert!(text.contains(register), "missing {register} in\n{text}");
+    }
+    assert!(text.contains("absent"), "{text}");
+    assert!(text.contains("widen: add contract text"), "{text}");
+    assert!(
+        text.lines().any(|line| line.starts_with("widen: ")),
+        "{text}"
+    );
+}
+
+#[test]
+fn the_register_audit_keeps_plain_copy_out_of_the_reach_number() {
+    let dir = data();
+    let out = run(&[
+        "legal",
+        "coverage",
+        "--json",
+        "--dir",
+        dir.to_str().unwrap(),
+    ]);
+    assert!(out.status.success());
+    let value: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let reach = value["reach"].as_f64().unwrap();
+    let leak = value["leak"].as_f64().unwrap();
+    assert!((0.0..=1.0).contains(&reach), "{reach}");
+    assert!((0.0..=1.0).contains(&leak), "{leak}");
+    let rows = value["rows"].as_array().unwrap();
+    let ad = rows
+        .iter()
+        .find(|row| row["register"] == "ad-copy")
+        .unwrap();
+    assert_eq!(ad["role"], "contrast");
+    assert_eq!(ad["verdict"], "clean");
+}
+
+#[test]
+fn the_bench_scores_the_shipped_pairs_with_an_interval() {
+    let dir = data();
+    let out = run(&["legal", "bench", "--dir", dir.to_str().unwrap()]);
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let text = stdout(&out);
+    assert!(text.contains("71 pairs scored"), "{text}");
+    assert!(text.contains("edited"), "{text}");
+    assert!(text.contains("95% interval"), "{text}");
+}
+
+#[test]
+fn the_bench_json_carries_the_rate_and_its_interval() {
+    let dir = data();
+    let out = run(&[
+        "legal",
+        "bench",
+        "--json",
+        "--resamples",
+        "200",
+        "--dir",
+        dir.to_str().unwrap(),
+    ]);
+    assert!(out.status.success());
+    let value: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let all = &value["all"];
+    let rate = all["rate"].as_f64().unwrap();
+    assert!((0.0..=1.0).contains(&rate), "{rate}");
+    assert!(all["low"].as_f64().unwrap() <= rate);
+    assert!(all["high"].as_f64().unwrap() >= rate);
+    assert_eq!(
+        value["pairs"].as_u64().unwrap(),
+        value["cases"].as_array().unwrap().len() as u64
+    );
+    // The edited slice is never larger than the whole, and a pair that no rule
+    // touched cannot be counted as an edit.
+    let edited = value["when_edited"]["cases"].as_u64().unwrap();
+    assert!(edited <= value["pairs"].as_u64().unwrap());
+    assert_eq!(edited, value["edited"].as_u64().unwrap());
+}
+
+#[test]
+fn a_bench_floor_above_the_measured_rate_is_a_failure() {
+    let dir = data();
+    let out = run(&[
+        "legal",
+        "bench",
+        "--fail-under",
+        "1.0",
+        "--resamples",
+        "0",
+        "--dir",
+        dir.to_str().unwrap(),
+    ]);
+    assert!(!out.status.success(), "no rewrite reaches every pair");
+    assert!(
+        String::from_utf8_lossy(&out.stderr).contains("below the 1 floor"),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+
+    let out = run(&[
+        "legal",
+        "bench",
+        "--fail-under",
+        "0",
+        "--resamples",
+        "0",
+        "--dir",
+        dir.to_str().unwrap(),
+    ]);
+    assert!(out.status.success());
 }

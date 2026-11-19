@@ -1,7 +1,38 @@
-queries: 28
-papers: 146
-by_source: {'openalex': 23, 'arxiv': 49, 'crossref': 74}
-with_abstract: 78
+queries: 44
+papers: 225
+by_source: {'openalex': 31, 'arxiv': 69, 'crossref': 125}
+with_abstract: 123
+misses: 1
+missed: ['openalex:bench-mcnemar (no usable answer from https://api.openalex.org/works?search=)']
+
+## bench-bootstrap
+- Bootstrap your own latent: A new approach to self-supervised Learning (2020, arXiv (Cornell University), cited 8692)
+  We introduce Bootstrap Your Own Latent (BYOL), a new approach to self-supervised image representation learning. BYOL relies on two neural networks, referred to as online and target networks, that interact and learn from each other. From an augmented view of an image, we train the online network to predict the target network representation of the same image under a different augmented view. At the same time, we update
+- Bootstrap Methods for Standard Errors, Confidence Intervals, and Other Measures of Statistical Accuracy (1986, Statistical Science, cited 3760)
+  This is a review of bootstrap methods, concentrating on basic ideas and applications rather than theoretical considerations. It begins with an exposition of the bootstrap estimate of standard error for one-sample situations. Several examples, some involving quite complicated statistical procedures, are given. The bootstrap is then extended to other measures of statistical accuracy such as bias and prediction error, a
+- Random assignment of available cases: Bootstrap standard errors and confidence intervals. (2001, Psychological Methods, cited 6)
+- Bootstrap confidence intervals for correlation between continuous repeated measures (2021, Statistical Methods &amp; Applications, cited 2)
+- Standard Errors, Confidence Intervals, and the Power of Statistical Tests (, Statistics for Advanced Practice Nurses and Health Professionals, cited 0)
+
+## bench-calibration
+- On Calibration of Modern Neural Networks (2017, arXiv (Cornell University), cited 13528)
+  Confidence calibration -- the problem of predicting probability estimates representative of the true correctness likelihood -- is important for classification models in many applications. We discover that modern neural networks, unlike those from a decade ago, are poorly calibrated. Through extensive experiments, we observe that depth, width, weight decay, and Batch Normalization are important factors influencing cal
+- Bayesian Calibration of Computer Models (2001, Journal of the Royal Statistical Society Series B (Statistical Methodology), cited 5146)
+  Summary We consider prediction and uncertainty analysis for systems which are approximated using complex mathematical models. Such models, implemented as computer codes, are often generic in the sense that by a suitable choice of some of the model's input parameters the code can be used to predict the behaviour of the system in a variety of specific applications. However, in any specific application the values of nec
+- Application of neural networks for stereo-camera calibration (, IJCNN'99. International Joint Conference on Neural Networks. Proceedings (Cat. No.99CH36339), cited 12)
+- Validation of neural networks in automotive engine calibration (1997, Fifth International Conference on Artificial Neural Networks, cited 11)
+- Advancing neural network calibration: The role of gradient decay in large-margin Softmax optimization (2024, Neural Networks, cited 10)
+
+## bench-mcnemar
+- Approximate Statistical Tests for Comparing Supervised Classification Learning Algorithms (1998, Neural Computation, cited 3090)
+  This article reviews five approximate statistical tests for determining whether one learning algorithm outperforms another on a particular learning task. These test sare compared experimentally to determine their probability of incorrectly detecting a difference when no difference exists (type I error). Two widely used statistical tests are shown to have high probability of type I error in certain situations and shou
+- Combined 5 × 2 cv F Test for Comparing Supervised Classification Learning Algorithms (1999, Neural Computation, cited 331)
+  Dietterich (1998) reviews five statistical tests and proposes the 5 × 2 cvt test for determining whether there is a significant difference between the error rates of two classifiers. In our experiments, we noticed that the 5 × 2 cvt test result may vary depending on factors that should not affect the test, and we propose a variant, the combined 5 × 2 cv F test, that combines multiple statistics to get a more robust t
+- Comparing linear discriminant analysis and supervised learning algorithms for binary classification—A method comparison study (2022, Biometrical Journal, cited 54)
+  Abstract In psychology, linear discriminant analysis (LDA) is the method of choice for two‐group classification tasks based on questionnaire data. In this study, we present a comparison of LDA with several supervised learning algorithms. In particular, we examine to what extent the predictive performance of LDA relies on the multivariate normality assumption. As nonparametric alternatives, the linear support vector m
+- Comparing Binary Tests And Regression Analysis (2003, The Statistical Evaluation of Medical Tests for Classification and Prediction, cited 15)
+  Abstract Various factors can influence the performance of a medical test. The environment in which it is performed, characteristics of testers, characteristics of test subjects and operating parameters for the test are some such factors. It is important to identify and understand the influence of such factors in order to optimize conditions for using a test.
+- Multivariate Statistical Tests for Comparing Classification Algorithms (2011, Lecture Notes in Computer Science, cited 15)
 
 ## jso
 - Population size reduction for the differential evolution algorithm (2007, Applied Intelligence, cited 318)
@@ -11,6 +42,47 @@ with_abstract: 78
   Differential evolution is one of the most prestigious population-based stochastic optimization algorithm for black-box problems. The performance of a differential evolution algorithm depends highly on its mutation and crossover strategy and associated control parameters. However, the determination process for the most suitable parameter setting is troublesome and time consuming. Adaptive control parameter methods tha
 - HARD-DE: Hierarchical ARchive Based Mutation Strategy With Depth Information of Evolution for the Enhancement of Differential Evolution on Numerical Optimization (2019, IEEE Access, cited 114)
   Differential evolution is a famous and effective branch of evolutionary computation, which aims at tackling complex optimization problems. There are two aspects significantly affecting the overall performance of DE variants, one is trial vector generation strategy and the other is the control parameter adaptation scheme. Here in this paper, a new hierarchical archive-based trial vector generation strategy with depth 
+
+## legal-bench
+- LegalBench: A Collaboratively Built Benchmark for Measuring Legal Reasoning in Large Language Models (2023, arXiv (Cornell University), cited 354)
+  The advent of large language models (LLMs) and their adoption by the legal community has given rise to the question: what types of legal reasoning can LLMs perform? To enable greater study of this question, we present LegalBench: a collaboratively constructed legal reasoning benchmark consisting of 162 tasks covering six different types of legal reasoning. LegalBench was built through an interdisciplinary process, in
+- LegalBench-RAG: A Benchmark for Retrieval-Augmented Generation in the Legal Domain (2024, arXiv (Cornell University), cited 251)
+  Retrieval-Augmented Generation (RAG) systems are showing promising potential, and are becoming increasingly relevant in AI-powered legal applications. Existing benchmarks, such as LegalBench, assess the generative capabilities of Large Language Models (LLMs) in the legal domain, but there is a critical gap in evaluating the retrieval component of RAG systems. To address this, we introduce LegalBench-RAG, the first be
+- Causalbench: A Multi-Domain Benchmark for Evaluating Causal Reasoning in Large Language Models (2025, , cited 1)
+- Enhancing Thai legal reasoning in large language models using group relative policy optimization (, , cited 0)
+  The application of Large Language Models (LLMs) to Thai legal question answering (QA) presents significant opportunities but faces challenges, particularly with complex legal reasoning, accurate citation, and the high cost of advanced alignment techniques. This thesis addresses these issues through a two-fold contribution. Firstly, it details the development of NitiBench, a comprehensive benchmark specifically design
+- LegalBench: Prototyping a Collaborative Benchmark for Legal Reasoning (2022-09-13, arXiv, cited 0)
+  Can foundation models be guided to execute tasks involving legal reasoning? We believe that building a benchmark to answer this question will require sustained collaborative efforts between the computer science and legal communities. To that end, this short paper serves three purposes. First, we describe how IRAC-a framework legal scholars use to distinguish different types of legal reasoning-can guide the constructi
+
+## legal-benchmark
+- A Brief Report on LawGPT 1.0: A Virtual Legal Assistant Based on GPT-3 (2023-02-11, arXiv, cited 0)
+  LawGPT 1.0 is a virtual legal assistant built on the state-of-the-art language model GPT-3, fine-tuned for the legal domain. The system is designed to provide legal assistance to users in a conversational manner, helping them with tasks such as answering legal questions, generating legal documents, and providing legal advice. In this paper, we provide a brief overview of LawGPT 1.0, its architecture, and its performa
+- Learning Interpretable Legal Case Retrieval via Knowledge-Guided Case Reformulation (2024-06-28, arXiv, cited 0)
+  Legal case retrieval for sourcing similar cases is critical in upholding judicial fairness. Different from general web search, legal case retrieval involves processing lengthy, complex, and highly specialized legal documents. Existing methods in this domain often overlook the incorporation of legal expert knowledge, which is crucial for accurately understanding and modeling legal cases, leading to unsatisfactory retr
+- Multi-Agent Simulator Drives Language Models for Legal Intensive Interaction (2025-02-08, arXiv, cited 0)
+  Large Language Models (LLMs) have significantly advanced legal intelligence, but the scarcity of scenario data impedes the progress toward interactive legal scenarios. This paper introduces a Multi-agent Legal Simulation Driver (MASER) to scalably generate synthetic data by simulating interactive legal scenarios. Leveraging real-legal case sources, MASER ensures the consistency of legal attributes between participant
+- A Reasoning-Focused Legal Retrieval Benchmark (2025-05-06, arXiv, cited 0)
+  As the legal community increasingly examines the use of large language models (LLMs) for various legal applications, legal AI developers have turned to retrieval-augmented LLMs ("RAG" systems) to improve system performance and robustness. An obstacle to the development of specialized RAG systems is the lack of realistic legal RAG benchmarks which capture the complexity of both legal retrieval and downstream legal que
+- BriefMe: A Legal NLP Benchmark for Assisting with Legal Briefs (2025-06-07, arXiv, cited 0)
+  A core part of legal work that has been under-explored in Legal NLP is the writing and editing of legal briefs. This requires not only a thorough understanding of the law of a jurisdiction, from judgments to statutes, but also the ability to make new arguments to try to expand the law in a new direction and make novel and creative arguments that are persuasive to judges. To capture and evaluate these legal skills in 
+
+## legal-cuad
+- CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review (2021, arXiv (Cornell University), cited 571)
+  Many specialized domains remain untouched by deep learning, as large labeled datasets require expensive expert annotators. We address this bottleneck within the legal domain by introducing the Contract Understanding Atticus Dataset (CUAD), a new dataset for legal contract review. CUAD was created with dozens of legal experts from The Atticus Project and consists of over 13,000 annotations. The task is to highlight sa
+- AI Enabled- Information Retrival Engine (AI-IRE) in Legal Services: An Expert-Annotated NLP for Legal Judgements (2023, 2023 Second International Conference on Augmented Intelligence and Sustainable Systems (ICAISS), cited 33)
+- Application of NLP-based models in automated detection of risky contract statements written in complex script system (2025, Expert Systems with Applications, cited 25)
+- MAUD: An Expert-Annotated Legal NLP Dataset for Merger Agreement Understanding (2023, Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, cited 24)
+- COMI-LINGUA: Expert Annotated Large-Scale Dataset for Multitask NLP in Hindi-English Code-Mixing (2025, Findings of the Association for Computational Linguistics: EMNLP 2025, cited 4)
+
+## legal-lexglue
+- LexGLUE: A Benchmark Dataset for Legal Language Understanding in English (2021, Proceedings of the conference - Association for Computational Linguistics. Meeting, cited 820)
+  Laws and their interpretations, legal arguments and agreements\ are typically expressed in writing, leading to the production of vast corpora of legal text. Their analysis, which is at the center of legal practice, becomes increasingly elaborate as these collections grow in size. Natural language understanding (NLU) technologies can be a valuable tool to support legal practitioners in these endeavors. Their usefulnes
+- Processing Long Legal Documents with Pre-trained Transformers: Modding LegalBERT and Longformer (2022, Natural Legal Language Processing Workshop (NLLP), cited 86)
+  Pre-trained Transformers currently dominate most NLP tasks.They impose, however, limits on the maximum input length (512 subwords in BERT), which are too restrictive in the legal domain.Even sparse-attention models, such as Longformer and BigBird, which increase the maximum input length to 4,096 sub-words, severely truncate texts in three of the six datasets of LexGLUE.Simpler linear classifiers with TF-IDF features 
+- ChatGPT may Pass the Bar Exam soon, but has a Long Way to Go for the LexGLUE benchmark (2023-03-09, arXiv, cited 21)
+  Following the hype around OpenAI's ChatGPT conversational agent, the last straw in the recent development of Large Language Models (LLMs) that demonstrate emergent unprecedented zero-shot capabilities, we audit the latest OpenAI's GPT-3.5 model, `gpt-3.5-turbo', the first available ChatGPT model, in the LexGLUE benchmark in a zero-shot fashion providing examples in a templated instruction-following format. The result
+- A Multi-Task Benchmark for Korean Legal Language Understanding and Judgement Prediction (2022, Advances in Neural Information Processing Systems 35, cited 8)
+- Developing a Pragmatic Benchmark for Assessing Korean Legal Language Understanding in Large Language Models (2024, Findings of the Association for Computational Linguistics: EMNLP 2024, cited 6)
 
 ## lshade
 - Memory, evolutionary operator, and local search based improved Grey Wolf Optimizer with linear population size reduction technique (2023, Knowledge-Based Systems, cited 105)
