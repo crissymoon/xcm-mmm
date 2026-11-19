@@ -112,6 +112,23 @@ pub struct Definition {
     pub offset: usize,
 }
 
+/// A citation shorthand the document uses, with the reading the glossary holds
+/// for it.
+///
+/// A shorthand is not a term of art and not a drafting word: it is a pointer,
+/// and a gloss beside it would land in the middle of the citation it belongs
+/// to. The brief therefore reads it once, at the end, where a footnotes list
+/// would sit.
+#[derive(Clone, Debug, Serialize)]
+pub struct Shorthand {
+    pub id: String,
+    /// The spelling the document used.
+    pub term: String,
+    pub plain: String,
+    /// How many times the shorthand appears, inside citations or outside them.
+    pub uses: usize,
+}
+
 /// The counts the summary is built from.
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct Counts {
@@ -128,6 +145,8 @@ pub struct Counts {
     /// occurrence, because a reader stops at each one.
     pub rare: usize,
     pub definitions: usize,
+    /// Distinct citation shorthands the document uses.
+    pub shorthand: usize,
 }
 
 /// A document explained.
@@ -139,6 +158,8 @@ pub struct Brief {
     pub counts: Counts,
     pub clauses: Vec<Clause>,
     pub definitions: Vec<Definition>,
+    /// The citation shorthands the document cites by, in order of first use.
+    pub shorthand: Vec<Shorthand>,
     /// Defined terms the glossary has no row for. The brief cannot answer for
     /// them, so they are named instead of being left out quietly.
     pub gaps: Vec<super::gaps::Gap>,
@@ -168,10 +189,11 @@ impl Brief {
         }
 
         let definitions = define(legal, &hits, &protected);
+        let shorthand = shorthands(legal, &hits);
         let gaps = super::gaps::find(legal, text);
-        let counts = count(&clauses, definitions.len());
+        let counts = count(&clauses, definitions.len(), shorthand.len());
         let scan = legal.scan(text);
-        let summary = summarise(&counts, scan.words);
+        let summary = summarise(&counts, &shorthand, scan.words);
         let warnings = warn(legal, &counts, &definitions, &gaps, scan.words);
 
         Ok(Self {
@@ -180,6 +202,7 @@ impl Brief {
             counts,
             clauses,
             definitions,
+            shorthand,
             gaps,
             stats: scan.stats,
             warnings,
@@ -375,12 +398,19 @@ fn read_clause(
             continue;
         }
         let term = legal.lexicon.term(hit);
+        // A citation shorthand is read once in the shorthand list, so its Latin
+        // is not a stop inside the clause. Counting it here put "seq" in front
+        // of the reader as a word general English does not use, when the word
+        // was half of `et seq.`
+        if term.shorthand() {
+            continue;
+        }
         if let Some((word, _)) = legal.rare_word(term) {
             if !rare.contains(&word) {
                 rare.push(word);
             }
         }
-        if term.avoidable || !term.explain {
+        if term.avoidable {
             continue;
         }
         if !terms.contains(&term.id) {
@@ -675,9 +705,47 @@ fn define(legal: &Legal, hits: &[super::term::Hit], protected: &[Span]) -> Vec<D
     out
 }
 
-fn count(clauses: &[Clause], definitions: usize) -> Counts {
+/// The citation shorthands a document uses (`id.`, `supra`, `et seq.`), in
+/// order of first use.
+///
+/// These rows are in the glossary because a reader stops at them, and they are
+/// outside the definition list because a gloss in place would split the
+/// citation. Before this they were counted nowhere: avoidable false meant the
+/// rewrite passed them and explain false meant the definitions list passed them
+/// too, so six rows of the glossary did no work at all. A pointer still needs
+/// reading, so the brief collects them and gives each one its plain reading
+/// once, at the end.
+///
+/// A shorthand is collected whether or not it sits inside a citation, because
+/// inside a citation is where it lives; the guard is what keeps the rewrite off
+/// it, not what keeps it out of the list.
+fn shorthands(legal: &Legal, hits: &[super::term::Hit]) -> Vec<Shorthand> {
+    let mut out: Vec<Shorthand> = Vec::new();
+    let mut seen: BTreeMap<String, usize> = BTreeMap::new();
+    for hit in hits {
+        let term = legal.lexicon.term(hit);
+        if !term.shorthand() {
+            continue;
+        }
+        if let Some(&index) = seen.get(&term.id) {
+            out[index].uses += 1;
+            continue;
+        }
+        seen.insert(term.id.clone(), out.len());
+        out.push(Shorthand {
+            id: term.id.clone(),
+            term: hit.text.clone(),
+            plain: term.plain.clone(),
+            uses: 1,
+        });
+    }
+    out
+}
+
+fn count(clauses: &[Clause], definitions: usize, shorthand: usize) -> Counts {
     let mut counts = Counts {
         definitions,
+        shorthand,
         ..Counts::default()
     };
     for clause in clauses {
@@ -702,7 +770,7 @@ fn count(clauses: &[Clause], definitions: usize) -> Counts {
     counts
 }
 
-fn summarise(counts: &Counts, words: usize) -> String {
+fn summarise(counts: &Counts, shorthand: &[Shorthand], words: usize) -> String {
     let mut parts = Vec::new();
     if counts.duties > 0 {
         parts.push(plural(counts.duties, "duty", "duties"));
@@ -769,6 +837,20 @@ fn summarise(counts: &Counts, words: usize) -> String {
         1 => text.push_str(" It uses one term of art, defined below."),
         2 => text.push_str(" It uses two terms of art, defined below."),
         n => text.push_str(&format!(" It uses {n} terms of art, defined below.")),
+    }
+    if !shorthand.is_empty() {
+        let names = shorthand
+            .iter()
+            .map(|row| row.term.clone())
+            .collect::<Vec<_>>();
+        text.push_str(&format!(
+            " Its citations use the {}, read at the end.",
+            if shorthand.len() == 1 {
+                format!("shorthand {}", names[0])
+            } else {
+                format!("shorthands {}", join(&names))
+            }
+        ));
     }
     text
 }
@@ -972,6 +1054,40 @@ mod tests {
             .warnings
             .iter()
             .any(|w| w.contains("nothing to comply with")));
+    }
+
+    #[test]
+    fn a_citation_shorthand_is_read_once_at_the_end() {
+        let b = brief(
+            "Smith v. Jones, 12 U.S. 34, 40 (2019), supra, at 42; see id. at 43. The Buyer shall \
+             pay the fee.",
+        );
+        let supra = b
+            .shorthand
+            .iter()
+            .find(|row| row.term.eq_ignore_ascii_case("supra"))
+            .expect("supra is a citation shorthand");
+        assert_eq!(supra.plain, "above");
+        assert_eq!(b.counts.shorthand, 2);
+        assert!(b.summary.contains("shorthands"), "{}", b.summary);
+        // A pointer is not a stop in the middle of a clause: the Latin in it is
+        // not reported as a word general English does not use.
+        assert!(
+            b.clauses.iter().all(|clause| !clause
+                .rare
+                .iter()
+                .any(|w| w == "supra" || w == "id" || w == "seq")),
+            "{:?}",
+            b.clauses.iter().map(|c| &c.rare).collect::<Vec<_>>()
+        );
+    }
+
+    #[test]
+    fn a_text_without_a_citation_has_no_shorthand_section() {
+        let b = brief("The Buyer shall pay the fee within thirty days.");
+        assert!(b.shorthand.is_empty(), "{:?}", b.shorthand);
+        assert_eq!(b.counts.shorthand, 0);
+        assert!(!b.summary.contains("shorthand"), "{}", b.summary);
     }
 
     #[test]

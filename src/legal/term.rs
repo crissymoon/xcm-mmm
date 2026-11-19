@@ -65,6 +65,16 @@ impl Term {
     pub fn spellings(&self) -> impl Iterator<Item = &str> {
         std::iter::once(self.term.as_str()).chain(self.variants.iter().map(|v| v.as_str()))
     }
+
+    /// A pointer rather than a word: `id.`, `supra`, `infra`, `cf.`, `et seq.`.
+    ///
+    /// The rows are in the glossary because a reader stops at them, and outside
+    /// the definition list because a gloss in place would split the citation.
+    /// The brief reads them once, at the end, so they are neither glossed,
+    /// replaced nor reported as a rare word in the middle of a clause.
+    pub fn shorthand(&self) -> bool {
+        !self.explain
+    }
 }
 
 /// One occurrence of a term.
@@ -405,6 +415,15 @@ mod tests {
             term("and-or", "and/or", "doublet", true),
         ])
         .unwrap()
+    }
+
+    #[test]
+    fn a_row_that_is_not_glossed_in_place_is_a_shorthand() {
+        let mut pointer = term("supra", "supra", "citation", false);
+        pointer.explain = false;
+        let art = term("laches", "laches", "doctrine", false);
+        assert!(pointer.shorthand());
+        assert!(!art.shorthand());
     }
 
     #[test]

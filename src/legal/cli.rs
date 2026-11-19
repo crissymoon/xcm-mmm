@@ -592,6 +592,26 @@ fn render(brief: &Brief, top: usize) -> String {
         }
     }
 
+    if !brief.shorthand.is_empty() {
+        out.push_str(
+            "\nSHORTHAND\n  the citations point with these, read once here rather than in \
+             place\n",
+        );
+        for (n, row) in brief.shorthand.iter().enumerate() {
+            out.push_str(&format!(
+                "  {}. {}: {}{}\n",
+                n + 1,
+                row.term,
+                row.plain,
+                if row.uses > 1 {
+                    format!(" (used {} times)", row.uses)
+                } else {
+                    String::new()
+                }
+            ));
+        }
+    }
+
     if !brief.gaps.is_empty() {
         out.push_str("\nUNGLOSSED TERMS\n");
         for (n, gap) in brief.gaps.iter().enumerate() {

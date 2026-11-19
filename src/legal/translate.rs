@@ -47,6 +47,10 @@ pub struct TermHit {
     /// one, and the rate it was measured at.
     pub rare: Option<String>,
     pub rare_per_million: f64,
+    /// A citation pointer (`id.`, `supra`, `et seq.`) rather than a word. It is
+    /// never rewritten and never glossed in place; the brief reads it once in
+    /// its shorthand list.
+    pub shorthand: bool,
 }
 
 /// The counts a reading is made of.
@@ -276,6 +280,7 @@ impl Legal {
             in_citation: protected.iter().any(|s| s.intersects(&hit.span)),
             rare_per_million: rare.as_ref().map(|(_, rate)| *rate).unwrap_or(0.0),
             rare: rare.map(|(word, _)| word),
+            shorthand: term.shorthand(),
         }
     }
 
@@ -288,7 +293,9 @@ impl Legal {
                 continue;
             }
             *kinds.entry(term.kind.clone()).or_insert(0) += 1;
-            if term.rare.is_some() {
+            // A pointer is not a word the reader has to meet in the middle of a
+            // sentence: the brief reads its citation shorthand once, at the end.
+            if term.rare.is_some() && !term.shorthand {
                 rare += 1;
             }
             if term.avoidable {
