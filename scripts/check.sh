@@ -17,6 +17,12 @@ echo "== docs"
 python3 scripts/check_docs.py
 cargo doc --no-deps
 
+echo "== scripts"
+# The generator is the only thing that builds the kernel, so it is compiled and
+# run here: a broken cell module would otherwise be found on Kaggle, not here.
+PYTHONPYCACHEPREFIX=tmp/pycache python3 -m compileall -q scripts
+python3 scripts/kaggle-notebook.py
+
 echo "== frequency table"
 python3 scripts/lex-freq.py --check
 
