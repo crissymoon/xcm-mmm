@@ -25,6 +25,7 @@ use xcm_mmm::problem::Problem;
 use xcm_mmm::profile::cli::{run as run_read, ReadArgs};
 use xcm_mmm::route::cli::{run as run_route, RouteArgs};
 use xcm_mmm::segment::cli::{run as run_segment, SegmentArgs};
+use xcm_mmm::topics::cli::{run as run_topics, TopicsArgs};
 
 #[derive(Parser)]
 #[command(
@@ -79,6 +80,9 @@ enum Command {
     /// Decide what to do with a message or a document: reply, forward, file,
     /// hold for a person, or ignore, with every veto printed.
     Route(RouteArgs),
+    /// Read the advertising panel: its hot topics, its keywords by ticker and
+    /// area, and the ads that reached the most people.
+    Topics(TopicsArgs),
 }
 
 #[derive(clap::Args)]
@@ -821,6 +825,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Churn(args) => run_churn(args),
         Command::Transformer(args) => run_transformer(args),
         Command::Route(args) => run_route(args),
+        Command::Topics(args) => run_topics(args),
     }
 }
 

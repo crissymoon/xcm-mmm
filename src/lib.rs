@@ -66,6 +66,7 @@ pub mod segment;
 pub mod stats;
 pub mod support;
 pub mod text;
+pub mod topics;
 pub mod transformer;
 pub mod uncertainty;
 
