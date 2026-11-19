@@ -1,8 +1,14 @@
 {
   "name": "marketlab-legal-language",
   "version": 1,
-  "built_at": "2026-11-19T05:04:09Z",
+  "built_at": "2026-11-19T15:31:40Z",
   "files": [
+    {
+      "name": "bank-ext.jsonl",
+      "rows": 1602,
+      "bytes": 469816,
+      "fnv64": "fe3b9d1cbb06eefa"
+    },
     {
       "name": "bank.jsonl",
       "rows": 2324,

@@ -1,6 +1,6 @@
 {
  "meta": {
-  "read_at": "2026-11-19T15:09:40+00:00",
+  "read_at": "2026-11-19T15:18:06+00:00",
   "source": "data/marketlab-ticker-ads-2026-11-19/ticker-ads.jsonl",
   "ads": 209,
   "with_reach": 209,
@@ -868,511 +868,436 @@
   }
  ],
  "by_ticker": {
-  "DUK": [
-   {
-    "term": "green",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "easy",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "clean",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "fit",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "reliable",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "hot",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "water",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "gas",
-    "ads": 1,
-    "lift": 104.5
-   }
-  ],
-  "GS": [
-   {
-    "term": "emprendedores",
-    "ads": 6,
-    "lift": 34.83
-   },
-   {
-    "term": "crecer",
-    "ads": 5,
-    "lift": 34.83
-   },
-   {
-    "term": "proyecto",
-    "ads": 5,
-    "lift": 34.83
-   },
-   {
-    "term": "somos",
-    "ads": 4,
-    "lift": 34.83
-   },
-   {
-    "term": "solo",
-    "ads": 4,
-    "lift": 34.83
-   },
-   {
-    "term": "cu\u00e9ntanos",
-    "ads": 4,
-    "lift": 34.83
-   },
-   {
-    "term": "equipo",
-    "ads": 4,
-    "lift": 34.83
-   },
-   {
-    "term": "negocio",
-    "ads": 4,
-    "lift": 34.83
-   }
-  ],
-  "JPM": [
-   {
-    "term": "invest",
-    "ads": 4,
-    "lift": 5.23
-   },
-   {
-    "term": "economies",
-    "ads": 4,
-    "lift": 5.23
-   },
-   {
-    "term": "markets",
-    "ads": 4,
-    "lift": 5.23
-   },
-   {
-    "term": "equity",
-    "ads": 4,
-    "lift": 5.23
-   },
-   {
-    "term": "apac",
-    "ads": 4,
-    "lift": 5.23
-   },
-   {
-    "term": "workshops",
-    "ads": 4,
-    "lift": 5.23
-   },
-   {
-    "term": "greater",
-    "ads": 4,
-    "lift": 5.23
-   },
-   {
-    "term": "resilient",
-    "ads": 6,
-    "lift": 5.22
-   }
-  ],
-  "KO": [
-   {
-    "term": "cocacolahbc",
-    "ads": 28,
-    "lift": 5.97
-   },
-   {
-    "term": "teamcchbc",
-    "ads": 12,
-    "lift": 5.97
-   },
-   {
-    "term": "lifeatcchbc",
-    "ads": 10,
-    "lift": 5.97
-   },
-   {
-    "term": "nextgen",
-    "ads": 10,
-    "lift": 5.97
-   },
-   {
-    "term": "day",
-    "ads": 8,
-    "lift": 5.97
-   },
-   {
-    "term": "bit",
-    "ads": 8,
-    "lift": 5.97
-   },
-   {
-    "term": "career",
-    "ads": 7,
-    "lift": 5.97
-   },
-   {
-    "term": "supplychain",
-    "ads": 7,
-    "lift": 5.97
-   }
-  ],
-  "PFE": [
-   {
-    "term": "cancer",
-    "ads": 12,
-    "lift": 6.53
-   },
-   {
-    "term": "breakthroughs",
-    "ads": 10,
-    "lift": 6.53
-   },
-   {
-    "term": "access",
-    "ads": 10,
-    "lift": 6.53
-   },
-   {
-    "term": "patients",
-    "ads": 8,
-    "lift": 6.53
-   },
-   {
-    "term": "reject",
-    "ads": 6,
-    "lift": 6.53
-   },
-   {
-    "term": "reduce",
-    "ads": 6,
-    "lift": 6.53
-   },
-   {
-    "term": "harm",
-    "ads": 6,
-    "lift": 6.53
-   },
-   {
-    "term": "harmful",
-    "ads": 5,
-    "lift": 6.53
-   }
-  ],
-  "PG": [
-   {
-    "term": "ambi",
-    "ads": 19,
-    "lift": 8.04
-   },
-   {
-    "term": "pur",
-    "ads": 19,
-    "lift": 8.04
-   },
-   {
-    "term": "dom",
-    "ads": 10,
-    "lift": 8.04
-   },
-   {
-    "term": "si\u0119",
-    "ads": 10,
-    "lift": 8.04
-   },
-   {
-    "term": "m\u00f3j",
-    "ads": 7,
-    "lift": 8.04
-   },
-   {
-    "term": "wsp\u00f3\u0142praca",
-    "ads": 6,
-    "lift": 8.04
-   },
-   {
-    "term": "tw\u00f3j",
-    "ads": 6,
-    "lift": 8.04
-   },
-   {
-    "term": "vibe",
-    "ads": 6,
-    "lift": 8.04
-   }
-  ],
-  "XOM": [
-   {
-    "term": "capture",
-    "ads": 26,
-    "lift": 3.07
-   },
-   {
-    "term": "storage",
-    "ads": 24,
-    "lift": 3.07
-   },
-   {
-    "term": "louisiana",
-    "ads": 18,
-    "lift": 3.07
-   },
-   {
-    "term": "texas",
-    "ads": 17,
-    "lift": 3.07
-   },
-   {
-    "term": "khan",
-    "ads": 14,
-    "lift": 3.07
-   },
-   {
-    "term": "academy",
-    "ads": 14,
-    "lift": 3.07
-   },
-   {
-    "term": "ccs",
-    "ads": 13,
-    "lift": 3.07
-   },
-   {
-    "term": "resources",
-    "ads": 12,
-    "lift": 3.07
-   }
-  ]
+  "DUK": {
+   "ads": 2,
+   "thin": true,
+   "terms": []
+  },
+  "GS": {
+   "ads": 6,
+   "thin": true,
+   "terms": []
+  },
+  "JPM": {
+   "ads": 40,
+   "thin": false,
+   "terms": [
+    {
+     "term": "invest",
+     "ads": 4,
+     "lift": 5.23
+    },
+    {
+     "term": "economies",
+     "ads": 4,
+     "lift": 5.23
+    },
+    {
+     "term": "markets",
+     "ads": 4,
+     "lift": 5.23
+    },
+    {
+     "term": "equity",
+     "ads": 4,
+     "lift": 5.23
+    },
+    {
+     "term": "apac",
+     "ads": 4,
+     "lift": 5.23
+    },
+    {
+     "term": "workshops",
+     "ads": 4,
+     "lift": 5.23
+    },
+    {
+     "term": "greater",
+     "ads": 4,
+     "lift": 5.23
+    },
+    {
+     "term": "resilient",
+     "ads": 6,
+     "lift": 5.22
+    }
+   ]
+  },
+  "KO": {
+   "ads": 35,
+   "thin": false,
+   "terms": [
+    {
+     "term": "cocacolahbc",
+     "ads": 28,
+     "lift": 5.97
+    },
+    {
+     "term": "teamcchbc",
+     "ads": 12,
+     "lift": 5.97
+    },
+    {
+     "term": "lifeatcchbc",
+     "ads": 10,
+     "lift": 5.97
+    },
+    {
+     "term": "nextgen",
+     "ads": 10,
+     "lift": 5.97
+    },
+    {
+     "term": "day",
+     "ads": 8,
+     "lift": 5.97
+    },
+    {
+     "term": "bit",
+     "ads": 8,
+     "lift": 5.97
+    },
+    {
+     "term": "career",
+     "ads": 7,
+     "lift": 5.97
+    },
+    {
+     "term": "supplychain",
+     "ads": 7,
+     "lift": 5.97
+    }
+   ]
+  },
+  "PFE": {
+   "ads": 32,
+   "thin": false,
+   "terms": [
+    {
+     "term": "cancer",
+     "ads": 12,
+     "lift": 6.53
+    },
+    {
+     "term": "breakthroughs",
+     "ads": 10,
+     "lift": 6.53
+    },
+    {
+     "term": "access",
+     "ads": 10,
+     "lift": 6.53
+    },
+    {
+     "term": "patients",
+     "ads": 8,
+     "lift": 6.53
+    },
+    {
+     "term": "reject",
+     "ads": 6,
+     "lift": 6.53
+    },
+    {
+     "term": "reduce",
+     "ads": 6,
+     "lift": 6.53
+    },
+    {
+     "term": "harm",
+     "ads": 6,
+     "lift": 6.53
+    },
+    {
+     "term": "harmful",
+     "ads": 5,
+     "lift": 6.53
+    }
+   ]
+  },
+  "PG": {
+   "ads": 26,
+   "thin": false,
+   "terms": [
+    {
+     "term": "ambi",
+     "ads": 19,
+     "lift": 8.04
+    },
+    {
+     "term": "pur",
+     "ads": 19,
+     "lift": 8.04
+    },
+    {
+     "term": "dom",
+     "ads": 10,
+     "lift": 8.04
+    },
+    {
+     "term": "si\u0119",
+     "ads": 10,
+     "lift": 8.04
+    },
+    {
+     "term": "m\u00f3j",
+     "ads": 7,
+     "lift": 8.04
+    },
+    {
+     "term": "wsp\u00f3\u0142praca",
+     "ads": 6,
+     "lift": 8.04
+    },
+    {
+     "term": "tw\u00f3j",
+     "ads": 6,
+     "lift": 8.04
+    },
+    {
+     "term": "vibe",
+     "ads": 6,
+     "lift": 8.04
+    }
+   ]
+  },
+  "XOM": {
+   "ads": 68,
+   "thin": false,
+   "terms": [
+    {
+     "term": "capture",
+     "ads": 26,
+     "lift": 3.07
+    },
+    {
+     "term": "storage",
+     "ads": 24,
+     "lift": 3.07
+    },
+    {
+     "term": "louisiana",
+     "ads": 18,
+     "lift": 3.07
+    },
+    {
+     "term": "texas",
+     "ads": 17,
+     "lift": 3.07
+    },
+    {
+     "term": "khan",
+     "ads": 14,
+     "lift": 3.07
+    },
+    {
+     "term": "academy",
+     "ads": 14,
+     "lift": 3.07
+    },
+    {
+     "term": "ccs",
+     "ads": 13,
+     "lift": 3.07
+    },
+    {
+     "term": "resources",
+     "ads": 12,
+     "lift": 3.07
+    }
+   ]
+  }
  },
  "by_area": {
-  "ENRG": [
-   {
-    "term": "capture",
-    "ads": 26,
-    "lift": 3.07
-   },
-   {
-    "term": "storage",
-    "ads": 24,
-    "lift": 3.07
-   },
-   {
-    "term": "louisiana",
-    "ads": 18,
-    "lift": 3.07
-   },
-   {
-    "term": "texas",
-    "ads": 17,
-    "lift": 3.07
-   },
-   {
-    "term": "khan",
-    "ads": 14,
-    "lift": 3.07
-   },
-   {
-    "term": "academy",
-    "ads": 14,
-    "lift": 3.07
-   },
-   {
-    "term": "ccs",
-    "ads": 13,
-    "lift": 3.07
-   },
-   {
-    "term": "resources",
-    "ads": 12,
-    "lift": 3.07
-   }
-  ],
-  "FINL": [
-   {
-    "term": "capital",
-    "ads": 8,
-    "lift": 4.54
-   },
-   {
-    "term": "emprendedores",
-    "ads": 6,
-    "lift": 4.54
-   },
-   {
-    "term": "resilient",
-    "ads": 6,
-    "lift": 4.54
-   },
-   {
-    "term": "james",
-    "ads": 6,
-    "lift": 4.54
-   },
-   {
-    "term": "sullivan",
-    "ads": 6,
-    "lift": 4.54
-   },
-   {
-    "term": "crecer",
-    "ads": 5,
-    "lift": 4.54
-   },
-   {
-    "term": "proyecto",
-    "ads": 5,
-    "lift": 4.54
-   },
-   {
-    "term": "minute",
-    "ads": 5,
-    "lift": 4.54
-   }
-  ],
-  "HLTH": [
-   {
-    "term": "cancer",
-    "ads": 12,
-    "lift": 6.53
-   },
-   {
-    "term": "breakthroughs",
-    "ads": 10,
-    "lift": 6.53
-   },
-   {
-    "term": "access",
-    "ads": 10,
-    "lift": 6.53
-   },
-   {
-    "term": "patients",
-    "ads": 8,
-    "lift": 6.53
-   },
-   {
-    "term": "reject",
-    "ads": 6,
-    "lift": 6.53
-   },
-   {
-    "term": "reduce",
-    "ads": 6,
-    "lift": 6.53
-   },
-   {
-    "term": "harm",
-    "ads": 6,
-    "lift": 6.53
-   },
-   {
-    "term": "harmful",
-    "ads": 5,
-    "lift": 6.53
-   }
-  ],
-  "STPL": [
-   {
-    "term": "cocacolahbc",
-    "ads": 28,
-    "lift": 3.43
-   },
-   {
-    "term": "ambi",
-    "ads": 19,
-    "lift": 3.43
-   },
-   {
-    "term": "pur",
-    "ads": 19,
-    "lift": 3.43
-   },
-   {
-    "term": "teamcchbc",
-    "ads": 12,
-    "lift": 3.43
-   },
-   {
-    "term": "lifeatcchbc",
-    "ads": 10,
-    "lift": 3.43
-   },
-   {
-    "term": "nextgen",
-    "ads": 10,
-    "lift": 3.43
-   },
-   {
-    "term": "dom",
-    "ads": 10,
-    "lift": 3.43
-   },
-   {
-    "term": "si\u0119",
-    "ads": 10,
-    "lift": 3.43
-   }
-  ],
-  "UTIL": [
-   {
-    "term": "green",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "easy",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "clean",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "fit",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "reliable",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "hot",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "water",
-    "ads": 1,
-    "lift": 104.5
-   },
-   {
-    "term": "gas",
-    "ads": 1,
-    "lift": 104.5
-   }
-  ]
+  "ENRG": {
+   "ads": 68,
+   "thin": false,
+   "terms": [
+    {
+     "term": "capture",
+     "ads": 26,
+     "lift": 3.07
+    },
+    {
+     "term": "storage",
+     "ads": 24,
+     "lift": 3.07
+    },
+    {
+     "term": "louisiana",
+     "ads": 18,
+     "lift": 3.07
+    },
+    {
+     "term": "texas",
+     "ads": 17,
+     "lift": 3.07
+    },
+    {
+     "term": "khan",
+     "ads": 14,
+     "lift": 3.07
+    },
+    {
+     "term": "academy",
+     "ads": 14,
+     "lift": 3.07
+    },
+    {
+     "term": "ccs",
+     "ads": 13,
+     "lift": 3.07
+    },
+    {
+     "term": "resources",
+     "ads": 12,
+     "lift": 3.07
+    }
+   ]
+  },
+  "FINL": {
+   "ads": 46,
+   "thin": false,
+   "terms": [
+    {
+     "term": "capital",
+     "ads": 8,
+     "lift": 4.54
+    },
+    {
+     "term": "emprendedores",
+     "ads": 6,
+     "lift": 4.54
+    },
+    {
+     "term": "resilient",
+     "ads": 6,
+     "lift": 4.54
+    },
+    {
+     "term": "james",
+     "ads": 6,
+     "lift": 4.54
+    },
+    {
+     "term": "sullivan",
+     "ads": 6,
+     "lift": 4.54
+    },
+    {
+     "term": "crecer",
+     "ads": 5,
+     "lift": 4.54
+    },
+    {
+     "term": "proyecto",
+     "ads": 5,
+     "lift": 4.54
+    },
+    {
+     "term": "minute",
+     "ads": 5,
+     "lift": 4.54
+    }
+   ]
+  },
+  "HLTH": {
+   "ads": 32,
+   "thin": false,
+   "terms": [
+    {
+     "term": "cancer",
+     "ads": 12,
+     "lift": 6.53
+    },
+    {
+     "term": "breakthroughs",
+     "ads": 10,
+     "lift": 6.53
+    },
+    {
+     "term": "access",
+     "ads": 10,
+     "lift": 6.53
+    },
+    {
+     "term": "patients",
+     "ads": 8,
+     "lift": 6.53
+    },
+    {
+     "term": "reject",
+     "ads": 6,
+     "lift": 6.53
+    },
+    {
+     "term": "reduce",
+     "ads": 6,
+     "lift": 6.53
+    },
+    {
+     "term": "harm",
+     "ads": 6,
+     "lift": 6.53
+    },
+    {
+     "term": "harmful",
+     "ads": 5,
+     "lift": 6.53
+    }
+   ]
+  },
+  "STPL": {
+   "ads": 61,
+   "thin": false,
+   "terms": [
+    {
+     "term": "cocacolahbc",
+     "ads": 28,
+     "lift": 3.43
+    },
+    {
+     "term": "ambi",
+     "ads": 19,
+     "lift": 3.43
+    },
+    {
+     "term": "pur",
+     "ads": 19,
+     "lift": 3.43
+    },
+    {
+     "term": "teamcchbc",
+     "ads": 12,
+     "lift": 3.43
+    },
+    {
+     "term": "lifeatcchbc",
+     "ads": 10,
+     "lift": 3.43
+    },
+    {
+     "term": "nextgen",
+     "ads": 10,
+     "lift": 3.43
+    },
+    {
+     "term": "dom",
+     "ads": 10,
+     "lift": 3.43
+    },
+    {
+     "term": "si\u0119",
+     "ads": 10,
+     "lift": 3.43
+    }
+   ]
+  },
+  "UTIL": {
+   "ads": 2,
+   "thin": true,
+   "terms": []
+  }
  }
 }

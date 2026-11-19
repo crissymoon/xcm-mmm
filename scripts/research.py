@@ -183,6 +183,32 @@ MUST: dict[str, str] = {
     "plain-language": r"(?i)plain (language|english)",
 }
 
+#: Two groups are named after a topic a paper can mention in passing, and the
+#: substring test above is too loose for them. ``machine-readable`` contains
+#: ``readab``, so a paper on machine-readable legislation scored as a
+#: readability paper, and a red-teaming paper that recommended a finding be
+#: written in plain language scored as a plain-language paper. For these two
+#: labels the topic must be in the title, which is where a paper about a topic
+#: puts it, and ``machine-readable`` is not a reading of a text.
+TITLE: dict[str, str] = {
+    "readability": r"(?i)(?<!machine-)(?<!machine )\breadab",
+    "plain-language": r"(?i)plain (language|english)",
+}
+
+
+def keeps(label: str, row: dict, extra: str = "") -> bool:
+    """Whether one returned row belongs under the label that found it.
+
+    ``extra`` is an OpenAlex query's own title test, which several labels carry
+    instead of an entry in MUST. A source with no test at all keeps the row.
+    """
+    text = row["title"] + " " + row["abstract"][:400]
+    for pattern in (MUST.get(label, ""), extra):
+        if pattern and not re.search(pattern, text):
+            return False
+    titled = TITLE.get(label)
+    return not titled or bool(re.search(titled, row["title"]))
+
 ATOM = "{http://www.w3.org/2005/Atom}"
 
 
@@ -368,7 +394,7 @@ def pull(rows: int = 10, wide: int = 40) -> dict:
                 body = get(OPENALEX.format(query=urllib.parse.quote(query), rows=wide),
                            f"openalex-{label}.json")
                 for row in parse_openalex(body):
-                    if re.search(must, row["title"] + " " + row["abstract"][:400]):
+                    if keeps(label, row, must):
                         row["query"] = label
                         absorb(found, row)
             attempt(misses, "openalex", label, work)
@@ -378,9 +404,8 @@ def pull(rows: int = 10, wide: int = 40) -> dict:
             def work(label=label, query=query):
                 body = get(ARXIV.format(query=urllib.parse.quote(query), rows=rows),
                            f"arxiv-{label}.xml")
-                must = MUST.get(label)
                 for row in parse_arxiv(body):
-                    if must and not re.search(must, row["title"] + " " + row["abstract"][:400]):
+                    if not keeps(label, row):
                         continue
                     row["query"] = label
                     absorb(found, row)
@@ -391,9 +416,8 @@ def pull(rows: int = 10, wide: int = 40) -> dict:
             def work(label=label, query=query):
                 body = get(CROSSREF.format(query=urllib.parse.quote(query), rows=rows),
                            f"crossref-{label}.json")
-                must = MUST.get(label)
                 for row in parse_crossref(body):
-                    if must and not re.search(must, row["title"] + " " + row["abstract"][:400]):
+                    if not keeps(label, row):
                         continue
                     row["query"] = label
                     absorb(found, row)
@@ -403,11 +427,7 @@ def pull(rows: int = 10, wide: int = 40) -> dict:
     # returned. OpenAlex honours its filter per query, but a cached group is
     # merged by title, so a row kept under one label can arrive under another
     # and has to be judged against the label it lands in.
-    papers = [
-        row for row in found.values()
-        if not MUST.get(row["query"])
-        or re.search(MUST[row["query"]], row["title"] + " " + row["abstract"][:400])
-    ]
+    papers = [row for row in found.values() if keeps(row["query"], row)]
     papers.sort(key=lambda row: (row["query"], -row["citations"], row["date"]))
     readings = {
         "queries": len(OPENALEX_QUERIES) + len(ARXIV_QUERIES) + len(CROSSREF_QUERIES),

@@ -1,18 +1,18 @@
 {
  "name": "marketlab-ad-topics",
- "read_at": "2026-11-19T15:09:40+00:00",
+ "read_at": "2026-11-19T15:18:06+00:00",
  "files": [
   {
    "name": "hot-topics.json",
    "rows": 12,
    "bytes": 25346,
-   "fnv64": "3117460351dd9918"
+   "fnv64": "42a830dc70fc8c08"
   },
   {
    "name": "keywords.json",
    "rows": 120,
-   "bytes": 19416,
-   "fnv64": "f64a3eb47d20c22c"
+   "bytes": 18822,
+   "fnv64": "1a4fdf2330a693f7"
   }
  ]
 }

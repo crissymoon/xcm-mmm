@@ -397,6 +397,40 @@ audit     control 0.168 (best 0.185)  resampling 0.759 (p10 0.552)
 
 `assign` places entities by the nearest centroid and reports the distance in the clipped z space, so a distant placement is visible rather than hidden. `check` answers three questions in order: is each file the file the manifest describes, does the fit rebuild from the shipped entities, and does every assignment land in a group of the size it claims. It writes nothing, and a folder that fails exits with status 1 and one line per fault.
 
+### topics
+
+The ad archive read as subject matter. Every verb is read only: the panel is pulled and turned into two files on the Python side, and this surface opens what it published and ranks it. `list` is the topic rank and also answers to `topics`.
+
+```bash
+xcm-mmm topics info
+xcm-mmm topics list --top 5
+xcm-mmm topics keywords --top 20
+xcm-mmm topics keywords --axis ticker --name JPM
+xcm-mmm topics ads --top 10
+xcm-mmm topics check
+```
+
+| Verb | Flags | Meaning |
+|---|---|---|
+| info | `--dir` | panel headline, languages, areas and reach |
+| list | `--dir`, `--top` | topics ranked by the reach their ads carried |
+| keywords | `--dir`, `--axis`, `--name`, `--top` | terms across the panel, or inside one ticker or area |
+| ads | `--dir`, `--top` | ads ranked by the reach the register measured |
+| check | `--dir` | compare both files with the manifest digest |
+
+`--dir` defaults to `data/topics`. `--axis` takes `ticker` or `area`, and `--name` empty reads the panel.
+
+The unit is the creative and the weight is reach, so a body that ran as hundreds of rows counts once and a term is ranked by the audience it reached rather than by how often it was bought. A term is ranked inside a group only when the group holds at least eight ads and the term appears in at least two of them; a narrower group is printed with its count and no terms, because a lift inside six ads measures the group rather than its language:
+
+```text
+ticker JPM: 40 ads, the terms it leans on
+  invest                     4 ads  x5.23
+  economies                  4 ads  x5.23
+ticker GS: 6 ads, under the floor for a term rank. A lift inside a group this narrow measures the group, not its language
+```
+
+`check` compares each file with the digest in `manifest.json`, so a file edited after publication is named rather than ranked. It writes nothing and exits 1 on a mismatch.
+
 ### read
 
 One text through every shipped model, in one report. The alias `profile` is the same command.

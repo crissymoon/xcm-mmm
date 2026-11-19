@@ -38,6 +38,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Emotion readings.** Eight Plutchik axes over the whole English vocabulary: a 673 word seed, a VADER valence list, a labelled bank of twenty contact-centre transcripts, suffix and prefix derivation, and a character-analogy fallback that needs a shared opening three letters unless the spelling is very close. Seven tiers, every word in a list resolved to one of them, and `emotion coverage` counts which tier answered for a 235,976 word dictionary and for running text.
 - **Churn outcome.** A 7,043 customer telecom panel into a churn label, a retention hazard by tenure month with right censoring, and the 1,869 churn reasons read on the emotion axes. A fourteen-feature logistic with folds assigned by customer id reports held-out AUC beside the AUC of tenure and monthly charge alone.
 - **Behavioural segments.** Advertisers grouped by what they did in an ad panel: volume, cadence and its spread, banded spend, copy length, terms bought against, creative reuse and copy concentration. k-means++ with a silhouette sweep, a shuffled control and a resampling audit, and a folder that rebuilds from its own entities.
+- **Hot topics and keywords.** The ad archive read as what it is about: creatives folded to one row each, terms ranked by the audience they reached rather than how often they were bought, 12 topic clusters built as seeds that never chain through a shared word, and a lift table per ticker and per area that refuses a group too narrow to have a language.
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
 - **Routing a reading to an action.** A policy file carries the cost of five actions (reply, forward, file, hold for a person, ignore) under six classes of arrival, and a router picks the cheapest expected cost with a reject option when the reading is close. Vetoes come from the protocol rather than the price: no answer to `Auto-Submitted`, a null reverse-path or a machine mailbox, and no forward for a privileged class. Arrivals are filed by copy beside a ledger that records the policy digest and the time of each decision, replies and forwards are written as drafts and never sent, a sender answered inside the policy's repeat window is held rather than answered twice, and seven sample files hold the behaviour still.
 - **One report per text.** `read` puts one piece of copy through the detectors, the emotion scanner, the segment centres and the learned copy map and prints every score beside its evidence: the words that carried the emotional mass, the cues that fired, the surface readings behind a register, Flesch ease and grade, and the segment dimensions the text cannot show.
@@ -99,11 +100,12 @@ The other five have no labelled corpus, so nothing here is an accuracy. They shi
 - `terms.jsonl` is the glossary, 184 rows. Each row carries the plain reading, the kind (modal, deictic, doublet, latin, doctrine, procedure), whether the term is avoidable, the authority behind it where one exists, and the page its meaning was checked against.
 - `rewrites.jsonl` holds 118 rules: 112 derived from the glossary, so the two cannot disagree, and 6 clause rules written in the corpus builder. 116 edit and 2 only advise, because `said` means "the" in `said vehicle` and "spoke" in `he said`. A replacement may name its own capture groups, which is what lets a clause rule reorder what it matched: `shall not be entitled to payment or reimbursement for` becomes `shall not be paid for`, where a word rule had produced `must not be entitled to`.
 - `bank.jsonl` is the labelled side: 1,402 sentences from statutes and rules fetched from their publisher, and 922 plain sentences about legal subjects from court self-help pages and advertisers' copy. The self-help sentences are the point of the file, because a detector fitted only against ads learns that courts are legal English rather than what legal English is.
+- `bank-ext.jsonl` is the second half of the labelled side: 1,602 sentences collected later from Federal Register notices, contracts, opinions, regulations and court rules, because the first file reached four of the eight registers and a glossary is only measured on the registers it was shown. It is disjoint from `bank.jsonl` by text and carries the same labels and the source prefix that places each row in its register.
 - `pairs.jsonl` is 71 legal to plain pairs, 43 published (a page prints both sides) and 28 written here from authority sentences and tagged editorial. Twelve of the editorial pairs quote a contract clause or a code of ethics, each with the document's URL on the pair and in `sources.json`, because the published pairs are thin on contract and securities wording.
 - `settings.json` holds the citation patterns a rewrite must not touch, the density bands, the rarity cut, the notice every brief carries, and the clause cues `legal explain` sorts a sentence by: duty, prohibition, permission, condition, deadline, negation, statement and abbreviation. On this bank every one of the 41 self-help documents lands in `plain`, at 0.48 avoidable terms per hundred words at the top, while the 46 statutory documents spread across light, heavy and dense.
 - `freq.json` is the frequency table the rarity reading is measured on: 479 words of general English counted from the Brown corpus, written by `scripts/lex-freq.py` and checked in `scripts/check.sh`, so a glossary edit that adds a word the table does not hold is a failing gate rather than a silent zero.
 
-Density is one axis and it is not the whole difficulty of a text. `hereunder` and `under` are both one avoidable term, and only one of them stops a reader, so each hit also carries the rarest word in its term and the rate that word was measured at. A term under the cut in `settings.json` is reported as a word general English rarely uses: `witnesseth`, `hereunder`, `hereto`, `ab initio`, `pari passu`. The register table reads it per register: 53 such words per 1,000 rows on the court self-help pages, which quote statutes, 39 in the statutes themselves, 14 in court rules and 4 in ad copy. The self-help pages lead because they quote the words without explaining them. The reading is a flag and never an error, because the corpus is 1.16 million tokens of 1961 prose and a word absent from it is not proven unknown.
+Density is one axis and it is not the whole difficulty of a text. `hereunder` and `under` are both one avoidable term, and only one of them stops a reader, so each hit also carries the rarest word in its term and the rate that word was measured at. A term under the cut in `settings.json` is reported as a word general English rarely uses: `witnesseth`, `hereunder`, `hereto`, `ab initio`, `pari passu`. The register table reads it per register: 108 such words per 1,000 rows in contracts, 53 on the court self-help pages, which quote statutes, 34 in the statutes themselves, 26 in court rules, 16 in regulations and none in ad copy. Contracts lead and the self-help pages come second because the pages quote the words without explaining them. The reading is a flag and never an error, because the corpus is 1.16 million tokens of 1961 prose and a word absent from it is not proven unknown.
 
 The distinction the reading is built on is avoidable against necessary. `pursuant to` becomes `under`; `res judicata` keeps its name and gets a gloss on first use, because replacing it would change what the document claims. A term inside a citation or a quotation is reported and never edited.
 
@@ -122,6 +124,8 @@ The distinction the reading is built on is avoidable against necessary. `pursuan
 `legal explain --check` is the coverage question a pipeline asks. A glossary answer has to start somewhere, so a name the document defines and the glossary has no row for is reported under `UNGLOSSED TERMS`, counted in a warning and, with `--check`, turned into a non-zero exit. The definitional cues it reads are the document's own: `(the "Service Fee")` and `Service Fee means`. A name a contract defines for its own cast, `the Buyer`, `the Agreement`, `the Term`, is not a term of art, so `clauses.defined_ignore` in `settings.json` lists those and the check stays quiet about them; that list is data, so a corpus with a different cast can change it without a build.
 
 `legal check` recomputes the folder's digests, the counts the manifest publishes and its coverage, then runs the translator over the whole bank. On the legal side 1.78 avoidable terms per hundred words fall to 0.37, of which 95 are the two advisory words and 12 sit inside citations; 378 of the 1402 legal rows change at all, and 12 of the 922 plain rows. The corpus is built by `tools/build-marketlab-legallanguage.py` in the marketlab repository, which writes both this folder and `data/marketlab-legal-language/` from the same bytes.
+
+`legal coverage` splits the bank by the register each source belongs to and reports where the glossary is blind. It reads both bank files, because either one alone reports registers absent that the other holds: with 3,926 rows read, all eight declared registers reach the table, five of the six target registers carry at least twenty sources, and court rules moved from 8 sources to 139. The sixth, opinions, is refused as `sparse` with its reason printed: the rows are single sentences, so the share of them that carries an avoidable term describes the cut rather than the register, and the widening note says to fetch opinions whole rather than to add words.
 
 ## Behavioural segments
 
@@ -174,6 +178,38 @@ The gate is explicit: at least two points over chance, at least ten percent lift
 `text_features.jsonl` ships the derived rows, readings and vocabulary buckets with no ad copy, so `segment text-check` rebuilds the map offline and the digest in `textmap.json` covers the rows it was fitted from. `read` prints the withheld measurement for one text rather than a placement, and uses the brand unit only when `--ads` names a set of more than one ad, taken from JSON Lines with a `text` field or one ad per line.
 
 Two limits are worth stating. Recency is deliberately not a feature: the panel is a snapshot weighted towards recent ads, so the distance from a last start would measure the archive's coverage as much as the advertiser's activity. And copy concentration is bounded by the ad count, so an advertiser with one ad scores one by construction; that group is a real behaviour, the advertiser who bought once, but its concentration reading adds nothing to its volume.
+
+## Hot topics and keywords
+
+`data/topics/` is the reading of the ad archive as subject matter rather than as a target for a classifier. Two files ship, both written by the Python collector and both opened read only by the Rust surface beside them.
+
+`hot-topics.json` carries the 12 clusters, the 25 heaviest ads and a meta block that names the measure. `keywords.json` carries the 120 terms that reached the most people, plus the same terms read inside each ticker and each area. On the 2026-11-19 pull the panel is 209 creatives covering 91,380,118 people, 174 of them English, 16 Polish, 7 Spanish and 12 with no detectable language, across 7 tickers and 5 areas:
+
+| reach | ads | topic | tickers |
+|---:|---:|---|---|
+| 41,259,261 | 19 | pur / ambi / dom | PG |
+| 15,373,869 | 3 | rossmann / dni / zimne | PG |
+| 8,414,996 | 10 | small / businesses / helping | JPM, PFE |
+| 7,062,707 | 10 | building / investing / local | JPM, XOM, KO |
+
+Three decisions are what make the ranking mean anything, and each was forced by reading the output rather than the code.
+
+The unit is the creative, not the row. One body ran as hundreds of archive rows, and a template that outnumbers the rest outvotes the panel: two words inside it look like a theme when they are one ad repeated. Rows now fold on the normalised body, which took 2,353 rows to 839 creatives on the first pull and 657 rows to 209 on this one.
+
+A topic is a seed and the words that keep its company. Single-link clustering welded the vocabulary into one 150-term component whose name no ad in it used together, because a chain of pairwise neighbours is not a theme. A seed now takes only the terms above a 0.35 cosine floor with it, and nothing chains through.
+
+A lift inside a narrow group measures the group. One ad in two gives every word it used a hundred times the panel, so a ticker under eight ads is published with its count and no terms, and a term has to appear in at least two ads inside a group before it counts as that group's language. `GS` at 6 ads and `UTIL` at 2 are named as thin rather than ranked.
+
+```bash
+./xcm-mmm topics info
+./xcm-mmm topics list --top 5
+./xcm-mmm topics keywords --top 20
+./xcm-mmm topics keywords --axis area --name ENRG
+./xcm-mmm topics ads --top 10
+./xcm-mmm topics check
+```
+
+`topics list` also answers to `topics topics`. `check` compares both files against the digest in `manifest.json`, so a file edited after publication is named rather than ranked. Reach is the DSA figure for a European ad and the midpoint of a published impression range for an American issue ad; the meta block says so and the two are never summed into one column.
 
 ## Emotion and churn
 

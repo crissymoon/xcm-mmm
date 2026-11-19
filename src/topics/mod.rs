@@ -162,9 +162,23 @@ pub struct Keywords {
     #[serde(default)]
     pub keywords: Vec<Term>,
     #[serde(default)]
-    pub by_ticker: BTreeMap<String, Vec<Term>>,
+    pub by_ticker: BTreeMap<String, Group>,
     #[serde(default)]
-    pub by_area: BTreeMap<String, Vec<Term>>,
+    pub by_area: BTreeMap<String, Group>,
+}
+
+/// One ticker or area: how many ads it ran, and the terms it leans on.
+///
+/// A thin group keeps its count and arrives with no terms: below the floor a
+/// lift measures the width of the group, not the language in it.
+#[derive(Clone, Debug, Deserialize, Default)]
+pub struct Group {
+    #[serde(default)]
+    pub ads: u32,
+    #[serde(default)]
+    pub thin: bool,
+    #[serde(default)]
+    pub terms: Vec<Term>,
 }
 
 /// Both files, opened from one folder.
@@ -225,8 +239,10 @@ impl Panel {
         ranked
     }
 
-    /// Terms inside one axis group, or empty when the group is unknown.
-    pub fn within(&self, axis: &str, name: &str) -> Option<&Vec<Term>> {
+    /// The group inside one axis, or none when the axis or the name is
+    /// unknown. A thin group is returned, so the reader can be told its count
+    /// rather than told it does not exist.
+    pub fn within(&self, axis: &str, name: &str) -> Option<&Group> {
         let table = match axis {
             "ticker" => &self.keywords.by_ticker,
             "area" => &self.keywords.by_area,

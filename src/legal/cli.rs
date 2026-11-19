@@ -77,9 +77,9 @@ pub struct BenchArgs {
 
 #[derive(Args)]
 pub struct CoverageArgs {
-    /// The sentence bank to split. Defaults to `bank.jsonl` in the folder.
-    /// Repeat it to score the shipped bank together with collected text:
-    /// `--bank data/legal/bank.jsonl --bank data/legal/bank-ext.jsonl`.
+    /// The sentence bank to split. Defaults to every bank file in the folder:
+    /// `bank.jsonl` and, when it exists, `bank-ext.jsonl`. Repeat it to score
+    /// a bank of your own.
     #[arg(long, value_name = "PATH")]
     bank: Vec<String>,
     /// Print the audit as JSON.
@@ -257,7 +257,7 @@ fn score_pairs(dir: &str, args: &BenchArgs) -> Result<(), Box<dyn Error>> {
 fn registers(dir: &str, args: &CoverageArgs) -> Result<(), Box<dyn Error>> {
     let legal = Legal::load(dir)?;
     let paths: Vec<String> = if args.bank.is_empty() {
-        vec![format!("{dir}/bank.jsonl")]
+        default_banks(dir)
     } else {
         args.bank.clone()
     };
@@ -269,6 +269,22 @@ fn registers(dir: &str, args: &CoverageArgs) -> Result<(), Box<dyn Error>> {
         println!("{}", coverage.render());
     }
     Ok(())
+}
+
+/// The bank files a coverage run reads when none is named.
+///
+/// The shipped bank is two files and neither is the whole picture: the first
+/// holds the registers cut from codes and rules, the extension holds the ones
+/// collected later from notices, contracts and opinions. Reading one by
+/// default reported four registers absent while their rows sat beside it on
+/// disk, so both are read when both exist.
+fn default_banks(dir: &str) -> Vec<String> {
+    let mut found = vec![format!("{dir}/bank.jsonl")];
+    let ext = format!("{dir}/bank-ext.jsonl");
+    if fs::metadata(&ext).is_ok() {
+        found.push(ext);
+    }
+    found
 }
 
 fn terms(dir: &str, args: &TermsArgs) -> Result<(), Box<dyn Error>> {
@@ -1058,6 +1074,20 @@ mod tests {
         let manifest: Manifest = serde_json::from_str(&text).expect("manifest json");
         let measured = derive_counts(DIR).expect("counted");
         assert_eq!(measured, manifest.counts, "manifest counts have drifted");
+    }
+
+    /// A coverage run over the shipped folder reads both banks, because the
+    /// extension carries four registers the first file has no row for.
+    #[test]
+    fn the_default_coverage_bank_is_both_shipped_files() {
+        let banks = default_banks(DIR);
+        assert_eq!(
+            banks,
+            vec![format!("{DIR}/bank.jsonl"), format!("{DIR}/bank-ext.jsonl")]
+        );
+        for bank in banks {
+            assert!(fs::metadata(&bank).is_ok(), "{bank} is named and missing");
+        }
     }
 
     /// Each published total is the sum of its parts, so a count that was rolled

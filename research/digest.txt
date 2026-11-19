@@ -1,7 +1,7 @@
 queries: 64
-papers: 219
-by_source: {'openalex': 37, 'arxiv': 112, 'crossref': 70}
-with_abstract: 159
+papers: 216
+by_source: {'openalex': 36, 'arxiv': 110, 'crossref': 70}
+with_abstract: 156
 misses: 0
 missed: []
 
@@ -235,20 +235,14 @@ missed: []
   Electrocardiogram (ECG) signals, which capture the heart's electrical activity, are used to diagnose and monitor cardiac problems. The accurate classification of ECG signals, particularly for distinguishing among various types of arrhythmias and myocardial infarctions, is crucial for the early detection and treatment of heart-related diseases. This paper proposes a novel approach based on an improved differential evo
 
 ## plain-language
-- Red Teaming Language Models to Reduce Harms: Methods, Scaling Behaviors, and Lessons Learned (2022, arXiv (Cornell University), cited 1661)
-  We describe our early efforts to red team language models in order to simultaneously discover, measure, and attempt to reduce their potentially harmful outputs. We make three main contributions. First, we investigate scaling behaviors for red teaming across 3 model sizes (2.7B, 13B, and 52B parameters) and 4 model types: a plain language model (LM); an LM prompted to be helpful, honest, and harmless; an LM with rejec
 - LengClaro2023: A Dataset of Administrative Texts in Spanish with Plain Language adaptations (2025-06-06, arXiv, cited 0)
   In this work, we present LengClaro2023, a dataset of legal-administrative texts in Spanish. Based on the most frequently used procedures from the Spanish Social Security website, we have created for each text two simplified equivalents. The first version follows the recommendations provided by arText claro. The second version incorporates additional recommendations from plain language guidelines to explore further po
 - Senseful Consense: Towards Simplified Cookie Banners using Plain Language (2026-09-09, arXiv, cited 0)
   While the GDPR and ePrivacy Directive mandate that consent information must be clear and accessible, most modern cookie banners remain obscured by technical jargon, vague phrasing, and frequent content overload or underload. This feasibility study investigates the impact of applying plain language (Einfache Sprache) to cookie banners within the IAB Transparency & Consent Framework (TCF). In our study, we analysed coo
 
 ## readability
-- Knowledge-Based Legal Document Assembly (2020-09-14, arXiv, cited 0)
-  This paper proposes a knowledge-based legal document assembly method that uses a machine-readable representation of knowledge of legal professionals. This knowledgebase has two components - the formal knowledge of legal norms represented as a rule-base and the tacit knowledge represented by a document template. A document assembly system is developed as a proof of concept. It collects input data in the form of an int
 - Assessing the Readability of Policy Documents on the Digital Single Market of the European Union (2021-02-23, arXiv, cited 0)
   Today, literature skills are necessary. Engineering and other technical professions are not an exception from this requirement. Traditionally, technical reading and writing have been framed with a limited scope, containing documentation, specifications, standards, and related text types. Nowadays, however, the scope covers also other text types, including legal, policy, and related documents. Given this motivation, t
-- The Legislative Recipe: Syntax for Machine-Readable Legislation (2021-08-19, arXiv, cited 0)
-  Legal interpretation is a linguistic venture. In judicial opinions, for example, courts are often asked to interpret the text of statutes and legislation. As time has shown, this is not always as easy as it sounds. Matters can hinge on vague or inconsistent language and, under the surface, human biases can impact the decision-making of judges. This raises an important question: what if there was a method of extractin
 - The Use of Readability Metrics in Legal Text: A Systematic Literature Review (2024-11-14, arXiv, cited 0)
   Understanding the text in legal documents can be challenging due to their complex structure and the inclusion of domain-specific jargon. Laws and regulations are often crafted in such a manner that engagement with them requires formal training, potentially leading to vastly different interpretations of the same texts. Linguistic complexity is an important contributor to the difficulties experienced by readers. Simpli
 

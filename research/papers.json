@@ -1,13 +1,13 @@
 {
  "readings": {
   "queries": 64,
-  "papers": 219,
+  "papers": 216,
   "by_source": {
-   "openalex": 37,
-   "arxiv": 112,
+   "openalex": 36,
+   "arxiv": 110,
    "crossref": 70
   },
-  "with_abstract": 159,
+  "with_abstract": 156,
   "misses": 0,
   "missed": []
  },
@@ -2567,17 +2567,6 @@
    "query": "opposition"
   },
   {
-   "source": "openalex",
-   "id": "https://doi.org/10.48550/arxiv.2209.07858",
-   "title": "Red Teaming Language Models to Reduce Harms: Methods, Scaling Behaviors, and Lessons Learned",
-   "date": "2022",
-   "venue": "arXiv (Cornell University)",
-   "citations": 1661,
-   "authors": [],
-   "abstract": "We describe our early efforts to red team language models in order to simultaneously discover, measure, and attempt to reduce their potentially harmful outputs. We make three main contributions. First, we investigate scaling behaviors for red teaming across 3 model sizes (2.7B, 13B, and 52B parameters) and 4 model types: a plain language model (LM); an LM prompted to be helpful, honest, and harmless; an LM with rejection sampling; and a model trained to be helpful and harmless using reinforcement learning from human feedback (RLHF). We find that the RLHF models are increasingly difficult to red team as they scale, and we find a flat trend with scale for the other model types. Second, we release our dataset of 38,961 red team attacks for others to analyze and learn from. We provide our own analysis of the data and find a variety of harmful outputs, which range from offensive language to more subtly harmful non-violent unethical outputs. Third, we exhaustively describe our instructions, processes, statistical methodologies, and uncertainty about red teaming. We hope that this transparency accelerates our ability to work together as a community in order to develop shared norms, practices, and technical standards for how to red team language models.",
-   "query": "plain-language"
-  },
-  {
    "source": "arxiv",
    "id": "http://arxiv.org/abs/2506.05927v1",
    "title": "LengClaro2023: A Dataset of Administrative Texts in Spanish with Plain Language adaptations",
@@ -2609,20 +2598,6 @@
   },
   {
    "source": "arxiv",
-   "id": "http://arxiv.org/abs/2009.06611v1",
-   "title": "Knowledge-Based Legal Document Assembly",
-   "date": "2020-09-14",
-   "venue": "arXiv",
-   "citations": 0,
-   "authors": [
-    "Marko Markovi\u0107",
-    "Stevan Gostoji\u0107"
-   ],
-   "abstract": "This paper proposes a knowledge-based legal document assembly method that uses a machine-readable representation of knowledge of legal professionals. This knowledgebase has two components - the formal knowledge of legal norms represented as a rule-base and the tacit knowledge represented by a document template. A document assembly system is developed as a proof of concept. It collects input data in the form of an interactive interview, performs legal reasoning over input data, and generates the output document. The system also creates an argument graph as an explanation of the reasoning process providing the user with an interpretation of how the input data and the rule-base influence the content of the output document. The system also semantically marks up data in the output document, facilitating its further processing and providing support to the interoperability of information systems in the legal domain.",
-   "query": "readability"
-  },
-  {
-   "source": "arxiv",
    "id": "http://arxiv.org/abs/2102.11625v2",
    "title": "Assessing the Readability of Policy Documents on the Digital Single Market of the European Union",
    "date": "2021-02-23",
@@ -2632,20 +2607,6 @@
     "Jukka Ruohonen"
    ],
    "abstract": "Today, literature skills are necessary. Engineering and other technical professions are not an exception from this requirement. Traditionally, technical reading and writing have been framed with a limited scope, containing documentation, specifications, standards, and related text types. Nowadays, however, the scope covers also other text types, including legal, policy, and related documents. Given this motivation, this paper evaluates the readability of 201 legislations and related policy documents in the European Union (EU). The digital single market (DSM) provides the context. Five classical readability indices provide the methods; these are quantitative measures of a text's readability. The empirical results indicate that (i) generally a Ph.D. level education is required to comprehend the DSM laws and policy documents. Although (ii) the results vary across the five indices used, (iii) readability has slightly improved over time.",
-   "query": "readability"
-  },
-  {
-   "source": "arxiv",
-   "id": "http://arxiv.org/abs/2108.08678v1",
-   "title": "The Legislative Recipe: Syntax for Machine-Readable Legislation",
-   "date": "2021-08-19",
-   "venue": "arXiv",
-   "citations": 0,
-   "authors": [
-    "Megan Ma",
-    "Bryan Wilson"
-   ],
-   "abstract": "Legal interpretation is a linguistic venture. In judicial opinions, for example, courts are often asked to interpret the text of statutes and legislation. As time has shown, this is not always as easy as it sounds. Matters can hinge on vague or inconsistent language and, under the surface, human biases can impact the decision-making of judges. This raises an important question: what if there was a method of extracting the meaning of statutes consistently? That is, what if it were possible to use machines to encode legislation in a mathematically precise form that would permit clearer responses to legal questions? This article attempts to unpack the notion of machine-readability, providing an overview of both its historical and recent developments. The paper will reflect on logic syntax and symbolic language to assess the capacity and limits of representing legal knowledge. In doing so, the paper seeks to move beyond existing literature to discuss the implications of various approaches to machine-readable legislation. Importantly, this study hopes to highlight the challenges encountered in this burgeoning ecosystem of machine-readable legislation against existing human-readable counterparts.",
    "query": "readability"
   },
   {

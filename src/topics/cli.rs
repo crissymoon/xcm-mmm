@@ -24,8 +24,10 @@ pub struct TopicsArgs {
 pub enum TopicsCommand {
     /// Print the panel headline, its languages and its reach.
     Info(TopicsDir),
-    /// Rank the topics by the reach their ads carried.
-    Topics(TopicsTop),
+    /// Rank the topics by the reach their ads carried. `topics` is accepted as
+    /// an alias, because `topics list` reads and `topics topics` does not.
+    #[command(alias = "topics")]
+    List(TopicsTop),
     /// Rank single terms across the panel, or inside one ticker or area.
     Keywords(TopicsWithin),
     /// Rank the ads by the reach the register measured.
@@ -70,7 +72,7 @@ pub struct TopicsWithin {
 pub fn run(args: TopicsArgs) -> Result<(), Box<dyn Error>> {
     match args.command {
         TopicsCommand::Info(a) => info(&a.dir),
-        TopicsCommand::Topics(a) => topics(&a),
+        TopicsCommand::List(a) => topics(&a),
         TopicsCommand::Keywords(a) => keywords(&a),
         TopicsCommand::Ads(a) => ads(&a),
         TopicsCommand::Check(a) => check(&a.dir),
@@ -184,14 +186,29 @@ fn keywords(args: &TopicsWithin) -> Result<(), Box<dyn Error>> {
         }
         return Ok(());
     }
-    let rows = panel.within(&args.axis, &args.name).ok_or_else(|| {
+    let group = panel.within(&args.axis, &args.name).ok_or_else(|| {
         format!(
             "no {} named {}, expected one of the published groups",
             args.axis, args.name
         )
     })?;
-    println!("{} {}: the terms it leans on", args.axis, args.name);
-    for term in rows.iter().take(args.top) {
+    if group.thin || group.terms.is_empty() {
+        println!(
+            "{} {}: {} ads, under the floor for a term rank. A lift inside a \
+             group this narrow measures the group, not its language",
+            args.axis,
+            args.name,
+            commas(group.ads as usize)
+        );
+        return Ok(());
+    }
+    println!(
+        "{} {}: {} ads, the terms it leans on",
+        args.axis,
+        args.name,
+        commas(group.ads as usize)
+    );
+    for term in group.terms.iter().take(args.top) {
         println!(
             "  {:<22} {:>5} ads  x{:.2}",
             cut(&term.term, 22),

@@ -196,7 +196,7 @@ fn terms_can_be_listed_by_kind() {
 }
 
 #[test]
-fn the_register_audit_names_the_registers_the_bank_cannot_speak_to() {
+fn the_register_audit_names_every_declared_register() {
     let dir = data();
     let out = run(&["legal", "coverage", "--dir", dir.to_str().unwrap()]);
     assert!(
@@ -205,8 +205,10 @@ fn the_register_audit_names_the_registers_the_bank_cannot_speak_to() {
         String::from_utf8_lossy(&out.stderr)
     );
     let text = stdout(&out);
-    // The four registers the bank does hold are reported with a verdict, and
-    // the ones it does not are named rather than left out of the table.
+    // Eight registers are declared and all eight have rows, because the
+    // shipped bank is two files and coverage reads both. A register that
+    // reaches the table with no row would be a fault in the folder, not a
+    // widening task, so none is reported absent.
     for register in [
         "court-rule",
         "statute",
@@ -214,13 +216,18 @@ fn the_register_audit_names_the_registers_the_bank_cannot_speak_to() {
         "ad-copy",
         "contract",
         "opinion",
+        "regulation",
+        "agency-notice",
     ] {
         assert!(text.contains(register), "missing {register} in\n{text}");
     }
-    assert!(text.contains("absent"), "{text}");
-    assert!(text.contains("widen: add contract text"), "{text}");
+    assert!(!text.contains("absent"), "{text}");
+    // The extension carries the registers the first file has no row for, and
+    // 1602 of its rows are what moved court-rule from eight sources to 139.
+    assert!(text.contains("5 of 6 target registers"), "{text}");
     assert!(
-        text.lines().any(|line| line.starts_with("widen: ")),
+        text.lines()
+            .any(|line| line.starts_with("widen: read opinion sentences")),
         "{text}"
     );
 }
