@@ -268,17 +268,31 @@ def opinion(limit: int, refresh: bool) -> list[dict]:
     on a public host with no key. Opinions are the register that argues in
     prose instead of clauses, so they are the one where a glossary read off
     statutes is most likely to be silent for the wrong reason.
+
+    The first ten cases of one volume are not that register. They filled the
+    whole cap on their own, so 249 rows came from four opinions and read as a
+    share over judicial reasoning. The sampler now walks five volumes across
+    two reporters, takes cases at a stride so a volume's opening per curiam
+    orders do not set the tone, and interleaves by document, which is what
+    keeps any one opinion from owning the cap.
     """
-    volumes = [("f3d", "200"), ("f3d", "600"), ("f3d", "900")]
-    per_volume = 10
+    volumes = [
+        ("f2d", "500"),
+        ("f3d", "50"),
+        ("f3d", "200"),
+        ("f3d", "600"),
+        ("f3d", "900"),
+    ]
+    per_volume = 15
     docs = []
     for reporter, volume in volumes:
         base = f"https://static.case.law/{reporter}/{volume}"
         meta_path = cache_path("opinion", f"{reporter}-{volume}-index", ".json")
         cases = json.loads(fetch(f"{base}/CasesMetadata.json", meta_path, refresh))
-        # A filing is long; the first case of each volume is as good as any,
-        # and taking them in order keeps the sample reproducible.
-        for case in cases[:per_volume]:
+        if not cases:
+            continue
+        step = max(1, len(cases) // per_volume)
+        for case in cases[::step][:per_volume]:
             name = case.get("file_name")
             if not name:
                 continue
@@ -287,12 +301,14 @@ def opinion(limit: int, refresh: bool) -> list[dict]:
             body = json.loads(fetch(f"{base}/cases/{name}", path, refresh))
             opinions = body.get("casebody", {}).get("opinions", [])
             text = "\n".join(o.get("text") or "" for o in opinions)
+            # A headnote-only case has no body worth scanning. CAP returns
+            # these rather than a 404, so they are dropped here and counted
+            # by the rows the register ends up with.
             if len(text) < 400:
                 continue
-            cite = (body.get("citations") or [{}])[0].get("cite") or name
             docs.append((f"cap-{reporter}-{volume}-{case.get('id')}",
                          f"{base}/cases/{name}", text))
-    return rows_of("opinion", docs)[:limit]
+    return interleave(rows_of("opinion", docs), limit)
 
 
 def interleave(rows: list[dict], limit: int) -> list[dict]:
@@ -450,7 +466,8 @@ def main(argv: list[str]) -> int:
             "sources": {"regulation": f"eCFR {ECFR_DATE}",
                         "agency-notice": "Federal Register API",
                         "contract": "theatticusproject/cuad",
-                        "court-rule": "Cornell LII federal rules"}}
+                        "court-rule": "Cornell LII federal rules",
+                        "opinion": "Caselaw Access Project static files"}}
     (args.out.with_suffix(".json")).write_text(json.dumps(meta, indent=1),
                                                encoding="utf-8")
     print(f"wrote {args.out} ({len(all_rows)} rows)")

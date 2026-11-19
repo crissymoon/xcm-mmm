@@ -1,5 +1,5 @@
 {
- "rows": 1662,
+ "rows": 1663,
  "registers": {
   "agency-notice": {
    "rows": 243,
@@ -14,8 +14,8 @@
    "duplicates_dropped": 26
   },
   "opinion": {
-   "rows": 249,
-   "duplicates_dropped": 1
+   "rows": 250,
+   "duplicates_dropped": 0
   },
   "regulation": {
    "rows": 249,
@@ -26,6 +26,7 @@
   "regulation": "eCFR 2026-08-10",
   "agency-notice": "Federal Register API",
   "contract": "theatticusproject/cuad",
-  "court-rule": "Cornell LII federal rules"
+  "court-rule": "Cornell LII federal rules",
+  "opinion": "Caselaw Access Project static files"
  }
 }
