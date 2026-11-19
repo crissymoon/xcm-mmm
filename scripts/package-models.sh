@@ -14,8 +14,10 @@
 # no flags at all,
 # which is the same invocation the repository's own README shows.
 #
-# data/training is deliberately not staged: it is 20 MB of raw source that no
-# shipped model reads, and the dataset is meant to mount fast.
+# data/topics is 52 KB and is read by `topics info|list|keywords|ads|check`,
+# so it rides along. data/training is deliberately not staged: it is 20 MB of
+# raw source that no shipped model reads, and the dataset is meant to mount
+# fast.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -37,7 +39,7 @@ VERSION="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
 rm -rf "$OUT"
 mkdir -p "$OUT/data"
 
-for d in detectors segments legal emotion churn route; do
+for d in detectors segments legal emotion churn route topics; do
   cp -R "data/$d" "$OUT/data/$d"
 done
 
