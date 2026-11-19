@@ -23,6 +23,7 @@ use xcm_mmm::moead::scalar::Scalarization;
 use xcm_mmm::moead::{self, MoeadConfig, MoeadOutcome};
 use xcm_mmm::problem::Problem;
 use xcm_mmm::profile::cli::{run as run_read, ReadArgs};
+use xcm_mmm::route::cli::{run as run_route, RouteArgs};
 use xcm_mmm::segment::cli::{run as run_segment, SegmentArgs};
 
 #[derive(Parser)]
@@ -75,6 +76,9 @@ enum Command {
     Churn(ChurnArgs),
     /// Train, score or inspect the shared transformer on a pair corpus.
     Transformer(TransformerArgs),
+    /// Decide what to do with a message or a document: reply, forward, file,
+    /// hold for a person, or ignore, with every veto printed.
+    Route(RouteArgs),
 }
 
 #[derive(clap::Args)]
@@ -816,6 +820,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         Command::Read(args) => run_read(args),
         Command::Churn(args) => run_churn(args),
         Command::Transformer(args) => run_transformer(args),
+        Command::Route(args) => run_route(args),
     }
 }
 

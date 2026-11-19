@@ -1,0 +1,12 @@
+From: Billing <billing@supplier.example>
+To: accounts@example.org
+Subject: Invoice 4471 amount due 30 November
+Date: Mon, 16 Nov 2026 14:02:00 +0000
+Message-Id: <invoice-4471@supplier.example>
+Return-Path: <billing@supplier.example>
+
+Please find invoice 4471 attached. Amount due is 900.00 under payment terms
+net 30. The purchase order reference is PO-2211.
+
+Regards,
+Supplier Billing

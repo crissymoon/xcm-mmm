@@ -18,6 +18,7 @@
 !/data/segments/
 !/data/emotion/
 !/data/churn/
+!/data/route/
 *.local.csv
 synthetic.csv
 /front.csv

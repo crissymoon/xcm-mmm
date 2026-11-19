@@ -133,6 +133,52 @@ because each one breaks a naive port:
   recomputes is the check that survives, which is why the provenance cell comes
   before the workload rather than after it.
 
+## Routing a reading to an action
+
+`route` asks a different question from the rest of the crate. The detectors say
+what a text looks like and the legal reading says what it does; the router says
+what to do about it, and the answer is one of five actions: reply, forward, file,
+hold for a person, or ignore. The interesting part is not the classification. It
+is that a good action depends on consequences, protocol rules and the cost of
+being wrong, and none of those live in a score.
+
+| question | what the source says | what it forced in the code |
+| --- | --- | --- |
+| may a robot answer this at all? | RFC 3834, sections 2 and 5.1: `Auto-Submitted` other than `no`, a null reverse-path and machine mailboxes must not be answered | three separate vetoes, each printed with its reason |
+| where may the answer go? | RFC 3834, section 4: after delivery the reply destination is the envelope sender, not `From` or `Reply-To` | `Return-Path` first, and the fallback to `Reply-To` is reported as a deviation |
+| is this list mail? | RFC 2919 says only list software generates `List-Id`; RFC 2369 defines `List-Unsubscribe`; RFC 2076 calls `Precedence` non-standard and discouraged | `List-*` headers raise the bulk class; `Precedence` may veto a reply but may never move a message into the class on its own |
+| what should filing look like? | RFC 5228: `fileinto` is a SHOULD, a missing mailbox may be an error, and an error must leave the message kept; RFC 5232 flags are per-message | folders are created explicitly, the original is copied and never moved, and no state is written into flags |
+| which action, given the costs? | Elkan (2001): choose the action that minimises expected cost under an asymmetric loss matrix | `costs` in `policy.json`, with every action's expected cost printed |
+| when should it refuse to choose? | Chow (1970) reject option; El-Yaniv and Wiener (2010) risk-coverage | a top-share gate and a cost-margin gate both force `hold` |
+| may the score be read as a probability? | Guo et al. (2017): modern scores are poorly calibrated | the numbers are called shares of evidence, never probabilities, and the gate carries the safety |
+| what keeps a person in the loop? | Parasuraman and Riley (1997): the failure mode is over-reliance, not under-use | `hold` is a real queue, and the draft says it was not read before it was sent |
+| what must the record keep? | ISO 15489-1:2016: records stay authentic, reliable, complete and usable | copies are additive and the ledger stores the policy digest beside each decision |
+
+The consequence is a policy file an operator can argue with rather than a model
+they cannot. A demand letter costs nine to answer unreviewed and one to hold; a
+newsletter costs ten to answer and one to ignore. Reverse those numbers and the
+router does the opposite, which is the point of putting them in a file.
+
+Three things the command deliberately cannot do, because each would be a
+stronger claim than the implementation supports:
+
+- **Send.** A reply or a forward is written as an `eml` body with the headers
+  RFC 3834 requires (`Auto-Submitted: auto-replied`, `In-Reply-To`,
+  `References`), and a person or a queue releases it. Nothing in this crate
+  opens a socket.
+- **Delete or move.** Every filing is a copy beside a ledger. A wrong reading
+  costs a duplicate under the wrong folder, not a message nobody can find, which
+  is the implicit-keep rule of RFC 5228 applied one level up.
+- **Honour the repeat window.** RFC 3834, section 2 recommends the same sender
+  receive the same notice at most once in seven days. A stateless call cannot
+  know that history, so `decide` takes a received count for the current run and
+  the ledger is the record a service would use to enforce the window. The code
+  says this instead of implying a guarantee it does not make.
+
+The seven files in `data/route/samples/` are fixtures, not decoration: the test
+suite asserts the action each one must receive, so a cue weight that moves a
+demand letter into a folder fails the build.
+
 ## What was read and not adopted
 
 - **A user-space allocator.** The case for one is real: musl's malloc is slower
@@ -164,6 +210,20 @@ because each one breaks a naive port:
 - **`trim-paths`, the Cargo replacement for `--remap-path-prefix`.** It is a
   nightly profile setting in the toolchain used here, so the stable flag is what
   the build script passes. Worth switching when it stabilises.
+- **One-click unsubscribe.** RFC 8058 makes the receiver POST to the list's
+  unsubscribe URI, and the same document requires user consent before that
+  request is made. A router that unsubscribed on its own would be spending a
+  person's consent it never had, so `List-Unsubscribe` only marks the message as
+  list mail; it never triggers a request.
+- **A folder per list.** `List-Id` is stable and would make a tidy tree, but the
+  value is chosen by the sender, so the folder names would be an untrusted
+  string turned into a path. The ledger records the `List-Id` instead and the
+  tree stays bounded by the policy.
+- **A learned router.** With a labelled log of past decisions a classifier would
+  beat the cue weights. There is no such log here, and fitting one on the seven
+  samples would be selection on the test set, which is the error the rest of this
+  document is about. The cost matrix and the gate are the honest version until
+  the log exists.
 
 ## References
 
@@ -237,3 +297,37 @@ because each one breaks a naive port:
     https://doc.rust-lang.org/rustc/profile-guided-optimization.html
 27. Wagner, I. Optimizing Rust builds with target flags.
     https://ianwwagner.com/optimizing-rust-builds-with-target-flags.html
+28. Chow, C. K. (1970). On optimum recognition error and reject tradeoff. IEEE
+    Transactions on Information Theory 16(1), 41-46.
+    https://doi.org/10.1109/TIT.1970.1054406
+29. Elkan, C. (2001). The foundations of cost-sensitive learning. IJCAI 2001,
+    973-978. https://cseweb.ucsd.edu/~elkan/rescale.pdf
+30. El-Yaniv, R. and Wiener, Y. (2010). On the foundations of noise-free
+    selective classification. Journal of Machine Learning Research 11,
+    1605-1641. https://jmlr.org/papers/v11/el-yaniv10a.html
+31. Guo, C., Pleiss, G., Sun, Y. and Weinberger, K. Q. (2017). On calibration of
+    modern neural networks. ICML 2017, PMLR 70, 1321-1330.
+    https://proceedings.mlr.press/v70/guo17a.html
+32. Parasuraman, R. and Riley, V. (1997). Humans and automation: use, misuse,
+    disuse, abuse. Human Factors 39(2), 230-253.
+    https://doi.org/10.1518/001872097778543886
+33. Moore, K. (2004). Recommendations for automatic responses to electronic
+    mail. RFC 3834.
+    https://www.rfc-editor.org/rfc/rfc3834.html
+34. Resnick, P. (2001). Internet Message Format. RFC 5322.
+    https://www.rfc-editor.org/rfc/rfc5322.html
+35. Palme, J. (1996). Common Internet message headers. RFC 2076, section 3.9.
+    https://www.rfc-editor.org/rfc/rfc2076.html
+36. Chandhok, R. and Wenger, K. (2010). The mailing list `List-Id` header.
+    RFC 2919. https://www.rfc-editor.org/rfc/rfc2919.html
+37. Neufeld, G. and Baer, J. (1998). The use of URLs as meta-syntax for core mail
+    list commands. RFC 2369. https://www.rfc-editor.org/rfc/rfc2369.html
+38. Levine, J. and Herk, T. (2017). Signaling one-click functionality for list
+    email headers. RFC 8058. https://www.rfc-editor.org/rfc/rfc8058.html
+39. Guenther, P. and Showalter, T. (2008). Sieve: an email filtering language.
+    RFC 5228. https://www.rfc-editor.org/rfc/rfc5228.html
+40. Melnikov, A. (2008). Sieve email filtering: `imap4flags` extension.
+    RFC 5232. https://www.rfc-editor.org/rfc/rfc5232.html
+41. International Organization for Standardization (2016). ISO 15489-1:2016,
+    Information and documentation, records management, part 1: concepts and
+    principles.

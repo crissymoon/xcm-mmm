@@ -122,7 +122,7 @@ cat > "$OUT/dataset-metadata.json" <<META
   "id": "crissymoon/${SLUG}",
   "licenses": [{"name": "MIT"}],
   "subtitle": "Static ELF build of the xcm-mmm command line tool, for Kaggle notebooks",
-  "description": "The xcm-mmm command line front end compiled for Linux x86-64 as a static-pie ELF, so it runs in a Kaggle notebook with no Rust toolchain and no network. Version ${VERSION}, ${BYTES} bytes, sha256 ${SHA}. Copy it out of /kaggle/input and chmod +x before running: Kaggle does not keep the executable bit on dataset files and /kaggle/input is read only. Commands used from notebooks are detect score, read, segment assign, legal scan, legal explain, churn check and forecast; the artefacts those text commands read live in the companion dataset crissymoon/xcm-mmm-models, which stages them as data/<model>/ so that the CLI defaults resolve once the tree sits beside the binary. ${DISCLAIMER}",
+  "description": "The xcm-mmm command line front end compiled for Linux x86-64 as a static-pie ELF, so it runs in a Kaggle notebook with no Rust toolchain and no network. Version ${VERSION}, ${BYTES} bytes, sha256 ${SHA}. Copy it out of /kaggle/input and chmod +x before running: Kaggle does not keep the executable bit on dataset files and /kaggle/input is read only. Commands used from notebooks are detect score, read, segment assign, legal scan, legal explain, churn check, route organize and forecast; the artefacts those text commands read live in the companion dataset crissymoon/xcm-mmm-models, which stages them as data/<model>/ so that the CLI defaults resolve once the tree sits beside the binary. ${DISCLAIMER}",
   "keywords": ["mathematics", "software"],
   "isPrivate": false
 }

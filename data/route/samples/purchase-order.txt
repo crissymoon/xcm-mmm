@@ -1,0 +1,6 @@
+Purchase order PO-2211
+
+Supplier: Example Components
+Amount due: 900.00
+Payment terms: net 30
+Bill to: Example Ltd, accounts@example.org

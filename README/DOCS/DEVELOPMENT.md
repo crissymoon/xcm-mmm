@@ -60,6 +60,7 @@
 | `src/forecast/cpcv.rs` | grouped purged splits, paths, and the probability of backtest overfitting |
 | `src/churn/` | panel loading, extraction, the fit, the card, the CLI, the window contract and the matured-cohort table |
 | `src/detect/`, `src/emotion/`, `src/transformer/`, `src/pairs/`, `src/text/`, `src/profile/` | the text front ends and the models they own |
+| `src/route/` | the envelope reader, the policy file, the expected-cost decision, the folder run and the CLI |
 | `src/bin/xcm-mmm.rs` | the command line |
 | `tests/` | convergence, the forecasting path, the CLI surface |
 | `examples/` | three runnable demonstrations |

@@ -1,0 +1,336 @@
+{
+  "version": 1,
+  "disclaimer": "The router proposes an action and writes a draft. It never sends mail and never moves a file unless --apply is given. The costs below are ranked judgements about consequence, not measured losses, and the class shares are shares of evidence rather than calibrated probabilities.",
+  "actions": [
+    {
+      "id": "reply",
+      "note": "Answer the sender with a templated acknowledgement. The draft carries Auto-Submitted: auto-replied, so another robot reading it knows not to answer again.",
+      "sends_mail": true
+    },
+    {
+      "id": "forward",
+      "note": "Send the message to the queue that owns the class. Refused for anything that must not leave the organisation, which is why the veto list exists.",
+      "sends_mail": true
+    },
+    {
+      "id": "file",
+      "note": "Copy the message into the folder the policy names for its class and record why. The copy is additive, so the original is never destroyed by a wrong reading.",
+      "sends_mail": false
+    },
+    {
+      "id": "hold",
+      "note": "Queue it for a person and do nothing else. This is the reject option: it is chosen when the reading is close to a boundary or a guard forbids every other action.",
+      "sends_mail": false
+    },
+    {
+      "id": "ignore",
+      "note": "No action at all. Correct for bulk mail and lists, expensive for anything a person wrote.",
+      "sends_mail": false
+    }
+  ],
+  "classes": [
+    {
+      "id": "support_request",
+      "question": "Does the sender want help using something?",
+      "prior": 0.05,
+      "cues": [
+        [
+          "cannot log in",
+          3.0
+        ],
+        [
+          "can't log in",
+          3.0
+        ],
+        [
+          "unable to log in",
+          3.0
+        ],
+        [
+          "password reset",
+          2.0
+        ],
+        [
+          "not working",
+          2.0
+        ],
+        [
+          "error message",
+          2.0
+        ],
+        [
+          "how do i",
+          1.5
+        ],
+        [
+          "help me",
+          1.5
+        ],
+        [
+          "support",
+          1.0
+        ],
+        [
+          "bug",
+          1.0
+        ]
+      ]
+    },
+    {
+      "id": "invoice",
+      "question": "Is this a bill, a remittance or a purchase order that belongs to finance?",
+      "prior": 0.05,
+      "cues": [
+        [
+          "invoice",
+          3.0
+        ],
+        [
+          "remittance",
+          3.0
+        ],
+        [
+          "purchase order",
+          3.0
+        ],
+        [
+          "payment terms",
+          2.0
+        ],
+        [
+          "amount due",
+          3.0
+        ],
+        [
+          "net 30",
+          2.0
+        ],
+        [
+          "vat",
+          1.0
+        ],
+        [
+          "bill to",
+          2.0
+        ]
+      ]
+    },
+    {
+      "id": "legal_notice",
+      "question": "Does the text make a demand, claim a right, or set a deadline that has legal consequence?",
+      "prior": 0.05,
+      "cues": [
+        [
+          "without prejudice",
+          4.0
+        ],
+        [
+          "pursuant to",
+          3.0
+        ],
+        [
+          "legal notice",
+          3.0
+        ],
+        [
+          "demand letter",
+          4.0
+        ],
+        [
+          "notice of default",
+          4.0
+        ],
+        [
+          "subpoena",
+          4.0
+        ],
+        [
+          "counsel",
+          2.0
+        ],
+        [
+          "hereby",
+          1.0
+        ],
+        [
+          "termination for cause",
+          3.0
+        ],
+        [
+          "shall be liable",
+          3.0
+        ]
+      ]
+    },
+    {
+      "id": "application",
+      "question": "Is a person applying for a role or asking to be considered?",
+      "prior": 0.03,
+      "cues": [
+        [
+          "resume",
+          3.0
+        ],
+        [
+          "curriculum vitae",
+          3.0
+        ],
+        [
+          "cover letter",
+          3.0
+        ],
+        [
+          "job application",
+          3.0
+        ],
+        [
+          "interview",
+          1.5
+        ],
+        [
+          "years of experience",
+          2.0
+        ],
+        [
+          "applying for",
+          2.0
+        ]
+      ]
+    },
+    {
+      "id": "bulk_list",
+      "question": "Was this sent to many people at once, by a system rather than a person?",
+      "prior": 0.05,
+      "cues": [
+        [
+          "unsubscribe",
+          3.0
+        ],
+        [
+          "newsletter",
+          3.0
+        ],
+        [
+          "view in browser",
+          3.0
+        ],
+        [
+          "email preferences",
+          2.0
+        ],
+        [
+          "no longer wish to receive",
+          3.0
+        ],
+        [
+          "limited time offer",
+          2.0
+        ]
+      ]
+    },
+    {
+      "id": "general",
+      "question": "A person wrote to a person, and the subject does not name a queue.",
+      "prior": 0.15,
+      "cues": []
+    }
+  ],
+  "costs": {
+    "support_request": {
+      "reply": 1.0,
+      "forward": 4.0,
+      "file": 3.0,
+      "hold": 4.0,
+      "ignore": 9.0
+    },
+    "invoice": {
+      "reply": 4.0,
+      "forward": 1.0,
+      "file": 1.6,
+      "hold": 5.0,
+      "ignore": 7.0
+    },
+    "legal_notice": {
+      "reply": 9.0,
+      "forward": 9.0,
+      "file": 4.0,
+      "hold": 1.0,
+      "ignore": 8.0
+    },
+    "application": {
+      "reply": 4.0,
+      "forward": 3.0,
+      "file": 2.0,
+      "hold": 3.0,
+      "ignore": 6.0
+    },
+    "bulk_list": {
+      "reply": 10.0,
+      "forward": 8.0,
+      "file": 5.0,
+      "hold": 6.0,
+      "ignore": 1.0
+    },
+    "general": {
+      "reply": 3.0,
+      "forward": 6.0,
+      "file": 2.0,
+      "hold": 4.0,
+      "ignore": 5.0
+    }
+  },
+  "folders": {
+    "support_request": "support/inbox",
+    "invoice": "finance/invoices",
+    "legal_notice": "legal/notices",
+    "application": "people/applications",
+    "bulk_list": "bulk/lists",
+    "general": "correspondence"
+  },
+  "forward_to": {
+    "invoice": "billing@example.invalid"
+  },
+  "replies": {
+    "support_request": "Thank you. Your message reached the support queue and a person will read it. This is an automatic acknowledgement and it does not mean the problem is solved.",
+    "general": "Thank you. Your message was received. This is an automatic acknowledgement; a person will read it and reply."
+  },
+  "guards": {
+    "min_top_share": 0.5,
+    "min_margin": 0.4,
+    "max_replies_per_sender": 1,
+    "blocked_local_parts": [
+      "mailer-daemon",
+      "postmaster",
+      "no-reply",
+      "noreply",
+      "do-not-reply",
+      "donotreply",
+      "bounce",
+      "bounces"
+    ],
+    "never_reply_classes": [
+      "bulk_list",
+      "legal_notice"
+    ],
+    "never_forward_classes": [
+      "legal_notice",
+      "application"
+    ],
+    "always_hold_classes": [
+      "legal_notice"
+    ],
+    "bulk_headers": [
+      "List-Id",
+      "List-Unsubscribe",
+      "List-Post",
+      "X-Campaign-Id"
+    ],
+    "bulk_precedence": [
+      "bulk",
+      "list",
+      "junk"
+    ],
+    "auto_header": "Auto-Submitted",
+    "max_forward_bytes": 20000000
+  }
+}

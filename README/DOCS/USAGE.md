@@ -422,6 +422,37 @@ The report has five blocks and none of them is a blend. Shape counts characters,
 
 Two things the report deliberately does not do. It does not assign a behavioural segment from a text: volume, cadence, spend, reuse and concentration are behaviour over time, so only copy length and, with `--terms`, targeting terms are compared, and the note says so. And it does not read tone pragmatically: `emotion` is a word reading, so a threat written in positive words still reads as trust and sadness, while the fear and manipulation axes are what catch the framing.
 
+### route
+
+Decide what to do with a message or a document. Five actions are possible: reply, forward, file, hold for a person, or ignore. The command never sends mail and never moves a file.
+
+```bash
+xcm-mmm route decide --file data/route/samples/legal-demand.eml --draft
+xcm-mmm route decide --file invoice.eml --detectors data/detectors/model.json --json
+xcm-mmm route organize --inbox incoming/ --out filed/            # dry run
+xcm-mmm route organize --inbox incoming/ --out filed/ --apply    # writes the tree
+xcm-mmm route policy
+xcm-mmm route check
+```
+
+| Flag | Default | Meaning |
+|---|---|---|
+| `--dir` | data/route | folder holding `policy.json` |
+| `--file`, positional text | none | one message or document, or text typed in |
+| `--detectors` | none | add the legal and manipulation readings from an artifact |
+| `--draft` | off | print the reply or forward the action would produce |
+| `--inbox`, `--out` | none | organize: the arrivals, and where the tree and ledger go |
+| `--apply` | off | organize: write the copies, drafts and ledger |
+| `--keep-ignored` | off | organize: copy bulk mail too |
+| `--from` | xcm-router@localhost | the identity written into a draft |
+| `--json` | off | one JSON object instead of a report |
+
+The report names the class, the action, the folder, the expected cost of every action, the evidence that raised the class and every veto with its reason. A reply or a forward is a draft with `Auto-Submitted: auto-replied` and its `In-Reply-To` and `References` set; nothing is transmitted.
+
+Three properties keep a run safe. It is dry unless `--apply` is given. It copies rather than moves, so a wrong reading costs a duplicate and not a lost message. It appends `ledger.jsonl` with the decision, the folder, the drafts and the digest of the policy that produced it, so a filing can be audited and replayed after the rulebook changes. A redelivered message is recognised by its `Message-Id` and counted once.
+
+`policy.json` is the whole rulebook: class cues, the cost of each action under each class, the folder tree, the forward queues, reply templates and the guards. `route check` refuses a file where a class is missing a cost, two classes share a folder, a guard names a class that does not exist or a threshold is outside zero to one.
+
 ## Error behaviour
 
 A wrong engine for a problem is refused with an explanation rather than run. `de --problem zdt1` says that the problem has two objectives and points at `moead`; `moead --problem sphere` does the reverse. Unknown problem names, a dimension below the problem minimum, an unreadable file, a missing target column and a panel too short for the requested folds all exit with status 1 and a single line on standard error.

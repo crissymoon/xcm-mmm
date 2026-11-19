@@ -61,6 +61,7 @@ pub mod problem;
 pub mod profile;
 pub mod provenance;
 pub mod rng;
+pub mod route;
 pub mod segment;
 pub mod stats;
 pub mod support;

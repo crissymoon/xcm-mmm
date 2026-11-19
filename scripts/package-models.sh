@@ -37,7 +37,7 @@ VERSION="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
 rm -rf "$OUT"
 mkdir -p "$OUT/data"
 
-for d in detectors segments legal emotion churn; do
+for d in detectors segments legal emotion churn route; do
   cp -R "data/$d" "$OUT/data/$d"
 done
 
@@ -55,8 +55,8 @@ card="README.md"
 cat > "$OUT/$card" <<CARD
 # xcm-mmm fitted artefacts (${VERSION})
 
-The five model folders the xcm-mmm command line tool reads, staged in the same
-layout the repository uses so that the CLI's defaults resolve with no flags.
+The folders the xcm-mmm command line tool reads, staged in the same layout the
+repository uses so that the CLI's defaults resolve with no flags.
 
 | field | value |
 | --- | --- |
@@ -75,6 +75,7 @@ layout the repository uses so that the CLI's defaults resolve with no flags.
 | \`data/segments\` | behavioural segment model, 251 entities, feature rows | \`segment info\`, \`segment assign\` |
 | \`data/legal\` | glossary, rules, pairs, rewrites, settings | \`legal scan\`, \`legal translate\`, \`legal explain\` |
 | \`data/churn\` | churn model, panel, reasons and the source it rebuilds from | \`churn check\`, \`churn score\` |
+| \`data/route\` | the routing policy and seven sample arrivals | \`route decide\`, \`route organize\`, \`route check\` |
 
 The binary itself is a separate dataset (\`crissymoon/xcm-mmm-static-linux-x86-64\`).
 This one has no executable in it.
@@ -127,8 +128,8 @@ cat > "$OUT/dataset-metadata.json" <<META
   "title": "xcm-mmm fitted artefacts",
   "id": "crissymoon/${SLUG}",
   "licenses": [{"name": "MIT"}],
-  "subtitle": "Detector, emotion, segment, legal and churn models for the xcm-mmm CLI",
-  "description": "The five fitted model folders read by the xcm-mmm command line tool: data/detectors (seven lexical axes plus 518 ads), data/emotion (listed and analogy tiers), data/segments (4 behavioural groups over 251 entities), data/legal (glossary, rules, pairs, rewrites) and data/churn (model, panel, reasons, source). ${FILES} files, ${BYTES} bytes, version ${VERSION}, tree digest ${DIGEST}, MIT. Staged as data/<model>/ so the CLI defaults resolve: copy the tree beside the xcm-mmm binary, cd into that directory and detect score, read, segment assign, legal scan, legal explain and churn check all run with no path flags. The executable is a separate dataset, crissymoon/xcm-mmm-static-linux-x86-64. ${DISCLAIMER}",
+  "subtitle": "Detector, emotion, segment, legal, churn and routing artefacts for the xcm-mmm CLI",
+  "description": "The data folders read by the xcm-mmm command line tool: data/detectors (seven lexical axes plus 518 ads), data/emotion (listed and analogy tiers), data/segments (4 behavioural groups over 251 entities), data/legal (glossary, rules, pairs, rewrites), data/churn (model, panel, reasons, source) and data/route (the routing policy and seven sample arrivals). ${FILES} files, ${BYTES} bytes, version ${VERSION}, tree digest ${DIGEST}, MIT. Staged as data/<model>/ so the CLI defaults resolve: copy the tree beside the xcm-mmm binary, cd into that directory and detect score, read, segment assign, legal scan, legal explain, churn check and route organize all run with no path flags. The executable is a separate dataset, crissymoon/xcm-mmm-static-linux-x86-64. ${DISCLAIMER}",
   "keywords": ["mathematics", "software"],
   "isPrivate": false
 }

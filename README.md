@@ -39,6 +39,7 @@ On the synthetic panel the search lowers its own walk-forward error: all 12 feat
 - **Churn outcome.** A 7,043 customer telecom panel into a churn label, a retention hazard by tenure month with right censoring, and the 1,869 churn reasons read on the emotion axes. A fourteen-feature logistic with folds assigned by customer id reports held-out AUC beside the AUC of tenure and monthly charge alone.
 - **Behavioural segments.** Advertisers grouped by what they did in an ad panel: volume, cadence and its spread, banded spend, copy length, terms bought against, creative reuse and copy concentration. k-means++ with a silhouette sweep, a shuffled control and a resampling audit, and a folder that rebuilds from its own entities.
 - **One transformer for every task.** A byte level byte pair tokenizer with no unknown token, a pre norm encoder whose backward pass is checked against finite differences, six task heads on one shared trunk, AdamW with a warmup and cosine schedule, early stopping on the validation split the pairs carry, and one model file holding the tokenizer, the config and the weights.
+- **Routing a reading to an action.** A policy file carries the cost of five actions (reply, forward, file, hold for a person, ignore) under six classes of arrival, and a router picks the cheapest expected cost with a reject option when the reading is close. Vetoes come from the protocol rather than the price: no answer to `Auto-Submitted`, a null reverse-path or a machine mailbox, and no forward for a privileged class. Arrivals are filed by copy beside a ledger that records the policy digest, replies and forwards are written as drafts and never sent, and seven sample files hold the behaviour still.
 - **One report per text.** `read` puts one piece of copy through the detectors, the emotion scanner, the segment centres and the learned copy map and prints every score beside its evidence: the words that carried the emotional mass, the cues that fired, the surface readings behind a register, Flesch ease and grade, and the segment dimensions the text cannot show.
 - **Two front ends.** A library with a small trait surface, and a CLI that can run a benchmark suite, solve a problem or score a panel.
 
@@ -360,7 +361,7 @@ Hypervolume uses the reference point 1.1 in every objective for the ZDT set, 0.6
 - [Benchmarks](README/DOCS/BENCHMARKS.md) - methodology, the tables above and how they compare with published results.
 - [Install](README/DOCS/INSTALL.md) - requirements, build, install and using the crate as a dependency.
 - [Development](README/DOCS/DEVELOPMENT.md) - layout, design rules, tests, lints and how to add a problem.
-- [Research and provenance](README/DOCS/RESEARCH.md) - the literature behind the evaluation, the reproducible build, and how a reader checks which binary produced a table.
+- [Research and provenance](README/DOCS/RESEARCH.md) - the literature behind the evaluation and the router, the reproducible build, and how a reader checks which binary produced a table.
 
 ## Testing
 
@@ -370,7 +371,7 @@ cargo clippy --all-targets -- -D warnings
 cargo fmt --all -- --check
 ```
 
-The suite has 689 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, the reader over the shipped models including its stdin and file inputs, the learned copy map from fit to gate to offline rebuild, the build provenance the binary reports about itself, and every CLI subcommand.
+The suite has 721 tests. It covers convergence on sphere, Rosenbrock, Rastrigin, Ackley, ZDT1 to ZDT4, ZDT6, DTLZ1 and DTLZ2, the exact hypervolume identities, the weight lattice counts, constraint handling, reproducibility at one and four threads, the forecasting path on a synthetic panel, the detector fit from bank to artifact including its refusals, the segmentation path from panel to artifact including its refusals, the reader over the shipped models including its stdin and file inputs, the learned copy map from fit to gate to offline rebuild, the build provenance the binary reports about itself, and every CLI subcommand.
 
 ## License
 

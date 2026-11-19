@@ -104,7 +104,11 @@ shard reports reduce into one table. The text half runs the shipped models over
 the 518 ads they were fitted on. A Rust binary in a notebook is useful for the
 work it does per core, not for one interactive call.
 
-Four figures follow, and each one reads a number the tool printed in this
+The last section is different in kind: `route` turns a reading into an action,
+so the notebook checks the decision a message receives, not only the score it
+carries.
+
+Five figures follow, and each one reads a number the tool printed in this
 session rather than a constant copied into the notebook:
 
 | figure | what it answers |
@@ -113,6 +117,7 @@ session rather than a constant copied into the notebook:
 | `02-shard-timings.png` | whether four shards in threads beat one shard in wall clock, given rayon already fills the cores |
 | `03-detector-axes.png` | how far each of the seven axes moves over 518 ads, and the shape of the top score by split |
 | `04-emotion-coverage.png` | how much of the emotion list and of running text reaches an answer above the neutral prior |
+| `05-routing-cost.png` | why a demand letter is held while a newsletter is ignored, from the cost of each action |
 
 The figures are written to `charts/` and kept as part of the kernel output.
 
@@ -213,6 +218,7 @@ figures read as one set.
 """),
     ("code", '''
 import matplotlib
+import matplotlib.patches
 
 # Agg is the backend a headless image has; the saved PNG is what gets displayed,
 # not a live canvas, so the file on disk and the inline picture are the same
@@ -725,6 +731,126 @@ show(fig, "04-emotion-coverage",
      f"prior is {tiers['prior'][1]:.1f}% of running text")
 '''),
     ("markdown", """
+## Deciding what to do, not only what it says
+
+Every command so far describes a text. `route` answers a different question: one
+of five actions. A message from a person who cannot log in is answered; an
+invoice is forwarded to the queue that pays it; a demand letter is held for a
+person; a newsletter is ignored; an application is filed. The evidence is the
+header block first, because `Auto-Submitted`, `List-Id` and a null reverse-path
+are exact strings, and the class cues second.
+
+The rule is the cheapest expected cost under an asymmetric loss matrix (Elkan,
+2001). Answering a newsletter costs ten units and ignoring it costs one; holding
+a demand letter costs one and answering it unreviewed costs nine. Those numbers
+live in `data/route/policy.json`, so the routing is a rulebook a reader can
+argue with rather than a model nobody can inspect.
+
+Two parts of the design are not prices. The vetoes come from the protocol:
+RFC 3834 forbids an answer to a message carrying `Auto-Submitted`, to a null
+reverse-path, or to a machine mailbox, and no cost matrix may buy past that. The
+reject option is Chow's (1970): when the top share is below the threshold, or
+the two cheapest actions sit within the margin, the message goes to a person
+instead. The shares are shares of evidence, not probabilities, because an
+uncalibrated score read as a probability is the error Guo and others (2017)
+document.
+
+Nothing here sends mail. A reply or a forward is written as a draft with
+`Auto-Submitted: auto-replied` and its `In-Reply-To` set, and a person or a queue
+releases it. Every filing is a copy beside a ledger that carries the digest of
+the policy that produced it, so the run can be audited after the rulebook
+changes.
+"""),
+    ("code", """
+ROUTE = WORK / "route"
+SAMPLES = RUN / "data/route/samples"
+
+print(run("route", "check").stdout.strip())
+
+dry = json.loads(run("route", "organize", "--inbox", SAMPLES, "--out", ROUTE,
+                     "--json").stdout)
+# A dry run is the default for a reason: it must not create the output tree.
+assert not ROUTE.exists(), "the dry run wrote something"
+print(f"dry run  {dry['files']} arrivals, no bytes written")
+
+applied = json.loads(run("route", "organize", "--inbox", SAMPLES, "--out", ROUTE,
+                          "--apply", "--json").stdout)
+rows = pd.DataFrame([{
+    "file": row["file"],
+    "class": row["class"],
+    "action": row["action"],
+    "filed as": row["dest"] or "-",
+} for row in applied["rows"]])
+print(rows.to_string(index=False))
+
+ledger = [json.loads(line) for line in (ROUTE / "ledger.jsonl").read_text().splitlines()]
+drafts = sorted(p.name for p in (ROUTE / "drafts").glob("*.eml"))
+print(f"ledger   {len(ledger)} rows, policy {applied['policy']['fnv64']}")
+print("drafts   ", ", ".join(drafts))
+
+# The counts are the claim: a demand letter is held, a newsletter is ignored,
+# and the two invoices reach the same queue whether or not the file had headers.
+assert applied["by_action"] == {"file": 1, "forward": 2, "hold": 2, "ignore": 1, "reply": 1}
+assert all(row["decision"]["policy"] == applied["policy"]["fnv64"] for row in ledger)
+
+reply = next((ROUTE / "drafts").glob("*-reply.eml")).read_text()
+assert "Auto-Submitted: auto-replied" in reply, "RFC 3834 header is missing"
+assert "In-Reply-To: <support-1@example.com>" in reply
+print()
+print("\\n".join(reply.splitlines()[:6]))
+"""),
+    ("code", """
+def reading(name):
+    out = json.loads(run("route", "decide", "--file", SAMPLES / name, "--json").stdout)
+    return out["decision"], {action: cost for action, cost in out["decision"]["expected"]}
+
+legal, legal_cost = reading("legal-demand.eml")
+news, news_cost = reading("newsletter.eml")
+ORDER = ["reply", "forward", "file", "hold", "ignore"]
+
+width = 0.38
+xs = list(range(len(ORDER)))
+fig, axes = panels(width=9.6, height=3.9)
+ax = axes[0]
+for offset, label, doc, cost, colour in (
+    (-width / 2, "demand letter", legal, legal_cost, INK["bar"]),
+    (width / 2, "list message", news, news_cost, INK["muted"]),
+):
+    bars = ax.bar([x + offset for x in xs], [cost[a] for a in ORDER], width=width,
+                  label=label, color=colour)
+    # The chosen action keeps its series colour and gains a hatch, because
+    # recolouring it orange would erase which message the bar belongs to.
+    chosen = ORDER.index(doc["action"])
+    bars[chosen].set_hatch("//")
+    bars[chosen].set_edgecolor(INK["accent"])
+    bars[chosen].set_linewidth(1.6)
+
+ax.set_xticks(xs)
+ax.set_xticklabels(ORDER)
+ax.set_ylabel("expected cost, cost units", color=INK["text"], fontsize=9)
+ax.set_title("Expected cost per action for two messages: hatched bars are the actions taken",
+             fontsize=10, color=INK["text"], loc="left")
+# The hatch needs its own key, or it reads as a third series.
+taken = matplotlib.patches.Patch(facecolor="white", edgecolor=INK["accent"], hatch="//",
+                                 label="action taken (hatched)")
+ax.legend(handles=[*ax.containers, taken], frameon=False, fontsize=8, loc="upper right")
+top = max(max(legal_cost.values()), max(news_cost.values()))
+ax.set_ylim(0, top * 1.15)
+for bar in ax.patches:
+    ax.annotate(f"{bar.get_height():.1f}",
+                (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                textcoords="offset points", xytext=(0, 3), ha="center",
+                fontsize=7, color=INK["text"])
+
+show(fig, "05-routing-cost",
+     f"hold {legal_cost['hold']:.2f} vs reply {legal_cost['reply']:.2f} for the letter")
+
+print(f"demand letter -> {legal['action']} ({legal['class']}), {len(legal['vetoes'])} vetoes")
+print(f"list message  -> {news['action']} ({news['class']}), {len(news['vetoes'])} vetoes")
+for line in news["vetoes"]:
+    print(" ", line)
+"""),
+    ("markdown", """
 ## What to carry forward
 
 - Copy then chmod. Never assume the executable bit survives a dataset upload.
@@ -742,6 +868,10 @@ show(fig, "04-emotion-coverage",
 - Make the artefact describe itself. A hash in a dataset card is a receipt; the
   same hash recomputed here and compared against the record shipped beside the
   binary is what turns it into evidence.
+- Put the costs in data. A router whose tradeoffs live in code cannot be argued
+  with by the person who owns the consequences.
+- Keep protocol rules out of the cost matrix. RFC 3834 vetoes an answer whatever
+  a number says, and a matrix that could outvote it would be wrong at any price.
 - Cite what constrains the method. A nested loop is either the procedure the
   literature prescribes or a shape someone liked, and the reader cannot tell
   without the reference.
@@ -753,8 +883,8 @@ own binary and artefacts, and the rest of the notebook is the part you keep.
     ("markdown", """
 ## References
 
-The evaluation, the search and the packaging, in the order the notebook uses
-them. DOIs and the page that explains each decision are in
+The evaluation, the search, the packaging and the routing, in the order the
+notebook uses them. DOIs and the page that explains each decision are in
 `README/DOCS/RESEARCH.md` of the repository.
 
 1. Cawley, G. C. and Talbot, N. L. C. (2010). On over-fitting in model selection
@@ -796,6 +926,23 @@ them. DOIs and the page that explains each decision are in
     [doc.rust-lang.org/rustc/command-line-arguments.html](https://doc.rust-lang.org/rustc/command-line-arguments.html)
 15. Kaggle. Notebooks, technical specifications.
     [kaggle.com/docs/notebooks](https://www.kaggle.com/docs/notebooks#technical-specifications)
+16. Elkan, C. (2001). The foundations of cost-sensitive learning. IJCAI 2001,
+    973-978. [cseweb.ucsd.edu/~elkan/rescale.pdf](https://cseweb.ucsd.edu/~elkan/rescale.pdf)
+17. Chow, C. K. (1970). On optimum recognition error and reject tradeoff.
+    IEEE Transactions on Information Theory 16(1), 41-46.
+    [doi:10.1109/TIT.1970.1054406](https://doi.org/10.1109/TIT.1970.1054406)
+18. Guo, C., Pleiss, G., Sun, Y. and Weinberger, K. Q. (2017). On calibration of
+    modern neural networks. ICML 2017, PMLR 70, 1321-1330.
+    [proceedings.mlr.press/v70/guo17a.html](https://proceedings.mlr.press/v70/guo17a.html)
+19. Parasuraman, R. and Riley, V. (1997). Humans and automation: use, misuse,
+    disuse, abuse. Human Factors 39(2), 230-253.
+    [doi:10.1518/001872097778543886](https://doi.org/10.1518/001872097778543886)
+20. Moore, K. (2004). Recommendations for automatic responses to electronic
+    mail. RFC 3834.
+    [rfc-editor.org/rfc/rfc3834.html](https://www.rfc-editor.org/rfc/rfc3834.html)
+21. Guenther, P. and Showalter, T. (2008). Sieve: an email filtering language.
+    RFC 5228.
+    [rfc-editor.org/rfc/rfc5228.html](https://www.rfc-editor.org/rfc/rfc5228.html)
 
 `provenance.json` in this version's output tab carries the binary's own report,
 the runtime versions and the two dataset slugs, so a fork records its own run
